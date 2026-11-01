@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>尚品汇 C 端原型 · V2.0 索引</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="modal.css">
+<style>
+.wrap { max-width: 820px; margin: 0 auto; padding: 48px 24px 64px; }
+.nav-item { display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-weight: 500; }
+.nav-item .code { font-family: var(--font-mono); font-size: 12px; color: var(--slate); min-width: 42px; }
+.nav-item .note { font-size: 12px; color: var(--slate); margin-left: auto; }
+.group { margin-bottom: 24px; }
+.group h2 { font-size: 13px; color: var(--stone); margin-bottom: 8px; letter-spacing: .06em; }
+.rule-list { list-style: none; font-size: 13px; color: var(--stone); }
+.rule-list li { display: flex; gap: 8px; padding: 4px 0; }
+.rule-list li::before { content: "·"; color: var(--slate); font-weight: 700; }
+.tag-line { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+    <img src="logo.png" style="width:48px;height:48px;border-radius:50%" alt="">
+    <div>
+      <div style="font-size:22px;font-weight:700">尚品汇 · V2.0</div>
+      <div class="muted">C 端购物网站原型 · Web + H5 · 纯静态 HTML</div>
+    </div>
+  </div>
+  <p class="hint" style="margin-bottom:20px">
+    本地预览：<code>http://127.0.0.1:8766/index.html</code> · 设计规范 <code>docs/02-design/设计系统.md</code> · 需求 <code>docs/01-requirements/PRD-V2.0-购物网站.md</code>
+  </p>
+
+  <div class="card" style="padding:16px 20px;margin-bottom:24px">
+    <div class="tag-line">
+      <span class="badge badge-coral">V2.0</span>
+      <span class="badge badge-forest">游客可浏览 · 加购下单需登录</span>
+      <span class="badge" style="background:var(--sand);color:var(--stone)">商品金额满 99 元免运费</span>
+    </div>
+    <ul class="rule-list">
+      <li>商品目录与后台种子数据一致：8 个一级类目、30 个 SPU（手机 / 电脑办公 / 家电 / 数码配件 / 家居收纳 / 美妆个护 / 食品生鲜 / 运动户外）。</li>
+      <li>所有商品图使用确定性 CSS 占位（<code>.ph</code>，按类目取暖色渐变），不依赖任何外链图片。</li>
+      <li>弹窗实现：<code>modal.css</code>（Web 居中对话框 / H5 半屏）+ <code>modal.js</code>（触发、ESC、遮罩点击、60 秒倒计时、支付三态）。</li>
+    </ul>
+  </div>
+
+  <div class="card group" style="padding:20px">
+    <h2>Web 桌面端（≥768px）</h2>
+    <a class="nav-item" href="web/home.html"><span class="code">W01</span>首页<span class="note">Banner 位 · 活动位 · 类目入口 · 推荐流</span></a>
+    <a class="nav-item" href="web/category.html"><span class="code">W02</span>分类<span class="note">一级类目 + 商品列表 + 排序分页</span></a>
+    <a class="nav-item" href="web/product.html"><span class="code">W03</span>商品详情<span class="note">规格选择 · 库存 · 评价 · 同类推荐</span></a>
+    <a class="nav-item" href="web/cart.html"><span class="code">W04</span>购物车<span class="note">勾选 · 数量 · 失效商品</span></a>
+    <a class="nav-item" href="web/checkout.html"><span class="code">W05</span>确认订单<span class="note">地址 · 运费 · 提交 · 支付</span></a>
+    <a class="nav-item" href="web/orders.html"><span class="code">W06</span>我的订单<span class="note">待付款倒计时 · 物流 · 售后</span></a>
+    <a class="nav-item" href="web/profile.html"><span class="code">W07</span>个人中心<span class="note">资料 · 地址 · 收藏 · 足迹</span></a>
+    <a class="nav-item" href="web/favorites.html"><span class="code">W07b</span>我的收藏<span class="note">商品收藏列表 · 失效置灰 · 取消收藏</span></a>
+    <a class="nav-item" href="web/login.html"><span class="code">W08</span>登录<span class="note">手机号 + 验证码 · 60 秒倒计时</span></a>
+    <a class="nav-item" href="web/dialogs.html"><span class="code">W09</span>弹窗图鉴<span class="note">全部 Web 弹窗内联展示</span></a>
+  </div>
+
+  <div class="card group" style="padding:20px">
+    <h2>H5 移动 Web（&lt;768px）</h2>
+    <a class="nav-item" href="h5/home.html"><span class="code">H01</span>首页<span class="note">类目入口 · 活动位 · 瀑布流</span></a>
+    <a class="nav-item" href="h5/category.html"><span class="code">H02</span>分类<span class="note">左侧类目 + 右侧商品</span></a>
+    <a class="nav-item" href="h5/product.html"><span class="code">H03</span>商品详情<span class="note">底部操作栏 · 规格半屏</span></a>
+    <a class="nav-item" href="h5/cart.html"><span class="code">H04</span>购物车<span class="note">结算栏 · 失效清理</span></a>
+    <a class="nav-item" href="h5/checkout.html"><span class="code">H05</span>确认订单<span class="note">地址 · 金额 · 支付</span></a>
+    <a class="nav-item" href="h5/orders.html"><span class="code">H06</span>我的订单<span class="note">状态 Tab · 物流 · 售后</span></a>
+    <a class="nav-item" href="h5/profile.html"><span class="code">H07</span>个人中心<span class="note">订单入口 · 地址 · 收藏</span></a>
+    <a class="nav-item" href="h5/login.html"><span class="code">H08</span>登录<span class="note">半屏登录 · 验证码</span></a>
+    <a class="nav-item" href="h5/dialogs.html"><span class="code">H09</span>弹窗图鉴<span class="note">全部 H5 半屏内联展示</span></a>
+  </div>
+
+  <div class="card group" style="padding:20px">
+    <h2>业务规则（原型已体现）</h2>
+    <ul class="rule-list">
+      <li>游客可浏览首页 / 分类 / 详情 / 搜索；加购、下单、个人中心需登录，登录后回到原场景。</li>
+      <li>登录：手机号 11 位、验证码 6 位（演示固定 123456）、发送后 60 秒防重发；未注册手机号自动注册。</li>
+      <li>库存 0 → 详情按钮变「暂时缺货」不可点；未选规格 → 「请选择规格」；超可售库存 → 「库存不足」并停在最大可售。</li>
+      <li>运费：商品金额 ≥ ¥99 免运费，否则 ¥8（后台可配）。</li>
+      <li>待付款 15 分钟倒计时（<code>mm:ss</code>），超时自动关闭并释放库存；待收货可确认收货；已完成可评价 / 售后 / 再次购买。</li>
+      <li>后台补全页在 <code>../admin/</code>（会员、站点品牌、首页运营位、交易设置、出入库单等）。</li>
+    </ul>
+  </div>
+
+  <p class="hint">截图归档目录：<code>docs/01-requirements/shots/</code>，由 <code>../render-shots.mjs</code> 一键生成。<br>
+    原型严格限定在 V2.0 范围：可以含 V1.0 已交付的能力（同一套商品目录与账号体系），但不含 V3.0 客服与 V4.0 营销 / 装修。</p>
+</div>
+<script src="modal.js"></script>
+</body>
+</html>

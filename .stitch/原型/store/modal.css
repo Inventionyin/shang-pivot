@@ -1,0 +1,288 @@
+/* 尚品汇 C 端 —— 弹窗 / 半屏 / 轻提示
+   与 styles.css 的暖橙奶油体系一致，和后台 ../admin/modal.css 同构：
+   Web 用居中对话框（.modal），H5 用底部半屏（.sheet）。
+   交付给 Vue 时对应 Element Plus 的 ElDialog / ElMessageBox / ElMessage
+   与 Vant 的 van-popup(position="bottom")。 */
+
+/* ===== 遮罩层 ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.modal[hidden] { display: none; }
+.modal-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(36, 29, 21, .38);
+  backdrop-filter: blur(1.5px);
+}
+
+/* ===== 居中面板 ===== */
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100dvh - 48px);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-3);
+  animation: modal-in .16s ease-out;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(6px) scale(.99); }
+  to   { opacity: 1; transform: none; }
+}
+.modal-panel.is-sm { max-width: 380px; }
+.modal-panel.is-md { max-width: 460px; }
+.modal-panel.is-lg { max-width: 640px; }
+.modal-panel.is-pay { max-width: 400px; text-align: center; }
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.modal-title { font-size: 15px; font-weight: 700; letter-spacing: -.01em; flex: 1; }
+.modal-x {
+  width: 28px; height: 28px;
+  border: 0; background: transparent; cursor: pointer;
+  border-radius: var(--r-sm); color: var(--slate);
+  display: grid; place-items: center; padding: 0;
+}
+.modal-x .ico { width: 16px; height: 16px; }
+.modal-x:hover { background: var(--sand); color: var(--ink); }
+
+.modal-body { padding: 18px 20px; overflow-y: auto; font-size: 13px; color: var(--ink); }
+.modal-body > p { margin-bottom: 10px; }
+.modal-body > p:last-child { margin-bottom: 0; }
+.modal-body.is-flush { padding: 0; }
+.modal-foot {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  background: var(--cream); border-radius: 0 0 var(--r-lg) var(--r-lg);
+  flex-shrink: 0;
+}
+.modal-foot .btn { min-width: 88px; }
+.modal-foot.is-spread { justify-content: space-between; }
+.modal-foot.is-spread .foot-left { display: flex; gap: 10px; }
+.modal-foot .foot-left { display: flex; gap: 10px; }
+
+/* ===== 语义化头部图标（确认类弹窗）===== */
+.modal-ico {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.modal-ico .ico { width: 18px; height: 18px; }
+.modal-ico.warn   { background: var(--amber-soft); color: #9A6A12; }
+.modal-ico.info   { background: var(--amber-soft); color: #9A6A12; }
+.modal-ico.danger { background: var(--brick-soft); color: var(--brick); }
+.modal-ico.ok     { background: var(--forest-soft); color: var(--forest); }
+
+/* 无头部、纯图标居中的确认弹窗 */
+.modal-center { text-align: center; padding: 26px 24px 6px; }
+.modal-center .modal-ico { margin: 0 auto 12px; width: 44px; height: 44px; }
+.modal-center .modal-ico .ico { width: 22px; height: 22px; }
+.modal-center .t { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.modal-center .d { font-size: 13px; color: var(--stone); line-height: 1.6; }
+
+/* ===== 提示块 ===== */
+.alert {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 11px 13px; border-radius: var(--r-md);
+  font-size: 12.5px; line-height: 1.55;
+}
+.alert .ico { width: 16px; height: 16px; margin-top: 1px; }
+.alert-warn { background: var(--brick-soft);  color: #8E2A24; }
+.alert-info { background: var(--amber-soft);  color: #8A5E10; }
+.alert-ok   { background: var(--forest-soft); color: #2F5230; }
+.alert b, .alert strong { font-weight: 700; }
+
+/* ===== 弹窗内的表单 ===== */
+.modal-body .field:last-child { margin-bottom: 0; }
+.modal-body .form-grid { gap: 0 16px; }
+
+/* ===== 商品摘要行（弹窗里的商品快照）===== */
+.dlg-goods { display: flex; gap: 12px; align-items: center; }
+.dlg-goods .ph { width: 64px; height: 64px; aspect-ratio: 1; flex-shrink: 0; }
+.dlg-goods .meta { flex: 1; min-width: 0; }
+.dlg-goods .t { font-weight: 600; font-size: 13px; line-height: 1.4; }
+.dlg-goods .s { font-size: 12px; color: var(--slate); margin-top: 2px; }
+
+/* ===== 支付层 ===== */
+.pay-amount { font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: var(--coral); }
+.pay-spin {
+  width: 40px; height: 40px; margin: 0 auto 14px;
+  border: 3px solid var(--sand); border-top-color: var(--amber);
+  border-radius: 50%; animation: pay-spin .8s linear infinite;
+}
+@keyframes pay-spin { to { transform: rotate(360deg); } }
+.pay-state { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 12px; display: grid; place-items: center; }
+.pay-state .ico { width: 28px; height: 28px; }
+.pay-state.ok  { background: var(--forest-soft); color: var(--forest); }
+.pay-state.err { background: var(--brick-soft);  color: var(--brick); }
+
+/* ===== H5 半屏弹出（底部 sheet）===== */
+.sheet {
+  position: fixed; inset: 0; z-index: 80;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.sheet[hidden] { display: none; }
+.sheet-mask {
+  position: absolute; inset: 0;
+  background: rgba(36, 29, 21, .42);
+  backdrop-filter: blur(1.5px);
+}
+.sheet-panel {
+  position: relative;
+  width: 100%;
+  max-height: 86dvh;
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -8px 28px rgba(36, 29, 21, .14);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: sheet-up .2s ease-out;
+}
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: none; }
+}
+.sheet-panel.is-tall { max-height: 92dvh; }
+.sheet-panel.is-short { border-radius: 16px 16px 0 0; }
+
+.sheet-grab {
+  width: 36px; height: 4px; border-radius: 2px;
+  background: var(--border); margin: 8px auto 0; flex-shrink: 0;
+}
+.sheet-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px 10px; flex-shrink: 0;
+}
+.sheet-title { font-size: 15px; font-weight: 700; flex: 1; }
+.sheet-title.center { text-align: center; }
+.sheet-x {
+  width: 28px; height: 28px; border: 0; background: transparent;
+  color: var(--slate); cursor: pointer; display: grid; place-items: center; padding: 0;
+}
+.sheet-x .ico { width: 16px; height: 16px; }
+.sheet-body { padding: 2px 14px 14px; overflow-y: auto; font-size: 13px; }
+.sheet-body.is-flush { padding: 0; }
+.sheet-foot {
+  display: flex; gap: 8px; padding: 10px 14px 14px;
+  border-top: 1px solid var(--border); background: var(--cream); flex-shrink: 0;
+}
+.sheet-foot .btn { flex: 1; min-height: 42px; }
+.sheet-foot .btn.is-auto { flex: 0 0 auto; min-width: 96px; }
+.sheet-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-top: 1px solid var(--border);
+  background: var(--cream); flex-shrink: 0;
+}
+.sheet-bar .btn { flex: 1; min-height: 42px; }
+
+/* 半屏里的分组标题 */
+.sheet-sec { margin-bottom: 14px; }
+.sheet-sec:last-child { margin-bottom: 0; }
+.sheet-sec .cap { font-size: 12px; font-weight: 600; color: var(--stone); margin-bottom: 8px; }
+
+/* ===== 轻提示 Toast（截图用静态展示 / 运行时可弹出）===== */
+.toast-stack {
+  position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
+  z-index: 90; display: flex; flex-direction: column; gap: 8px; align-items: center;
+  width: max-content; max-width: 90vw;
+}
+.toast {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 15px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: var(--sh-2); font-size: 13px; font-weight: 600;
+}
+.toast .ico { width: 16px; height: 16px; }
+.toast.ok   { color: var(--forest); border-color: rgba(71,112,76,.35); }
+.toast.err  { color: var(--brick);  border-color: rgba(200,69,60,.35); }
+.toast.warn { color: #8A5E10;       border-color: rgba(254,187,74,.5); }
+/* H5 的 Toast 沉到半屏上方居中 */
+.toast-stack.is-bottom { top: auto; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+
+/* ===== 图鉴页：把弹窗按内联方式并排展示，便于截图归档 ===== */
+.spec-grid { display: grid; gap: 22px; }
+.spec-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.spec-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 1100px) { .spec-grid.cols-2, .spec-grid.cols-3 { grid-template-columns: 1fr; } }
+
+.spec {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-1);
+  overflow: hidden;
+}
+.spec-cap {
+  padding: 11px 15px;
+  border-bottom: 1px solid var(--border);
+  background: var(--sand);
+  font-size: 12px; font-weight: 700; color: var(--stone);
+  display: flex; align-items: center; gap: 8px;
+}
+.spec-cap .id { font-family: var(--font-mono); color: var(--slate); font-weight: 600; }
+.spec-stage {
+  padding: 22px;
+  display: grid; place-items: center;
+  background: repeating-linear-gradient(45deg, var(--cream), var(--cream) 10px, #FBF7EE 10px, #FBF7EE 20px);
+}
+/* 触发点说明（图鉴页每条弹窗的「怎么触发」）*/
+.spec-trigger {
+  padding: 10px 15px; border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--stone); display: flex; gap: 8px; align-items: baseline;
+}
+.spec-trigger .k { color: var(--slate); flex-shrink: 0; }
+
+/* 内联模式：弹窗 / 半屏参与文档流，不再是固定定位 */
+.modal.is-inline, .sheet.is-inline {
+  position: static; inset: auto; padding: 0; display: block; z-index: auto;
+}
+.modal.is-inline .modal-mask, .sheet.is-inline .sheet-mask { display: none; }
+.modal.is-inline .modal-panel { animation: none; max-height: none; box-shadow: var(--sh-2); }
+.sheet.is-inline .sheet-panel {
+  animation: none; max-height: none; box-shadow: var(--sh-2);
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding-bottom: 0;
+}
+/* 图鉴页限定宽度，避免半屏铺满整页 */
+.spec-stage .sheet.is-inline .sheet-panel { border-radius: var(--r-lg); }
+
+/* H5 图鉴用的手机取景框 */
+.phone-frame {
+  width: 375px; max-width: 100%;
+  border: 1px solid var(--border); border-radius: 20px;
+  background: var(--cream); overflow: hidden;
+}
+
+/* 图鉴页头部与说明 */
+.spec-page { max-width: 1240px; margin: 0 auto; padding: 32px 24px 64px; }
+.spec-page.is-h5 { max-width: 860px; }
+.spec-page h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.spec-page .lead { font-size: 13px; color: var(--stone); margin-bottom: 8px; }
+.spec-page .legend {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  font-size: 12px; color: var(--slate); margin-bottom: 28px;
+}
+.spec-sec-title {
+  font-size: 14px; font-weight: 700; color: var(--stone);
+  letter-spacing: .04em; margin: 32px 0 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: baseline; gap: 10px;
+}
+/* 分组条数标注：与组内 .spec 数量一一对应，由 check-dialog-groups 校验 */
+.spec-sec-title .hint { font-weight: 500; letter-spacing: 0; }
+.spec-sec-title:first-of-type { margin-top: 0; }

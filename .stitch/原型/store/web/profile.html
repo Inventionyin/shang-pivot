@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>个人中心 · 尚品汇 Web</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../web.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="web-shell web-page-wide">
+<div class="web-utility-bar">
+  <div class="web-utility-bar-inner">
+    <span><a href="home.html">尚品汇首页</a></span>
+    <div>
+      <a href="profile.html">我的尚品汇</a>
+      <a href="cart.html">购物车</a>
+      <a href="favorites.html">我的收藏</a>
+      <a href="orders.html">我的订单</a>
+    </div>
+  </div>
+</div>
+<header class="web-topnav"><div class="web-topnav-inner">
+  <a class="web-brand" href="home.html">
+    <img src="../logo.png" alt="">
+    <div>
+      <div class="name">尚品汇</div>
+      <div class="hint" style="font-size:11px;font-weight:500">我的尚品汇</div>
+    </div>
+  </a>
+  <div class="web-search" style="margin-left:auto;max-width:420px">
+    <input placeholder="搜索尚品汇" readonly>
+    <button class="go" type="button">搜索</button>
+  </div>
+</div></header>
+
+<main class="web-main account-layout">
+  <nav class="account-side">
+    <div class="group-label">账户</div>
+    <a class="active" href="profile.html">我的尚品汇</a>
+    <a href="cart.html">我的购物车</a>
+    <a href="orders.html">已买到的宝贝</a>
+    <div class="group-label">收藏与足迹</div>
+    <a href="favorites.html">收藏的宝贝</a>
+    <a href="profile.html">我的足迹</a>
+    <div class="group-label">地址与设置</div>
+    <a href="profile.html">收货地址</a>
+    <a href="#" data-modal-open="dlg-logout">退出登录</a>
+  </nav>
+
+  <section>
+    <div class="dash-top">
+      <div class="dash-user">
+        <img src="../logo.png" alt="">
+        <div>
+          <div class="name">Jean</div>
+          <div class="muted">138****0000 · 会员</div>
+          <div class="links">
+            <a href="#addr-list">收货地址</a>
+            <a href="favorites.html">我的收藏</a>
+            <a href="#" data-modal-open="dlg-logout">退出登录</a>
+          </div>
+        </div>
+      </div>
+      <div class="dash-assets">
+        <div class="item"><div class="num">2</div><div class="label">收货地址</div></div>
+        <div class="item"><div class="num">6</div><div class="label">收藏商品</div></div>
+        <div class="item"><div class="num">12</div><div class="label">浏览足迹</div></div>
+      </div>
+    </div>
+
+    <div class="dash-orders">
+      <div class="head">
+        <strong>我的订单</strong>
+        <a class="hint" href="orders.html">查看全部订单 ›</a>
+      </div>
+      <div class="statuses">
+        <a href="orders.html"><div class="ico"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/></svg><span class="count">1</span></div>待付款</a>
+        <a href="orders.html"><div class="ico"><svg class="ico" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/></svg></div>待发货</a>
+        <a href="orders.html"><div class="ico"><svg class="ico" viewBox="0 0 24 24"><path d="M2 6h12v10H2z"/><path d="M14 9h4l4 4v3h-8z"/><circle cx="7" cy="18.5" r="1.6"/><circle cx="18" cy="18.5" r="1.6"/></svg></div>待收货</a>
+        <a href="orders.html"><div class="ico"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></div>待评价</a>
+        <a href="orders.html"><div class="ico"><svg class="ico" viewBox="0 0 24 24"><path d="M4 10h11a5 5 0 010 10H8"/><path d="M8 6l-4 4 4 4"/></svg></div>退款 / 售后</a>
+      </div>
+    </div>
+
+    <!-- 待办：待评价 / 待付款，入口直达对应操作 -->
+    <div class="card" style="padding:16px 20px;margin-bottom:12px">
+      <div class="flex-between">
+        <div class="flex-between gap-12" style="justify-content:flex-start">
+          <div class="ph ph-acc" style="width:48px;height:48px;aspect-ratio:1"><span>AP</span></div>
+          <div>
+            <div style="font-weight:600;font-size:13px">AirPods Pro 2 <span class="badge badge-forest" style="margin-left:6px">待评价</span></div>
+            <div class="hint mt-12">订单 202609010012 · 2026-09-03 已确认收货</div>
+          </div>
+        </div>
+        <div class="gap-12" style="display:flex">
+          <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-review">去评价</button>
+          <a class="btn btn-sm btn-secondary" href="orders.html">查看订单</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 收货地址管理（FR-014） -->
+    <div class="card" id="addr-list" style="padding:20px;margin-bottom:16px">
+      <div class="flex-between mb-16">
+        <h2 class="section-title" style="margin:0">收货地址</h2>
+        <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-addr-new">+ 新增收货地址</button>
+      </div>
+      <div class="card" style="padding:14px;margin-bottom:10px;border-color:var(--amber)">
+        <div class="flex-between">
+          <div>
+            <div style="font-weight:600">张三 · 138****0000 <span class="badge badge-coral" style="margin-left:6px">默认</span></div>
+            <div class="hint mt-12">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</div>
+          </div>
+          <div class="gap-12" style="display:flex;flex-shrink:0">
+            <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-addr-edit">编辑</button>
+            <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-addr-del">删除</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="padding:14px">
+        <div class="flex-between">
+          <div>
+            <div style="font-weight:600">李四 · 139****0001</div>
+            <div class="hint mt-12">北京市 海淀区 中关村大街 1 号 A 座 903</div>
+          </div>
+          <div class="gap-12" style="display:flex;flex-shrink:0">
+            <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-addr-edit">编辑</button>
+            <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-addr-del">删除</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint mt-12">最多可保存 20 条地址；删除地址需确认，已被待付款订单引用的地址快照不受影响。</p>
+    </div>
+
+    <div class="dash-preview">
+      <div class="card-preview">
+        <div class="head">我的收藏 <a href="favorites.html">全部 ›</a></div>
+        <a class="snap" href="product.html">
+          <div class="ph ph-phone"><span>iP</span></div>
+          <div>
+            <div class="t">iPhone 15 Pro 128G</div>
+            <div class="price">¥7,999 起</div>
+          </div>
+        </a>
+      </div>
+      <div class="card-preview">
+        <div class="head">我的足迹 <a href="#">全部 ›</a></div>
+        <a class="snap" href="product.html">
+          <div class="ph ph-appliance"><span>戴森</span></div>
+          <div>
+            <div class="t">戴森 V12 吸尘器</div>
+            <div class="price">¥3,999</div>
+            <div class="hint">今天浏览</div>
+          </div>
+        </a>
+      </div>
+      <div class="card-preview">
+        <div class="head">购物车 <a href="cart.html">全部 ›</a></div>
+        <a class="snap" href="cart.html">
+          <div class="ph ph-acc"><span>索尼</span></div>
+          <div>
+            <div class="t">索尼 WH-1000XM5</div>
+            <div class="price">¥2,599</div>
+            <div class="hint">购物车内 2 件</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <h2 class="section-title">常买 / 推荐</h2>
+    <div class="product-grid" style="grid-template-columns:repeat(5,minmax(0,1fr));gap:12px">
+      <a class="product-card" href="product.html"><div class="ph ph-food"><span>坚果</span></div><div class="info"><div class="title">每日坚果 750g</div><div class="price">¥89</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-food"><span>咖啡</span></div><div class="info"><div class="title">挂耳咖啡 20袋</div><div class="price">¥69</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-acc"><span>An</span></div><div class="info"><div class="title">Anker 65W 充电器</div><div class="price">¥199</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-sport"><span>跑鞋</span></div><div class="info"><div class="title">减震跑步鞋 男款</div><div class="price">¥399</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-storage"><span>台灯</span></div><div class="info"><div class="title">落地台灯</div><div class="price">¥199</div></div></a>
+    </div>
+  </section>
+</main>
+<footer class="web-footer">尚品汇 · V2.0 Web 门店 · 个人中心</footer>
+
+<!-- ============ 弹窗层 ============ -->
+
+<!-- P-01 新增收货地址 -->
+<div class="modal" id="dlg-addr-new" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-head">
+      <span class="modal-title">新增收货地址</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field">
+          <span class="field-label">收货人<span class="req">*</span></span>
+          <input class="input" placeholder="请输入收货人姓名" maxlength="25">
+          <span class="hint">1～25 字符</span>
+        </div>
+        <div class="field">
+          <span class="field-label">手机号<span class="req">*</span></span>
+          <input class="input" placeholder="请输入 11 位手机号" maxlength="11">
+          <span class="hint">11 位数字，1 开头</span>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">所在地区<span class="req">*</span></span>
+        <div class="form-grid" style="gap:0 10px">
+          <select class="select"><option>省 / 直辖市</option><option>上海市</option><option>北京市</option><option>广东省</option></select>
+          <select class="select"><option>市 / 区</option><option>浦东新区</option><option>海淀区</option><option>南山区</option></select>
+        </div>
+        <span class="hint">省 / 市 / 区三级选择</span>
+      </div>
+      <div class="field">
+        <span class="field-label">详细地址<span class="req">*</span></span>
+        <input class="input" placeholder="街道、门牌号、楼层等" maxlength="100">
+        <span class="hint">1～100 字符</span>
+      </div>
+      <div class="field">
+        <label style="display:flex;gap:8px;align-items:center;font-size:13px">
+          <input type="checkbox"> 设为默认地址
+        </label>
+        <span class="hint">默认地址仅一个，设置新默认自动取消旧默认</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close>保存地址</button>
+    </div>
+  </div>
+</div>
+
+<!-- P-02 编辑收货地址（含校验错误态） -->
+<div class="modal" id="dlg-addr-edit" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-head">
+      <span class="modal-title">编辑收货地址</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field">
+          <span class="field-label">收货人<span class="req">*</span></span>
+          <input class="input" value="张三" maxlength="25">
+        </div>
+        <div class="field">
+          <span class="field-label">手机号<span class="req">*</span></span>
+          <input class="input is-err" value="1380000" maxlength="11">
+          <span class="error-text">手机号格式不正确</span>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">所在地区<span class="req">*</span></span>
+        <div class="form-grid" style="gap:0 10px">
+          <select class="select"><option selected>上海市</option><option>北京市</option></select>
+          <select class="select"><option selected>浦东新区</option><option>海淀区</option></select>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">详细地址<span class="req">*</span></span>
+        <input class="input" value="张江路 88 号 尚品汇大楼 12F" maxlength="100">
+      </div>
+      <div class="field">
+        <label style="display:flex;gap:8px;align-items:center;font-size:13px">
+          <input type="checkbox" checked> 设为默认地址
+        </label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close>保存修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- P-03 删除地址确认 -->
+<div class="modal" id="dlg-addr-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 14h10l1-14"/></svg></span>
+      <span class="modal-title">删除该地址？</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-weight:600">张三 · 138****0000</p>
+      <p class="muted">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</p>
+      <div class="alert alert-warn mt-12">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        删除后不可恢复；已被待付款订单引用的地址快照不受影响。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- P-04 评价（1~5 星 / ≤500 字 / ≤3 图） -->
+<div class="modal" id="dlg-review" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-lg">
+    <div class="modal-head">
+      <span class="modal-title">发表评价</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="dlg-goods">
+        <div class="ph ph-appliance"><span>戴森</span></div>
+        <div class="meta">
+          <div class="t">戴森 V12 吸尘器</div>
+          <div class="s">官方标配 × 1</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="field">
+        <span class="field-label">商品评分<span class="req">*</span></span>
+        <div class="star-row">
+          <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <button type="button" class="star"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <button type="button" class="star"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <span class="score">3 分</span>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">评价内容（选填）</span>
+        <textarea class="input" maxlength="500" placeholder="说说使用感受，最多 500 字"></textarea>
+        <span class="hint">0 / 500</span>
+      </div>
+      <div class="field">
+        <span class="field-label">晒图（选填，最多 3 张）</span>
+        <div class="upload-row">
+          <div class="up-box"><svg class="ico" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg><span>上传图片</span></div>
+        </div>
+        <span class="hint">jpeg / png，单张 ≤10MB</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close>提交评价</button>
+    </div>
+  </div>
+</div>
+
+<!-- P-05 退出登录确认 -->
+<div class="modal" id="dlg-logout" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-center">
+      <div class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><path d="M15 4h3a2 2 0 012 2v12a2 2 0 01-2 2h-3"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg></div>
+      <div class="t">退出登录？</div>
+      <div class="d">退出后需重新用手机号验证码登录，本端登录态会被清除。</div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <a class="btn btn-danger" href="login.html">退出登录</a>
+    </div>
+  </div>
+</div>
+
+<script src="../modal.js"></script>
+</body>
+</html>

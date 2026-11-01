@@ -1,0 +1,120 @@
+/* 弹窗 / 抽屉 / 提示 —— 与原型 .stitch/原型/admin/modal.css 保持同源
+   凡新增弹窗一律用这里的类，不要再写行内 style。 */
+
+/* ===== 遮罩层 ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.modal-mask-layer {
+  position: absolute;
+  inset: 0;
+  background: rgba(36, 29, 21, .38);
+  backdrop-filter: blur(1.5px);
+}
+
+/* ===== 面板 ===== */
+.modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100dvh - 48px);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-3);
+  animation: modal-in .16s ease-out;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(6px) scale(.99); }
+  to   { opacity: 1; transform: none; }
+}
+.modal-panel.is-sm { max-width: 380px; }
+.modal-panel.is-md { max-width: 440px; }
+.modal-panel.is-lg { max-width: 620px; }
+.modal-panel.is-xl { max-width: 820px; }
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.modal-title { font-size: 15px; font-weight: 700; letter-spacing: -.01em; flex: 1; }
+.modal-x {
+  width: 28px; height: 28px;
+  border: 0; background: transparent; cursor: pointer;
+  border-radius: var(--r-sm); color: var(--slate);
+  font-size: 18px; line-height: 1; display: grid; place-items: center;
+}
+.modal-x:hover { background: var(--sand); color: var(--ink); }
+
+.modal-body { padding: 18px 20px; overflow-y: auto; font-size: 13px; color: var(--ink); }
+.modal-body > p { margin-bottom: 10px; }
+.modal-body > p:last-child { margin-bottom: 0; }
+.modal-foot {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  background: var(--cream); border-radius: 0 0 var(--r-lg) var(--r-lg);
+  flex-shrink: 0;
+}
+
+/* ===== 语义化头部图标 ===== */
+.modal-ico {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; flex-shrink: 0;
+  font-size: 17px; font-weight: 700;
+}
+.modal-ico.warn   { background: var(--brick-soft);  color: var(--brick); }
+.modal-ico.info   { background: var(--amber-soft);  color: #9A6A12; }
+.modal-ico.danger { background: var(--brick-soft);  color: var(--brick); }
+.modal-ico.ok     { background: var(--forest-soft); color: var(--forest); }
+
+/* ===== 表单（弹窗内）===== */
+.modal-body .field:last-child { margin-bottom: 0; }
+.modal-body .req { color: var(--brick); margin-left: 2px; }
+
+/* ===== 提示块：必须块级流，否则内联 <b>/<span> 会被 flex 拆成一列字符 ===== */
+.alert {
+  display: block;
+  padding: 11px 13px; border-radius: var(--r-md);
+  font-size: 12.5px; line-height: 1.55;
+}
+.alert-warn { background: var(--brick-soft);  color: #8E2A24; }
+.alert-info { background: var(--amber-soft);  color: #8A5E10; }
+.alert-ok   { background: var(--forest-soft); color: #2F5230; }
+
+/* ===== 影响面清单 ===== */
+.impact { list-style: none; margin-top: 10px; }
+.impact li { display: flex; gap: 8px; padding: 5px 0; font-size: 12.5px; color: var(--stone); }
+.impact li::before { content: "·"; color: var(--slate); font-weight: 700; }
+.impact li b { color: var(--ink); font-weight: 600; font-family: var(--font-mono); }
+
+/* ===== 抽屉（右侧详情）===== */
+.drawer {
+  position: fixed; inset: 0; z-index: 80;
+  display: flex; justify-content: flex-end;
+}
+.drawer .modal-mask-layer { position: absolute; inset: 0; background: rgba(36,29,21,.38); }
+.drawer-panel {
+  position: relative;
+  width: 100%; max-width: 560px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--sh-3);
+  display: flex; flex-direction: column;
+  animation: drawer-in .18s ease-out;
+}
+@keyframes drawer-in {
+  from { transform: translateX(16px); opacity: .6; }
+  to   { transform: none; opacity: 1; }
+}
+.drawer-panel .modal-body { flex: 1; }

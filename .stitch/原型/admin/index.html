@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shang 后台原型 · 索引</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="content" style="max-width:860px;margin:0 auto;padding:48px 24px">
+  <div class="auth-logo" style="justify-content:flex-start;margin-bottom:8px">
+    <img class="brand-logo" src="logo.png" alt="Shang"><div class="brand-name">Shang · 后台原型</div>
+  </div>
+  <p class="page-sub" style="margin-bottom:28px">
+    按版本分区：<b>V1.0 交付基线</b>（V1 页面，侧栏只渲染 V1 菜单）与 <b>V2.0 增量</b>（V2 页面，侧栏渲染 V2 菜单）。
+    两侧截图不得互相串档。
+  </p>
+
+  <!-- ==================== V1.0 交付基线 ==================== -->
+  <div class="card card-pad" style="margin-bottom:16px">
+    <div class="page-head" style="margin-bottom:12px">
+      <div class="page-title" style="font-size:17px">V1.0 交付基线</div>
+      <span class="badge badge-forest">已交付</span>
+    </div>
+    <p class="hint" style="margin-bottom:12px">共 16 项 · 每页 <span class="code">__NAV_VERSION__='v1'</span>，页面内不出现任何 V2.0 内容。</p>
+
+    <div class="nav-group-title">登录</div>
+    <a class="nav-item" href="login.html">登录</a>
+
+    <div class="nav-group-title">概览</div>
+    <a class="nav-item" href="dashboard.html">工作台</a>
+
+    <div class="nav-group-title">商品中心</div>
+    <a class="nav-item" href="products.html">商品列表</a>
+    <a class="nav-item" href="product-edit.html">商品编辑</a>
+    <a class="nav-item" href="categories.html">类目与品牌</a>
+    <a class="nav-item" href="inventory.html">库存管理</a>
+
+    <div class="nav-group-title">订单中心</div>
+    <a class="nav-item" href="orders.html">订单列表</a>
+    <a class="nav-item" href="aftersales.html">售后管理</a>
+
+    <div class="nav-group-title">系统管理</div>
+    <a class="nav-item" href="users.html">用户管理</a>
+    <a class="nav-item" href="roles.html">角色管理</a>
+    <a class="nav-item" href="menus.html">菜单与权限</a>
+    <a class="nav-item" href="depts.html">部门管理</a>
+    <a class="nav-item" href="dicts.html">字典管理</a>
+    <a class="nav-item" href="logs.html">操作日志</a>
+    <a class="nav-item" href="settings.html">系统设置</a>
+
+    <div class="nav-group-title">交付物</div>
+    <a class="nav-item" href="dialogs.html">弹窗与交互图鉴（V1.0）</a>
+  </div>
+
+  <!-- ==================== V2.0 增量 ==================== -->
+  <div class="card card-pad" style="margin-bottom:16px;background:var(--sand)">
+    <div class="page-head" style="margin-bottom:12px">
+      <div class="page-title" style="font-size:17px">V2.0 增量</div>
+      <span class="badge badge-coral">V2.0 新增</span>
+    </div>
+    <p class="hint" style="margin-bottom:12px">
+      下列页面均为 <b>V2.0 新增</b>，渲染 <span class="code">__NAV_VERSION__='v2'</span> 侧栏（多出「出入库单」与「会员与内容」分组）；
+      不纳入 V1.0 交付基线截图。
+    </p>
+
+    <div class="nav-group-title">商品中心</div>
+    <a class="nav-item" href="stock-io.html">出入库单 <span class="badge badge-coral">V2.0 新增</span></a>
+
+    <div class="nav-group-title">会员与内容</div>
+    <a class="nav-item" href="customers.html">会员管理 <span class="badge badge-coral">V2.0 新增</span></a>
+    <a class="nav-item" href="site-brand.html">站点品牌 <span class="badge badge-coral">V2.0 新增</span></a>
+    <a class="nav-item" href="home-slots.html">首页运营位 <span class="badge badge-coral">V2.0 新增</span></a>
+    <a class="nav-item" href="reviews.html">评价管理 <span class="badge badge-coral">V2.0 新增</span></a>
+
+    <div class="nav-group-title">页面增补</div>
+    <a class="nav-item" href="settings-trade.html">系统设置（交易 Tab）<span class="badge badge-coral" style="margin-left:6px">V2.0 新增</span></a>
+    <a class="nav-item" href="orders-enhanced.html">订单列表（含来源端 / 导出）<span class="badge badge-coral" style="margin-left:6px">V2.0 新增</span></a>
+    <a class="nav-item" href="product-edit-schedule.html">商品编辑（含上架方式 / 定时上架）<span class="badge badge-coral" style="margin-left:6px">V2.0 新增</span></a>
+    <p class="hint" style="padding:4px 12px 10px">以上两页是 V1.0 同页的 V2.0 变体（<a href="orders.html">orders.html</a> / <a href="product-edit.html">product-edit.html</a> 保持 V1 语义不变），改 V1 语义时先改 V1 页再同步变体页。</p>
+    <p class="hint" style="padding:0 12px 10px">弹窗图鉴（V2 增量）：见 <a href="dialogs-v2.html">dialogs-v2.html</a>，收录 V2.0 增量页面的全部弹窗与抽屉，与 <a href="dialogs.html">V1.0 图鉴</a>分开归档。</p>
+  </div>
+
+  <p class="hint" style="margin-top:24px">
+    配色见 <code>../../DESIGN.md</code>；侧栏 <code>sidebar.js</code>；弹窗控制器 <code>modal.js</code> + <code>modal.css</code>。
+    文档：<code>docs/01-requirements/PRD-V1.0-后台管理.md</code>、
+    <code>docs/01-requirements/PRD-V2.0-购物网站.md</code> §8.15（后台补全）、
+    <code>docs/04-architecture/v2.0/开发设计.md</code>。
+    版本纪律：V1 页面用 <code>__NAV_VERSION__='v1'</code>，V2 页面用 <code>'v2'</code>；截图由 <code>../render-shots.mjs</code> 生成。
+    本地预览：<code>python3 -m http.server 8765</code> → http://127.0.0.1:8765/
+  </p>
+</div>
+<script src="modal.js"></script>
+</body>
+</html>

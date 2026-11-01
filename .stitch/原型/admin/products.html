@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>商品列表 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='products'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">商品中心 / <b>商品列表</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content list-page">
+      <div class="page-head">
+        <div>
+          <div class="page-title">商品列表</div>
+          <div class="page-sub">SPU 32 个（在售 30）· SKU 47 个 · 可售库存 = 总库存 − 锁定占用</div>
+        </div>
+        <a class="btn btn-primary" href="product-edit.html">+ 新增商品</a>
+      </div>
+
+      <div class="card card-pad list-card">
+        <div class="tabs">
+          <div class="tab active">全部 <span class="c">32</span></div>
+          <div class="tab">上架 <span class="c">30</span></div>
+          <div class="tab">下架 <span class="c">1</span></div>
+          <div class="tab">草稿 <span class="c">1</span></div>
+        </div>
+
+        <div class="toolbar">
+          <input class="input" placeholder="商品名称 / 编码" style="min-width:240px">
+          <select class="select" style="width:auto">
+            <option>全部类目</option>
+            <option>手机</option>
+            <option>电脑/办公</option>
+            <option>家电</option>
+            <option>数码配件</option>
+            <option>家居收纳</option>
+            <option>美妆个护</option>
+            <option>食品生鲜</option>
+            <option>运动户外</option>
+          </select>
+          <select class="select" style="width:auto"><option>全部状态</option><option>上架</option><option>下架</option><option>草稿</option></select>
+          <div class="spacer"></div>
+          <button class="btn btn-secondary btn-sm" data-modal-open="dlg-p-off-batch">批量下架</button>
+        </div>
+
+        <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:28px"><input type="checkbox"></th>
+              <th style="width:64px">商品图</th>
+              <th style="min-width:220px">商品名称</th>
+              <th>类目</th>
+              <th class="num">价格区间</th>
+              <th class="num">SKU 数</th>
+              <th class="num">可售库存</th>
+              <th>状态</th>
+              <th class="col-op">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" checked></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#FEBB4A,#FF8A5B)"></div></td>
+              <td>iPhone 15 Pro 128G</td>
+              <td>手机</td>
+              <td class="num">¥7,999 ~ ¥10,999</td>
+              <td class="num">3</td>
+              <td class="num">258</td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" checked></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#F4EEE0,#9A8E7C)"></div></td>
+              <td>Xiaomi 14 Pro 12+256G</td>
+              <td>手机</td>
+              <td class="num">¥4,999 ~ ¥5,599</td>
+              <td class="num">2</td>
+              <td class="num">280</td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" checked></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#241D15,#6F6354)"></div></td>
+              <td>Redmi K70 12+256G</td>
+              <td>手机</td>
+              <td class="num">¥2,299</td>
+              <td class="num">1</td>
+              <td class="num">300</td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#47704C,#6B9A6F)"></div></td>
+              <td>HUAWEI Mate X5</td>
+              <td>手机</td>
+              <td class="num">¥12,999</td>
+              <td class="num">1</td>
+              <td class="num">80 <span class="badge badge-brick">低库存</span></td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#FF8A5B,#C8453C)"></div></td>
+              <td>荣耀 Magic6 Pro</td>
+              <td>手机</td>
+              <td class="num">¥6,499</td>
+              <td class="num">1</td>
+              <td class="num">120</td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#4A8A8A,#9A8E7C)"></div></td>
+              <td>vivo X100</td>
+              <td>手机</td>
+              <td class="num">¥5,299</td>
+              <td class="num">1</td>
+              <td class="num">140 <span class="badge badge-amber">关注</span></td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#E9E0CE,#6F6354)"></div></td>
+              <td>MacBook Air 13 M3 16G</td>
+              <td>电脑/办公</td>
+              <td class="num">¥9,999 ~ ¥11,999</td>
+              <td class="num">2</td>
+              <td class="num">160 <span class="badge badge-amber">关注</span></td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#6F6354,#241D15)"></div></td>
+              <td>ThinkPad X1 Carbon</td>
+              <td>电脑/办公</td>
+              <td class="num">¥12,999</td>
+              <td class="num">1</td>
+              <td class="num">80 <span class="badge badge-brick">低库存</span></td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#FEFFEF,#FEBB4A)"></div></td>
+              <td>戴森 V12 吸尘器</td>
+              <td>家电</td>
+              <td class="num">¥3,999</td>
+              <td class="num">1</td>
+              <td class="num">79</td>
+              <td><span class="badge badge-forest">上架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-off-batch">下架</button>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#FF8A5B,#E07A1C)"></div></td>
+              <td>折叠露营桌 铝合金</td>
+              <td>运动户外</td>
+              <td class="num">¥359</td>
+              <td class="num">1</td>
+              <td class="num">40</td>
+              <td><span class="badge badge-brick">下架</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-on-fail">上架</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td><input type="checkbox"></td>
+              <td><div class="thumb" style="background:linear-gradient(135deg,#4A8A8A,#7FB3B3)"></div></td>
+              <td>iPhone 15 Pro Max 256G</td>
+              <td>手机</td>
+              <td class="num">¥9,999</td>
+              <td class="num">1</td>
+              <td class="num">60</td>
+              <td><span class="badge badge-amber">草稿</span></td>
+              <td class="col-op">
+                <a class="btn btn-ghost btn-sm" href="product-edit.html">编辑</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-on-fail">上架</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-p-del-draft">删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="pager pager-fixed">
+          <span>共 32 条 · 每页 10 条</span>
+          <button class="btn btn-secondary btn-sm" disabled>‹</button>
+          <span class="badge badge-amber">1 / 4</span>
+          <button class="btn btn-secondary btn-sm">›</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 上架校验失败（逐条列原因）============ -->
+<div class="modal" id="dlg-p-on-fail" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true" aria-labelledby="dlg-p-on-fail-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-p-on-fail-t">无法上架</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>商品「索尼 WH-1000XM5」不满足上架条件，请修正后重试：</p>
+      <ul class="impact">
+        <li>至少需要 <b>1</b> 张主图（当前 0 张）</li>
+        <li>至少需要 <b>1</b> 个已填售价的 SKU（当前 1 个 SKU 未填售价）</li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">
+        校验规则：主图非空、至少 1 个启用 SKU、售价 &gt; 0。库存为 0 不阻止上架；
+        校验不通过时商品停留在<b>草稿</b>状态，已填内容不丢失。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>去补充</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 批量下架（危险确认，含勾选数量）============ -->
+<div class="modal" id="dlg-p-off-batch" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true" aria-labelledby="dlg-p-off-batch-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">!</span>
+      <div class="modal-title" id="dlg-p-off-batch-t">批量下架</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认下架已勾选的 <b>3</b> 个商品？</p>
+      <ul class="impact">
+        <li><b>iPhone 15 Pro 128G</b> 手机 · 3 个 SKU</li>
+        <li><b>Xiaomi 14 Pro 12+256G</b> 手机 · 2 个 SKU</li>
+        <li><b>Redmi K70 12+256G</b> 手机 · 1 个 SKU</li>
+      </ul>
+      <div class="alert alert-warn" style="margin-top:12px">
+        下架后顾客端<b>立即不可见、不可下单</b>；已生成订单不受影响，库存与 SKU 数据保留，可随时重新上架。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认下架（3）</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除草稿（危险确认）============ -->
+<div class="modal" id="dlg-p-del-draft" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-p-del-draft-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-p-del-draft-t">删除商品</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除草稿「索尼 WH-1000XM5」？</p>
+      <p class="hint">将一并删除该 SPU 下的 <b>1</b> 个 SKU 及其库存记录，删除后不可恢复。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 非草稿商品删除：拒绝 -->
+<div class="modal" id="dlg-p-del-reject" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title">仅草稿可删除</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>商品 <b>iPhone 15 Pro 128G</b> 当前为 <span class="badge badge-forest">上架</span> 状态，不能删除。</p>
+      <p class="hint">删除按钮只在「草稿」行显示；对非草稿调用删除接口时，后端同样以 409 拒绝，提示「仅草稿可删」。上架/下架商品请保留用于历史订单追溯。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# 本地开发环境（本项目真实口径：应用端口 8086，PostgreSQL 55432，Redis 56379）
+#
+# 历史坑：本文件曾指向 http://localhost:8080/api 与 MySQL(port 3309) —— 那是前身项目（元气购）
+# 的配置，与本项目完全不符（本项目是 PostgreSQL + 8086）。
+admin_base: http://localhost:8086
+mall_base: http://localhost:8086
+base_url: http://localhost:8086
+timeout: 30
+
+auth:
+  token_expiry: 900          # access token 900s（application.yaml）
+  refresh_before_expiry: 60

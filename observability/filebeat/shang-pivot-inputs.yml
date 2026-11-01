@@ -1,0 +1,26 @@
+  # >>> shang-pivot（本块由 observability/scripts/server-apply-platform.sh 维护，勿手改）
+  # 尚品汇后端自己的两个日志文件（logback 滚动，按天切分；tail 由 Filebeat 的 filestream 负责）
+  #   shang-pivot.log         应用日志（WARN/ERROR、异常堆栈、定时任务、BizException）
+  #   shang-pivot-access.log  AccessLogFilter 逐请求日志（traceId/状态码/耗时/用户/响应体）
+  # 不进 nginx 日志：应用自带的 access 日志信息量更大，且不需要改服务器 nginx 配置。
+  - type: filestream
+    id: shang-pivot-app
+    paths:
+      - /opt/shang-pivot/current/logs/shang-pivot.log
+    ignore_older: 24h
+    fields:
+      log_source: shang-pivot-app
+    fields_under_root: true
+    index: "shang-pivot-logs-%{+yyyy.MM.dd}"
+    pipeline: "shang-pivot-logs"
+  - type: filestream
+    id: shang-pivot-access
+    paths:
+      - /opt/shang-pivot/current/logs/shang-pivot-access.log
+    ignore_older: 24h
+    fields:
+      log_source: shang-pivot-access
+    fields_under_root: true
+    index: "shang-pivot-logs-%{+yyyy.MM.dd}"
+    pipeline: "shang-pivot-logs"
+  # <<< shang-pivot

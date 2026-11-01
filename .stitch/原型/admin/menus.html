@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>菜单与权限 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='menus'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">系统管理 / <b>菜单与权限</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <div class="page-title">菜单与权限</div>
+          <div class="page-sub">目录 / 菜单 / 按钮 / 接口 · 权限码 · 排序与显隐（共 50 个节点）</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm">全部展开</button>
+          <button class="btn btn-secondary btn-sm">全部收起</button>
+          <button class="btn btn-primary" data-modal-open="dlg-node-form">+ 新增节点</button>
+        </div>
+      </div>
+
+      <div class="card card-pad">
+        <div class="toolbar">
+          <input class="input" placeholder="名称 / 权限码 / 路由" />
+          <select class="select"><option>全部类型</option><option>目录</option><option>菜单</option><option>按钮</option><option>接口</option></select>
+          <div class="spacer"></div>
+          <button class="btn btn-secondary btn-sm">重置</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="min-width:200px">名称</th>
+              <th>类型</th>
+              <th class="code">路由</th>
+              <th class="code">权限码</th>
+              <th>图标</th>
+              <th class="num center">排序</th>
+              <th>显隐</th>
+              <th>状态</th>
+              <th class="col-op">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>工作台</b></td>
+              <td><span class="badge badge-coral">菜单</span></td>
+              <td class="code">/dashboard</td>
+              <td class="code">dashboard</td>
+              <td class="hint">Odometer</td>
+              <td class="num center">1</td>
+              <td>显示</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr>
+              <td>▾ <b>商品中心</b></td>
+              <td><span class="badge badge-amber">目录</span></td>
+              <td class="code">—</td>
+              <td class="code">product</td>
+              <td class="hint">Goods</td>
+              <td class="num center">2</td>
+              <td>显示</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">下级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-parent">改上级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td style="padding-left:28px">▾ 商品列表</td>
+              <td><span class="badge badge-coral">菜单</span></td>
+              <td class="code">/products</td>
+              <td class="code">products</td>
+              <td class="hint">List</td>
+              <td class="num center">1</td>
+              <td>显示</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">下级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td style="padding-left:46px">新增商品</td>
+              <td><span class="badge badge-forest">按钮</span></td>
+              <td class="code">—</td>
+              <td class="code">product:add</td>
+              <td class="hint">—</td>
+              <td class="num center">1</td>
+              <td class="hint">—</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td style="padding-left:46px">编辑商品</td>
+              <td><span class="badge badge-forest">按钮</span></td>
+              <td class="code">—</td>
+              <td class="code">product:edit</td>
+              <td class="hint">—</td>
+              <td class="num center">2</td>
+              <td class="hint">—</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td style="padding-left:28px">类目与品牌</td>
+              <td><span class="badge badge-coral">菜单</span></td>
+              <td class="code">/categories</td>
+              <td class="code">categories</td>
+              <td class="hint">Menu</td>
+              <td class="num center">3</td>
+              <td>显示</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr>
+              <td><b>库存管理</b></td>
+              <td><span class="badge badge-coral">菜单</span></td>
+              <td class="code">/inventory</td>
+              <td class="code">inventory</td>
+              <td class="hint">Box</td>
+              <td class="num center">3</td>
+              <td>显示</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr>
+              <td>▾ <b>订单中心</b></td>
+              <td><span class="badge badge-amber">目录</span></td>
+              <td class="code">—</td>
+              <td class="code">order</td>
+              <td class="hint">Document</td>
+              <td class="num center">4</td>
+              <td>显示</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">下级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td style="padding-left:28px">售后管理</td>
+              <td><span class="badge badge-coral">菜单</span></td>
+              <td class="code">/aftersales</td>
+              <td class="code">aftersales</td>
+              <td class="hint">RefreshLeft</td>
+              <td class="num center">2</td>
+              <td>显示</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">下级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr>
+              <td>▾ <b>系统管理</b></td>
+              <td><span class="badge badge-amber">目录</span></td>
+              <td class="code">—</td>
+              <td class="code">system</td>
+              <td class="hint">Setting</td>
+              <td class="num center">5</td>
+              <td>显示</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">下级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-node-del">删除</button>
+              </td>
+            </tr>
+            <tr><td colspan="9" class="hint">… 共 50 个节点（含按钮 / 接口权限点），此处展示概览、商品中心与订单中心分支</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 新增 / 编辑节点 ============ -->
+<div class="modal" id="dlg-node-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-lg" role="dialog" aria-modal="true" aria-labelledby="dlg-node-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-node-form-t">新增 / 编辑节点</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">节点类型<span class="req">*</span></label>
+          <select class="select">
+            <option>目录</option>
+            <option selected>菜单</option>
+            <option>按钮</option>
+            <option>接口</option>
+          </select>
+          <span class="hint">目录 / 菜单 显示在侧栏；按钮 / 接口 仅作为权限点</span>
+        </div>
+        <div class="field">
+          <label class="label">名称<span class="req">*</span></label>
+          <input class="input" value="商品列表" autofocus>
+          <span class="hint">1～30 字符</span>
+        </div>
+        <div class="field">
+          <label class="label">权限码<span class="req">*</span></label>
+          <input class="input" value="products">
+          <span class="hint">2～50 位，仅字母 / 数字 / 冒号 / 下划线，如 <span class="code">product:edit</span></span>
+        </div>
+        <div class="field">
+          <label class="label">上级节点<span class="req">*</span></label>
+          <select class="select">
+            <option>顶级节点</option>
+            <option>概览</option>
+            <option selected>商品中心</option>
+            <option>　└ 商品列表</option>
+            <option>　└ 类目与品牌</option>
+            <option>库存管理</option>
+            <option>订单中心</option>
+            <option>系统管理</option>
+          </select>
+          <span class="hint">不能选自己或自己的子孙节点（防止菜单树成环）</span>
+        </div>
+        <div class="field">
+          <label class="label">路由 path</label>
+          <input class="input" value="/products">
+          <span class="hint">菜单类型必填，目录 / 按钮 / 接口留空</span>
+        </div>
+        <div class="field">
+          <label class="label">图标</label>
+          <input class="input" value="List">
+          <span class="hint">侧栏图标标识，目录 / 菜单使用</span>
+        </div>
+        <div class="field">
+          <label class="label">排序<span class="req">*</span></label>
+          <input class="input" value="1">
+          <span class="hint">0～999，同级越小越靠前</span>
+        </div>
+        <div class="field">
+          <label class="label">侧栏可见</label>
+          <label class="switch" style="margin-top:4px"><input type="checkbox" checked><span class="track"></span></label>
+          <span class="hint">关闭后节点仍生效，但不在侧栏展示</span>
+        </div>
+      </div>
+      <div class="alert alert-info">权限码是角色授权的唯一依据，改动会影响已授权角色；<b>按钮 / 接口</b>类型的权限码建议用 <span class="code">模块:动作</span> 形式。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除节点（危险确认）============ -->
+<div class="modal" id="dlg-node-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true" aria-labelledby="dlg-node-del-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-node-del-t">删除节点</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除节点「商品中心（product）」？</p>
+      <ul class="impact">
+        <li>先移除 / 迁移其<b>下级节点</b>：商品列表、类目与品牌、新增商品、编辑商品 …</li>
+        <li>先解除<b>角色引用</b>：运营、仓库等角色当前勾选了该节点</li>
+      </ul>
+      <div class="alert alert-warn" style="margin-top:12px">节点仍存在子节点或角色引用时，删除会被拒绝；删除后该权限码立即失效，菜单树不可恢复。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 上级节点选了自身/子孙：拒绝 -->
+<div class="modal" id="dlg-node-parent" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-node-parent-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-node-parent-t">上级节点不能选自己或子孙</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>「商品中心」的上级不能是它自己，也不能是其子孙节点（商品列表、类目与品牌、新增商品 …）。</p>
+      <p class="hint">该限制用于防止菜单树成环。请改选其他上级节点，或先把下级节点迁移到别处。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

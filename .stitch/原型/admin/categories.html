@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>类目与品牌 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+<style>
+  .tree-item { cursor: pointer; border-radius: 6px; padding: 6px 8px; }
+  .tree-item:hover { background: var(--sand); }
+  .tree-item.active { background: #FEF3D8; color: var(--ink); font-weight: 600; }
+  .cat-all { margin-bottom: 8px; }
+  /* 类目树行：名称 + 商品数 + 行内操作 */
+  .cat-row { display: flex; align-items: center; gap: 8px; }
+  .cat-row .nm { flex: 1; display: flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='categories'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">商品中心 / <b>类目与品牌</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <div class="page-title">类目与品牌</div>
+          <div class="page-sub">点击左侧类目，右侧展示该类目下关联品牌与属性 · 共 8 个一级类目</div>
+        </div>
+      </div>
+
+      <div class="split" style="grid-template-columns:330px 1fr">
+        <div class="card card-pad">
+          <div class="page-head" style="margin-bottom:12px">
+            <div class="page-title" style="font-size:16px">类目</div>
+            <button class="btn btn-ghost btn-sm" data-modal-open="dlg-cat-form">+ 顶级</button>
+          </div>
+          <div class="tree-item cat-all" id="cat-all">全部类目</div>
+          <ul class="tree">
+            <li>
+              <div class="tree-item cat-row active" data-name="手机">
+                <span class="nm"><span class="chev">▸</span><b>手机</b></span>
+                <span class="meta hint">8 商品</span>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-reject">删除</button>
+              </div>
+            </li>
+            <li>
+              <div class="tree-item cat-row" data-name="电脑/办公">
+                <span class="nm"><span class="chev">▸</span><b>电脑/办公</b></span>
+                <span class="meta hint">6 商品</span>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-reject">删除</button>
+              </div>
+            </li>
+            <li>
+              <div class="tree-item cat-row" data-name="家电">
+                <span class="nm"><span class="chev">▸</span><b>家电</b></span>
+                <span class="meta hint">4 商品</span>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-reject">删除</button>
+              </div>
+            </li>
+            <li>
+              <div class="tree-item cat-row" data-name="数码配件">
+                <span class="nm"><span class="chev">▸</span><b>数码配件</b></span>
+                <span class="meta hint">4 商品</span>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-reject">删除</button>
+              </div>
+            </li>
+            <li>
+              <div class="tree-item cat-row" data-name="家居收纳">
+                <span class="nm"><span class="chev">▸</span><b>家居收纳</b></span>
+                <span class="meta hint">2 商品</span>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-del">删除</button>
+              </div>
+            </li>
+            <li>
+              <div class="tree-item cat-row" data-name="美妆个护">
+                <span class="nm"><span class="chev">▸</span><b>美妆个护</b></span>
+                <span class="meta hint">2 商品</span>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-reject">删除</button>
+              </div>
+            </li>
+            <li>
+              <div class="tree-item cat-row" data-name="食品生鲜">
+                <span class="nm"><span class="chev">▸</span><b>食品生鲜</b></span>
+                <span class="meta hint">2 商品</span>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-reject">删除</button>
+              </div>
+            </li>
+            <li>
+              <div class="tree-item cat-row" data-name="运动户外">
+                <span class="nm"><span class="chev">▸</span><b>运动户外</b></span>
+                <span class="meta hint">2 商品</span>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cat-reject">删除</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="hint" style="margin-bottom:10px">当前：<b id="cur-cat">手机</b></div>
+          <div class="card card-pad" style="margin-bottom:16px">
+            <div class="page-head" style="margin-bottom:12px">
+              <div class="page-title" style="font-size:16px">品牌</div>
+              <button class="btn btn-ghost btn-sm" data-modal-open="dlg-brand-form">+ 品牌</button>
+            </div>
+            <p class="hint" style="margin-bottom:10px">筛选 = 归属本类目树 ∪ 本类目树下商品已引用的品牌；新增默认挂当前类目</p>
+            <table class="table">
+              <thead><tr><th>品牌名称</th><th>归属类目</th><th>Logo</th><th class="num">关联SPU</th><th class="num center">排序</th><th class="col-op">操作</th></tr></thead>
+              <tbody id="brand-body">
+                <tr>
+                  <td>Apple</td><td>手机</td>
+                  <td><div class="thumb" style="width:24px;height:24px;background:#111"></div></td>
+                  <td class="num">8</td><td class="num center">10</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-brand-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-brand-del">删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>联想</td><td>电脑/办公</td>
+                  <td><div class="thumb" style="width:24px;height:24px;background:#E2231A"></div></td>
+                  <td class="num">6</td><td class="num center">11</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-brand-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-brand-del">删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>家电精选</td><td>家电</td>
+                  <td><div class="thumb" style="width:24px;height:24px;background:linear-gradient(135deg,#FEBB4A,#FF8A5B)"></div></td>
+                  <td class="num">4</td><td class="num center">12</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-brand-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-brand-del">删除</button>
+                  </td>
+                </tr>
+                <tr><td colspan="6" class="hint">… 共 8 个品牌（数码配件 / 生活家居 / 美妆个护 / 食品生鲜 / 运动户外），按归属类目筛选后展示</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card card-pad">
+            <div class="page-head" style="margin-bottom:12px">
+              <div class="page-title" style="font-size:16px">属性</div>
+              <button class="btn btn-ghost btn-sm" data-modal-open="dlg-attr-form">+ 属性</button>
+            </div>
+            <p class="hint" style="margin-bottom:10px">
+              <b>规格</b>参与 SKU 组合（如 颜色 / 容量）；<b>参数</b>仅作详情展示（如 处理器）。
+            </p>
+            <table class="table">
+              <thead><tr><th>属性名</th><th>所属类目</th><th>类型</th><th class="code">可选值</th><th class="col-op">操作</th></tr></thead>
+              <tbody id="attr-body">
+                <tr>
+                  <td>颜色</td><td>手机</td><td><span class="badge badge-coral">规格</span></td>
+                  <td class="code">黑色 / 白色 / 蓝色 / 原色钛</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-del">删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>容量</td><td>手机</td><td><span class="badge badge-coral">规格</span></td>
+                  <td class="code">128GB / 256GB / 512GB</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-del">删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>颜色</td><td>运动户外</td><td><span class="badge badge-coral">规格</span></td>
+                  <td class="code">军绿 / 卡其 / 黑灰</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-del">删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>尺码</td><td>运动户外</td><td><span class="badge badge-coral">规格</span></td>
+                  <td class="code">41码 / 42码 / 43码</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-del">删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>规格</td><td>食品生鲜</td><td><span class="badge badge-coral">规格</span></td>
+                  <td class="code">750g / 1.5kg / 20袋 / 40袋</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-del">删除</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>色号</td><td>美妆个护</td><td><span class="badge badge-coral">规格</span></td>
+                  <td class="code">豆沙 / 正红 / 番茄红</td>
+                  <td class="col-op">
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-form">编辑</button>
+                    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-attr-del">删除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 新增 / 编辑类目 ============ -->
+<div class="modal" id="dlg-cat-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-cat-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-cat-form-t">新增 / 编辑类目</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">类目名称<span class="req">*</span></label>
+        <input class="input" value="运动户外" autofocus>
+        <span class="hint">1～30 字符，同一上级类目下不能重名</span>
+      </div>
+      <div class="field">
+        <label class="label">上级类目<span class="req">*</span></label>
+        <select class="select">
+          <option selected>—（顶级类目）</option>
+          <option>手机</option>
+          <option>电脑/办公</option>
+          <option>家电</option>
+          <option>数码配件</option>
+          <option>家居收纳</option>
+          <option>美妆个护</option>
+          <option>食品生鲜</option>
+        </select>
+        <span class="hint">顶级类目共 8 个；同样不能选自己或自己的下级类目</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">排序<span class="req">*</span></label>
+          <input class="input" value="17">
+          <span class="hint">0～999，同级越小越靠前</span>
+        </div>
+        <div class="field">
+          <label class="label">状态<span class="req">*</span></label>
+          <select class="select">
+            <option selected>启用</option>
+            <option>禁用</option>
+          </select>
+          <span class="hint">禁用后不出现在商品编辑的类目下拉中</span>
+        </div>
+      </div>
+      <div class="alert alert-info">类目被商品或属性引用时<b>不能删除</b>；如需合并请先迁移商品、删除或迁移属性。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除类目（危险确认）============ -->
+<div class="modal" id="dlg-cat-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-cat-del-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-cat-del-t">删除类目</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除类目「家居收纳」？</p>
+      <ul class="impact">
+        <li>该类目下商品 <b>2</b> 个</li>
+        <li>该类目下属性 <b>0</b> 个 · 下级类目 <b>0</b> 个</li>
+      </ul>
+      <div class="alert alert-warn" style="margin-top:12px">
+        仅当类目下<b>无商品且无属性引用</b>时才能删除；存在引用会被系统拒绝，需先转移商品或删除属性。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 类目被商品/属性引用：拒绝 -->
+<div class="modal" id="dlg-cat-reject" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-cat-reject-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-cat-reject-t">无法删除类目</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>类目「手机」仍被 <b>8</b> 个商品、<b>2</b> 个属性（颜色、容量）引用，不能删除。</p>
+      <p class="hint">请先把这些商品改到其他类目，并删除 / 迁移该类目下的属性，待引用归零后再删除。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 新增 / 编辑品牌 ============ -->
+<div class="modal" id="dlg-brand-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-brand-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-brand-form-t">新增 / 编辑品牌</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">品牌名称<span class="req">*</span></label>
+        <input class="input" value="Apple" autofocus>
+        <span class="hint">1～30 字符，同一类目下不能重名</span>
+      </div>
+      <div class="field">
+        <label class="label">归属类目<span class="req">*</span></label>
+        <select class="select">
+          <option selected>手机</option>
+          <option>电脑/办公</option>
+          <option>家电</option>
+          <option>数码配件</option>
+          <option>家居收纳</option>
+          <option>美妆个护</option>
+          <option>食品生鲜</option>
+          <option>运动户外</option>
+        </select>
+        <span class="hint">默认取当前选中类目；品牌在类目页按「归属类目树 ∪ 商品已引用」筛选</span>
+      </div>
+      <div class="field">
+        <label class="label">品牌 Logo</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="thumb" style="width:56px;height:56px;background:#111"></div>
+          <button class="thumb" type="button" style="width:56px;height:56px;background:var(--sand);display:grid;place-items:center;color:var(--slate);border:1px dashed var(--border);border-radius:8px;cursor:pointer">+</button>
+        </div>
+        <p class="hint" style="margin-top:6px">1 张，jpeg / png / webp，≤10MB，建议 256×256；展示走 <span class="code">/admin/files/view</span> 代理。</p>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">排序</label>
+          <input class="input" value="10">
+        </div>
+        <div class="field">
+          <label class="label">状态</label>
+          <select class="select">
+            <option selected>启用</option>
+            <option>禁用</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 新增 / 编辑属性 ============ -->
+<div class="modal" id="dlg-attr-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-attr-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-attr-form-t">新增 / 编辑属性</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">所属类目<span class="req">*</span></label>
+        <select class="select">
+          <option selected>手机</option>
+          <option>电脑/办公</option>
+          <option>家电</option>
+          <option>数码配件</option>
+          <option>家居收纳</option>
+          <option>美妆个护</option>
+          <option>食品生鲜</option>
+          <option>运动户外</option>
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">属性名称<span class="req">*</span></label>
+          <input class="input" value="颜色" autofocus>
+          <span class="hint">1～30 字符，同一类目下不能重名</span>
+        </div>
+        <div class="field">
+          <label class="label">属性类型<span class="req">*</span></label>
+          <select class="select">
+            <option selected>规格（参与 SKU 组合）</option>
+            <option>参数（仅详情展示）</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">可选值<span class="req">*</span></label>
+        <input class="input" value="黑色 / 白色 / 蓝色 / 原色钛">
+        <span class="hint">以「/」分隔，每项 1～20 字符，同一属性内不可重复；最多 2 个规格属性参与 SKU 组合</span>
+      </div>
+      <div class="field">
+        <label class="label">排序</label>
+        <input class="input" value="1">
+      </div>
+      <div class="alert alert-info">规格属性的可选值会作为商品编辑页「生成 SKU」的规格维度；已成 SKU 的值被删除时不会被覆盖。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 类目树：点击切换当前类目（静态原型，右侧表格为「全部类目」视图） */
+(function () {
+  var cur = document.getElementById('cur-cat');
+  var items = document.querySelectorAll('.tree-item');
+  items.forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      if (e.target.closest('.btn')) return;   // 点编辑/删除不切换选中
+      items.forEach(function (x) { x.classList.remove('active'); });
+      el.classList.add('active');
+      var name = el.getAttribute('data-name') || (el.id === 'cat-all' ? '全部类目' : el.textContent.trim());
+      cur.textContent = name;
+    });
+  });
+})();
+</script>
+<!-- ============ 删除品牌（危险确认）============ -->
+<div class="modal" id="dlg-brand-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-brand-del-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-brand-del-t">删除品牌</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除品牌「Apple」？</p>
+      <ul class="impact">
+        <li>该品牌关联商品 <b>8</b> 个</li>
+      </ul>
+      <div class="alert alert-warn" style="margin-top:12px">
+        仅当品牌下<b>无商品引用</b>时才能删除；存在引用会被系统拒绝，请先把商品改到其他品牌或清空品牌。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除属性（危险确认）============ -->
+<div class="modal" id="dlg-attr-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-attr-del-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-attr-del-t">删除属性</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除属性「颜色」？</p>
+      <p class="hint">该属性为<b>规格</b>类型，删除后商品编辑页不再提供该规格维度；已生成的 SKU 不受影响，但后续无法再按此维度组合。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

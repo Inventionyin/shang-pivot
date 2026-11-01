@@ -1,0 +1,38 @@
+# 登录输入校验数据（数据驱动用例）
+# expected_http: 期望 HTTP 状态；expected_code: 期望业务码；msg_keyword: 提示信息应包含的关键字
+cases:
+  - id: phone-too-short
+    body:
+      phone: "123"
+      code: "123456"
+      clientType: web
+    expected_http: 400
+    expected_code: 40000
+    msg_keyword: 手机号
+
+  - id: phone-contains-letter
+    body:
+      phone: "1390000000a"
+      code: "123456"
+      clientType: web
+    expected_http: 400
+    expected_code: 40000
+    msg_keyword: 手机号
+
+  - id: code-blank
+    body:
+      phone: "13900000009"
+      code: ""
+      clientType: web
+    expected_http: 400
+    expected_code: 40000
+    msg_keyword: 不能为空
+
+  - id: client-type-invalid
+    body:
+      phone: "13900000009"
+      code: "123456"
+      clientType: pc
+    expected_http: 400
+    expected_code: 40000
+    msg_keyword: clientType

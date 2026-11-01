@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>确认订单 · 尚品汇 Web</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../web.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="web-shell">
+<header class="web-topnav"><div class="web-topnav-inner">
+  <a class="web-brand" href="home.html"><img src="../logo.png" alt=""><span class="name">尚品汇</span></a>
+  <a class="web-nav-link" href="cart.html">返回购物车</a>
+  <div class="web-topnav-actions"><span class="muted">确认订单</span></div>
+</div></header>
+
+<main class="web-main checkout-grid">
+  <div>
+    <h1 class="page-title">确认订单</h1>
+
+    <div class="card" style="padding:20px;margin-bottom:16px">
+      <div class="flex-between mb-12">
+        <div class="hint">收货地址</div>
+        <div class="gap-12" style="display:flex">
+          <a class="hint" href="#" style="color:var(--coral)" data-modal-open="dlg-addr-list">切换地址</a>
+          <a class="hint" href="#" style="color:var(--coral)" data-modal-open="dlg-addr-new">新增地址</a>
+        </div>
+      </div>
+      <div style="font-weight:600">张三 · 138****0000 <span class="badge badge-coral" style="margin-left:6px">默认</span></div>
+      <div class="muted mt-12">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</div>
+    </div>
+
+    <div class="card" style="padding:20px;margin-bottom:16px">
+      <div class="hint mb-12">商品清单（2 件）</div>
+      <div class="flex-between gap-12" style="margin-bottom:14px">
+        <div class="ph ph-acc" style="width:64px;height:64px;aspect-ratio:1;flex-shrink:0"><span>索尼</span></div>
+        <div style="flex:1;min-width:0"><div style="font-weight:600">索尼 WH-1000XM5</div><div class="hint">官方标配 × 1</div></div>
+        <div class="price">¥2,599</div>
+      </div>
+      <div class="flex-between gap-12">
+        <div class="ph ph-food" style="width:64px;height:64px;aspect-ratio:1;flex-shrink:0"><span>坚果</span></div>
+        <div style="flex:1;min-width:0"><div style="font-weight:600">每日坚果 750g</div><div class="hint">750g / 袋 × 1</div></div>
+        <div class="price">¥89</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px;margin-bottom:16px">
+      <div class="hint mb-12">支付方式</div>
+      <div class="sku-row">
+        <span class="chip active">沙箱支付（模拟）</span>
+      </div>
+      <p class="hint mt-12">本版本为模拟支付，无真实资金流；支付失败订单保持待付款，可重试。</p>
+    </div>
+
+    <div class="card" style="padding:20px">
+      <div class="hint mb-12">配送与售后</div>
+      <p style="font-size:13px">商品金额 ≥ ¥99 免运费，未满收 ¥8；正品保障，7 天无理由退货。</p>
+    </div>
+  </div>
+
+  <aside class="summary-sticky">
+    <div class="section-title" style="font-size:16px">订单摘要</div>
+    <div class="flex-between muted"><span>商品金额</span><span>¥2,688</span></div>
+    <div class="flex-between muted mt-12"><span>运费</span><span style="color:var(--forest)">免运费</span></div>
+    <div class="hint mt-12">商品金额满 99 元免运费</div>
+    <hr class="divider">
+    <div class="flex-between mb-16"><span style="font-weight:600">应付</span><span class="price price-lg">¥2,688</span></div>
+    <button type="button" class="btn btn-primary btn-block" data-modal-open="dlg-submit">提交订单</button>
+    <p class="hint mt-12" style="text-align:center">提交后 15 分钟内未支付将自动取消</p>
+  </aside>
+</main>
+<footer class="web-footer">尚品汇 · V2.0 Web 门店 · 确认订单</footer>
+
+<!-- ============ 弹窗层 ============ -->
+
+<!-- O-01 提交订单确认 -->
+<div class="modal" id="dlg-submit" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-head">
+      <span class="modal-title">确认提交订单</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="kv-list">
+        <div class="kv"><span class="k">收货人</span><span class="v">张三 · 138****0000</span></div>
+        <div class="kv"><span class="k">收货地址</span><span class="v">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</span></div>
+        <div class="kv"><span class="k">商品</span><span class="v">索尼 WH-1000XM5 等 2 件</span></div>
+        <div class="kv"><span class="k">商品金额</span><span class="v num">¥2,688</span></div>
+        <div class="kv"><span class="k">运费</span><span class="v">免运费</span></div>
+        <div class="kv"><span class="k">应付</span><span class="v num" style="color:var(--coral)">¥2,688</span></div>
+      </div>
+      <div class="alert alert-info mt-16">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>
+        提交后生成待付款订单并锁定库存，15 分钟内未支付将自动关闭并释放库存。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>再看看</button>
+      <button type="button" class="btn btn-primary" data-modal-close data-modal-open="dlg-pay" data-pay="loading">确认提交</button>
+    </div>
+  </div>
+</div>
+
+<!-- O-02 提交时库存不足 -->
+<div class="modal" id="dlg-stock-fail" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+      <span class="modal-title">提交失败 · 库存不足</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p>提交时校验库存，以下商品可售库存不足，订单未生成：</p>
+      <div class="dlg-goods mt-12">
+        <div class="ph ph-acc"><span>索尼</span></div>
+        <div class="meta">
+          <div class="t">索尼 WH-1000XM5</div>
+          <div class="s">官方标配 × 8</div>
+          <div class="error-text mt-12">仅剩 5 件可售</div>
+        </div>
+      </div>
+      <div class="alert alert-warn mt-16">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        请调整数量后重新提交，当前停留在确认订单页。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>返回修改</button>
+      <a class="btn btn-primary" href="cart.html">去购物车调整</a>
+    </div>
+  </div>
+</div>
+
+<!-- O-03 切换收货地址 -->
+<div class="modal" id="dlg-addr-list" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-head">
+      <span class="modal-title">选择收货地址</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <label class="card" style="padding:14px;display:flex;gap:10px;margin-bottom:10px;border-color:var(--amber)">
+        <input type="radio" name="addr" checked style="margin-top:4px">
+        <div>
+          <div style="font-weight:600">张三 · 138****0000 <span class="badge badge-coral" style="margin-left:6px">默认</span></div>
+          <div class="hint mt-12">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</div>
+        </div>
+      </label>
+      <label class="card" style="padding:14px;display:flex;gap:10px">
+        <input type="radio" name="addr" style="margin-top:4px">
+        <div>
+          <div style="font-weight:600">李四 · 139****0001</div>
+          <div class="hint mt-12">北京市 海淀区 中关村大街 1 号 A 座 903</div>
+        </div>
+      </label>
+      <div class="flex-between mt-16">
+        <a class="hint" href="#" data-modal-close data-modal-open="dlg-no-addr">没有可用地址时的引导 ›</a>
+        <button type="button" class="btn btn-sm btn-secondary" data-modal-close data-modal-open="dlg-addr-new">+ 新增收货地址</button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close>使用该地址</button>
+    </div>
+  </div>
+</div>
+
+<!-- O-04 无地址时引导新增 -->
+<div class="modal" id="dlg-no-addr" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-center">
+      <div class="modal-ico info"><svg class="ico" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="11" r="2.5"/></svg></div>
+      <div class="t">还没有收货地址</div>
+      <div class="d">下单前需要先添加一条收货地址，填好后可设为默认地址。</div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>稍后再说</button>
+      <button type="button" class="btn btn-primary" data-modal-close data-modal-open="dlg-addr-new">新增收货地址</button>
+    </div>
+  </div>
+</div>
+
+<!-- O-05 新增收货地址（收货人 1~25 字 / 手机号 11 位 / 省市区三级 / 详细地址 1~100 字 / 设为默认） -->
+<div class="modal" id="dlg-addr-new" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-head">
+      <span class="modal-title">新增收货地址</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field">
+          <span class="field-label">收货人<span class="req">*</span></span>
+          <input class="input" value="张三" maxlength="25">
+          <span class="hint">1～25 字</span>
+        </div>
+        <div class="field">
+          <span class="field-label">手机号<span class="req">*</span></span>
+          <input class="input" value="13800000000" maxlength="11">
+          <span class="hint">11 位数字，1 开头</span>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">所在地区<span class="req">*</span></span>
+        <div class="form-grid" style="gap:0 10px">
+          <select class="select"><option>上海市</option><option>北京市</option><option>广东省</option></select>
+          <select class="select"><option>浦东新区</option><option>海淀区</option><option>南山区</option></select>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">详细地址<span class="req">*</span></span>
+        <input class="input" value="张江路 88 号 尚品汇大楼 12F" maxlength="100">
+        <span class="hint">1～100 字</span>
+      </div>
+      <div class="field">
+        <label style="display:flex;gap:8px;align-items:center;font-size:13px">
+          <input type="checkbox" checked> 设为默认地址
+        </label>
+        <span class="hint">默认地址仅一个，设置新默认会自动取消旧默认</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close>保存地址</button>
+    </div>
+  </div>
+</div>
+
+<!-- O-06 支付层：支付中（loading）→ 支付成功 / 支付失败（可重试） -->
+<div class="modal" id="dlg-pay" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-pay">
+    <div class="modal-head">
+      <span class="modal-title">收银台</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+
+    <!-- 支付中 -->
+    <div class="modal-body" data-pay-stage="loading">
+      <div class="pay-spin"></div>
+      <div style="font-weight:600;margin-bottom:6px">支付中…</div>
+      <div class="pay-amount">¥2,688</div>
+      <p class="hint mt-12">沙箱支付（模拟），约 1 秒返回结果</p>
+    </div>
+
+    <!-- 支付成功 -->
+    <div class="modal-body" data-pay-stage="ok" hidden>
+      <div class="pay-state ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">支付成功</div>
+      <div class="muted">订单号 202609140001 · 待发货</div>
+      <p class="hint mt-12">商家将尽快为你发货，发货后可查看物流轨迹</p>
+    </div>
+
+    <!-- 支付失败 -->
+    <div class="modal-body" data-pay-stage="fail" hidden>
+      <div class="pay-state err"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">支付失败</div>
+      <div class="muted">订单仍为待付款，可重新支付</div>
+      <p class="hint mt-12">剩余支付时间 12:48，超时订单将自动关闭并释放库存</p>
+    </div>
+
+    <div class="modal-foot">
+      <!-- 支付中：真实交互里 1 秒内自动返回结果；原型用两个按钮手动演示两种结果 -->
+      <div class="foot-left" data-pay-stage="loading">
+        <button type="button" class="btn btn-secondary" data-modal-close>取消支付</button>
+        <button type="button" class="btn btn-secondary" data-pay-to="fail">模拟支付失败</button>
+        <button type="button" class="btn btn-primary" data-pay-to="ok">模拟支付成功</button>
+      </div>
+      <div class="foot-left" data-pay-stage="ok" hidden>
+        <a class="btn btn-secondary" href="home.html">返回首页</a>
+        <button type="button" class="btn btn-primary" data-modal-close data-modal-open="dlg-pay-result">查看支付结果</button>
+      </div>
+      <div class="foot-left" data-pay-stage="fail" hidden>
+        <button type="button" class="btn btn-secondary" data-modal-close>稍后支付</button>
+        <button type="button" class="btn btn-primary" data-pay-to="loading">重试支付</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- O-07 支付结果页 -->
+<div class="modal" id="dlg-pay-result" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-body">
+      <div class="pay-state ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
+      <div style="text-align:center;font-weight:700;font-size:17px;margin-bottom:4px">支付成功</div>
+      <div class="hint" style="text-align:center;margin-bottom:16px">订单已进入待发货，商家将尽快发货</div>
+      <div class="kv-list">
+        <div class="kv"><span class="k">订单号</span><span class="v num">202609140001</span></div>
+        <div class="kv"><span class="k">支付金额</span><span class="v num" style="color:var(--coral)">¥2,688</span></div>
+        <div class="kv"><span class="k">支付方式</span><span class="v">沙箱支付（模拟）</span></div>
+        <div class="kv"><span class="k">订单状态</span><span class="v">待发货</span></div>
+        <div class="kv"><span class="k">收货人</span><span class="v">张三 · 138****0000</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a class="btn btn-secondary" href="home.html">返回首页</a>
+      <a class="btn btn-primary" href="orders.html">查看订单</a>
+    </div>
+  </div>
+</div>
+
+<script src="../modal.js"></script>
+</body>
+</html>

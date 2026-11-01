@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>订单列表 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='orders'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">订单中心 / <b>订单列表</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content list-page">
+      <div class="page-head">
+        <div><div class="page-title">订单列表</div><div class="page-sub">演示订单 · 发货 · 状态流转</div></div>
+      </div>
+
+      <div class="card card-pad list-card">
+        <div class="tabs">
+          <div class="tab active">全部 <span class="c">6</span></div>
+          <div class="tab">待付款 <span class="c">1</span></div>
+          <div class="tab">待发货 <span class="c">2</span></div>
+          <div class="tab">待收货 <span class="c">1</span></div>
+          <div class="tab">已完成 <span class="c">1</span></div>
+          <div class="tab">已关闭 <span class="c">1</span></div>
+        </div>
+        <div class="toolbar">
+          <input class="input" placeholder="订单号" style="min-width:200px">
+          <div class="spacer"></div>
+          <button class="btn btn-secondary btn-sm">重置</button>
+          <button class="btn btn-primary btn-sm">查询</button>
+        </div>
+        <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th class="code">订单号</th><th>商品摘要</th><th class="num">金额</th><th>状态</th><th class="code">下单时间</th><th>操作</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="code">SO202609140101</td>
+              <td>iPhone 15 Pro 128G · 128GB/原色钛金属 ×1</td>
+              <td class="num">¥7,999.00</td>
+              <td><span class="badge badge-coral">待发货</span></td>
+              <td class="code">09-14 09:21</td>
+              <td>
+                <button class="btn btn-primary btn-sm" data-modal-open="dlg-ship">发货</button>
+                <button class="btn btn-ghost btn-sm" data-modal-open="drw-order">详情</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">SO202609140106</td>
+              <td>戴森 V12 吸尘器 · 单规格 ×1</td>
+              <td class="num">¥4,009.00</td>
+              <td><span class="badge badge-coral">待发货</span></td>
+              <td class="code">09-14 08:05</td>
+              <td>
+                <button class="btn btn-primary btn-sm" data-modal-open="dlg-ship">发货</button>
+                <button class="btn btn-ghost btn-sm" data-modal-open="drw-order">详情</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">SO202609140102</td>
+              <td>Xiaomi 14 Pro 12+256G · 12GB/256GB/黑色 ×1</td>
+              <td class="num">¥4,999.00</td>
+              <td><span class="badge badge-amber">待付款</span></td>
+              <td class="code">09-14 07:50</td>
+              <td>
+                <button class="btn btn-ghost btn-sm" data-modal-open="dlg-noop">发货</button>
+                <button class="btn btn-ghost btn-sm" data-modal-open="drw-order">详情</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">SO202609140103</td>
+              <td>MacBook Air 13 M3 16G ×1、罗技 MX Master 3s ×1</td>
+              <td class="num">¥10,598.00</td>
+              <td><span class="badge badge-forest">待收货</span></td>
+              <td class="code">09-11 16:30</td>
+              <td>
+                <button class="btn btn-ghost btn-sm" data-modal-open="drw-order">详情</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">SO202609140104</td>
+              <td>AirPods Pro 2 · 单规格 ×1</td>
+              <td class="num">¥1,999.00</td>
+              <td><span class="badge badge-forest">已完成</span></td>
+              <td class="code">09-04 11:00</td>
+              <td>
+                <button class="btn btn-ghost btn-sm" data-modal-open="drw-order">详情</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">SO202609140105</td>
+              <td>Redmi K70 12+256G · 单规格 ×1</td>
+              <td class="num">¥2,299.00</td>
+              <td><span class="badge badge-brick">已关闭</span></td>
+              <td class="code">09-14 06:40</td>
+              <td>
+                <button class="btn btn-ghost btn-sm" data-modal-open="drw-order">详情</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="pager pager-fixed">
+          <span>共 6 条 · 每页 10 条</span>
+          <button class="btn btn-secondary btn-sm" disabled>‹</button>
+          <span class="badge badge-amber">1 / 1</span>
+          <button class="btn btn-secondary btn-sm">›</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 发货弹窗 ============ -->
+<div class="modal" id="dlg-ship" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-ship-t">
+    <div class="modal-head">
+      <span class="modal-ico info">↗</span>
+      <div class="modal-title" id="dlg-ship-t">订单发货</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:14px">订单 <b class="code">SO202609140101</b> · iPhone 15 Pro 128G · 128GB/原色钛金属 ×1 · ¥7,999.00</p>
+      <div class="field">
+        <label class="label">承运商</label>
+        <select class="select">
+          <option selected>模拟快递</option>
+          <option>顺丰速运</option>
+          <option>中通快递</option>
+        </select>
+        <span class="hint">不选则默认「模拟快递」</span>
+      </div>
+      <div class="field">
+        <label class="label">运单号<span class="req">*</span></label>
+        <input class="input" placeholder="请录入运单号" autofocus>
+        <span class="error-text">请录入运单号</span>
+      </div>
+      <div class="alert alert-info">发货后订单进入<b>待收货</b>，并按订单明细<b>扣减库存</b>（总库存与锁定占用同时减少）。此操作不可撤销。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认发货</button>
+    </div>
+  </div>
+</div>
+
+<!-- 非待发货点发货：不弹表单，直接提示 -->
+<div class="modal" id="dlg-noop" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title">当前状态不可发货</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p>订单 <b class="code">SO202609140102</b> 当前为 <span class="badge badge-amber">待付款</span>。</p>
+      <p class="hint">仅「待发货」订单可发货。待付款订单需顾客完成支付，超时 15 分钟会自动关闭并释放库存。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 订单详情抽屉 ============ -->
+<div class="drawer" id="drw-order" hidden>
+  <div class="modal-mask"></div>
+  <div class="drawer-panel" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div class="modal-title">订单详情</div>
+      <span class="badge badge-coral">待发货</span>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body" style="flex:1">
+      <dl class="kv" style="grid-template-columns:96px 1fr;margin-bottom:18px">
+        <dt>订单号</dt><dd class="code">SO202609140101</dd>
+        <dt>下单时间</dt><dd class="code">2026-09-14 09:21:18</dd>
+        <dt>收货人</dt><dd>张三 · 138****0000</dd>
+        <dt>收货地址</dt><dd>北京市朝阳区建国路 88 号</dd>
+        <dt>备注</dt><dd class="hint">—</dd>
+      </dl>
+
+      <div class="page-title" style="font-size:13px;margin-bottom:10px">商品项</div>
+      <table class="table" style="margin-bottom:18px">
+        <thead><tr><th>商品</th><th>规格</th><th class="num">单价</th><th class="num">数量</th><th class="num">小计</th></tr></thead>
+        <tbody>
+          <tr><td>iPhone 15 Pro 128G</td><td>128GB/原色钛金属</td><td class="num">¥7,999</td><td class="num">1</td><td class="num">¥7,999</td></tr>
+        </tbody>
+      </table>
+
+      <div class="page-title" style="font-size:13px;margin-bottom:10px">金额</div>
+      <dl class="kv" style="grid-template-columns:96px 1fr;margin-bottom:18px">
+        <dt>商品金额</dt><dd class="num">¥7,999.00</dd>
+        <dt>运费</dt><dd class="num">¥0.00</dd>
+        <dt>实付</dt><dd class="num" style="font-weight:700">¥7,999.00</dd>
+      </dl>
+
+      <div class="page-title" style="font-size:13px;margin-bottom:10px">状态时间线</div>
+      <div class="timeline">
+        <div class="tl-item done"><div class="tl-time">09-14 09:21</div><div class="tl-label">提交订单 · 锁定库存</div></div>
+        <div class="tl-item done"><div class="tl-time">09-14 09:21</div><div class="tl-label">沙箱支付成功</div></div>
+        <div class="tl-item pending"><div class="tl-time">待操作</div><div class="tl-label">发货 → 待收货</div></div>
+        <div class="tl-item pending"><div class="tl-time">—</div><div class="tl-label">顾客确认收货 → 已完成</div></div>
+      </div>
+
+      <details style="margin-top:18px">
+        <summary class="hint" style="cursor:pointer">原始数据（JSON 调试视图）</summary>
+        <pre class="code" style="background:var(--sand);padding:12px;border-radius:var(--r-md);font-size:12px;overflow:auto;margin-top:8px">{
+  "orderNo": "SO202609140101",
+  "status": "PENDING_SHIP",
+  "items": [{ "skuId": 10001, "qty": 1, "price": 7999.00 }],
+  "goodsAmount": 7999.00,
+  "freightAmount": 0.00,
+  "payAmount": 7999.00
+}</pre>
+      </details>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>关闭</button>
+      <button class="btn btn-primary" data-modal-open="dlg-ship">发货</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

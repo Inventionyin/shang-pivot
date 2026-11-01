@@ -1,0 +1,1596 @@
+{
+  "uid": "shang-pivot-perf-overview",
+  "title": "尚品汇性能测试总览",
+  "tags": [
+    "shang-pivot",
+    "perf"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "editable": true,
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "客户端 P95",
+      "description": "k6 侧 P95。k6 按 URL 打标签，无法在 Prometheus 里还原全局 P95，故同时给出两个口径：各 URL 平均（典型值）与各 URL 最大（最差值，容量判定用这个）。全局 P95 以 k6 运行结束的终端汇总为准。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 3,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.8
+              },
+              {
+                "color": "red",
+                "value": 1.5
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "avg(k6_http_req_duration_p95{app=\"shang-pivot\"})",
+          "legendFormat": "各 URL 平均"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "max(k6_http_req_duration_p95{app=\"shang-pivot\"})",
+          "legendFormat": "最差 URL"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "客户端 P99",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 3,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1.5
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "avg(k6_http_req_duration_p99{app=\"shang-pivot\"})",
+          "legendFormat": "各 URL 平均"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "max(k6_http_req_duration_p99{app=\"shang-pivot\"})",
+          "legendFormat": "最差 URL"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "客户端失败率",
+      "description": "失败请求数 / 总请求数，按计数器比值聚合。不能用 max(k6_http_req_failed_rate)：k6 按 URL 打标签，只请求过一次且失败的那个 URL 比率是 1.0，会把整体误显示为 100%。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "decimals": 2,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.01
+              },
+              {
+                "color": "red",
+                "value": 0.05
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "(sum(rate(k6_http_reqs_total{app=\"shang-pivot\",expected_response=\"false\"}[5m])) or vector(0)) / clamp_min(sum(rate(k6_http_reqs_total{app=\"shang-pivot\"}[5m])), 0.000001)",
+          "legendFormat": "失败率"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "断言通过率",
+      "description": "k6 checks 通过率。低于阈值即说明业务断言出现失败（含业务 code != 200）。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "decimals": 2,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.99
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "min(k6_checks_rate{app=\"shang-pivot\"})",
+          "legendFormat": "通过率"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "活跃虚拟用户",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "max"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "none",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "max(k6_vus{app=\"shang-pivot\"})",
+          "legendFormat": "VU"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "客户端 RPS",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "decimals": 1
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "none",
+        "graphMode": "area",
+        "textMode": "auto",
+        "justifyMode": "auto"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "sum(rate(k6_http_reqs_total{app=\"shang-pivot\"}[1m]))",
+          "legendFormat": "RPS"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "客户端延迟拆解（区分网络与服务端）",
+      "description": "k6 分段计时。connecting 是纯 TCP 建连开销；waiting 是从请求发出到收到首字节，包含网络往返 + 服务端处理。若 waiting 远大于服务端指标，瓶颈在链路而非服务端。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "avg(k6_http_req_duration_p95{app=\"shang-pivot\"})",
+          "legendFormat": "总耗时 duration"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "avg(k6_http_req_waiting_p95{app=\"shang-pivot\"})",
+          "legendFormat": "等待响应 waiting（含 RTT）"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "avg(k6_http_req_connecting_p95{app=\"shang-pivot\"})",
+          "legendFormat": "TCP 建连 connecting"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "avg(k6_http_req_receiving_p95{app=\"shang-pivot\"})",
+          "legendFormat": "接收 receiving"
+        },
+        {
+          "refId": "E",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "avg(k6_http_req_sending_p95{app=\"shang-pivot\"})",
+          "legendFormat": "发送 sending"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "客户端 vs 服务端耗时",
+      "description": "客户端 P95 与服务端实际处理耗时对比。两者差距即链路与排队开销。服务端平均 = rate(_sum)/rate(_count)，因未开 histogram 无法算服务端分位数。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "avg(k6_http_req_duration_p95{app=\"shang-pivot\"})",
+          "legendFormat": "客户端 P95"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "sum(rate(http_server_requests_seconds_sum{job=\"shang-pivot\",uri!~\"/actuator.*\"}[1m])) / sum(rate(http_server_requests_seconds_count{job=\"shang-pivot\",uri!~\"/actuator.*\"}[1m]))",
+          "legendFormat": "服务端平均"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "max(http_server_requests_seconds_max{job=\"shang-pivot\",uri!~\"/actuator.*\"})",
+          "legendFormat": "服务端历史最大"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "服务端接口平均耗时（按 uri）",
+      "description": "来自应用 Micrometer 指标，不含网络时间。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 14
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "sum by (uri) (rate(http_server_requests_seconds_sum{job=\"shang-pivot\",uri!~\"/actuator.*\"}[1m])) / sum by (uri) (rate(http_server_requests_seconds_count{job=\"shang-pivot\",uri!~\"/actuator.*\"}[1m]))",
+          "legendFormat": "{{uri}}"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "服务端接口最大耗时（按 uri）",
+      "description": "滚动最大值（Micrometer 的 _max），是当前唯一可用的服务端尾延迟指标。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 14
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "max by (uri) (http_server_requests_seconds_max{job=\"shang-pivot\",uri!~\"/actuator.*\"})",
+          "legendFormat": "{{uri}}"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "服务端 QPS（按 uri）",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 14
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "decimals": 2,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "sum by (uri) (rate(http_server_requests_seconds_count{job=\"shang-pivot\",uri!~\"/actuator.*\"}[1m]))",
+          "legendFormat": "{{uri}}"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "JVM 堆内存",
+      "description": "基线参考：Old Gen 约 48MB、Eden 约 107MB，上限 2048MB。稳定性测试看是否有持续爬升（内存泄漏）。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 23
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "jvm_memory_used_bytes{job=\"shang-pivot\",area=\"heap\"}",
+          "legendFormat": "{{id}}"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "GC 暂停",
+      "description": "平均暂停 = rate(_sum)/rate(_count)；最大暂停为滚动最大值。Full GC 频繁时此处抬升。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 23
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 4,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "rate(jvm_gc_pause_seconds_sum{job=\"shang-pivot\"}[1m]) / rate(jvm_gc_pause_seconds_count{job=\"shang-pivot\"}[1m])",
+          "legendFormat": "平均暂停 {{action}}"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "jvm_gc_pause_seconds_max{job=\"shang-pivot\"}",
+          "legendFormat": "最大暂停 {{action}}"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "rate(jvm_gc_pause_seconds_count{job=\"shang-pivot\"}[1m])",
+          "legendFormat": "GC 次数/秒 {{action}}"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "type": "timeseries",
+      "title": "JVM 线程与类加载",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 23
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "jvm_threads_live_threads{job=\"shang-pivot\"}",
+          "legendFormat": "活跃线程"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "jvm_threads_peak_threads{job=\"shang-pivot\"}",
+          "legendFormat": "峰值线程"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "jvm_classes_loaded_classes{job=\"shang-pivot\"}",
+          "legendFormat": "已加载类"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "type": "timeseries",
+      "title": "CPU 与系统负载",
+      "description": "左轴：process_cpu_usage 应用进程占用、system_cpu_usage 整机（单位 percentunit）。右轴：load1 系统负载均值，它是一个计数（16 核主机上 0.05~0.82 属空闲），因此单独用 short 单位，不能和 CPU 百分比共用坐标轴——否则 0.8 会被显示成 80%。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 32
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "load1.*"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 3
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "process_cpu_usage{job=\"shang-pivot\"}",
+          "legendFormat": "应用进程 CPU"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "system_cpu_usage{job=\"shang-pivot\"}",
+          "legendFormat": "整机 CPU"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "system_load_average_1m{job=\"shang-pivot\"}",
+          "legendFormat": "load1（右轴）"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "type": "timeseries",
+      "title": "HikariCP 数据库连接池",
+      "description": "上限 20（application.yml:15）。pending 持续大于 0 表示连接池成为瓶颈。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 32
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "hikaricp_connections_active{job=\"shang-pivot\"}",
+          "legendFormat": "活跃"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "hikaricp_connections_idle{job=\"shang-pivot\"}",
+          "legendFormat": "空闲"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "hikaricp_connections_pending{job=\"shang-pivot\"}",
+          "legendFormat": "等待获取"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "hikaricp_connections_max{job=\"shang-pivot\"}",
+          "legendFormat": "上限"
+        },
+        {
+          "refId": "E",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "rate(hikaricp_connections_timeout_total{job=\"shang-pivot\"}[1m])",
+          "legendFormat": "超时/秒"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "type": "timeseries",
+      "title": "Tomcat 线程池",
+      "description": "executor_queued_tasks 持续增长说明线程池打满，请求开始排队。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 32
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "executor_active_threads{job=\"shang-pivot\"}",
+          "legendFormat": "活跃线程"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "executor_pool_size_threads{job=\"shang-pivot\"}",
+          "legendFormat": "当前池大小"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "executor_queued_tasks{job=\"shang-pivot\"}",
+          "legendFormat": "排队任务"
+        },
+        {
+          "refId": "D",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "rate(executor_completed_tasks_total{job=\"shang-pivot\"}[1m])",
+          "legendFormat": "完成/秒"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "type": "text",
+      "title": "服务端分位数：已开启",
+      "description": "",
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 41
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "### 服务端 P95/P99 已可用\n\n历史状态：`/api/actuator/prometheus` 的 `_bucket` 指标为 **0 条**，导致服务端无法计算分位数。\n\n**2026-10-06 已修复并部署验证**：在 `back/src/main/resources/application.yml` 的 `management.metrics` 下增加\n\n```yaml\ndistribution:\n  percentiles-histogram:\n    http.server.requests: true\n```\n\n重新部署到实例 30634 后，`_bucket` 由 0 条变为 **679 条**，`histogram_quantile()` 已生效，见下方「服务端 P95 / P99」面板。\n\n### 已观测到的服务端分位数（2026-10-06 基准）\n\n252 req/s、60 VU、2 分钟：**服务端 P95 = 18.35ms、P99 = 36.62ms、0 失败**。同期连接池峰值仅 2/20，进程 CPU 峰值 24.5%，远未触及瓶颈。"
+      }
+    },
+    {
+      "id": 19,
+      "type": "text",
+      "title": "阈值口径与使用说明",
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 41
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "### 两套阈值口径\n\n| 口径 | P95 | P99 | 失败率 | 适用 |\n| --- | --- | --- | --- | --- |\n| 项目原有 | 800ms | 1500ms | <1% | 服务端容量判定 |\n| 跨公网实测 | 2000ms | 3300ms | — | 本机加压时的端到端观测 |\n\n跨公网压测时延迟由链路主导，不能直接用于服务端容量判定。压测机放到服务器本机后，应使用「项目原有」口径。\n\n### 数据来源\n\n- **客户端指标**（`k6_*`）：k6 通过 remote write 上报，需带 `-o experimental-prometheus-rw` 运行。\n- **服务端指标**：Prometheus 每 5 秒采集 `111.170.33.2:60080/api/actuator/prometheus`。\n\n### 单位\n\n本次核对：k6 的 `k6_http_req_*` 与服务端的 `http_server_requests_seconds_*` **均为秒**，可直接同轴对比。"
+      }
+    },
+    {
+      "id": 20,
+      "type": "timeseries",
+      "title": "服务端 P95 / P99（按 uri，histogram_quantile）",
+      "description": "基于直方图 bucket 计算的服务端真实尾延迟，不含网络时间。这是服务端容量判定的权威口径。直方图为累积分布，必须用 rate() 作用于 bucket 再聚合，且 sum by (le) 不能漏掉 le 标签。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 48
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 4,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le, uri) (rate(http_server_requests_seconds_bucket{job=\"shang-pivot\",uri!~\"/actuator.*\"}[5m])))",
+          "legendFormat": "P95 {{uri}}"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum by (le, uri) (rate(http_server_requests_seconds_bucket{job=\"shang-pivot\",uri!~\"/actuator.*\"}[5m])))",
+          "legendFormat": "P99 {{uri}}"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "type": "timeseries",
+      "title": "接口调用速率（来自链路追踪）",
+      "description": "数据源不是 Micrometer 而是 Tempo 聚合出的 span 指标 traces_spanmetrics_calls_total。与上方 Micrometer 面板互为印证：一个来自应用自报，一个来自实际追踪到的 span。span 名含 SQL（如 SELECT web.users），可看出数据库调用频次。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 57
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "sum by (span_name) (rate(traces_spanmetrics_calls_total{service=\"shang-pivot\"}[5m]))",
+          "legendFormat": "{{span_name}}"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "type": "timeseries",
+      "title": "接口 P95 延迟（来自链路追踪）",
+      "description": "由追踪 span 的耗时直方图算出，与服务端 Micrometer 的 P95 互相印证。样本少时 histogram_quantile 会返回 NaN（显示为断点），属正常现象——需累积足够 span。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 57
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "decimals": 4,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le, span_name) (rate(traces_spanmetrics_latency_bucket{service=\"shang-pivot\"}[5m])))",
+          "legendFormat": "{{span_name}}"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "type": "alertlist",
+      "title": "当前告警（来自 Prometheus 规则）",
+      "description": "数据来自 Prometheus 的告警规则（经 Alertmanager 数据源读取）。firing 表示条件已持续满足 for 时长，pending 表示条件已满足但还没到 for 时长。规则定义见 prometheus/rules/shang-pivot-alerts.yml。",
+      "datasource": {
+        "type": "alertmanager",
+        "uid": "projectku-alertmanager"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 65
+      },
+      "options": {
+        "showOptions": "current",
+        "maxItems": 20,
+        "stateFilter": {
+          "firing": true,
+          "pending": true,
+          "inactive": false,
+          "noData": false,
+          "error": true
+        },
+        "alertName": "",
+        "dashboardAlerts": false,
+        "alertInstanceLabelFilter": "",
+        "viewMode": "list",
+        "sortOrder": 3
+      },
+      "targets": []
+    },
+    {
+      "id": 24,
+      "type": "table",
+      "title": "告警状态明细（ALERTS 指标）",
+      "description": "Prometheus 内置的 ALERTS 时序，列出每条规则当前状态。与左侧列表互为印证——列表读的是 Alertmanager，这张表读的是 Prometheus 自身的规则求值结果。pending 数量上升意味着系统正在逼近某个阈值。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 8,
+        "y": 65
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left"
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "pending"
+                      },
+                      "1": {
+                        "text": "firing"
+                      },
+                      "-1": {
+                        "text": "inactive"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "ALERTS{alertname=~\"尚品汇-.*\"}",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "job": true,
+              "source": true
+            },
+            "renameByName": {
+              "alertname": "告警",
+              "alertstate": "状态",
+              "severity": "级别",
+              "Value": "状态值"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "type": "timeseries",
+      "title": "业务失败速率（按错误码）",
+      "description": "业务失败 = HTTP 200 + body.code != 200，既不产生 5xx 也不进错误率面板，是监控的老盲区。指标 business_failures_total 由应用在 GlobalExceptionHandler 与 OrderController.checkout 两处埋点。设为 0 表示这段时间没有业务失败。",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "projectku-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 73
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "decimals": 3,
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 20,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "projectku-prometheus"
+          },
+          "expr": "sum by (code) (rate(business_failures_total{job=\"shang-pivot\"}[5m]))",
+          "legendFormat": "{{code}}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>商品详情 · 尚品汇 Web</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../web.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="web-shell">
+<header class="web-topnav"><div class="web-topnav-inner">
+  <a class="web-brand" href="home.html"><img src="../logo.png" alt=""><span class="name">尚品汇</span></a>
+  <a class="web-nav-link" href="category.html">全部分类</a>
+  <div class="web-search"><input placeholder="搜索商品" readonly><button class="go" type="button">搜索</button></div>
+  <div class="web-topnav-actions">
+    <a class="web-cart-badge" href="cart.html">购物车<span>2</span></a>
+    <a href="orders.html">我的订单</a>
+    <a class="btn btn-sm btn-primary" href="login.html">登录</a>
+  </div>
+</div></header>
+
+<main class="web-main">
+  <div class="web-crumb"><a href="home.html">首页</a> / <a href="category.html">手机</a> / iPhone 15 Pro 128G</div>
+
+  <div class="detail-grid">
+    <div>
+      <div class="detail-gallery"><div class="ph ph-phone is-lg"><span>iPhone 15</span></div></div>
+      <div class="detail-thumbs">
+        <div class="ph ph-phone active"><span>正面</span></div>
+        <div class="ph ph-phone r-wide"><span>背面</span></div>
+        <div class="ph ph-phone"><span>侧边</span></div>
+        <div class="ph ph-phone r-wide"><span>包装</span></div>
+      </div>
+    </div>
+
+    <div class="buy-box">
+      <h1 class="page-title">iPhone 15 Pro 128G</h1>
+      <p class="muted">A17 Pro 芯片，旗舰性能 · 钛金属机身 · 原彩显示</p>
+
+      <div class="price-block">
+        <div class="price price-lg">¥7,999 ~ ¥10,999</div>
+        <div class="hint mt-12">已售 1.2 万+ · 共 3 个规格</div>
+        <p class="mt-12">
+          <span class="badge badge-forest">有货</span>
+          <span class="badge badge-coral">满 99 免运</span>
+        </p>
+      </div>
+
+      <!-- 规格（未选中时点加购会提示「请选择规格」；缺货规格点开看缺货态） -->
+      <div>
+        <div class="flex-between mb-12">
+          <span class="muted" style="font-weight:600">容量</span>
+          <span class="hint">点规格可直接打开选择层</span>
+        </div>
+        <div class="sku-row">
+          <button type="button" class="chip" data-modal-open="dlg-spec">128GB</button>
+          <button type="button" class="chip is-out" data-modal-open="dlg-soldout">256GB · 缺货</button>
+          <button type="button" class="chip" data-modal-open="dlg-spec">512GB</button>
+        </div>
+      </div>
+      <div>
+        <div class="muted mb-12" style="font-weight:600">颜色</div>
+        <div class="sku-row">
+          <button type="button" class="chip" data-modal-open="dlg-spec">原色钛金属</button>
+          <button type="button" class="chip" data-modal-open="dlg-spec">白色钛金属</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="muted mb-12" style="font-weight:600">数量</div>
+        <div class="qty"><button type="button" data-modal-open="dlg-spec">−</button><span>1</span><button type="button" data-modal-open="dlg-spec">+</button></div>
+        <p class="hint mt-12">选择规格后显示该规格可售库存</p>
+      </div>
+
+      <div class="buy-actions">
+        <a class="btn btn-secondary" href="#" data-modal-open="dlg-spec-warn">加入购物车</a>
+        <a class="btn btn-primary" href="#" data-modal-open="dlg-spec-warn">立即购买</a>
+      </div>
+      <hr class="divider">
+      <p class="hint">正品保障 · 7 天无理由退货 · 商品金额满 99 元免运费</p>
+    </div>
+  </div>
+
+  <!-- 商品详情（图文） -->
+  <section class="card mt-16" style="padding:20px;margin-top:24px">
+    <h2 class="section-title">商品详情</h2>
+    <p class="muted">A17 Pro 芯片，旗舰性能。钛金属边框，手感更轻；原彩显示与 ProMotion 自适应刷新率，日常与游戏都跟手。</p>
+    <div class="product-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px">
+      <div class="ph ph-phone r-wide"><span>性能</span></div>
+      <div class="ph ph-phone r-wide"><span>影像</span></div>
+      <div class="ph ph-phone r-wide"><span>续航</span></div>
+    </div>
+    <table class="cart-table" style="margin-top:20px">
+      <tbody>
+        <tr><th style="width:140px">商品名称</th><td>iPhone 15 Pro</td></tr>
+        <tr><th>类目</th><td>手机</td></tr>
+        <tr><th>规格</th><td>容量（128GB / 256GB / 512GB）× 颜色（原色钛金属 / 白色钛金属）</td></tr>
+        <tr><th>价格区间</th><td class="price">¥7,999 ~ ¥10,999</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 评价摘要（来自已完成订单的评价） -->
+  <section class="card" style="padding:20px;margin-top:16px">
+    <div class="flex-between mb-16">
+      <h2 class="section-title" style="margin:0">商品评价（128）</h2>
+      <span class="hint">好评率 98%</span>
+    </div>
+    <div class="order-card" style="margin-bottom:10px">
+      <div class="head"><span class="hint">Jean · 2026-09-12</span><span class="star-row"><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><span class="score">5 分</span></span></div>
+      <p style="font-size:13px">手感比上一代轻，长焦拍人像很稳，一天重度使用还有 30% 电。</p>
+      <div class="upload-row mt-12">
+        <div class="ph ph-phone is-sm" style="width:56px;height:56px;aspect-ratio:1"><span>晒图</span></div>
+      </div>
+      <div class="hint mt-12">规格：512GB · 白色钛金属</div>
+    </div>
+    <div class="order-card" style="margin-bottom:0">
+      <div class="head"><span class="hint">李** · 2026-09-08</span><span class="star-row"><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--amber);fill:currentColor"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg><span class="score">4 分</span></span></div>
+      <p style="font-size:13px">发货快，包装完好。原色钛金属比较耐指纹，推荐。</p>
+      <div class="hint mt-12">规格：128GB · 原色钛金属</div>
+    </div>
+  </section>
+
+  <!-- 同类推荐 -->
+  <section style="margin-top:24px">
+    <h2 class="section-title">同类推荐</h2>
+    <div class="product-grid web-product-grid">
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>iP</span></div><div class="info"><div class="title">iPhone 15 128G</div><div class="price">¥5,999 起</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>Xi</span></div><div class="info"><div class="title">Xiaomi 14 Pro 12+256G</div><div class="price">¥4,999 起</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>Re</span></div><div class="info"><div class="title">Redmi K70 12+256G</div><div class="price">¥2,299</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>HW</span></div><div class="info"><div class="title">HUAWEI Mate X5</div><div class="price">¥12,999</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>OP</span></div><div class="info"><div class="title">OPPO Find N3</div><div class="price">¥9,999</div><div class="meta">暂时缺货</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>荣耀</span></div><div class="info"><div class="title">荣耀 Magic6 Pro</div><div class="price">¥6,499</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>vi</span></div><div class="info"><div class="title">vivo X100</div><div class="price">¥5,299</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-acc"><span>AP</span></div><div class="info"><div class="title">AirPods Pro 2</div><div class="price">¥1,999</div></div></a>
+    </div>
+  </section>
+</main>
+
+<footer class="web-footer">尚品汇 · V2.0 Web 门店 · 商品详情</footer>
+
+<!-- ============ 弹窗层 ============ -->
+
+<!-- D-01 规格选择层：选规格 + 数量步进 + 库存提示 + 加购 / 立即购买 -->
+<div class="modal" id="dlg-spec" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-head">
+      <span class="modal-title">选择规格</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="dlg-goods">
+        <div class="ph ph-phone"><span>iP</span></div>
+        <div class="meta">
+          <div class="t">iPhone 15 Pro 128G</div>
+          <div class="s">已选：128GB · 原色钛金属</div>
+          <div class="price" style="font-size:18px;margin-top:4px">¥7,999</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="field">
+        <span class="field-label">容量<span class="req">*</span></span>
+        <div class="sku-row">
+          <span class="chip active">128GB</span>
+          <span class="chip" style="color:var(--slate);text-decoration:line-through">256GB 缺货</span>
+          <span class="chip">512GB · ¥10,999</span>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">颜色<span class="req">*</span></span>
+        <div class="sku-row">
+          <span class="chip active">原色钛金属</span>
+          <span class="chip">白色钛金属</span>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">数量</span>
+        <div class="flex-between">
+          <div class="qty"><button type="button">−</button><span>1</span><button type="button" data-modal-open="dlg-stock-short">+</button></div>
+          <span class="hint">库存 12 件可售</span>
+        </div>
+        <p class="hint">单笔最多可购 12 件，超出会提示「库存不足」</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close data-modal-open="dlg-cart-ok">加入购物车</button>
+      <button type="button" class="btn btn-primary" data-modal-close data-modal-open="dlg-buy-ok">立即购买</button>
+    </div>
+  </div>
+</div>
+
+<!-- D-02 未选规格提示 -->
+<div class="modal" id="dlg-spec-warn" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-center">
+      <div class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></div>
+      <div class="t">请选择规格</div>
+      <div class="d">该商品有容量与颜色两组规格，选好后才能加入购物车或立即购买。</div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close data-modal-open="dlg-spec">去选择规格</button>
+    </div>
+  </div>
+</div>
+
+<!-- D-03 库存不足提示 -->
+<div class="modal" id="dlg-stock-short" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-center">
+      <div class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></div>
+      <div class="t">库存不足</div>
+      <div class="d">该规格当前可售 12 件，数量已停在最大可售数。</div>
+    </div>
+    <div class="modal-foot"><button type="button" class="btn btn-primary" data-modal-close>知道了</button></div>
+  </div>
+</div>
+
+<!-- D-04 缺货态 -->
+<div class="modal" id="dlg-soldout" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/></svg></span>
+      <span class="modal-title">256GB 暂时缺货</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p>该规格可售库存为 0，商品仍可浏览，但「加入购物车」「立即购买」按钮显示为「暂时缺货」且不可点击。</p>
+      <div class="alert alert-info mt-12"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>可切换到 128GB / 512GB 规格下单。</div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>返回</button>
+      <button type="button" class="btn is-disabled" disabled>暂时缺货</button>
+    </div>
+  </div>
+</div>
+
+<!-- D-05 加购成功 -->
+<div class="modal" id="dlg-cart-ok" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-ico ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+      <span class="modal-title">已加入购物车</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="dlg-goods">
+        <div class="ph ph-phone"><span>iP</span></div>
+        <div class="meta">
+          <div class="t">iPhone 15 Pro 128G</div>
+          <div class="s">128GB · 原色钛金属 × 1</div>
+        </div>
+        <div class="price">¥7,999</div>
+      </div>
+      <div class="kv-list mt-16">
+        <div class="kv"><span class="k">购物车商品</span><span class="v num">3 件</span></div>
+        <div class="kv"><span class="k">商品金额</span><span class="v num">¥10,687</span></div>
+        <div class="kv"><span class="k">运费</span><span class="v">免运费（满 99 元）</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>继续逛逛</button>
+      <a class="btn btn-primary" href="cart.html">去购物车结算</a>
+    </div>
+  </div>
+</div>
+
+<!-- D-06 立即购买确认 -->
+<div class="modal" id="dlg-buy-ok" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-title">确认下单信息</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="kv-list">
+        <div class="kv"><span class="k">商品</span><span class="v">iPhone 15 Pro 128G</span></div>
+        <div class="kv"><span class="k">规格</span><span class="v">128GB · 原色钛金属</span></div>
+        <div class="kv"><span class="k">数量</span><span class="v num">1</span></div>
+        <div class="kv"><span class="k">商品金额</span><span class="v num">¥7,999</span></div>
+        <div class="kv"><span class="k">运费</span><span class="v">免运费</span></div>
+        <div class="kv"><span class="k">应付</span><span class="v num" style="color:var(--coral)">¥7,999</span></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>再想想</button>
+      <a class="btn btn-primary" href="checkout.html">去确认订单</a>
+    </div>
+  </div>
+</div>
+
+<script src="../modal.js"></script>
+</body>
+</html>

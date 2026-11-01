@@ -1,0 +1,199 @@
+name: nightly-pytest
+
+on:
+  schedule:
+    # 02:00 Asia/Shanghai（GitHub cron 为 UTC）
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "full=全量；affected=按 git diff 选测"
+        type: choice
+        options: [full, affected]
+        default: full
+      skip_ui:
+        description: "跳过 UI 回归"
+        type: boolean
+        default: false
+
+concurrency:
+  group: nightly-pytest
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: shang
+          POSTGRES_USER: shang
+          POSTGRES_PASSWORD: shang
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U shang -d shang"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+      minio:
+        image: minio/minio:latest
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+        ports:
+          - 9000:9000
+        options: >-
+          --health-cmd "curl -f http://127.0.0.1:9000/minio/health/live"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+        command: server /data
+
+    env:
+      DB_URL: jdbc:postgresql://127.0.0.1:5432/shang?sslmode=disable&stringtype=unspecified&connectTimeout=5&socketTimeout=30&tcpKeepAlive=true
+      DB_USERNAME: shang
+      DB_PASSWORD: shang
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+      SERVER_PORT: 8086
+      MANAGEMENT_PORT: 8087
+      MINIO_ENDPOINT: 127.0.0.1:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET_NAME: shang-pivot
+      JWT_SECRET: shang-pivot-ci-jwt-secret-32bytes-minimum!!
+      SHANG_CORS_ALLOWED_ORIGINS: http://127.0.0.1:5173,http://127.0.0.1:5174
+      SHANG_API_BASE_URL: http://127.0.0.1:8086
+      SHANG_MALL_BASE_URL: http://127.0.0.1:5174
+      SHANG_ADMIN_BASE_URL: http://127.0.0.1:5173
+      SHANG_UI_HEADLESS: "true"
+      ADMIN_PASSWORD: Admin@123
+      TEST_ENV: dev
+      CI: "true"
+      MODE: ${{ inputs.mode || 'full' }}
+      SINCE: origin/main
+      SKIP_UI: ${{ inputs.skip_ui && '1' || '0' }}
+      # CI 无显示器：夜间默认无头；本地 scripts/run_ui_parallel.sh 默认有头
+      UI_HEADED: "0"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            shang-mall/package-lock.json
+            shang-admin-web/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pytest_automation/requirements.txt
+
+      - name: 构建后端
+        run: mvn -q -DskipTests -f backend/pom.xml -pl shang-server -am package
+
+      - name: 启动后端
+        run: |
+          mkdir -p backend/logs
+          nohup java -jar backend/shang-server/target/shang-server-0.0.1-SNAPSHOT.jar \
+            > /tmp/backend.log 2>&1 &
+          for i in $(seq 1 120); do
+            if curl -fsS http://127.0.0.1:8086/api/home >/dev/null 2>&1; then
+              echo "backend ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "backend failed"; tail -100 /tmp/backend.log; exit 1
+
+      - name: 安装前端依赖并启动
+        run: |
+          (cd shang-mall && npm ci --no-audit --no-fund || npm install --no-audit --no-fund)
+          (cd shang-admin-web && npm ci --no-audit --no-fund || npm install --no-audit --no-fund)
+          (cd shang-mall && nohup npm run dev -- --host 127.0.0.1 --port 5174 > /tmp/mall.log 2>&1 &)
+          (cd shang-admin-web && nohup npm run dev -- --host 127.0.0.1 --port 5173 > /tmp/admin.log 2>&1 &)
+          for i in $(seq 1 90); do
+            if curl -fsS http://127.0.0.1:5174/ >/dev/null 2>&1 \
+              && curl -fsS http://127.0.0.1:5173/ >/dev/null 2>&1; then
+              echo "frontends ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "frontends failed"; tail -50 /tmp/mall.log /tmp/admin.log; exit 1
+
+      - name: 安装 Python 依赖
+        working-directory: pytest_automation
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 安装 Playwright 浏览器
+        if: env.SKIP_UI != '1'
+        working-directory: pytest_automation
+        run: python -m playwright install --with-deps chromium firefox webkit
+
+      - name: 安装 Allure CLI
+        run: |
+          curl -fsSLo /tmp/allure.zip https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.35.1/allure-commandline-2.35.1.zip
+          mkdir -p .tools
+          unzip -q /tmp/allure.zip -d .tools
+          test -x .tools/allure-2.35.1/bin/allure
+
+      - name: 夜间回归
+        working-directory: pytest_automation
+        run: bash scripts/ci/nightly.sh
+
+      - name: 上传报告与产物
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-${{ github.run_id }}
+          retention-days: 30
+          path: |
+            pytest_automation/artifacts/allure-report
+            pytest_automation/artifacts/runs
+            pytest_automation/artifacts/history
+            pytest_automation/artifacts/ci
+            pytest_automation/defects
+            pytest_automation/artifacts/quality-gate
+            pytest_automation/artifacts/review
+          if-no-files-found: warn
+
+      - name: 结果摘要
+        if: always()
+        run: |
+          echo "### 夜间回归" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f pytest_automation/artifacts/ci/nightly-summary.json ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat pytest_automation/artifacts/ci/nightly-summary.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "未生成摘要（检查回归日志）" >> "$GITHUB_STEP_SUMMARY"
+          fi

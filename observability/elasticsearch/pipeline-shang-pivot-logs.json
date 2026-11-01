@@ -1,0 +1,82 @@
+{
+  "description": "尚品汇日志解析：把 Filebeat 搬来的原始行按来源做 grok 解析。两个来源：shang-pivot-app（logback 应用日志）、shang-pivot-access（AccessLogFilter 逐请求日志，含 traceId/状态码/耗时/用户/响应体）。字段设计沿用本地 Logstash 管道，两者语义一致。",
+  "processors": [
+    {
+      "grok": {
+        "description": "AccessLogFilter 的两行格式。锚定 ^$ 是必需的：grok 默认不锚定，不锚定会让可选部分被跳过、尾部字段全部解析不到（Logstash 侧踩过一次）",
+        "if": "ctx.log_source == 'shang-pivot-access'",
+        "field": "message",
+        "patterns": [
+          "^%{TIMESTAMP_ISO8601:app_timestamp}\\s+%{LOGLEVEL:log_level}\\s+\\[%{DATA:thread}\\]\\s+\\[trace=%{DATA:trace_id}\\]\\s+\\[user=%{DATA:user_id}/%{DATA:username}\\]\\s+%{DATA:logger}\\s+-\\s+→\\s+%{WORD:http_method}\\s+%{DATA:request_uri}\\s+\\|\\s+ip=%{DATA:client_ip}\\s+\\|\\s+ct=%{DATA:content_type}$",
+          "^%{TIMESTAMP_ISO8601:app_timestamp}\\s+%{LOGLEVEL:log_level}\\s+\\[%{DATA:thread}\\]\\s+\\[trace=%{DATA:trace_id}\\]\\s+\\[user=%{DATA:user_id}/%{DATA:username}\\]\\s+%{DATA:logger}\\s+-\\s+←\\s+%{WORD:http_method}\\s+%{DATA:request_uri}\\s+\\|\\s+status=%{INT:http_status:int}\\s+\\|\\s+%{INT:duration_ms:int}ms\\s+\\|\\s+ip=%{DATA:client_ip}\\s+\\|\\s+user=%{DATA:tail_user}\\s+\\|\\s+req=%{DATA:req_size}\\s+\\|\\s+resp=%{GREEDYDATA:resp_body}$"
+        ],
+        "ignore_failure": true
+      }
+    },
+    {
+      "script": {
+        "description": "派生字段：方向、状态分类、错误/慢请求标记、uri 与查询串拆分；→ 行发生在鉴权前，空 user 直接去掉",
+        "if": "ctx.log_source == 'shang-pivot-access' && ctx.http_method != null",
+        "source": "if (ctx.http_status != null) { int s = ctx.http_status; ctx.status_class = s >= 500 ? '5xx' : (s >= 400 ? '4xx' : (s >= 300 ? '3xx' : '2xx')); ctx.is_error = s >= 400; ctx.direction = 'response'; } else { ctx.direction = 'request'; } if (ctx.duration_ms != null) { ctx.is_slow = ctx.duration_ms >= 1000; } if (ctx.request_uri != null) { def u = ctx.request_uri; int q = u.indexOf('?'); if (q >= 0) { ctx.uri = u.substring(0, q); ctx.query_string = u.substring(q + 1); } else { ctx.uri = u; } } if (ctx.user_id == '-' || ctx.user_id == '') { ctx.remove('user_id'); ctx.remove('username'); } if (ctx.tail_user != null) { ctx.remove('tail_user'); } if (ctx.logger != null) { ctx.remove('logger'); }"
+      }
+    },
+    {
+      "date": {
+        "description": "用日志行自己的时间戳做事件时间（服务器时钟比真实时间慢约 100 秒，但同一台机器上应用与 Tempo/ES 用同一时钟，不影响时序）",
+        "if": "ctx.log_source == 'shang-pivot-access' && ctx.app_timestamp != null",
+        "field": "app_timestamp",
+        "formats": [
+          "yyyy-MM-dd HH:mm:ss.SSS"
+        ],
+        "ignore_failure": true
+      }
+    },
+    {
+      "remove": {
+        "if": "ctx.log_source == 'shang-pivot-access'",
+        "field": [
+          "app_timestamp"
+        ],
+        "ignore_missing": true
+      }
+    },
+    {
+      "grok": {
+        "description": "logback FILE_LOG_PATTERN：时间 级别 [线程] [trace=] [user=/] logger - 消息",
+        "if": "ctx.log_source == 'shang-pivot-app'",
+        "field": "message",
+        "patterns": [
+          "^%{TIMESTAMP_ISO8601:app_timestamp}\\s+%{LOGLEVEL:log_level}\\s+\\[%{DATA:thread}\\]\\s+\\[trace=%{DATA:trace_id}\\]\\s+\\[user=%{DATA:user_id}/%{DATA:username}\\]\\s+%{DATA:logger}\\s+-\\s+%{GREEDYDATA:log_message}$"
+        ],
+        "ignore_failure": true
+      }
+    },
+    {
+      "script": {
+        "description": "命中主格式的归 app；其余按内容归 stack_trace（异常续行）或 other，保证不丢行",
+        "if": "ctx.log_source == 'shang-pivot-app'",
+        "source": "if (ctx.log_message != null) { ctx.message = ctx.log_message; ctx.log_line_type = 'app'; ctx.remove('log_message'); } else { def m = ctx.message; if (m != null) { def t = m.trim(); if (t.startsWith('at ') || t.startsWith('...') || t.startsWith('Caused by:') || t.startsWith('###') || t.startsWith(';') || t.startsWith('Position:') || t.startsWith('Hint:')) { ctx.log_line_type = 'stack_trace'; } else { ctx.log_line_type = 'other'; } } } if (ctx.trace_id == '') { ctx.remove('trace_id'); }"
+      }
+    },
+    {
+      "date": {
+        "if": "ctx.log_source == 'shang-pivot-app' && ctx.app_timestamp != null",
+        "field": "app_timestamp",
+        "formats": [
+          "yyyy-MM-dd HH:mm:ss.SSS"
+        ],
+        "ignore_failure": true
+      }
+    },
+    {
+      "remove": {
+        "if": "ctx.log_source == 'shang-pivot-app'",
+        "field": [
+          "app_timestamp",
+          "log_message"
+        ],
+        "ignore_missing": true
+      }
+    }
+  ]
+}

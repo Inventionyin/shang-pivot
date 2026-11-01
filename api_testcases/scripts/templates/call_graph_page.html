@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>尚品汇 · 调用链路图</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161a21; --panel2:#1c2029; --line:#2a3038; --fg:#e6e9ef;
+    --fg2:#9aa4b2; --fg3:#6b7480; --accent:#4c8dff; --warn:#e0a03a; --danger:#e05c5c;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
+    font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+  header{display:flex;align-items:center;gap:14px;padding:8px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+  header h1{margin:0;font-size:15px;font-weight:600;letter-spacing:.2px}
+  header .meta{color:var(--fg3);font:11px/1 var(--mono)}
+  .layout{display:grid;grid-template-columns:232px 1fr 336px;height:calc(100% - 45px)}
+  .layout.collapsed{grid-template-columns:1fr}
+  .layout.collapsed aside{display:none}
+  aside{overflow:auto;background:var(--panel);border-right:1px solid var(--line)}
+  aside.detail{border-right:0;border-left:1px solid var(--line)}
+  main{position:relative;overflow:hidden}
+  #stage{position:absolute;inset:0;background:
+    radial-gradient(circle at 1px 1px,#20252e 1px,transparent 0) 0 0/22px 22px}
+  .sec{padding:10px 12px;border-bottom:1px solid var(--line)}
+  .sec h3{margin:0 0 8px;font-size:11px;font-weight:600;color:var(--fg2);text-transform:uppercase;letter-spacing:.6px}
+  label.chk{display:flex;align-items:center;gap:7px;padding:3px 0;cursor:pointer;color:var(--fg2)}
+  label.chk:hover{color:var(--fg)}
+  label.chk input{accent-color:var(--accent);margin:0}
+  .swatch{width:10px;height:10px;border-radius:2px;flex:0 0 auto}
+  input[type=search],select{width:100%;background:var(--panel2);border:1px solid var(--line);
+    color:var(--fg);border-radius:6px;padding:6px 8px;font:12px var(--mono)}
+  input[type=search]:focus,select:focus{outline:1px solid var(--accent);border-color:var(--accent)}
+  .btns{display:flex;flex-wrap:wrap;gap:6px}
+  button{background:var(--panel2);border:1px solid var(--line);color:var(--fg);border-radius:6px;
+    padding:5px 9px;cursor:pointer;font-size:12px}
+  button:hover{border-color:var(--accent);color:#fff}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .hint{color:var(--fg3);font-size:11px;margin-top:6px;line-height:1.45}
+  svg{display:block;width:100%;height:100%;cursor:grab}
+  svg.dragging{cursor:grabbing}
+  .band-label{fill:var(--fg2);font-size:11px;font-weight:600}
+  .band-bg{fill:#ffffff05}
+  .layer-label{fill:var(--fg3);font-size:10px;font-weight:600;letter-spacing:.5px}
+  .n-label{fill:#d6dbe4;font-size:12.5px;pointer-events:none;font-family:var(--mono)}
+  .n-label.m{fill:#aab3c0;font-size:11.5px}
+  .edge{fill:none;stroke-linecap:round}
+  .dim{opacity:.06 !important}
+  .node{cursor:pointer}
+  .node rect,.node circle{stroke-width:1}
+  .node.sel rect,.node.sel circle{stroke:#fff;stroke-width:2}
+  .node.hl rect,.node.hl circle{stroke:#fff;stroke-width:1.6}
+  .node.up rect,.node.up circle{stroke-width:1.4}
+  #detail .ttl{font-size:13px;font-weight:600;margin:0 0 4px;word-break:break-all}
+  #detail .sub{color:var(--fg3);font:11px var(--mono);margin-bottom:10px;word-break:break-all}
+  #detail dl{margin:0;display:grid;grid-template-columns:64px 1fr;gap:3px 8px;font-size:12px}
+  #detail dt{color:var(--fg3)}
+  #detail dd{margin:0;word-break:break-all}
+  #detail code{font:11px var(--mono);background:#ffffff0d;padding:1px 4px;border-radius:3px}
+  #detail .empty{color:var(--fg3);font-size:12px}
+  table.k{width:100%;border-collapse:collapse;font-size:11px;margin-top:4px}
+  table.k th,table.k td{text-align:left;padding:2px 4px;border-bottom:1px solid #ffffff0f}
+  table.k th{color:var(--fg3);font-weight:500}
+  .pill{display:inline-block;font:10px var(--mono);padding:1px 5px;border-radius:9px;
+    background:#ffffff12;color:var(--fg2);margin:1px 3px 1px 0}
+  .zoom{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;align-items:center;
+    background:#0f1115cc;border:1px solid var(--line);border-radius:8px;padding:5px 7px}
+  .zoom .lvl{font:11px var(--mono);color:var(--fg3);min-width:38px;text-align:center}
+  .warnbar{padding:6px 12px;background:#3a2a12;color:#ffd08a;font-size:11px;border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>尚品汇 · 调用链路图</h1>
+  <span class="meta" id="meta"></span>
+  <button id="btn-collapse" style="margin-left:auto">折叠侧栏</button>
+</header>
+
+<div class="layout">
+  <aside class="controls">
+    <div class="sec">
+      <h3>搜索</h3>
+      <input type="search" id="q" placeholder="路径 / 类名 / 表名，如 orders、Spu" />
+      <label class="chk" style="margin-top:6px"><input type="checkbox" id="focusOnly" checked />
+        仅显示选中节点的上下游</label>
+      <div class="hint" id="qhint">回车选中第一个匹配；匹配项高亮，其余淡化。</div>
+    </div>
+
+    <div class="sec">
+      <h3>操作</h3>
+      <div class="btns">
+        <button id="btn-all">显示全部</button>
+        <button id="btn-reset">重置</button>
+        <button id="btn-fit">适配窗口</button>
+        <button id="btn-png" class="primary">导出 PNG</button>
+      </div>
+      <div class="hint">滚轮缩放 · 空白处拖动平移 · 点节点看详情并高亮上下游</div>
+    </div>
+
+    <div class="sec">
+      <h3>业务域</h3>
+      <select id="domain"></select>
+      <div class="hint">全部业务域是总览；点节点后可切到单域或用上方「聚焦」缩小范围。</div>
+    </div>
+
+    <div class="sec">
+      <h3>层（列）</h3>
+      <div id="layers"></div>
+    </div>
+
+    <div class="sec">
+      <h3>边类型</h3>
+      <div id="edgekinds"></div>
+      <div class="hint">取消勾选即可只保留关心的关系，例如只留「数据访问」看服务到表。</div>
+    </div>
+
+    <div class="sec">
+      <h3>图例</h3>
+      <div id="legend"></div>
+    </div>
+  </aside>
+
+  <main><div id="stage"><svg id="svg"></svg></div>
+    <div class="zoom">
+      <button id="z-out" title="缩小">−</button>
+      <span class="lvl" id="lvl">100%</span>
+      <button id="z-in" title="放大">+</button>
+      <button id="z-fit" title="适配窗口">适配</button>
+      <button id="z-png" title="导出 PNG">PNG</button>
+    </div>
+  </main>
+
+  <aside class="detail" id="detail">
+    <div class="sec"><h3>详情</h3><div id="detailBody" class="empty">点任意节点查看详情。</div></div>
+  </aside>
+</div>
+
+<script>window.__errs=[];window.addEventListener("error",e=>window.__errs.push(String(e.message)));window.addEventListener("unhandledrejection",e=>window.__errs.push("rejection: "+String(e.reason)));</script>
+<script id="data" type="application/json">/*__GRAPH_DATA__*/</script>
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById("data").textContent);
+
+/* ---------- 常量 ---------- */
+const LAYERS = [
+  { key:"fe",        name:"前端 api" },
+  { key:"endpoint",  name:"HTTP 端点" },
+  { key:"controller",name:"控制器" },
+  { key:"service",   name:"应用服务" },
+  { key:"cross_api", name:"跨上下文 API" },
+  { key:"mapper",    name:"Mapper" },
+  { key:"table",     name:"数据库表" },
+  { key:"module",    name:"Maven 模块" },
+  { key:"job",       name:"定时任务" },
+];
+const KIND_STYLE = {
+  fe:        { fill:"#2b3a55", stroke:"#4c8dff" },
+  endpoint:  { fill:"#233b2e", stroke:"#4fbf7f" },
+  controller:{ fill:"#3a3320", stroke:"#d6a84a" },
+  service:   { fill:"#3a2a3f", stroke:"#b06fd6" },
+  cross_api: { fill:"#203a3d", stroke:"#3fbfc4" },
+  mapper:    { fill:"#33303a", stroke:"#8b8398" },
+  table:     { fill:"#3d2a2a", stroke:"#d67a6f" },
+  module:    { fill:"#243040", stroke:"#6f8fbf" },
+  job:       { fill:"#3d3524", stroke:"#c9a227" },
+};
+const EDGE_STYLE = {
+  fetches:       { color:"#4c8dff", label:"前端调用" },
+  handled_by:    { color:"#4fbf7f", label:"端点→控制器" },
+  calls:         { color:"#d6a84a", label:"调用" },
+  injects:       { color:"#6b7480", label:"注入" },
+  accesses:      { color:"#d67a6f", label:"数据访问" },
+  cross_api:     { color:"#3fbfc4", label:"跨上下文" },
+  requires_auth: { color:"#e05c5c", label:"鉴权前置" },
+  module_depends:{ color:"#5a6b80", label:"模块依赖" },
+};
+const COL_W = 208, ROW_H = 27, BAND_GAP = 24, PAD_T = 46, PAD_L = 96;
+
+/* ---------- 状态 ---------- */
+const state = {
+  domain:"__ALL__",
+  layers:new Set(LAYERS.map(l=>l.key)),
+  edges:new Set(Object.keys(EDGE_STYLE)),
+  hideModule:true,
+  focusOnly:true,
+  q:"",
+  selected:null,
+  tx:0, ty:0, scale:1,
+};
+
+const nodes = DATA.nodes, edges = DATA.edges;
+const byId = new Map(nodes.map(n=>[n.id,n]));
+const epBy = new Map((DATA.endpoints||[]).map(e=>["ep:"+e.endpoint, e]));
+
+/* ---------- 可见性 ---------- */
+function edgeKindOk(e){
+  if(!state.edges.has(e.kind)) return false;
+  if(e.kind==="module_depends" && state.hideModule) return false;
+  return true;
+}
+function layerOk(n){ return n && state.layers.has(n.layer); }
+function edgeVisible(e){
+  if(!edgeKindOk(e)) return false;
+  const a=byId.get(e.from), b=byId.get(e.to);
+  if(!layerOk(a)||!layerOk(b)) return false;
+  return VIS.has(e.from)&&VIS.has(e.to);
+}
+let VIS = new Set();
+/* 单域视图必须包含「该域节点的一跳邻居」：
+   每个节点只归一个业务域，若只显示本域节点，跨域的边（如 admin-trade 的端点 → 归在
+   admin-identity 的控制器）会整条消失，出现「17 个节点 0 条边」的假空图。 */
+function computeVisible(){
+  // 聚焦模式优先级最高：只渲染选中节点的上下游，图小到能看清标签
+  if(state.focusOnly && state.selected){
+    const keep=touched(state.selected);
+    VIS=new Set([...keep].filter(id=>layerOk(byId.get(id))));
+    return;
+  }
+  const base=new Set();
+  for(const n of nodes){
+    if(!layerOk(n)) continue;
+    if(state.domain==="__ALL__" || n.domain===state.domain) base.add(n.id);
+  }
+  if(state.domain!=="__ALL__"){
+    for(const e of edges){
+      if(!edgeKindOk(e)) continue;
+      const a=byId.get(e.from), b=byId.get(e.to);
+      if(!layerOk(a)||!layerOk(b)) continue;
+      if(base.has(a.id)) base.add(b.id);
+      else if(base.has(b.id)) base.add(a.id);
+    }
+  }
+  VIS=base;
+}
+function nodeVisible(n){ return VIS.has(n.id); }
+
+function domainsList(){
+  const out=[...new Set(nodes.map(n=>n.domain))].sort();
+  return out;
+}
+
+
+/* ---------- 布局 ---------- */
+const layerX = new Map(LAYERS.map((l,i)=>[l.key, PAD_L + i*COL_W]));
+function layout(){
+  const pos=new Map();
+  const visNodes=nodes.filter(n=>VIS.has(n.id));
+  const domains=[...new Set(visNodes.map(n=>n.domain))].sort((a,b)=>{
+    if(state.domain==="__ALL__") return a.localeCompare(b);
+    return (a===state.domain?-1:0)-(b===state.domain?-1:0) || a.localeCompare(b);
+  });
+  let y=PAD_T;
+  const bands=[];
+  for(const d of domains){
+    const dn=visNodes.filter(n=>n.domain===d);
+    const perLayer=new Map();
+    for(const n of dn){
+      if(!state.layers.has(n.layer)) continue;
+      if(!perLayer.has(n.layer)) perLayer.set(n.layer,[]);
+      perLayer.get(n.layer).push(n);
+    }
+    let maxRows=1;
+    for(const arr of perLayer.values()){
+      arr.sort((a,b)=>String(a.label).localeCompare(String(b.label)));
+      maxRows=Math.max(maxRows,arr.length);
+    }
+    const bandY=y, bandH=maxRows*ROW_H+18;
+    for(const [layer,arr] of perLayer){
+      arr.forEach((n,i)=>{ pos.set(n.id,{x:layerX.get(layer), y:bandY+10+i*ROW_H}); });
+    }
+    bands.push({domain:d, y:bandY, h:bandH, count:dn.length});
+    y=bandY+bandH+BAND_GAP;
+  }
+  return {pos, bands, height:y+PAD_T, usedLayers:[...new Set(visNodes.map(n=>n.layer))]};
+}
+
+/* ---------- 渲染 ---------- */
+const svg=document.getElementById("svg");
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs){ const e=document.createElementNS(NS,tag);
+  for(const k in attrs) if(attrs[k]!=null) e.setAttribute(k,attrs[k]); return e; }
+
+let view=null, viewPos=null;
+function render(){
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  computeVisible();
+  const {pos,bands,height,usedLayers}=layout();
+  const maxLayerX = usedLayers.length ? Math.max(...usedLayers.map(k=>layerX.get(k))) : 0;
+  const totalW = maxLayerX + 175 + 20;   // 节点宽 166 + 余量
+  svg.setAttribute("viewBox",`0 0 ${totalW} ${height}`);
+  svg.setAttribute("width","100%"); svg.setAttribute("height","100%");
+
+  const gRoot=el("g",{id:"root"});
+  gRoot.setAttribute("transform",`translate(${state.tx},${state.ty}) scale(${state.scale})`);
+  svg.appendChild(gRoot);
+
+  // 背景（导出 PNG 时保证不透明）
+  gRoot.appendChild(el("rect",{id:"bg",x:-4000,y:-4000,width:totalW+8000,height:height+8000,fill:"#0f1115"}));
+
+  // 业务域带
+  for(const b of bands){
+    gRoot.appendChild(el("rect",{class:"band-bg",x:0,y:b.y,width:totalW,height:b.h,rx:8}));
+    const t=el("text",{class:"band-label",x:12,y:b.y+16});
+    t.textContent=`${b.domain}（${b.count} 节点）`;
+    gRoot.appendChild(t);
+  }
+  // 层标题
+  LAYERS.forEach(l=>{
+    if(!state.layers.has(l.key)) return;
+    const t=el("text",{class:"layer-label",x:layerX.get(l.key),y:PAD_T-18});
+    t.textContent=l.name;
+    gRoot.appendChild(t);
+  });
+
+  // 边（先画，压在节点下）
+  const highlight=state.selected?touched(state.selected):null;
+  const visEdges=edges.filter(edgeVisible);
+  const gE=el("g",{id:"edges"});
+  for(const e of visEdges){
+    const a=pos.get(e.from), b=pos.get(e.to);
+    if(!a||!b) continue;
+    const on = !highlight || (highlight.has(e.from) && highlight.has(e.to));
+    const st=EDGE_STYLE[e.kind]||{color:"#888"};
+    const x1=a.x+166, y1=a.y, x2=b.x, y2=b.y;      // 节点右缘 → 目标左缘
+    const mx=(x1+x2)/2;
+    const p=el("path",{class:"edge"+(on?"":" dim"),d:`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`,
+      stroke:st.color,"stroke-width":on?1.4:1,opacity:on?0.5:0.05});
+    p.dataset.kind=e.kind;
+    gE.appendChild(p);
+  }
+  gRoot.appendChild(gE);
+
+  // 节点
+  const gN=el("g",{id:"nodes"});
+  for(const n of nodes){
+    if(!nodeVisible(n)) continue;
+    const p=pos.get(n.id); if(!p) continue;
+    const st=KIND_STYLE[n.kind]||{fill:"#333",stroke:"#888"};
+    const g=el("g",{class:"node",transform:`translate(${p.x},${p.y})`});
+    g.dataset.id=n.id;
+    const isTable=n.kind==="table";
+    const h=18, w=isTable?150:166;
+    if(isTable) g.appendChild(el("rect",{x:0,y:-h/2,width:w,height:h,rx:9,fill:st.fill,stroke:st.stroke}));
+    else if(n.kind==="endpoint") g.appendChild(el("rect",{x:0,y:-h/2,width:w,height:h,rx:3,fill:st.fill,stroke:st.stroke}));
+    else g.appendChild(el("rect",{x:0,y:-h/2,width:w,height:h,rx:4,fill:st.fill,stroke:st.stroke,opacity:.92}));
+    const t=el("text",{class:"n-label"+(n.kind==="table"?" m":""),x:7,y:3.5});
+    t.textContent=trim(n.label, isTable?24:23);
+    g.appendChild(t);
+    if(n.method){ // HTTP 方法小色块
+      const mc={GET:"#4fbf7f",POST:"#d6a84a",PUT:"#4c8dff",DELETE:"#e05c5c"}[n.method]||"#888";
+      g.appendChild(el("rect",{x:0,y:-h/2,width:3,height:h,fill:mc,rx:1.5}));
+    }
+    if(state.selected===n.id) g.setAttribute("class","node sel");
+    else if(highlight&&highlight.has(n.id)) g.setAttribute("class","node hl");
+    if(state.q && labelHit(n,state.q)) g.setAttribute("class",(g.getAttribute("class")||"node")+" hl");
+    if(state.q && !labelHit(n,state.q)) g.setAttribute("class",(g.getAttribute("class")||"node")+" dim");
+    gN.appendChild(g);
+  }
+  gRoot.appendChild(gN);
+
+  view={pos,totalW,height}; viewPos=pos;
+}
+function trim(s,n){ s=String(s); return s.length>n? s.slice(0,n-1)+"…":s; }
+function labelHit(n,q){
+  q=q.toLowerCase();
+  return String(n.label).toLowerCase().includes(q)||String(n.id).toLowerCase().includes(q);
+}
+
+/* ---------- 上下游高亮 ---------- */
+function ads(){
+  const out=new Map(), inc=new Map();
+  for(const e of edges){
+    if(!edgeKindOk(e)) continue;
+    const a=byId.get(e.from), b=byId.get(e.to);
+    if(!layerOk(a)||!layerOk(b)) continue;
+    if(!out.has(e.from)) out.set(e.from,[]);
+    out.get(e.from).push(e.to);
+    if(!inc.has(e.to)) inc.set(e.to,[]);
+    inc.get(e.to).push(e.from);
+  }
+  return {out,inc};
+}
+function touched(id){
+  const {out,inc}=ads();
+  const seen=new Set([id]);
+  let frontier=[id];
+  while(frontier.length){ const nx=[];
+    for(const f of frontier) for(const t of (out.get(f)||[])) if(!seen.has(t)){seen.add(t);nx.push(t);}
+    frontier=nx; }
+  frontier=[id];
+  while(frontier.length){ const nx=[];
+    for(const f of frontier) for(const t of (inc.get(f)||[])) if(!seen.has(t)){seen.add(t);nx.push(t);}
+    frontier=nx; }
+  return seen;
+}
+
+/* ---------- 详情面板 ---------- */
+function showDetail(id){
+  const n=byId.get(id); const box=document.getElementById("detailBody");
+  if(!n){ box.className="empty"; box.textContent="点任意节点查看详情。"; return; }
+  box.className="";
+  const rows=[];
+  let title=n.label, sub=`${n.kind}${n.domain?" · "+n.domain:""}`;
+  const ep=epBy.get(id);
+  if(ep){
+    title=`${ep.endpoint}`;
+    sub=`HTTP ${ep.http} · ${ep.summary||"（无摘要）"}`;
+    rows.push(["鉴权", ep.auth||"—"]);
+    rows.push(["控制器", `<code>${ep.controller}.${ep.method}</code>`]);
+    if(ep.services.length) rows.push(["服务", ep.services.map(s=>`<code>${s}</code>`).join(" ")]);
+    if(ep.cross_api.length) rows.push(["跨上下文", ep.cross_api.map(s=>`<code>${s}</code>`).join(" ")]);
+    if(ep.tables.length) rows.push(["涉及表", ep.tables.map(s=>`<span class="pill">${s}</span>`).join("")]);
+    if(ep.fe_callers.length) rows.push(["前端调用方", ep.fe_callers.map(s=>`<code>${s}</code>`).join(" ")]);
+    if(ep.detail){
+      const d=ep.detail;
+      if(d.params_text) rows.push(["请求体/参数", `<code>${esc(d.params_text)}</code>`]);
+      if(d.body_keys&&d.body_keys.length) rows.push(["请求体字段", d.body_keys.map(k=>`<span class="pill">${esc(k)}${(d.body_required||[]).includes(k)?"*":""}</span>`).join("")]);
+      if(d.resp_keys&&d.resp_keys.length) rows.push(["已知响应键", d.resp_keys.map(k=>`<span class="pill">${esc(k)}</span>`).join("")]);
+      if(d.codes&&d.codes.length) rows.push(["可能失败码", d.codes.map(k=>`<code>${esc(k)}</code>`).join(" ")]);
+      if(d.impl) rows.push(["实现位置", `<code>${esc(d.impl)}</code>`]);
+    }
+  } else if(n.kind==="table"){
+    const t=(DATA.tables||{})[id.replace("table:","")];
+    title=n.label;
+    sub=`数据库表 · ${n.domain}`;
+    if(t&&t.comment) rows.push(["表说明", t.comment]);
+    if(t&&t.columns){
+      rows.push(["字段数", t.columns.length]);
+      let html='<table class="k"><tr><th>列</th><th>类型</th><th>可空</th></tr>';
+      for(const c of t.columns) html+=`<tr><td><code>${c.name}</code></td><td>${c.type}</td><td>${c.nullable?"是":"否"}</td></tr>`;
+      html+="</table>";
+      rows.push(["字段", html]);
+    }
+  } else {
+    rows.push(["类型", n.kind]);
+    rows.push(["源码", `<code>${n.file||"—"}</code>`]);
+  }
+  const tset=touched(id);
+  rows.push(["上下游", `${tset.size-1} 个节点（含自身）`]);
+
+  box.innerHTML=`<div class="ttl">${esc(title)}</div><div class="sub">${esc(sub)}</div>
+    <dl>${rows.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${v}</dd>`).join("")}</dl>`;
+}
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ---------- 交互 ---------- */
+svg.addEventListener("click",ev=>{
+  const g=ev.target.closest(".node");
+  if(g){
+    state.selected=g.dataset.id; render(); showDetail(state.selected);
+    if(state.focusOnly) focusView(state.selected);
+  }
+});
+let drag=null;
+svg.addEventListener("mousedown",ev=>{
+  if(ev.target.closest(".node")) return;
+  drag={x:ev.clientX,y:ev.clientY,tx:state.tx,ty:state.ty};
+  svg.classList.add("dragging");
+});
+window.addEventListener("mousemove",ev=>{
+  if(!drag) return;
+  state.tx=drag.tx+(ev.clientX-drag.x);
+  state.ty=drag.ty+(ev.clientY-drag.y);
+  const r=document.getElementById("root");
+  if(r) r.setAttribute("transform",`translate(${state.tx},${state.ty}) scale(${state.scale})`);
+});
+window.addEventListener("mouseup",()=>{ drag=null; svg.classList.remove("dragging"); });
+svg.addEventListener("wheel",ev=>{
+  ev.preventDefault();
+  const k=ev.deltaY<0?1.12:1/1.12;
+  state.scale=Math.min(4,Math.max(.12,state.scale*k));
+  document.getElementById("lvl").textContent=Math.round(state.scale*100)+"%";
+  const r=document.getElementById("root");
+  if(r) r.setAttribute("transform",`translate(${state.tx},${state.ty}) scale(${state.scale})`);
+},{passive:false});
+
+/* ---------- 控件 ---------- */
+function initControls(){
+  const dsel=document.getElementById("domain");
+  const ds=domainsList();
+  dsel.innerHTML=`<option value="__ALL__">全部业务域（较挤）</option>`+
+    ds.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join("");
+  dsel.value=state.domain;
+  dsel.addEventListener("change",()=>{ state.domain=dsel.value; resetView(); });
+
+  document.getElementById("layers").innerHTML=LAYERS.map(l=>
+    `<label class="chk"><input type="checkbox" data-layer="${l.key}" checked />${esc(l.name)}</label>`).join("");
+  document.getElementById("layers").addEventListener("change",ev=>{
+    const k=ev.target.dataset.layer; if(!k) return;
+    ev.target.checked? state.layers.add(k) : state.layers.delete(k);
+    render();
+  });
+
+  document.getElementById("edgekinds").innerHTML=Object.entries(EDGE_STYLE).map(([k,v])=>
+    `<label class="chk"><input type="checkbox" data-edge="${k}" checked />
+      <span class="swatch" style="background:${v.color}"></span>${esc(v.label)}
+      <span style="color:var(--fg3);font:10px var(--mono);margin-left:auto">${k}</span></label>`).join("");
+  document.getElementById("edgekinds").addEventListener("change",ev=>{
+    const k=ev.target.dataset.edge; if(!k) return;
+    ev.target.checked? state.edges.add(k) : state.edges.delete(k);
+    render();
+  });
+
+  document.getElementById("legend").innerHTML=
+    Object.entries(KIND_STYLE).map(([k,v])=>
+      `<label class="chk"><span class="swatch" style="background:${v.fill};border:1px solid ${v.stroke}"></span>
+        ${esc(k)}</label>`).join("")+
+    `<div class="hint">节点按类型着色；外框色即上表；表的圆角更大。</div>`;
+
+  const q=document.getElementById("q");
+  const qhint=document.getElementById("qhint");
+  q.addEventListener("input",()=>{
+    state.q=q.value.trim();
+    if(state.q){
+      const inDomain=nodes.some(n=>labelHit(n,state.q)&&nodeVisible(n));
+      const globally=nodes.some(n=>labelHit(n,state.q));
+      if(!inDomain && globally){          // 当前业务域里没有，但全局有 → 自动放开
+        state.domain="__ALL__";
+        document.getElementById("domain").value="__ALL__";
+        qhint.textContent=`当前业务域内无匹配，已切到「全部业务域」。`;
+      } else if(!globally){
+        qhint.textContent="无匹配节点。";
+      } else {
+        qhint.textContent="";
+      }
+    } else { qhint.textContent=""; }
+    render();
+  });
+  q.addEventListener("keydown",ev=>{
+    if(ev.key!=="Enter"||!state.q) return;
+    const hit=nodes.find(n=>labelHit(n,state.q)&&nodeVisible(n));
+    if(hit){ state.selected=hit.id; render(); showDetail(hit.id); }
+  });
+
+  document.getElementById("focusOnly").addEventListener("change",ev=>{
+    state.focusOnly=ev.target.checked; render();
+    if(state.focusOnly&&state.selected) focusView(state.selected);
+  });
+  document.getElementById("btn-all").addEventListener("click",()=>{
+    state.domain="__ALL__"; document.getElementById("domain").value="__ALL__";
+    state.layers=new Set(LAYERS.map(l=>l.key)); state.edges=new Set(Object.keys(EDGE_STYLE));
+    document.querySelectorAll("#layers input").forEach(i=>i.checked=true);
+    document.querySelectorAll("#edgekinds input").forEach(i=>i.checked=true);
+    resetView();
+  });
+  document.getElementById("btn-reset").addEventListener("click",()=>{
+    state.selected=null; state.q=""; document.getElementById("q").value="";
+    state.domain="__ALL__"; document.getElementById("domain").value="__ALL__";
+    state.focusOnly=true; document.getElementById("focusOnly").checked=true;
+    state.layers=new Set(LAYERS.map(l=>l.key));
+    document.querySelectorAll("#layers input").forEach(i=>i.checked=true);
+    resetView(); showDetail(null);
+  });
+  document.getElementById("btn-fit").addEventListener("click",fitView);
+  document.getElementById("btn-collapse").addEventListener("click",ev=>{
+    const lay=document.querySelector(".layout");
+    const on=lay.classList.toggle("collapsed");
+    ev.target.textContent=on?"展开侧栏":"折叠侧栏";
+    setTimeout(fitView,60);
+  });
+  const zoomBy=(k)=>{ state.scale=Math.min(4,Math.max(.12,state.scale*k)); applyTransform(); };
+  document.getElementById("z-in").addEventListener("click",()=>zoomBy(1.2));
+  document.getElementById("z-out").addEventListener("click",()=>zoomBy(1/1.2));
+  document.getElementById("z-fit").addEventListener("click",fitView);
+  document.getElementById("z-png").addEventListener("click",exportPNG);
+  document.getElementById("btn-png").addEventListener("click",exportPNG);
+}
+
+function applyTransform(){
+  const r=document.getElementById("root");
+  if(r) r.setAttribute("transform",`translate(${state.tx},${state.ty}) scale(${state.scale})`);
+  const lvl=document.getElementById("lvl");
+  if(lvl) lvl.textContent=Math.round(state.scale*100)+"%";
+}
+function resetView(){ state.selected=null; showDetail(null); render(); fitView(); }
+
+/* ---------- 视图适配 ---------- */
+/* 聚焦视图：按可读比例（不低于 0.7）显示，并居中到选中节点 */
+function focusView(id){
+  const st=document.getElementById("stage").getBoundingClientRect();
+  const w=(view&&view.totalW)||1400, h=(view&&view.height)||600;
+  const fit=Math.min(st.width/w, st.height/h);
+  state.scale=Math.min(1.6, Math.max(0.7, fit));
+  const p=viewPos&&viewPos.get(id);
+  if(p){
+    state.tx=st.width/2 - (p.x+83)*state.scale;
+    state.ty=Math.max(8, st.height/2 - p.y*state.scale);
+  } else { state.tx=(st.width-w*state.scale)/2; state.ty=8; }
+  applyTransform();
+}
+function fitView(){
+  const st=document.getElementById("stage").getBoundingClientRect();
+  const w=(view&&view.totalW)||1600, h=(view&&view.height)||900;
+  const s=Math.min(st.width/w, st.height/h)*0.96;
+  state.scale=Math.min(1.6,Math.max(.18,s));
+  state.tx=(st.width-w*state.scale)/2;
+  state.ty=8;
+  applyTransform();
+}
+
+/* ---------- 导出 PNG ---------- */
+function exportPNG(){
+  try{
+    const clone=svg.cloneNode(true);
+    const st=document.getElementById("stage").getBoundingClientRect();
+    const w=(view&&view.totalW)||1600, h=(view&&view.height)||900;
+    clone.setAttribute("xmlns",NS);
+    clone.setAttribute("width",w); clone.setAttribute("height",h);
+    clone.setAttribute("viewBox",`0 0 ${w} ${h}`);
+    // 去掉屏幕上的平移缩放，导出完整图
+    const root=clone.querySelector("#root");
+    if(root) root.setAttribute("transform","translate(0,0) scale(1)");
+    const bg=clone.querySelector("#bg");
+    if(bg){ bg.setAttribute("fill","#ffffff"); }
+    // 导出用亮色底：把深色文字改深、浅色描边保留
+    clone.querySelectorAll(".n-label").forEach(t=>t.setAttribute("fill","#1b1f27"));
+    clone.querySelectorAll(".band-label").forEach(t=>t.setAttribute("fill","#333a45"));
+    clone.querySelectorAll(".layer-label").forEach(t=>t.setAttribute("fill","#5a6472"));
+    clone.querySelectorAll(".band-bg").forEach(r=>r.setAttribute("fill","#f2f4f7"));
+    const xml=new XMLSerializer().serializeToString(clone);
+    const url="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(xml);
+    const img=new Image();
+    img.onload=()=>{
+      const cv=document.createElement("canvas");
+      cv.width=w*2; cv.height=h*2;
+      const cx=cv.getContext("2d");
+      cx.fillStyle="#ffffff"; cx.fillRect(0,0,cv.width,cv.height);
+      cx.drawImage(img,0,0,cv.width,cv.height);
+      cv.toBlob(b=>{
+        const a=document.createElement("a");
+        a.href=URL.createObjectURL(b);
+        a.download=`调用链路图_${DATA.meta.fingerprint.replace(/[^\w.-]+/g,"_")}.png`;
+        a.click(); URL.revokeObjectURL(a.href);
+      },"image/png");
+    };
+    img.onerror=()=>alert("PNG 导出失败：SVG 序列化后浏览器无法解回图像。可改用「显示全部 → 截图」。");
+    img.src=url;
+  }catch(err){ alert("PNG 导出失败："+err.message); }
+}
+
+/* ---------- 启动 ---------- */
+document.getElementById("meta").textContent=
+  `${DATA.meta.fingerprint} · ${nodes.length} 节点 / ${edges.length} 边 · 生成于 ${DATA.meta.generated_at}`;
+initControls();
+state.domain="__ALL__";
+document.getElementById("domain").value="__ALL__";
+
+/* 首屏默认选中一条「规模适中」的链路并聚焦：
+   全部业务域总览在 290+ 节点时必然缩到 20%（标签不可读），
+   所以给一个立刻能看懂的追踪示例，用户再自行搜索/切换。 */
+(function pickOpening(){
+  const size = id => touched(id).size;
+  let best=null, bestScore=-1;
+  for(const n of nodes){
+    if(n.kind!=="endpoint") continue;
+    const s=size(n.id);
+    if(s<6 || s>42) continue;                 // 太小没内容，太大读不清
+    const score=Math.abs(s-20);               // 越接近 20 个节点越合适
+    if(bestScore<0 || score<bestScore){ best=n; bestScore=score; }
+  }
+  if(best){ state.selected=best.id; }
+})();
+render(); showDetail(state.selected);
+if(state.selected && state.focusOnly) focusView(state.selected); else fitView();
+</script>
+</body>
+</html>

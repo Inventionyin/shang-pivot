@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>操作日志 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='logs'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">系统管理 / <b>操作日志</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div><div class="page-title">操作日志</div><div class="page-sub">关键操作审计 · 异步落库 · 按筛选结果导出 CSV</div></div>
+        <button class="btn btn-secondary btn-sm" data-modal-open="dlg-log-export">导出 CSV</button>
+      </div>
+
+      <div class="card card-pad">
+        <div class="toolbar">
+          <input class="input" type="text" placeholder="用户 / 操作内容" style="min-width:220px">
+          <select class="select" style="width:auto"><option>全部模块</option><option>权限</option><option>商品</option><option>库存</option><option>系统</option></select>
+          <input class="input" type="text" placeholder="日期范围" style="width:180px">
+          <div class="spacer"></div>
+          <button class="btn btn-secondary btn-sm">重置</button>
+          <button class="btn btn-primary btn-sm">查询</button>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr><th>用户</th><th>模块</th><th>动作</th><th class="code">对象</th><th class="code">IP</th><th>结果</th><th class="num">时间</th><th class="col-op">操作</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>陈思远</td><td>权限</td><td>禁用用户</td><td class="code">wang.meili</td><td class="code">10.0.4.21</td>
+              <td><span class="badge badge-forest">成功</span></td><td class="num">2026-09-11 14:02:11</td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-log">详情</button></td>
+            </tr>
+            <tr>
+              <td>林晓涵</td><td>商品</td><td>上架商品</td><td class="code">101</td><td class="code">10.0.4.33</td>
+              <td><span class="badge badge-forest">成功</span></td><td class="num">2026-09-11 11:20:45</td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-log">详情</button></td>
+            </tr>
+            <tr>
+              <td>周凯</td><td>库存</td><td>库存调整</td><td class="code">10022 -10</td><td class="code">10.0.4.50</td>
+              <td><span class="badge badge-forest">成功</span></td><td class="num">2026-09-11 10:08:02</td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-log">详情</button></td>
+            </tr>
+            <tr>
+              <td>陈思远</td><td>权限</td><td>角色权限变更</td><td class="code">OPERATOR</td><td class="code">10.0.4.21</td>
+              <td><span class="badge badge-forest">成功</span></td><td class="num">2026-09-11 09:15:30</td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-log">详情</button></td>
+            </tr>
+            <tr>
+              <td>林晓涵</td><td>商品</td><td>删除商品</td><td class="code">161</td><td class="code">10.0.4.33</td>
+              <td><span class="badge badge-brick">失败</span></td><td class="num">2026-09-11 08:40:12</td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-log">详情</button></td>
+            </tr>
+            <tr>
+              <td>admin</td><td>系统</td><td>登录</td><td class="code">—</td><td class="code">10.0.4.21</td>
+              <td><span class="badge badge-forest">成功</span></td><td class="num">2026-09-11 08:30:00</td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-log">详情</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pager pager-fixed">
+          <span>共 284 条 · 每页 10 条</span>
+          <button class="btn btn-secondary btn-sm" disabled>‹</button>
+          <span class="badge badge-amber">1 / 29</span>
+          <button class="btn btn-secondary btn-sm">›</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 日志详情抽屉 ============ -->
+<div class="drawer" id="drw-log" hidden>
+  <div class="modal-mask"></div>
+  <div class="drawer-panel" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div class="modal-title">操作日志详情</div>
+      <span class="badge badge-forest">成功</span>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body" style="flex:1">
+      <dl class="kv" style="grid-template-columns:96px 1fr;margin-bottom:18px">
+        <dt>操作人</dt><dd>陈思远 <span class="hint">（admin）</span></dd>
+        <dt>时间</dt><dd class="code">2026-09-11 14:02:11</dd>
+        <dt>模块</dt><dd>权限（identity）</dd>
+        <dt>动作</dt><dd>禁用用户（user:status）</dd>
+        <dt>对象</dt><dd class="code">wang.meili</dd>
+        <dt>结果</dt><dd><span class="badge badge-forest">成功</span></dd>
+        <dt>来源 IP</dt><dd class="code">10.0.4.21</dd>
+        <dt>TraceId</dt><dd class="code">8f2c1d0e9a7b4c3d</dd>
+      </dl>
+
+      <div class="page-title" style="font-size:13px;margin-bottom:10px">参数摘要</div>
+      <div class="card card-pad" style="background:var(--cream);margin-bottom:18px">
+        <dl class="kv" style="grid-template-columns:96px 1fr">
+          <dt>userId</dt><dd class="code">5</dd>
+          <dt>username</dt><dd class="code">wang.meili</dd>
+          <dt>status</dt><dd><span class="badge badge-brick">DISABLED</span></dd>
+          <dt>reason</dt><dd class="hint">—</dd>
+        </dl>
+        <p class="hint" style="margin-top:10px">敏感字段（密码、密钥等）落库前已脱敏，仅保留字段名。</p>
+      </div>
+
+      <details>
+        <summary class="hint" style="cursor:pointer">原始参数（JSON，点击展开）</summary>
+        <pre class="code" style="background:var(--sand);padding:12px;border-radius:var(--r-md);font-size:12px;overflow:auto;margin-top:8px">{
+  "userId": 5,
+  "username": "wang.meili",
+  "realName": "王美丽",
+  "status": "DISABLED",
+  "operatorId": 1,
+  "traceId": "8f2c1d0e9a7b4c3d"
+}</pre>
+      </details>
+
+      <div class="alert alert-info" style="margin-top:18px">
+        日志为<b>异步落库</b>的审计快照，写入失败不影响业务操作；日志仅可查询与导出，<b>不提供编辑 / 删除</b>。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>关闭</button>
+      <button class="btn btn-primary" data-modal-open="dlg-log-export">导出当前筛选</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 导出 CSV 确认 ============ -->
+<div class="modal" id="dlg-log-export" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-log-export-t">
+    <div class="modal-head">
+      <span class="modal-ico info">↓</span>
+      <div class="modal-title" id="dlg-log-export-t">导出操作日志</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>将按<b>当前筛选条件</b>导出日志：</p>
+      <ul class="impact">
+        <li>时间范围 <b>2026-09-01 ~ 2026-09-11</b></li>
+        <li>模块 <b>全部模块</b> · 关键字 <b>空</b></li>
+        <li>预计条数 <b>284</b> 条（翻页不影响导出范围）</li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">
+        CSV 为 UTF-8（带 BOM），可直接用 Excel 打开；导出内容包含参数摘要，敏感字段已脱敏。导出动作本身也会写入一条操作日志。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认导出</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

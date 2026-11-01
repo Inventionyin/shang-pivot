@@ -1,0 +1,174 @@
+# 尚品汇告警规则。
+#
+# 阈值说明：元气购那套阈值是压测标定过的（写进了 docs/性能测试方案）。
+# 尚品汇**尚未压测标定基线**，因此这里给的是"明显劣化"的经验阈值，
+# 每条都隐含「待标定」——首次压测后按实测曲线回填，做法同元气购（阈值取在
+# 明显偏离正常、但远早于崩溃的位置，避免告警疲劳）。
+#
+# 告警名统一带「尚品汇-」前缀：服务器上的 Alertmanager 同时服务元气购那套规则，
+# 同名规则会被按 alertname 分到同一组通知里，前缀可以避免混淆。
+#
+# 指标来源：Spring Boot actuator + Micrometer（应用侧接入见 docs/可观测平台.md），
+# 依赖指标族：http_server_requests_seconds_* / jvm_* / hikaricp_connections_*
+#            / executor_* / process_cpu_usage / business_failures_total（应用自定义计数）
+groups:
+  - name: shang-pivot-slo
+    interval: 30s
+    rules:
+      - alert: 尚品汇-接口P95劣化
+        # 最小请求量门槛：低流量下 P95 由个位数样本算出，一次部署重启造成的慢请求
+        # 就能把 P95 拉到秒级并误报（元气购实测踩过）。要求该 uri 至少 0.1 req/s。
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le, uri) (rate(http_server_requests_seconds_bucket{job="shang-pivot",uri!~"/actuator.*"}[5m]))
+          ) > 1
+          and
+          sum by (uri) (rate(http_server_requests_seconds_count{job="shang-pivot",uri!~"/actuator.*"}[5m])) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          source: latency
+        annotations:
+          summary: "接口 {{ $labels.uri }} 服务端 P95 超过 1s"
+          description: "P95 = {{ $value | humanizeDuration }}（阈值 1s 为经验值，首次压测后回填基线）。"
+
+      # 登录是同类项目的头号瓶颈（BCrypt 纯 CPU 校验 + 令牌签发）。管理端与 C 端两条都盯。
+      - alert: 尚品汇-登录接口延迟异常
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le, uri) (rate(http_server_requests_seconds_bucket{job="shang-pivot",uri=~"(/admin)?/auth/login"}[5m]))
+          ) > 1
+          and
+          sum by (uri) (rate(http_server_requests_seconds_count{job="shang-pivot",uri=~"(/admin)?/auth/login"}[5m])) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          source: bottleneck
+        annotations:
+          summary: "登录接口 {{ $labels.uri }} P95 超过 1s"
+          description: "P95 = {{ $value | humanizeDuration }}。登录含密码/验证码校验与令牌签发，是 CPU 与 Redis 密集路径；出现此告警说明登录风暴已开始堆积。"
+
+      - alert: 尚品汇-错误率升高
+        expr: |
+          sum(rate(http_server_requests_seconds_count{job="shang-pivot",status=~"5.."}[5m]))
+          / clamp_min(sum(rate(http_server_requests_seconds_count{job="shang-pivot"}[5m])), 0.001) > 0.01
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "5xx 错误率超过 1%"
+          description: "当前错误率 {{ $value | humanizePercentage }}（阈值待标定）。"
+
+      - alert: 尚品汇-服务不可用
+        expr: up{job="shang-pivot"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus 采不到尚品汇指标端点"
+          description: "up=0 持续 1 分钟。先分清两种情况：① 后端进程活着、只是还没接入 actuator（部署新包前的预期状态）；② 进程退出或 SSH 隧道断了。排查：上服务器 systemctl status shang-pivot，再 curl 127.0.0.1:8087/actuator/prometheus。"
+
+      - alert: 尚品汇-主机指标不可达
+        expr: up{job="shang-pivot-host"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          source: tunnel
+        annotations:
+          summary: "采不到服务器主机指标（SSH 隧道可能已断）"
+          description: "up=0 持续 2 分钟。serverbridge 每 15 秒自动重连，持续不可达说明隧道或服务器 node_exporter 有问题。查看：docker compose --profile monitoring logs serverbridge"
+
+      # 业务失败是「HTTP 200 + body.code != 0」的静默失败：既不产生 5xx，
+      # 又被 GlobalExceptionHandler 吞成 200（handleBiz）。没有这条规则，
+      # "下单失败率攀升"在告警上完全空白。
+      # 依赖应用自定义计数器 business_failures_total（GlobalExceptionHandler 埋点，见 docs/可观测平台.md）。
+      - alert: 尚品汇-业务失败率升高
+        expr: sum(rate(business_failures_total{job="shang-pivot"}[5m])) > 0.1
+        for: 3m
+        labels:
+          severity: warning
+          source: business
+        annotations:
+          summary: "业务失败持续发生（非 HTTP 错误）"
+          description: "近 5 分钟业务失败 {{ $value | humanize }} 次/秒。这类失败返回 HTTP 200 + code≠0，不出现在 5xx 错误率里。按 code 标签排查（STOCK_INSUFFICIENT / ORDER_STATUS_INVALID / LOGIN_FAILED…），错误码词条见 docs/测试资料/领域词典.md。"
+
+  - name: shang-pivot-resources
+    interval: 30s
+    rules:
+      # 尚品汇连接池上限只有 5（application.yaml hikari.maximum-pool-size），
+      # 打满的代价比元气购（20）大得多，所以更早预警。
+      - alert: 尚品汇-数据库连接池接近打满
+        expr: |
+          hikaricp_connections_active{job="shang-pivot"}
+          / clamp_min(hikaricp_connections_max{job="shang-pivot"}, 1) > 0.8
+        for: 3m
+        labels:
+          severity: warning
+          source: bottleneck
+        annotations:
+          summary: "HikariCP 活跃连接超过上限的 80%"
+          description: "活跃 {{ $value | humanizePercentage }}（上限 5）。公网 PG 抖动时连接迟迟不释放最容易触发；结合「数据库连接等待」一起看。"
+
+      - alert: 尚品汇-数据库连接等待
+        expr: hikaricp_connections_pending{job="shang-pivot"} > 0
+        for: 1m
+        labels:
+          severity: warning
+          source: bottleneck
+        annotations:
+          summary: "有请求在等待数据库连接"
+          description: "等待数 {{ $value }}。连接池已饱和：池上限 5，且远程库 connectTimeout=15s，排队会直接体现为接口变慢。"
+
+      - alert: 尚品汇-Tomcat线程池接近饱和
+        # 依赖 application.yaml 的 server.tomcat.mbeanregistry.enabled=true，否则没有 tomcat_threads_* 指标
+        expr: |
+          tomcat_threads_busy_threads{job="shang-pivot"}
+          / clamp_min(tomcat_threads_config_max_threads{job="shang-pivot"}, 1) > 0.9
+        for: 2m
+        labels:
+          severity: warning
+          source: bottleneck
+        annotations:
+          summary: "Tomcat 工作线程占用超过 90%"
+          description: "占用 {{ $value | humanizePercentage }}。持续高位说明请求处理已被阻塞（慢 SQL / 外部调用卡住），再往上就是请求排队。"
+
+      - alert: 尚品汇-异步线程池积压
+        # 必须排除 taskScheduler：@Scheduled 周期任务天然常驻队列（实测恒为 1~2 个），
+        # 不过滤会变成"永远在告警"的噪声（部署首日实测踩到）
+        expr: executor_queued_tasks{job="shang-pivot",name!="taskScheduler"} > 0
+        for: 2m
+        labels:
+          severity: warning
+          source: bottleneck
+        annotations:
+          summary: "异步线程池 {{ $labels.name }} 出现排队"
+          description: "排队任务 {{ $value }}。异步执行器（如 operationLogExecutor）积压说明消费侧变慢。"
+
+      - alert: 尚品汇-应用CPU饱和
+        expr: process_cpu_usage{job="shang-pivot"} > 0.8
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "应用进程 CPU 超过 80%"
+          description: "当前 {{ $value | humanizePercentage }}。服务器 16 核；结合「登录接口延迟异常」一起判断。"
+
+      - alert: 尚品汇-GC单次停顿过长
+        expr: jvm_gc_pause_seconds_max{job="shang-pivot"} > 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "JVM 单次 GC 停顿超过 1 秒"
+          description: "最大停顿 {{ $value | humanizeDuration }}。注意服务未设 -Xmx（用 JVM 默认堆，约物理内存 1/4），堆大时单次停顿会更长。"
+
+      - alert: 尚品汇-堆内存高位
+        expr: |
+          sum(jvm_memory_used_bytes{job="shang-pivot",area="heap"})
+          / clamp_min(sum(jvm_memory_max_bytes{job="shang-pivot",area="heap"}), 1) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "堆内存使用超过 90%"
+          description: "当前 {{ $value | humanizePercentage }}。持续高位需排查内存泄漏（浏览历史/收藏等按会员累积的数据是常见嫌疑）。"

@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ShangPivotApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="" />
+    <module name="shang-server" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.shangpivot.ShangPivotApplication" />
+    <!-- 工作目录 = 后端根，日志统一写到 backend/logs -->
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

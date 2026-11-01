@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>系统设置 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='settings'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">系统管理 / <b>系统设置</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <div class="page-title">系统设置</div>
+          <div class="page-sub">配置 KV 列表 · 按分类 Tab 过滤 · 敏感值脱敏显示</div>
+        </div>
+        <button class="btn btn-primary btn-sm" data-modal-open="dlg-save-all">保存修改</button>
+      </div>
+
+      <div class="cfg-tabs">
+        <div class="cfg-tab active">全部</div>
+        <div class="cfg-tab">SYS</div>
+        <div class="cfg-tab">PAYMENT</div>
+      </div>
+
+      <div class="card card-pad">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>分类</th>
+              <th class="code">键</th>
+              <th>值</th>
+              <th>备注</th>
+              <th class="col-op">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SYS</td>
+              <td class="code">site.name</td>
+              <td><input class="input" value="Shang Pivot" style="min-width:200px"></td>
+              <td><input class="input" value="站点名称" style="min-width:120px"></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button">保存</button></td>
+            </tr>
+            <tr>
+              <td>PAYMENT</td>
+              <td class="code">payment.sandbox.enabled</td>
+              <td><input class="input" value="true" style="min-width:200px"></td>
+              <td><input class="input" value="沙箱支付开关" style="min-width:120px"></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button">保存</button></td>
+            </tr>
+            <tr>
+              <td>PAYMENT</td>
+              <td class="code">payment.sandbox.secret</td>
+              <td>
+                <input class="input" value="******" readonly style="min-width:200px">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-secret">改值</button>
+              </td>
+              <td><input class="input" value="沙箱支付密钥（敏感）" style="min-width:120px"></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-secret-empty">保存</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="hint" style="margin-top:12px">
+          逐条保存或点右上「保存修改」批量保存脏数据；敏感项（is_secret）列表只回显掩码，必须重新输入新值才可保存。修改写操作日志。
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 批量保存确认 ============ -->
+<div class="modal" id="dlg-save-all" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico info">✓</span>
+      <div class="modal-title">保存修改</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p>将保存 <b>2</b> 条有改动的配置项：</p>
+      <ul class="impact">
+        <li><b>site.name</b> 站点名称</li>
+        <li><b>payment.sandbox.enabled</b> 沙箱支付开关</li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">配置保存后立即生效；本次修改会写入操作日志（操作人、时间、键名、新值）。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 敏感值改值 ============ -->
+<div class="modal" id="dlg-secret" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico warn">🔒</span>
+      <div class="modal-title">修改敏感配置</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:14px">键 <b class="code">payment.sandbox.secret</b> · 已存值以掩码显示，不回显原文。</p>
+      <div class="field">
+        <label class="label">新值<span class="req">*</span></label>
+        <input class="input" type="password" placeholder="请输入新的密钥值" autofocus>
+        <span class="hint">保存后列表仍显示 <span class="code">******</span>，原文不落日志</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-open="dlg-save-all" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 敏感值未输入新值就保存：拒绝 -->
+<div class="modal" id="dlg-secret-empty" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title">无法保存</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p>敏感配置请输入新值后再保存。</p>
+      <p class="hint">列表里的 <span class="code">******</span> 只是掩码，不是真实值，直接提交会把密钥覆盖成掩码。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

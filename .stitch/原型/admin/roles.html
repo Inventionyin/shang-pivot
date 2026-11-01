@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>角色管理 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='roles'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">系统管理 / <b>角色管理</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div><div class="page-title">角色管理</div><div class="page-sub">角色 CRUD · 权限绑定 · 数据范围 ALL / DEPT / SELF</div></div>
+        <button class="btn btn-primary" data-modal-open="dlg-role-form">+ 新增角色</button>
+      </div>
+
+      <div class="split">
+        <div class="card card-pad">
+          <div class="nav-group-title">角色列表</div>
+          <table class="table">
+            <thead><tr><th>角色 / 编码</th><th>数据范围</th><th class="num">用户</th><th class="col-op">操作</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>超级管理员</b> <span class="badge badge-amber">内置</span><div class="hint code" style="font-size:11px">SUPER_ADMIN</div></td>
+                <td class="code">ALL</td>
+                <td class="num">1</td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-builtin">删除</button>
+                </td>
+              </tr>
+              <tr style="background:var(--sand)">
+                <td><b>运营</b><div class="hint code" style="font-size:11px">OPERATOR</div></td>
+                <td class="code">ALL</td>
+                <td class="num">2</td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-inuse">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td><b>仓库</b><div class="hint code" style="font-size:11px">WAREHOUSE</div></td>
+                <td class="code">DEPT</td>
+                <td class="num">1</td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-inuse">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td><b>客服</b><div class="hint code" style="font-size:11px">SERVICE</div></td>
+                <td class="code">SELF</td>
+                <td class="num">1</td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-inuse">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td><b>财务</b><div class="hint code" style="font-size:11px">FINANCE</div></td>
+                <td class="code">SELF</td>
+                <td class="num">0</td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-role-del">删除</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card card-pad">
+          <div class="page-head" style="margin-bottom:12px">
+            <div class="page-title" style="font-size:16px">权限分配 · 运营</div>
+            <div class="seg"><span class="seg-item active">功能权限</span><span class="seg-item">数据范围</span></div>
+          </div>
+          <div class="toolbar" style="margin-bottom:8px">
+            <input class="input" placeholder="筛选名称 / 权限码" />
+            <button class="btn btn-secondary btn-sm">全部展开</button>
+            <button class="btn btn-secondary btn-sm">全部收起</button>
+            <button class="btn btn-ghost btn-sm">全选</button>
+          </div>
+          <div class="hint" style="margin-bottom:8px">已选 28 / 50 · 数据范围 ALL（全部数据）</div>
+          <div style="max-height:420px;overflow:auto;border:1px solid var(--border);border-radius:8px;padding:6px 0;background:var(--cream)">
+            <div class="tree-item"><span class="chev">▾</span> <input type="checkbox" checked> <b>商品中心</b> <span class="meta">product · 目录</span></div>
+            <div class="tree-item" style="padding-left:24px"><span class="chev">▾</span> <input type="checkbox" checked> 商品列表 <span class="meta">products</span></div>
+            <div class="tree-item" style="padding-left:42px"><input type="checkbox" checked> 新增商品 <span class="meta">product:add · 按钮</span></div>
+            <div class="tree-item" style="padding-left:42px"><input type="checkbox" checked> 编辑商品 <span class="meta">product:edit · 按钮</span></div>
+            <div class="tree-item"><span class="chev">▸</span> <input type="checkbox" checked> <b>系统管理</b> <span class="meta">system · 目录</span></div>
+          </div>
+          <div style="margin-top:16px;display:flex;gap:8px">
+            <button class="btn btn-primary btn-sm">保存权限</button>
+            <button class="btn btn-secondary btn-sm">重置</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 新增 / 编辑角色 ============ -->
+<div class="modal" id="dlg-role-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-role-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-role-form-t">新增 / 编辑角色</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">角色编码<span class="req">*</span></label>
+        <input class="input" value="OPERATOR" autofocus>
+        <span class="hint">2～30 位，仅字母 / 数字 / 下划线；<b>创建后不可修改</b>（权限与用户绑定按编码记录）</span>
+      </div>
+      <div class="field">
+        <label class="label">角色名称<span class="req">*</span></label>
+        <input class="input" value="运营">
+        <span class="hint">1～30 字符，不能与已有角色重名</span>
+      </div>
+      <div class="field">
+        <label class="label">数据范围<span class="req">*</span></label>
+        <select class="select">
+          <option selected>ALL · 全部数据</option>
+          <option>DEPT · 本部门及下级部门</option>
+          <option>SELF · 仅本人</option>
+        </select>
+        <span class="hint">决定该角色在列表页可见的数据范围（ALL / DEPT / SELF）</span>
+      </div>
+      <div class="alert alert-info">角色创建后可在右侧权限树继续分配功能权限；「超级管理员」为内置角色，不可删除。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除角色（危险确认）============ -->
+<div class="modal" id="dlg-role-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-role-del-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-role-del-t">删除角色</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除角色「财务（FINANCE）」？</p>
+      <p class="hint">该角色当前<b>没有用户</b>，删除后其权限绑定一并解除，不可恢复。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 角色仍被用户引用：拒绝 -->
+<div class="modal" id="dlg-role-inuse" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-role-inuse-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-role-inuse-t">无法删除角色</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>角色「运营（OPERATOR）」仍被 <b>2</b> 个用户引用（林晓涵、胡健），不能删除。</p>
+      <p class="hint">请先在「用户管理」中为这些用户更换角色，待引用数归零后再删除。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 内置角色不可删除：拒绝 -->
+<div class="modal" id="dlg-role-builtin" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-role-builtin-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-role-builtin-t">无法删除角色</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>「超级管理员（SUPER_ADMIN）」是系统<b>内置角色</b>，不允许删除。</p>
+      <p class="hint">内置角色承载全部权限，删除会导致系统无法管理；其名称与编码也不可修改。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

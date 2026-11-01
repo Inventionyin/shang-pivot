@@ -1,0 +1,1655 @@
+{
+  "generatedAt": "2026-10-30 10:11:44",
+  "runId": "20261030-094851",
+  "git": "b13bf61",
+  "total": 92,
+  "located": 92,
+  "defects": [
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /admin/after-sales/{id}/audit]-43abea64",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /admin/after-sales/{id}/audit]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/after-sales/{id}/audit",
+      "method": "POST",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/AfterSaleController.java:48",
+        "snippet": "   43 |     }\n   44 | \n   45 |     @PostMapping(\"/{id}/audit\")\n   46 |     @OpLog(module = \"aftersale\", action = \"audit\")\n   47 |     @Operation(summary = \"审核售后单\", description = \"对待审核售后单进行通过或驳回\")\n   48 |     public Result<Void> audit(\n   49 |             @Parameter(description = \"售后单ID\", example = \"1\") @PathVariable Long id,\n   50 |             @RequestBody AfterSaleService.AuditReq req) {\n   51 |         afterSaleService.audit(id, req);\n   52 |         return Result.ok();\n   53 |     }",
+        "source": "endpoint",
+        "frame": "AfterSaleController#audit（无应用堆栈，按端点映射）",
+        "className": "AfterSaleController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPOST_admin_after.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/after-sales/{id}/audit]-786f1b03",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/after-sales/{id}/audit]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/after-sales/{id}/audit",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/AfterSaleController.java:48",
+        "snippet": "   43 |     }\n   44 | \n   45 |     @PostMapping(\"/{id}/audit\")\n   46 |     @OpLog(module = \"aftersale\", action = \"audit\")\n   47 |     @Operation(summary = \"审核售后单\", description = \"对待审核售后单进行通过或驳回\")\n   48 |     public Result<Void> audit(\n   49 |             @Parameter(description = \"售后单ID\", example = \"1\") @PathVariable Long id,\n   50 |             @RequestBody AfterSaleService.AuditReq req) {\n   51 |         afterSaleService.audit(id, req);\n   52 |         return Result.ok();\n   53 |     }",
+        "source": "endpoint",
+        "frame": "AfterSaleController#audit（无应用堆栈，按端点映射）",
+        "className": "AfterSaleController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_after-.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/auth/login]-06c9ee43",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/auth/login]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/auth/login",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/AuthController.java:35",
+        "snippet": "   30 | \n   31 |     private final AuthService authService;\n   32 | \n   33 |     @PostMapping(\"/login\")\n   34 |     @Operation(summary = \"用户登录\", description = \"使用用户名和密码登录，返回访问令牌与用户信息\")\n   35 |     public Result<LoginVO> login(@Valid @RequestBody LoginRequest request, HttpServletRequest http) {\n   36 |         return Result.ok(authService.login(request, http.getRemoteAddr(), http.getHeader(\"User-Agent\")));\n   37 |     }\n   38 | \n   39 |     @PostMapping(\"/logout\")\n   40 |     @Operation(summary = \"退出登录\", description = \"使当前访问令牌失效\")",
+        "source": "endpoint",
+        "frame": "AuthController#login（无应用堆栈，按端点映射）",
+        "className": "AuthController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_auth_l.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/auth/refresh]-18c11ef3",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/auth/refresh]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/auth/refresh",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/AuthController.java:50",
+        "snippet": "   45 |         return Result.ok();\n   46 |     }\n   47 | \n   48 |     @PostMapping(\"/refresh\")\n   49 |     @Operation(summary = \"刷新令牌\", description = \"使用刷新令牌获取新的访问令牌\")\n   50 |     public Result<LoginVO> refresh(@Valid @RequestBody RefreshRequest request) {\n   51 |         return Result.ok(authService.refresh(request.getRefreshToken()));\n   52 |     }\n   53 | \n   54 |     @GetMapping(\"/me\")\n   55 |     @Operation(summary = \"获取当前用户信息\", description = \"返回当前登录用户的角色、权限与菜单\")",
+        "source": "endpoint",
+        "frame": "AuthController#refresh（无应用堆栈，按端点映射）",
+        "className": "AuthController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_auth_r.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/customers/{id}/status]-5792260b",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/customers/{id}/status]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/customers/{id}/status",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/CustomerAdminController.java:45",
+        "snippet": "   40 |     }\n   41 | \n   42 |     @PutMapping(\"/{id}/status\")\n   43 |     @OpLog(module = \"customer\", action = \"status\")\n   44 |     @Operation(summary = \"冻结/解冻会员\")\n   45 |     public Result<Void> updateStatus(\n   46 |             @PathVariable Long id,\n   47 |             @RequestBody Map<String, String> body) {\n   48 |         customerAdminService.updateStatus(id, body.get(\"status\"));\n   49 |         return Result.ok();\n   50 |     }",
+        "source": "endpoint",
+        "frame": "CustomerAdminController#updateStatus（无应用堆栈，按端点映射）",
+        "className": "CustomerAdminController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_custom.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /admin/orders/{id}/ship]-cda85a75",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /admin/orders/{id}/ship]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/orders/{id}/ship",
+      "method": "POST",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/OrderController.java:115",
+        "snippet": "  110 |     }\n  111 | \n  112 |     @PostMapping(\"/{id}/ship\")\n  113 |     @OpLog(module = \"order\", action = \"ship\")\n  114 |     @Operation(summary = \"订单发货\", description = \"对待发货订单录入物流信息并扣减库存\")\n  115 |     public Result<Void> ship(\n  116 |             @Parameter(description = \"订单ID\", example = \"1\") @PathVariable Long id,\n  117 |             @RequestBody OrderService.ShipReq req) {\n  118 |         orderService.ship(id, req);\n  119 |         return Result.ok();\n  120 |     }",
+        "source": "endpoint",
+        "frame": "OrderController#ship（无应用堆栈，按端点映射）",
+        "className": "OrderController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPOST_admin_order.md"
+    },
+    {
+      "id": "API-VAL-019-0732a203",
+      "caseId": "API-VAL-019",
+      "name": "售后原因 513 字符（超列宽）应被拒",
+      "endpoint": "/admin/orders/{id}/ship",
+      "method": "POST",
+      "dimension": "边界值",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/application/AfterSaleService.java:115",
+        "snippet": "  110 |         as.setType(req.getType());\n  111 |         as.setReason(req.getReason().trim());\n  112 |         as.setEvidencePics(req.getEvidenceKeys());\n  113 |         as.setStatus(\"PENDING_AUDIT\");\n  114 |         as.setRefundAmount(req.getRefundAmount() != null ? req.getRefundAmount() : order.getPayAmount());\n  115 |         afterSaleMapper.insert(as);\n  116 |         return as.getId();\n  117 |     }\n  118 | \n  119 |     public PageResult<AfterSale> myPage(int page, int size, String status) {\n  120 |         Long customerId = SecurityContexts.requireUserId();",
+        "frame": "at com.shangpivot.commerce.application.AfterSaleService.apply(AfterSaleService.java:115)",
+        "className": "AfterSaleService"
+      },
+      "reportLink": "../defects/API-VAL-019-0732a203.md"
+    },
+    {
+      "id": "API-VAL-021-31352296",
+      "caseId": "API-VAL-021",
+      "name": "评价评分 6（超出 1–5）应被拒",
+      "endpoint": "/admin/orders/{id}/ship",
+      "method": "POST",
+      "dimension": "边界值",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:300",
+        "snippet": "  295 |         review.setContent(body.get(\"content\") == null ? null : body.get(\"content\").toString());\n  296 |         if (body.get(\"picKeys\") instanceof List<?> pics) {\n  297 |             review.setPics(pics.stream().map(Object::toString).toList());\n  298 |         }\n  299 |         review.setStatus(\"VISIBLE\");\n  300 |         reviewMapper.insert(review);\n  301 |         return Result.ok(review.getId());\n  302 |     }\n  303 | \n  304 |     @GetMapping(\"/api/products/{spuId}/reviews\")\n  305 |     public Result<PageResult<Review>> productReviews(",
+        "frame": "at com.shangpivot.commerce.controller.StorefrontController.createReview(StorefrontController.java:300)",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-VAL-021-31352296.md"
+    },
+    {
+      "id": "API-VAL-022-30430b96",
+      "caseId": "API-VAL-022",
+      "name": "评价评分非数字应被拒",
+      "endpoint": "/admin/orders/{id}/ship",
+      "method": "POST",
+      "dimension": "边界值",
+      "priority": "P1",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:294",
+        "snippet": "  289 |         }\n  290 |         Review review = new Review();\n  291 |         review.setOrderItemId(orderItemId);\n  292 |         review.setCustomerId(customerId);\n  293 |         review.setSpuId(item.getSpuId());\n  294 |         review.setRating(Integer.parseInt(body.get(\"rating\").toString()));\n  295 |         review.setContent(body.get(\"content\") == null ? null : body.get(\"content\").toString());\n  296 |         if (body.get(\"picKeys\") instanceof List<?> pics) {\n  297 |             review.setPics(pics.stream().map(Object::toString).toList());\n  298 |         }\n  299 |         review.setStatus(\"VISIBLE\");",
+        "frame": "at com.shangpivot.commerce.controller.StorefrontController.createReview(StorefrontController.java:294)",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-VAL-022-30430b96.md"
+    },
+    {
+      "id": "API-LINK-040-7e23b79b",
+      "caseId": "API-LINK-040",
+      "name": "评价订单项合规但缺评分",
+      "endpoint": "/admin/orders/{id}/ship",
+      "method": "POST",
+      "dimension": "参数组合",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:294",
+        "snippet": "  289 |         }\n  290 |         Review review = new Review();\n  291 |         review.setOrderItemId(orderItemId);\n  292 |         review.setCustomerId(customerId);\n  293 |         review.setSpuId(item.getSpuId());\n  294 |         review.setRating(Integer.parseInt(body.get(\"rating\").toString()));\n  295 |         review.setContent(body.get(\"content\") == null ? null : body.get(\"content\").toString());\n  296 |         if (body.get(\"picKeys\") instanceof List<?> pics) {\n  297 |             review.setPics(pics.stream().map(Object::toString).toList());\n  298 |         }\n  299 |         review.setStatus(\"VISIBLE\");",
+        "frame": "at com.shangpivot.commerce.controller.StorefrontController.createReview(StorefrontController.java:294)",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-LINK-040-7e23b79b.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/orders/{id}/ship]-b8ce03f0",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/orders/{id}/ship]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/orders/{id}/ship",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/OrderController.java:115",
+        "snippet": "  110 |     }\n  111 | \n  112 |     @PostMapping(\"/{id}/ship\")\n  113 |     @OpLog(module = \"order\", action = \"ship\")\n  114 |     @Operation(summary = \"订单发货\", description = \"对待发货订单录入物流信息并扣减库存\")\n  115 |     public Result<Void> ship(\n  116 |             @Parameter(description = \"订单ID\", example = \"1\") @PathVariable Long id,\n  117 |             @RequestBody OrderService.ShipReq req) {\n  118 |         orderService.ship(id, req);\n  119 |         return Result.ok();\n  120 |     }",
+        "source": "endpoint",
+        "frame": "OrderController#ship（无应用堆栈，按端点映射）",
+        "className": "OrderController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_orders.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/permissions]-ee6f4c53",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/permissions]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/permissions",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/PermissionController.java:48",
+        "snippet": "   43 |     }\n   44 | \n   45 |     @PostMapping\n   46 |     @OpLog(module = \"permission\", action = \"create\")\n   47 |     @Operation(summary = \"创建权限\", description = \"新增菜单、目录或按钮权限节点\")\n   48 |     public Result<Long> create(@RequestBody Permission permission) {\n   49 |         // identity.permission.code / name / type 为 NOT NULL；缺失时应返回参数错误而非落库 500\n   50 |         if (!StringUtils.hasText(permission.getCode())) {\n   51 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请填写权限编码\");\n   52 |         }\n   53 |         if (!StringUtils.hasText(permission.getName())) {",
+        "source": "endpoint",
+        "frame": "PermissionController#create（无应用堆栈，按端点映射）",
+        "className": "PermissionController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_permis.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/permissions/{id}]-9c069d42",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/permissions/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/permissions/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/PermissionController.java:108",
+        "snippet": "  103 |     }\n  104 | \n  105 |     @DeleteMapping(\"/{id}\")\n  106 |     @OpLog(module = \"permission\", action = \"delete\")\n  107 |     @Operation(summary = \"删除权限\", description = \"删除权限节点，存在子节点时不允许删除\")\n  108 |     public Result<Void> delete(\n  109 |             @Parameter(description = \"权限ID\", example = \"1\") @PathVariable Long id) {\n  110 |         Long children = permissionMapper.selectCount(new LambdaQueryWrapper<Permission>().eq(Permission::getParentId, id));\n  111 |         if (children != null && children > 0) {\n  112 |             throw new BizException(ErrorCode.CONFLICT, \"存在子节点，无法删除\");\n  113 |         }",
+        "source": "endpoint",
+        "frame": "PermissionController#delete（无应用堆栈，按端点映射）",
+        "className": "PermissionController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_per.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/permissions/{id}]-fbb33df6",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/permissions/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/permissions/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/PermissionController.java:82",
+        "snippet": "   77 |     }\n   78 | \n   79 |     @PutMapping(\"/{id}\")\n   80 |     @OpLog(module = \"permission\", action = \"update\")\n   81 |     @Operation(summary = \"更新权限\", description = \"修改权限节点的名称、路径、图标等信息\")\n   82 |     public Result<Void> update(\n   83 |             @Parameter(description = \"权限ID\", example = \"1\") @PathVariable Long id,\n   84 |             @RequestBody Permission patch) {\n   85 |         Permission p = permissionMapper.selectById(id);\n   86 |         if (p == null) {\n   87 |             throw new BizException(ErrorCode.NOT_FOUND);",
+        "source": "endpoint",
+        "frame": "PermissionController#update（无应用堆栈，按端点映射）",
+        "className": "PermissionController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_permis.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/products]-a6b1cf2f",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/products]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/products",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/ProductController.java:47",
+        "snippet": "   42 |     }\n   43 | \n   44 |     @PostMapping\n   45 |     @OpLog(module = \"product\", action = \"create\")\n   46 |     @Operation(summary = \"创建商品\", description = \"新建 SPU 及 SKU，默认状态为 DRAFT\")\n   47 |     public Result<Long> create(@RequestBody ProductService.ProductSaveReq req) {\n   48 |         return Result.ok(productService.create(req));\n   49 |     }\n   50 | \n   51 |     @PutMapping(\"/{id}\")\n   52 |     @OpLog(module = \"product\", action = \"update\")",
+        "source": "endpoint",
+        "frame": "ProductController#create（无应用堆栈，按端点映射）",
+        "className": "ProductController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_produc.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[empty_body\\uff5cPOST /admin/products]-1d279f0b",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[empty_body\\uff5cPOST /admin/products]",
+      "name": "异常-空请求体",
+      "endpoint": "/admin/products",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/application/ProductService.java:186",
+        "snippet": "  181 |             if (!req.getScheduleOnAt().isAfter(java.time.OffsetDateTime.now())) {\n  182 |                 throw new BizException(ErrorCode.BAD_REQUEST, \"定时上架时间须晚于当前\");\n  183 |             }\n  184 |             spu.setScheduleOnAt(req.getScheduleOnAt());\n  185 |         }\n  186 |         spuMapper.insert(spu);\n  187 |         saveSkus(spu.getId(), req.getSkus(), true);\n  188 |         return spu.getId();\n  189 |     }\n  190 | \n  191 |     /** 更新 SPU；若带 skus 则删旧建新（不强制重建库存）。 */",
+        "frame": "at com.shangpivot.commerce.application.ProductService.create(ProductService.java:186)",
+        "className": "ProductService"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_empty_body_uff5cPOST_admin_products_-.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/products/{id}]-db36018c",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/products/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/products/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/ProductController.java:89",
+        "snippet": "   84 |     }\n   85 | \n   86 |     @DeleteMapping(\"/{id}\")\n   87 |     @OpLog(module = \"product\", action = \"delete\")\n   88 |     @Operation(summary = \"删除商品\", description = \"仅草稿状态商品可删除\")\n   89 |     public Result<Void> delete(\n   90 |             @Parameter(description = \"商品ID\", example = \"1\") @PathVariable Long id) {\n   91 |         productService.delete(id);\n   92 |         return Result.ok();\n   93 |     }\n   94 | }",
+        "source": "endpoint",
+        "frame": "ProductController#delete（无应用堆栈，按端点映射）",
+        "className": "ProductController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_pro.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/products/{id}]-03ae095f",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/products/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/products/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/ProductController.java:54",
+        "snippet": "   49 |     }\n   50 | \n   51 |     @PutMapping(\"/{id}\")\n   52 |     @OpLog(module = \"product\", action = \"update\")\n   53 |     @Operation(summary = \"更新商品\", description = \"修改 SPU 信息并重建 SKU 列表\")\n   54 |     public Result<Void> update(\n   55 |             @Parameter(description = \"商品ID\", example = \"1\") @PathVariable Long id,\n   56 |             @RequestBody ProductService.ProductSaveReq req) {\n   57 |         productService.update(id, req);\n   58 |         return Result.ok();\n   59 |     }",
+        "source": "endpoint",
+        "frame": "ProductController#update（无应用堆栈，按端点映射）",
+        "className": "ProductController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_produc.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPUT /admin/products/{id}]-98fb9e4c",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPUT /admin/products/{id}]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/products/{id}",
+      "method": "PUT",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/ProductController.java:54",
+        "snippet": "   49 |     }\n   50 | \n   51 |     @PutMapping(\"/{id}\")\n   52 |     @OpLog(module = \"product\", action = \"update\")\n   53 |     @Operation(summary = \"更新商品\", description = \"修改 SPU 信息并重建 SKU 列表\")\n   54 |     public Result<Void> update(\n   55 |             @Parameter(description = \"商品ID\", example = \"1\") @PathVariable Long id,\n   56 |             @RequestBody ProductService.ProductSaveReq req) {\n   57 |         productService.update(id, req);\n   58 |         return Result.ok();\n   59 |     }",
+        "source": "endpoint",
+        "frame": "ProductController#update（无应用堆栈，按端点映射）",
+        "className": "ProductController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPUT_admin_product.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/products/{id}/off]-9c344fae",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/products/{id}/off]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/products/{id}/off",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/ProductController.java:73",
+        "snippet": "   68 |     }\n   69 | \n   70 |     @PutMapping(\"/{id}/off\")\n   71 |     @OpLog(module = \"product\", action = \"offShelf\")\n   72 |     @Operation(summary = \"商品下架\", description = \"将商品状态变更为 OFF\")\n   73 |     public Result<Void> off(\n   74 |             @Parameter(description = \"商品ID\", example = \"1\") @PathVariable Long id) {\n   75 |         productService.changeStatus(id, \"OFF\");\n   76 |         return Result.ok();\n   77 |     }\n   78 | ",
+        "source": "endpoint",
+        "frame": "ProductController#off（无应用堆栈，按端点映射）",
+        "className": "ProductController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_produc.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/products/{id}/on]-adba1492",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/products/{id}/on]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/products/{id}/on",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/ProductController.java:64",
+        "snippet": "   59 |     }\n   60 | \n   61 |     @PutMapping(\"/{id}/on\")\n   62 |     @OpLog(module = \"product\", action = \"onShelf\")\n   63 |     @Operation(summary = \"商品上架\", description = \"将商品状态变更为 ON，需满足主图、SKU、价格等校验\")\n   64 |     public Result<Void> on(\n   65 |             @Parameter(description = \"商品ID\", example = \"1\") @PathVariable Long id) {\n   66 |         productService.changeStatus(id, \"ON\");\n   67 |         return Result.ok();\n   68 |     }\n   69 | ",
+        "source": "endpoint",
+        "frame": "ProductController#on（无应用堆栈，按端点映射）",
+        "className": "ProductController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_produc.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/reviews/{id}/status]-8bfdd430",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/reviews/{id}/status]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/reviews/{id}/status",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/AdminOpsController.java:76",
+        "snippet": "   71 |     }\n   72 | \n   73 |     @PutMapping(\"/admin/reviews/{id}/status\")\n   74 |     @OpLog(module = \"review\", action = \"status\")\n   75 |     @Operation(summary = \"隐藏/恢复评价\")\n   76 |     public Result<Void> reviewStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {\n   77 |         reviewAdminService.updateStatus(id, body.get(\"status\"));\n   78 |         return Result.ok();\n   79 |     }\n   80 | \n   81 |     @GetMapping(\"/admin/in-out\")",
+        "source": "endpoint",
+        "frame": "AdminOpsController#reviewStatus（无应用堆栈，按端点映射）",
+        "className": "AdminOpsController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_review.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/roles/{id}]-8180bb2a",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/roles/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/roles/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/RoleController.java:77",
+        "snippet": "   72 |     }\n   73 | \n   74 |     @DeleteMapping(\"/{id}\")\n   75 |     @OpLog(module = \"role\", action = \"delete\")\n   76 |     @Operation(summary = \"删除角色\", description = \"根据角色ID删除角色\")\n   77 |     public Result<Void> delete(\n   78 |             @Parameter(description = \"角色ID\", example = \"1\") @PathVariable Long id) {\n   79 |         roleService.delete(id);\n   80 |         return Result.ok();\n   81 |     }\n   82 | ",
+        "source": "endpoint",
+        "frame": "RoleController#delete（无应用堆栈，按端点映射）",
+        "className": "RoleController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_rol.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/roles/{id}]-3b0ce754",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/roles/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/roles/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/RoleController.java:62",
+        "snippet": "   57 |     }\n   58 | \n   59 |     @PutMapping(\"/{id}\")\n   60 |     @OpLog(module = \"role\", action = \"update\")\n   61 |     @Operation(summary = \"更新角色\", description = \"修改角色信息与权限分配\")\n   62 |     public Result<Void> update(\n   63 |             @Parameter(description = \"角色ID\", example = \"1\") @PathVariable Long id,\n   64 |             @RequestBody RoleSaveReq req) {\n   65 |         Role role = new Role();\n   66 |         role.setName(req.getName());\n   67 |         role.setDataScope(req.getDataScope());",
+        "source": "endpoint",
+        "frame": "RoleController#update（无应用堆栈，按端点映射）",
+        "className": "RoleController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_roles_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/users/{id}]-0229f462",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/users/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/users/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/AdminUserController.java:92",
+        "snippet": "   87 |     }\n   88 | \n   89 |     @DeleteMapping(\"/{id}\")\n   90 |     @OpLog(module = \"user\", action = \"delete\")\n   91 |     @Operation(summary = \"删除用户\", description = \"根据用户ID删除用户\")\n   92 |     public Result<Void> delete(\n   93 |             @Parameter(description = \"用户ID\", example = \"1\") @PathVariable Long id) {\n   94 |         adminUserService.delete(id);\n   95 |         return Result.ok();\n   96 |     }\n   97 | ",
+        "source": "endpoint",
+        "frame": "AdminUserController#delete（无应用堆栈，按端点映射）",
+        "className": "AdminUserController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_use.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/users/{id}]-90af9675",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/users/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/users/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/AdminUserController.java:56",
+        "snippet": "   51 |     }\n   52 | \n   53 |     @PutMapping(\"/{id}\")\n   54 |     @OpLog(module = \"user\", action = \"update\")\n   55 |     @Operation(summary = \"更新用户\", description = \"修改用户基本信息与角色分配\")\n   56 |     public Result<Void> update(\n   57 |             @Parameter(description = \"用户ID\", example = \"1\") @PathVariable Long id,\n   58 |             @RequestBody UserSaveReq req) {\n   59 |         adminUserService.update(id, req.toEntity(), req.getRoleIds());\n   60 |         return Result.ok();\n   61 |     }",
+        "source": "endpoint",
+        "frame": "AdminUserController#update（无应用堆栈，按端点映射）",
+        "className": "AdminUserController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_users_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/users/{id}/password]-28e7ddb1",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/users/{id}/password]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/users/{id}/password",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/AdminUserController.java:79",
+        "snippet": "   74 |     }\n   75 | \n   76 |     @PutMapping(\"/{id}/password\")\n   77 |     @OpLog(module = \"user\", action = \"resetPassword\")\n   78 |     @Operation(summary = \"重置密码\", description = \"管理员重置指定用户的登录密码\")\n   79 |     public Result<Void> resetPassword(\n   80 |             @Parameter(description = \"用户ID\", example = \"1\") @PathVariable Long id,\n   81 |             @io.swagger.v3.oas.annotations.parameters.RequestBody(\n   82 |                     description = \"新密码\",\n   83 |                     content = @Content(schema = @Schema(example = \"{\\\"password\\\":\\\"Admin@123\\\"}\")))\n   84 |             @RequestBody Map<String, String> body) {",
+        "source": "endpoint",
+        "frame": "AdminUserController#resetPassword（无应用堆栈，按端点映射）",
+        "className": "AdminUserController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_users_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/users/{id}/status]-49a5c469",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/users/{id}/status]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/users/{id}/status",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/AdminUserController.java:66",
+        "snippet": "   61 |     }\n   62 | \n   63 |     @PutMapping(\"/{id}/status\")\n   64 |     @OpLog(module = \"user\", action = \"updateStatus\")\n   65 |     @Operation(summary = \"更新用户状态\", description = \"启用或禁用用户\")\n   66 |     public Result<Void> status(\n   67 |             @Parameter(description = \"用户ID\", example = \"1\") @PathVariable Long id,\n   68 |             @io.swagger.v3.oas.annotations.parameters.RequestBody(\n   69 |                     description = \"状态更新\",\n   70 |                     content = @Content(schema = @Schema(example = \"{\\\"status\\\":\\\"ENABLED\\\"}\")))\n   71 |             @RequestBody Map<String, String> body) {",
+        "source": "endpoint",
+        "frame": "AdminUserController#status（无应用堆栈，按端点映射）",
+        "className": "AdminUserController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_users_.md"
+    },
+    {
+      "id": "API-VAL-006-d393eab7",
+      "caseId": "API-VAL-006",
+      "name": "收货人姓名 65 字符（超列宽）应被拒",
+      "endpoint": "/api/addresses",
+      "method": "POST",
+      "dimension": "边界值",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/application/AddressService.java:51",
+        "snippet": "   46 |             clearDefault(customerId);\n   47 |             address.setIsDefault(true);\n   48 |         } else {\n   49 |             address.setIsDefault(false);\n   50 |         }\n   51 |         addressMapper.insert(address);\n   52 |         return address.getId();\n   53 |     }\n   54 | \n   55 |     @Transactional\n   56 |     public void update(Long id, AddressReq req) {",
+        "frame": "at com.shangpivot.commerce.application.AddressService.create(AddressService.java:51)",
+        "className": "AddressService"
+      },
+      "reportLink": "../defects/API-VAL-006-d393eab7.md"
+    },
+    {
+      "id": "API-VAL-008-5acbff6f",
+      "caseId": "API-VAL-008",
+      "name": "详细地址 256 字符（超列宽）应被拒",
+      "endpoint": "/api/addresses",
+      "method": "POST",
+      "dimension": "边界值",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/application/AddressService.java:51",
+        "snippet": "   46 |             clearDefault(customerId);\n   47 |             address.setIsDefault(true);\n   48 |         } else {\n   49 |             address.setIsDefault(false);\n   50 |         }\n   51 |         addressMapper.insert(address);\n   52 |         return address.getId();\n   53 |     }\n   54 | \n   55 |     @Transactional\n   56 |     public void update(Long id, AddressReq req) {",
+        "frame": "at com.shangpivot.commerce.application.AddressService.create(AddressService.java:51)",
+        "className": "AddressService"
+      },
+      "reportLink": "../defects/API-VAL-008-5acbff6f.md"
+    },
+    {
+      "id": "API-VAL-009-37c5b503",
+      "caseId": "API-VAL-009",
+      "name": "收货人手机号非数字应被拒",
+      "endpoint": "/api/addresses",
+      "method": "POST",
+      "dimension": "边界值",
+      "priority": "P1",
+      "summary": "业务码 0（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:132",
+        "snippet": "  127 |     public Result<List<?>> addresses() {\n  128 |         return Result.ok(addressService.list());\n  129 |     }\n  130 | \n  131 |     @PostMapping(\"/api/addresses\")\n  132 |     public Result<Long> createAddress(@RequestBody AddressService.AddressReq req) {\n  133 |         return Result.ok(addressService.create(req));\n  134 |     }\n  135 | \n  136 |     @PutMapping(\"/api/addresses/{id}\")\n  137 |     public Result<Void> updateAddress(@PathVariable Long id, @RequestBody AddressService.AddressReq req) {",
+        "source": "endpoint",
+        "frame": "StorefrontController#createAddress（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-VAL-009-37c5b503.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /api/addresses/{id}]-7a0d8159",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /api/addresses/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/addresses/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:143",
+        "snippet": "  138 |         addressService.update(id, req);\n  139 |         return Result.ok();\n  140 |     }\n  141 | \n  142 |     @DeleteMapping(\"/api/addresses/{id}\")\n  143 |     public Result<Void> deleteAddress(@PathVariable Long id) {\n  144 |         addressService.delete(id);\n  145 |         return Result.ok();\n  146 |     }\n  147 | \n  148 |     @PutMapping(\"/api/addresses/{id}/default\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#deleteAddress（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_api_addre.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /api/addresses/{id}]-e044b7bf",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /api/addresses/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/addresses/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:137",
+        "snippet": "  132 |     public Result<Long> createAddress(@RequestBody AddressService.AddressReq req) {\n  133 |         return Result.ok(addressService.create(req));\n  134 |     }\n  135 | \n  136 |     @PutMapping(\"/api/addresses/{id}\")\n  137 |     public Result<Void> updateAddress(@PathVariable Long id, @RequestBody AddressService.AddressReq req) {\n  138 |         addressService.update(id, req);\n  139 |         return Result.ok();\n  140 |     }\n  141 | \n  142 |     @DeleteMapping(\"/api/addresses/{id}\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#updateAddress（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_api_addresse.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPUT /api/addresses/{id}]-95ec22ee",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPUT /api/addresses/{id}]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/api/addresses/{id}",
+      "method": "PUT",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:137",
+        "snippet": "  132 |     public Result<Long> createAddress(@RequestBody AddressService.AddressReq req) {\n  133 |         return Result.ok(addressService.create(req));\n  134 |     }\n  135 | \n  136 |     @PutMapping(\"/api/addresses/{id}\")\n  137 |     public Result<Void> updateAddress(@PathVariable Long id, @RequestBody AddressService.AddressReq req) {\n  138 |         addressService.update(id, req);\n  139 |         return Result.ok();\n  140 |     }\n  141 | \n  142 |     @DeleteMapping(\"/api/addresses/{id}\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#updateAddress（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPUT_api_addresses.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /api/addresses/{id}/default]-4cb9b23d",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /api/addresses/{id}/default]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/addresses/{id}/default",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:149",
+        "snippet": "  144 |         addressService.delete(id);\n  145 |         return Result.ok();\n  146 |     }\n  147 | \n  148 |     @PutMapping(\"/api/addresses/{id}/default\")\n  149 |     public Result<Void> defaultAddress(@PathVariable Long id) {\n  150 |         addressService.setDefault(id);\n  151 |         return Result.ok();\n  152 |     }\n  153 | \n  154 |     @GetMapping(\"/api/favorites\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#defaultAddress（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_api_addresse.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/after-sales]-df20794f",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/after-sales]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/api/after-sales",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:253",
+        "snippet": "  248 |     public Result<Map<String, Object>> payStatus(@PathVariable Long orderId) {\n  249 |         return Result.ok(paymentSandboxService.status(orderId));\n  250 |     }\n  251 | \n  252 |     @PostMapping(\"/api/after-sales\")\n  253 |     public Result<Long> applyAfterSale(@RequestBody AfterSaleService.ApplyReq req) {\n  254 |         return Result.ok(afterSaleService.apply(req));\n  255 |     }\n  256 | \n  257 |     @GetMapping(\"/api/after-sales\")\n  258 |     public Result<PageResult<?>> myAfterSales(",
+        "source": "endpoint",
+        "frame": "StorefrontController#applyAfterSale（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_api_after-sa.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/auth/login]-05020639",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/auth/login]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/api/auth/login",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/CustomerAuthController.java:35",
+        "snippet": "   30 |         return Result.ok(customerAuthService.sendSms(req.getPhone()));\n   31 |     }\n   32 | \n   33 |     @PostMapping({\"/api/auth/login\", \"/api/auth/phone\"})\n   34 |     @Operation(summary = \"手机号验证码登录\")\n   35 |     public Result<CustomerLoginVO> login(@Valid @RequestBody CustomerLoginRequest req) {\n   36 |         return Result.ok(customerAuthService.login(req));\n   37 |     }\n   38 | \n   39 |     @PostMapping(\"/api/auth/refresh\")\n   40 |     @Operation(summary = \"刷新令牌\")",
+        "source": "endpoint",
+        "frame": "CustomerAuthController#login（无应用堆栈，按端点映射）",
+        "className": "CustomerAuthController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_api_auth_log.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/auth/phone]-a83d9531",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/auth/phone]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/api/auth/phone",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/CustomerAuthController.java:35",
+        "snippet": "   30 |         return Result.ok(customerAuthService.sendSms(req.getPhone()));\n   31 |     }\n   32 | \n   33 |     @PostMapping({\"/api/auth/login\", \"/api/auth/phone\"})\n   34 |     @Operation(summary = \"手机号验证码登录\")\n   35 |     public Result<CustomerLoginVO> login(@Valid @RequestBody CustomerLoginRequest req) {\n   36 |         return Result.ok(customerAuthService.login(req));\n   37 |     }\n   38 | \n   39 |     @PostMapping(\"/api/auth/refresh\")\n   40 |     @Operation(summary = \"刷新令牌\")",
+        "source": "endpoint",
+        "frame": "CustomerAuthController#login（无应用堆栈，按端点映射）",
+        "className": "CustomerAuthController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_api_auth_pho.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/auth/refresh]-a1adb0b1",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/auth/refresh]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/api/auth/refresh",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/CustomerAuthController.java:41",
+        "snippet": "   36 |         return Result.ok(customerAuthService.login(req));\n   37 |     }\n   38 | \n   39 |     @PostMapping(\"/api/auth/refresh\")\n   40 |     @Operation(summary = \"刷新令牌\")\n   41 |     public Result<CustomerLoginVO> refresh(@Valid @RequestBody RefreshRequest req) {\n   42 |         return Result.ok(customerAuthService.refresh(req.getRefreshToken()));\n   43 |     }\n   44 | \n   45 |     @PostMapping(\"/api/auth/logout\")\n   46 |     @Operation(summary = \"退出登录\")",
+        "source": "endpoint",
+        "frame": "CustomerAuthController#refresh（无应用堆栈，按端点映射）",
+        "className": "CustomerAuthController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_api_auth_ref.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/auth/sms/send]-240d6a76",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/auth/sms/send]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/api/auth/sms/send",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/CustomerAuthController.java:29",
+        "snippet": "   24 | \n   25 |     private final CustomerAuthService customerAuthService;\n   26 | \n   27 |     @PostMapping(\"/api/auth/sms/send\")\n   28 |     @Operation(summary = \"发送验证码\")\n   29 |     public Result<Map<String, Object>> sendSms(@Valid @RequestBody SmsSendRequest req) {\n   30 |         return Result.ok(customerAuthService.sendSms(req.getPhone()));\n   31 |     }\n   32 | \n   33 |     @PostMapping({\"/api/auth/login\", \"/api/auth/phone\"})\n   34 |     @Operation(summary = \"手机号验证码登录\")",
+        "source": "endpoint",
+        "frame": "CustomerAuthController#sendSms（无应用堆栈，按端点映射）",
+        "className": "CustomerAuthController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_api_auth_sms.md"
+    },
+    {
+      "id": "API-LINK-025-aa3ceb60",
+      "caseId": "API-LINK-025",
+      "name": "加购缺 SKU 但数量合规",
+      "endpoint": "/api/cart/items",
+      "method": "POST",
+      "dimension": "参数组合",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:101",
+        "snippet": "   96 |         return Result.ok(cartService.getCart());\n   97 |     }\n   98 | \n   99 |     @PostMapping(\"/api/cart/items\")\n  100 |     public Result<Map<String, Object>> addCart(@RequestBody Map<String, Object> body) {\n  101 |         Long skuId = Long.valueOf(body.get(\"skuId\").toString());\n  102 |         int qty = Integer.parseInt(body.get(\"quantity\").toString());\n  103 |         return Result.ok(cartService.addItem(skuId, qty));\n  104 |     }\n  105 | \n  106 |     @PutMapping(\"/api/cart/items/{id}\")",
+        "frame": "at com.shangpivot.commerce.controller.StorefrontController.addCart(StorefrontController.java:101)",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-LINK-025-aa3ceb60.md"
+    },
+    {
+      "id": "API-LINK-026-8a280574",
+      "caseId": "API-LINK-026",
+      "name": "加购缺数量但 SKU 合规",
+      "endpoint": "/api/cart/items",
+      "method": "POST",
+      "dimension": "参数组合",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:102",
+        "snippet": "   97 |     }\n   98 | \n   99 |     @PostMapping(\"/api/cart/items\")\n  100 |     public Result<Map<String, Object>> addCart(@RequestBody Map<String, Object> body) {\n  101 |         Long skuId = Long.valueOf(body.get(\"skuId\").toString());\n  102 |         int qty = Integer.parseInt(body.get(\"quantity\").toString());\n  103 |         return Result.ok(cartService.addItem(skuId, qty));\n  104 |     }\n  105 | \n  106 |     @PutMapping(\"/api/cart/items/{id}\")\n  107 |     public Result<Void> updateCart(@PathVariable Long id, @RequestBody Map<String, Object> body) {",
+        "frame": "at com.shangpivot.commerce.controller.StorefrontController.addCart(StorefrontController.java:102)",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-LINK-026-8a280574.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /api/cart/items/{id}]-9b5b8a4c",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /api/cart/items/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/cart/items/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:115",
+        "snippet": "  110 |         cartService.updateItem(id, qty, selected);\n  111 |         return Result.ok();\n  112 |     }\n  113 | \n  114 |     @DeleteMapping(\"/api/cart/items/{id}\")\n  115 |     public Result<Void> removeCart(@PathVariable Long id) {\n  116 |         cartService.removeItem(id);\n  117 |         return Result.ok();\n  118 |     }\n  119 | \n  120 |     @PostMapping(\"/api/cart/clear-invalid\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#removeCart（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_api_cart_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /api/cart/items/{id}]-9d42d795",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /api/cart/items/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/cart/items/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:107",
+        "snippet": "  102 |         int qty = Integer.parseInt(body.get(\"quantity\").toString());\n  103 |         return Result.ok(cartService.addItem(skuId, qty));\n  104 |     }\n  105 | \n  106 |     @PutMapping(\"/api/cart/items/{id}\")\n  107 |     public Result<Void> updateCart(@PathVariable Long id, @RequestBody Map<String, Object> body) {\n  108 |         Integer qty = body.get(\"quantity\") == null ? null : Integer.parseInt(body.get(\"quantity\").toString());\n  109 |         Boolean selected = body.get(\"selected\") == null ? null : Boolean.valueOf(body.get(\"selected\").toString());\n  110 |         cartService.updateItem(id, qty, selected);\n  111 |         return Result.ok();\n  112 |     }",
+        "source": "endpoint",
+        "frame": "StorefrontController#updateCart（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_api_cart_ite.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/orders]-bc75cf35",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/orders]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/api/orders",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:187",
+        "snippet": "  182 |         favoriteBrowseService.clearHistory();\n  183 |         return Result.ok();\n  184 |     }\n  185 | \n  186 |     @PostMapping(\"/api/orders\")\n  187 |     public Result<Map<String, Object>> submit(@RequestBody OrderSubmitService.SubmitReq req) {\n  188 |         return Result.ok(orderSubmitService.submit(req));\n  189 |     }\n  190 | \n  191 |     @GetMapping(\"/api/orders\")\n  192 |     public Result<PageResult<Order>> myOrders(",
+        "source": "endpoint",
+        "frame": "StorefrontController#submit（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_api_orders_-.md"
+    },
+    {
+      "id": "API-OMX-014-27588eb8",
+      "caseId": "API-OMX-014",
+      "name": "【异常】畸形 JSON 请求体",
+      "endpoint": "/api/orders",
+      "method": "POST",
+      "dimension": "契约/其他",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:187",
+        "snippet": "  182 |         favoriteBrowseService.clearHistory();\n  183 |         return Result.ok();\n  184 |     }\n  185 | \n  186 |     @PostMapping(\"/api/orders\")\n  187 |     public Result<Map<String, Object>> submit(@RequestBody OrderSubmitService.SubmitReq req) {\n  188 |         return Result.ok(orderSubmitService.submit(req));\n  189 |     }\n  190 | \n  191 |     @GetMapping(\"/api/orders\")\n  192 |     public Result<PageResult<Order>> myOrders(",
+        "source": "endpoint",
+        "frame": "StorefrontController#submit（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-OMX-014-27588eb8.md"
+    },
+    {
+      "id": "API-OMX-015-da44be90",
+      "caseId": "API-OMX-015",
+      "name": "【异常】skuId 非数字",
+      "endpoint": "/api/orders",
+      "method": "POST",
+      "dimension": "契约/其他",
+      "priority": "P0",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:187",
+        "snippet": "  182 |         favoriteBrowseService.clearHistory();\n  183 |         return Result.ok();\n  184 |     }\n  185 | \n  186 |     @PostMapping(\"/api/orders\")\n  187 |     public Result<Map<String, Object>> submit(@RequestBody OrderSubmitService.SubmitReq req) {\n  188 |         return Result.ok(orderSubmitService.submit(req));\n  189 |     }\n  190 | \n  191 |     @GetMapping(\"/api/orders\")\n  192 |     public Result<PageResult<Order>> myOrders(",
+        "source": "endpoint",
+        "frame": "StorefrontController#submit（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-OMX-015-da44be90.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /api/orders/{id}/cancel]-4e010ca5",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /api/orders/{id}/cancel]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/orders/{id}/cancel",
+      "method": "POST",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:220",
+        "snippet": "  215 |         m.put(\"shipments\", shipmentMapper.selectList(new LambdaQueryWrapper<Shipment>().eq(Shipment::getOrderId, id)));\n  216 |         return Result.ok(m);\n  217 |     }\n  218 | \n  219 |     @PostMapping(\"/api/orders/{id}/cancel\")\n  220 |     public Result<Void> cancel(@PathVariable Long id) {\n  221 |         orderSubmitService.cancel(id);\n  222 |         return Result.ok();\n  223 |     }\n  224 | \n  225 |     @PostMapping(\"/api/orders/{id}/confirm\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#cancel（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPOST_api_orders_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /api/orders/{id}/confirm]-ad920230",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /api/orders/{id}/confirm]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/orders/{id}/confirm",
+      "method": "POST",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:226",
+        "snippet": "  221 |         orderSubmitService.cancel(id);\n  222 |         return Result.ok();\n  223 |     }\n  224 | \n  225 |     @PostMapping(\"/api/orders/{id}/confirm\")\n  226 |     public Result<Void> confirm(@PathVariable Long id) {\n  227 |         orderSubmitService.confirmReceive(id);\n  228 |         return Result.ok();\n  229 |     }\n  230 | \n  231 |     @GetMapping(\"/api/orders/{id}/logistics\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#confirm（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPOST_api_orders_.md"
+    },
+    {
+      "id": "API-VAL-020-1af94877",
+      "caseId": "API-VAL-020",
+      "name": "评价必填项缺失应被拒",
+      "endpoint": "/api/reviews",
+      "method": "POST",
+      "dimension": "边界值",
+      "priority": "P1",
+      "summary": "业务码 50000（期望 40000）",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:277",
+        "snippet": "  272 |     public Result<Long> createReview(@RequestBody Map<String, Object> body) {\n  273 |         Long customerId = SecurityContexts.requireUserId();\n  274 |         if (!customerQueryApi.isActive(customerId)) {\n  275 |             throw new BizException(ErrorCode.CUSTOMER_FROZEN);\n  276 |         }\n  277 |         Long orderItemId = Long.valueOf(body.get(\"orderItemId\").toString());\n  278 |         OrderItem item = orderItemMapper.selectById(orderItemId);\n  279 |         if (item == null) {\n  280 |             throw new BizException(ErrorCode.NOT_FOUND, \"订单项不存在\");\n  281 |         }\n  282 |         Order order = orderMapper.selectById(item.getOrderId());",
+        "frame": "at com.shangpivot.commerce.controller.StorefrontController.createReview(StorefrontController.java:277)",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/API-VAL-020-1af94877.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/attributes]-119efbda",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/attributes]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/attributes",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/AttributeController.java:38",
+        "snippet": "   33 |     }\n   34 | \n   35 |     @PostMapping\n   36 |     @OpLog(module = \"attribute\", action = \"create\")\n   37 |     @Operation(summary = \"创建属性\", description = \"新增商品属性项，未传 type 时默认为 SPEC\")\n   38 |     public Result<Long> create(@RequestBody Attribute attr) {\n   39 |         // commerce.attribute.category_id / name 为 NOT NULL，缺失时应在入口拒绝而非落库报错\n   40 |         if (attr.getCategoryId() == null) {\n   41 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请选择类目\");\n   42 |         }\n   43 |         if (!StringUtils.hasText(attr.getName())) {",
+        "source": "endpoint",
+        "frame": "AttributeController#create（无应用堆栈，按端点映射）",
+        "className": "AttributeController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_attrib.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/attributes/{id}]-de0f4db7",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/attributes/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/attributes/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/AttributeController.java:72",
+        "snippet": "   67 |     }\n   68 | \n   69 |     @DeleteMapping(\"/{id}\")\n   70 |     @OpLog(module = \"attribute\", action = \"delete\")\n   71 |     @Operation(summary = \"删除属性\", description = \"根据属性ID删除属性项\")\n   72 |     public Result<Void> delete(\n   73 |             @Parameter(description = \"属性ID\", example = \"1\") @PathVariable Long id) {\n   74 |         attributeMapper.deleteById(id);\n   75 |         return Result.ok();\n   76 |     }\n   77 | }",
+        "source": "endpoint",
+        "frame": "AttributeController#delete（无应用堆栈，按端点映射）",
+        "className": "AttributeController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_att.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/attributes/{id}]-c2dad947",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/attributes/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/attributes/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/AttributeController.java:55",
+        "snippet": "   50 |     }\n   51 | \n   52 |     @PutMapping(\"/{id}\")\n   53 |     @OpLog(module = \"attribute\", action = \"update\")\n   54 |     @Operation(summary = \"更新属性\", description = \"修改属性名称、类型、选项、排序及所属类目\")\n   55 |     public Result<Void> update(\n   56 |             @Parameter(description = \"属性ID\", example = \"1\") @PathVariable Long id,\n   57 |             @RequestBody Attribute patch) {\n   58 |         Attribute attr = attributeMapper.selectById(id);\n   59 |         if (attr == null) throw new BizException(ErrorCode.NOT_FOUND);\n   60 |         attr.setName(patch.getName());",
+        "source": "endpoint",
+        "frame": "AttributeController#update（无应用堆栈，按端点映射）",
+        "className": "AttributeController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_attrib.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/brands]-b80055d8",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/brands]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/brands",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/BrandController.java:44",
+        "snippet": "   39 |     }\n   40 | \n   41 |     @PostMapping\n   42 |     @OpLog(module = \"brand\", action = \"create\")\n   43 |     @Operation(summary = \"创建品牌\", description = \"新增商品品牌\")\n   44 |     public Result<Long> create(@RequestBody Brand brand) {\n   45 |         if (!StringUtils.hasText(brand.getName())) {\n   46 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请填写品牌名称\");\n   47 |         }\n   48 |         if (brand.getCategoryId() == null) {\n   49 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请选择类目\");",
+        "source": "endpoint",
+        "frame": "BrandController#create（无应用堆栈，按端点映射）",
+        "className": "BrandController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_brands.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/brands/{id}]-5d490089",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/brands/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/brands/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/BrandController.java:77",
+        "snippet": "   72 |     }\n   73 | \n   74 |     @DeleteMapping(\"/{id}\")\n   75 |     @OpLog(module = \"brand\", action = \"delete\")\n   76 |     @Operation(summary = \"删除品牌\", description = \"根据品牌ID删除品牌；被商品引用时不可删除\")\n   77 |     public Result<Void> delete(\n   78 |             @Parameter(description = \"品牌ID\", example = \"1\") @PathVariable Long id) {\n   79 |         Long used = spuMapper.selectCount(new LambdaQueryWrapper<Spu>().eq(Spu::getBrandId, id));\n   80 |         if (used != null && used > 0) {\n   81 |             throw new BizException(ErrorCode.CONFLICT, \"品牌已被商品引用，请先处理引用\");\n   82 |         }",
+        "source": "endpoint",
+        "frame": "BrandController#delete（无应用堆栈，按端点映射）",
+        "className": "BrandController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_bra.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/brands/{id}]-97ed2581",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/brands/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/brands/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/BrandController.java:60",
+        "snippet": "   55 |     }\n   56 | \n   57 |     @PutMapping(\"/{id}\")\n   58 |     @OpLog(module = \"brand\", action = \"update\")\n   59 |     @Operation(summary = \"更新品牌\", description = \"修改品牌名称、Logo、排序及状态\")\n   60 |     public Result<Void> update(\n   61 |             @Parameter(description = \"品牌ID\", example = \"1\") @PathVariable Long id,\n   62 |             @RequestBody Brand patch) {\n   63 |         Brand brand = brandMapper.selectById(id);\n   64 |         if (brand == null) throw new BizException(ErrorCode.NOT_FOUND);\n   65 |         brand.setName(patch.getName());",
+        "source": "endpoint",
+        "frame": "BrandController#update（无应用堆栈，按端点映射）",
+        "className": "BrandController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_brands.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/categories]-7bdcd665",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/categories]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/categories",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/CategoryController.java:55",
+        "snippet": "   50 |     }\n   51 | \n   52 |     @PostMapping\n   53 |     @OpLog(module = \"category\", action = \"create\")\n   54 |     @Operation(summary = \"创建类目\", description = \"新增商品类目，未传 parentId 时默认为顶级类目\")\n   55 |     public Result<Long> create(@RequestBody Category c) {\n   56 |         if (!StringUtils.hasText(c.getName())) {\n   57 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请填写类目名称\");\n   58 |         }\n   59 |         if (c.getParentId() == null) c.setParentId(0L);\n   60 |         if (c.getSort() == null) c.setSort(0);",
+        "source": "endpoint",
+        "frame": "CategoryController#create（无应用堆栈，按端点映射）",
+        "className": "CategoryController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_catego.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/categories/{id}]-19a299a3",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/categories/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/categories/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/CategoryController.java:86",
+        "snippet": "   81 |     }\n   82 | \n   83 |     @DeleteMapping(\"/{id}\")\n   84 |     @OpLog(module = \"category\", action = \"delete\")\n   85 |     @Operation(summary = \"删除类目\", description = \"删除指定类目，存在子类目、商品或属性引用时不可删除\")\n   86 |     public Result<Void> delete(\n   87 |             @Parameter(description = \"类目ID\", example = \"1\") @PathVariable Long id) {\n   88 |         Long children = categoryMapper.selectCount(new LambdaQueryWrapper<Category>().eq(Category::getParentId, id));\n   89 |         if (children != null && children > 0) {\n   90 |             throw new BizException(ErrorCode.CONFLICT, \"存在子类目，请先处理\");\n   91 |         }",
+        "source": "endpoint",
+        "frame": "CategoryController#delete（无应用堆栈，按端点映射）",
+        "className": "CategoryController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_cat.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/categories/{id}]-4c3df5c9",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/categories/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/categories/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/CategoryController.java:70",
+        "snippet": "   65 |     }\n   66 | \n   67 |     @PutMapping(\"/{id}\")\n   68 |     @OpLog(module = \"category\", action = \"update\")\n   69 |     @Operation(summary = \"更新类目\", description = \"修改类目名称、层级、排序及状态\")\n   70 |     public Result<Void> update(\n   71 |             @Parameter(description = \"类目ID\", example = \"1\") @PathVariable Long id,\n   72 |             @RequestBody Category patch) {\n   73 |         Category c = require(id);\n   74 |         c.setName(patch.getName());\n   75 |         c.setParentId(patch.getParentId());",
+        "source": "endpoint",
+        "frame": "CategoryController#update（无应用堆栈，按端点映射）",
+        "className": "CategoryController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_catego.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/customers/{id}]-19f0d60b",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/customers/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/customers/{id}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/CustomerAdminController.java:37",
+        "snippet": "   32 |         return Result.ok(customerAdminService.page(page, size, phone, nickname, status, clientType));\n   33 |     }\n   34 | \n   35 |     @GetMapping(\"/{id}\")\n   36 |     @Operation(summary = \"会员详情\")\n   37 |     public Result<Map<String, Object>> detail(\n   38 |             @Parameter(description = \"会员ID\") @PathVariable Long id) {\n   39 |         return Result.ok(customerAdminService.detail(id));\n   40 |     }\n   41 | \n   42 |     @PutMapping(\"/{id}/status\")",
+        "source": "endpoint",
+        "frame": "CustomerAdminController#detail（无应用堆栈，按端点映射）",
+        "className": "CustomerAdminController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_admin_custom.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/depts]-4ab540a3",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/depts]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/depts",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DeptController.java:52",
+        "snippet": "   47 |     }\n   48 | \n   49 |     @PostMapping\n   50 |     @OpLog(module = \"dept\", action = \"create\")\n   51 |     @Operation(summary = \"创建部门\", description = \"新增组织部门节点\")\n   52 |     public Result<Long> create(@RequestBody Dept dept) {\n   53 |         if (!StringUtils.hasText(dept.getName())) {\n   54 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请填写部门名称\");\n   55 |         }\n   56 |         if (dept.getParentId() == null) {\n   57 |             dept.setParentId(0L);",
+        "source": "endpoint",
+        "frame": "DeptController#create（无应用堆栈，按端点映射）",
+        "className": "DeptController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_depts_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/depts/{id}]-4d8885bc",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/depts/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/depts/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DeptController.java:90",
+        "snippet": "   85 |     }\n   86 | \n   87 |     @DeleteMapping(\"/{id}\")\n   88 |     @OpLog(module = \"dept\", action = \"delete\")\n   89 |     @Operation(summary = \"删除部门\", description = \"删除部门节点；存在子部门或用户引用时不允许删除\")\n   90 |     public Result<Void> delete(\n   91 |             @Parameter(description = \"部门ID\", example = \"1\") @PathVariable Long id) {\n   92 |         Long children = deptMapper.selectCount(new LambdaQueryWrapper<Dept>().eq(Dept::getParentId, id));\n   93 |         if (children != null && children > 0) {\n   94 |             throw new BizException(ErrorCode.CONFLICT, \"存在子部门，无法删除\");\n   95 |         }",
+        "source": "endpoint",
+        "frame": "DeptController#delete（无应用堆栈，按端点映射）",
+        "className": "DeptController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_dep.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/depts/{id}]-48e0d890",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/depts/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/depts/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DeptController.java:72",
+        "snippet": "   67 |     }\n   68 | \n   69 |     @PutMapping(\"/{id}\")\n   70 |     @OpLog(module = \"dept\", action = \"update\")\n   71 |     @Operation(summary = \"更新部门\", description = \"修改部门名称、上级部门、排序等信息\")\n   72 |     public Result<Void> update(\n   73 |             @Parameter(description = \"部门ID\", example = \"1\") @PathVariable Long id,\n   74 |             @RequestBody Dept patch) {\n   75 |         Dept dept = deptMapper.selectById(id);\n   76 |         if (dept == null) {\n   77 |             throw new BizException(ErrorCode.NOT_FOUND);",
+        "source": "endpoint",
+        "frame": "DeptController#update（无应用堆栈，按端点映射）",
+        "className": "DeptController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_depts_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/dict-items]-ee20349c",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/dict-items]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/dict-items",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DictController.java:112",
+        "snippet": "  107 |     }\n  108 | \n  109 |     @PostMapping(\"/admin/dict-items\")\n  110 |     @OpLog(module = \"dict\", action = \"createItem\")\n  111 |     @Operation(summary = \"创建字典项\", description = \"为指定字典新增字典项\")\n  112 |     public Result<Long> createItem(@RequestBody DictItem item) {\n  113 |         if (item.getDictId() == null) {\n  114 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请选择所属字典\");\n  115 |         }\n  116 |         if (!StringUtils.hasText(item.getLabel())) {\n  117 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请填写字典项标签\");",
+        "source": "endpoint",
+        "frame": "DictController#createItem（无应用堆栈，按端点映射）",
+        "className": "DictController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_dict-i.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/dict-items/{id}]-496b01b0",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/dict-items/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/dict-items/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DictController.java:153",
+        "snippet": "  148 |     }\n  149 | \n  150 |     @DeleteMapping(\"/admin/dict-items/{id}\")\n  151 |     @OpLog(module = \"dict\", action = \"deleteItem\")\n  152 |     @Operation(summary = \"删除字典项\", description = \"根据字典项ID删除\")\n  153 |     public Result<Void> deleteItem(\n  154 |             @Parameter(description = \"字典项ID\", example = \"1\") @PathVariable Long id) {\n  155 |         dictItemMapper.deleteById(id);\n  156 |         return Result.ok();\n  157 |     }\n  158 | }",
+        "source": "endpoint",
+        "frame": "DictController#deleteItem（无应用堆栈，按端点映射）",
+        "className": "DictController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_dic.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/dict-items/{id}]-e7824f41",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/dict-items/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/dict-items/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DictController.java:135",
+        "snippet": "  130 |     }\n  131 | \n  132 |     @PutMapping(\"/admin/dict-items/{id}\")\n  133 |     @OpLog(module = \"dict\", action = \"updateItem\")\n  134 |     @Operation(summary = \"更新字典项\", description = \"修改字典项的标签、值、排序等信息\")\n  135 |     public Result<Void> updateItem(\n  136 |             @Parameter(description = \"字典项ID\", example = \"1\") @PathVariable Long id,\n  137 |             @RequestBody DictItem patch) {\n  138 |         DictItem item = dictItemMapper.selectById(id);\n  139 |         if (item == null) {\n  140 |             throw new BizException(ErrorCode.NOT_FOUND);",
+        "source": "endpoint",
+        "frame": "DictController#updateItem（无应用堆栈，按端点映射）",
+        "className": "DictController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_dict-i.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/dicts]-88c611fa",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/dicts]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/dicts",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DictController.java:48",
+        "snippet": "   43 |     }\n   44 | \n   45 |     @PostMapping(\"/admin/dicts\")\n   46 |     @OpLog(module = \"dict\", action = \"create\")\n   47 |     @Operation(summary = \"创建字典\", description = \"新增数据字典\")\n   48 |     public Result<Long> createDict(@RequestBody Dict dict) {\n   49 |         if (!StringUtils.hasText(dict.getCode())) {\n   50 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请填写字典编码\");\n   51 |         }\n   52 |         if (!StringUtils.hasText(dict.getName())) {\n   53 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请填写字典名称\");",
+        "source": "endpoint",
+        "frame": "DictController#createDict（无应用堆栈，按端点映射）",
+        "className": "DictController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_dicts_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/dicts/{id}]-fa131bab",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /admin/dicts/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/dicts/{id}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DictController.java:82",
+        "snippet": "   77 |     }\n   78 | \n   79 |     @DeleteMapping(\"/admin/dicts/{id}\")\n   80 |     @OpLog(module = \"dict\", action = \"delete\")\n   81 |     @Operation(summary = \"删除字典\", description = \"删除字典及其所有字典项\")\n   82 |     public Result<Void> deleteDict(\n   83 |             @Parameter(description = \"字典ID\", example = \"1\") @PathVariable Long id) {\n   84 |         dictItemMapper.delete(new LambdaQueryWrapper<DictItem>().eq(DictItem::getDictId, id));\n   85 |         dictMapper.deleteById(id);\n   86 |         return Result.ok();\n   87 |     }",
+        "source": "endpoint",
+        "frame": "DictController#deleteDict（无应用堆栈，按端点映射）",
+        "className": "DictController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_admin_dic.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/dicts/{id}]-213db536",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/dicts/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/dicts/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DictController.java:66",
+        "snippet": "   61 |     }\n   62 | \n   63 |     @PutMapping(\"/admin/dicts/{id}\")\n   64 |     @OpLog(module = \"dict\", action = \"update\")\n   65 |     @Operation(summary = \"更新字典\", description = \"修改字典名称与备注\")\n   66 |     public Result<Void> updateDict(\n   67 |             @Parameter(description = \"字典ID\", example = \"1\") @PathVariable Long id,\n   68 |             @RequestBody Dict patch) {\n   69 |         Dict dict = dictMapper.selectById(id);\n   70 |         if (dict == null) {\n   71 |             throw new BizException(ErrorCode.NOT_FOUND);",
+        "source": "endpoint",
+        "frame": "DictController#updateDict（无应用堆栈，按端点映射）",
+        "className": "DictController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_dicts_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/files/confirm]-8b6de583",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/files/confirm]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/files/confirm",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/FileController.java:128",
+        "snippet": "  123 |     }\n  124 | \n  125 |     @PostMapping(\"/confirm\")\n  126 |     @OpLog(module = \"file\", action = \"confirm\")\n  127 |     @Operation(summary = \"确认上传完成\", description = \"客户端直传成功后回调，登记文件元数据并返回访问地址\")\n  128 |     public Result<Map<String, Object>> confirm(@RequestBody ConfirmReq req) {\n  129 |         if (!StringUtils.hasText(req.getObjectKey())) {\n  130 |             throw new BizException(ErrorCode.BAD_REQUEST, \"objectKey不能为空\");\n  131 |         }\n  132 |         FileObject fo = new FileObject();\n  133 |         fo.setBucket(ossProperties.getBucketName());",
+        "source": "endpoint",
+        "frame": "FileController#confirm（无应用堆栈，按端点映射）",
+        "className": "FileController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_files_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPUT /admin/home/slots/{code}]-bba0b3fb",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPUT /admin/home/slots/{code}]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/home/slots/{code}",
+      "method": "PUT",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/AdminOpsController.java:56",
+        "snippet": "   51 |     }\n   52 | \n   53 |     @PutMapping(\"/admin/home/slots/{code}\")\n   54 |     @OpLog(module = \"content\", action = \"home\")\n   55 |     @Operation(summary = \"保存运营位\")\n   56 |     public Result<Map<String, Object>> saveSlot(@PathVariable String code,\n   57 |                                                 @RequestBody HomeSlotService.SlotSaveReq req) {\n   58 |         return Result.ok(homeSlotService.saveByCode(code, req));\n   59 |     }\n   60 | \n   61 |     @GetMapping(\"/admin/reviews\")",
+        "source": "endpoint",
+        "frame": "AdminOpsController#saveSlot（无应用堆栈，按端点映射）",
+        "className": "AdminOpsController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPUT_admin_home_sl.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/orders/{id}]-1c8d67db",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/orders/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/orders/{id}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/OrderController.java:107",
+        "snippet": "  102 |         }\n  103 |     }\n  104 | \n  105 |     @GetMapping(\"/{id}\")\n  106 |     @Operation(summary = \"获取订单详情\", description = \"返回订单信息、明细行及物流记录\")\n  107 |     public Result<Map<String, Object>> detail(\n  108 |             @Parameter(description = \"订单ID\", example = \"1\") @PathVariable Long id) {\n  109 |         return Result.ok(orderService.detail(id));\n  110 |     }\n  111 | \n  112 |     @PostMapping(\"/{id}/ship\")",
+        "source": "endpoint",
+        "frame": "OrderController#detail（无应用堆栈，按端点映射）",
+        "className": "OrderController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_admin_orders.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/products/{id}]-4b563699",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/products/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/products/{id}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/ProductController.java:39",
+        "snippet": "   34 |         return Result.ok(productService.page(page, size, name, status, categoryId));\n   35 |     }\n   36 | \n   37 |     @GetMapping(\"/{id}\")\n   38 |     @Operation(summary = \"获取商品详情\", description = \"返回 SPU 信息及关联 SKU 列表\")\n   39 |     public Result<Map<String, Object>> detail(\n   40 |             @Parameter(description = \"商品ID\", example = \"1\") @PathVariable Long id) {\n   41 |         return Result.ok(productService.detail(id));\n   42 |     }\n   43 | \n   44 |     @PostMapping",
+        "source": "endpoint",
+        "frame": "ProductController#detail（无应用堆栈，按端点映射）",
+        "className": "ProductController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_admin_produc.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/system-configs/{id}]-29703b1e",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/system-configs/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/system-configs/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/SystemConfigController.java:41",
+        "snippet": "   36 |     }\n   37 | \n   38 |     @PutMapping(\"/{id}\")\n   39 |     @OpLog(module = \"config\", action = \"update\")\n   40 |     @Operation(summary = \"更新系统配置\", description = \"修改指定配置项的值与备注\")\n   41 |     public Result<Void> update(\n   42 |             @Parameter(description = \"配置ID\", example = \"1\") @PathVariable Long id,\n   43 |             @RequestBody SystemConfig patch) {\n   44 |         SystemConfig cfg = systemConfigMapper.selectById(id);\n   45 |         if (cfg == null) {\n   46 |             throw new BizException(ErrorCode.NOT_FOUND);",
+        "source": "endpoint",
+        "frame": "SystemConfigController#update（无应用堆栈，按端点映射）",
+        "className": "SystemConfigController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_system.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/users/{id}]-3b7b487c",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/users/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/users/{id}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/AdminUserController.java:41",
+        "snippet": "   36 |         return Result.ok(adminUserService.page(page, size, username, phone, status, deptId));\n   37 |     }\n   38 | \n   39 |     @GetMapping(\"/{id}\")\n   40 |     @Operation(summary = \"获取用户详情\", description = \"根据用户ID查询用户详情及关联角色\")\n   41 |     public Result<Map<String, Object>> get(\n   42 |             @Parameter(description = \"用户ID\", example = \"1\") @PathVariable Long id) {\n   43 |         return Result.ok(adminUserService.get(id));\n   44 |     }\n   45 | \n   46 |     @PostMapping",
+        "source": "endpoint",
+        "frame": "AdminUserController#get（无应用堆栈，按端点映射）",
+        "className": "AdminUserController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_admin_users_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/warehouses]-1a34ae04",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /admin/warehouses]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/admin/warehouses",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/WarehouseController.java:35",
+        "snippet": "   30 |     }\n   31 | \n   32 |     @PostMapping\n   33 |     @OpLog(module = \"warehouse\", action = \"create\")\n   34 |     @Operation(summary = \"创建仓库\", description = \"新增仓库，未传 status 时默认为 ENABLED\")\n   35 |     public Result<Long> create(@RequestBody Warehouse w) {\n   36 |         if (!StringUtils.hasText(w.getName())) {\n   37 |             throw new BizException(ErrorCode.BAD_REQUEST, \"请填写仓库名称\");\n   38 |         }\n   39 |         if (!StringUtils.hasText(w.getStatus())) {\n   40 |             w.setStatus(\"ENABLED\");",
+        "source": "endpoint",
+        "frame": "WarehouseController#create（无应用堆栈，按端点映射）",
+        "className": "WarehouseController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_admin_wareho.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/warehouses/{id}]-db7e6a19",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPUT /admin/warehouses/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/warehouses/{id}",
+      "method": "PUT",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/WarehouseController.java:49",
+        "snippet": "   44 |     }\n   45 | \n   46 |     @PutMapping(\"/{id}\")\n   47 |     @OpLog(module = \"warehouse\", action = \"update\")\n   48 |     @Operation(summary = \"更新仓库\", description = \"修改仓库名称及状态\")\n   49 |     public Result<Void> update(\n   50 |             @Parameter(description = \"仓库ID\", example = \"1\") @PathVariable Long id,\n   51 |             @RequestBody Warehouse patch) {\n   52 |         Warehouse w = warehouseMapper.selectById(id);\n   53 |         if (w == null) {\n   54 |             throw new BizException(ErrorCode.NOT_FOUND);",
+        "source": "endpoint",
+        "frame": "WarehouseController#update（无应用堆栈，按端点映射）",
+        "className": "WarehouseController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPUT_admin_wareho.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/after-sales/{id}]-f62fda0a",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/after-sales/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/after-sales/{id}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:266",
+        "snippet": "  261 |             @RequestParam(defaultValue = \"10\") int size) {\n  262 |         return Result.ok(afterSaleService.myPage(page, size, status));\n  263 |     }\n  264 | \n  265 |     @GetMapping(\"/api/after-sales/{id}\")\n  266 |     public Result<Map<String, Object>> afterSaleDetail(@PathVariable Long id) {\n  267 |         return Result.ok(afterSaleService.myDetail(id));\n  268 |     }\n  269 | \n  270 |     @PostMapping(\"/api/reviews\")\n  271 |     @Operation(summary = \"发表评价\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#afterSaleDetail（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_api_after-sa.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /api/favorites/{spuId}]-616ad984",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cDELETE /api/favorites/{spuId}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/favorites/{spuId}",
+      "method": "DELETE",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:168",
+        "snippet": "  163 |         favoriteBrowseService.addFavorite(spuId);\n  164 |         return Result.ok();\n  165 |     }\n  166 | \n  167 |     @DeleteMapping(\"/api/favorites/{spuId}\")\n  168 |     public Result<Void> removeFavorite(@PathVariable Long spuId) {\n  169 |         favoriteBrowseService.removeFavorite(spuId);\n  170 |         return Result.ok();\n  171 |     }\n  172 | \n  173 |     @GetMapping(\"/api/history\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#removeFavorite（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cDELETE_api_favor.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /api/favorites/{spuId}]-4431a889",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cPOST /api/favorites/{spuId}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/favorites/{spuId}",
+      "method": "POST",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:162",
+        "snippet": "  157 |             @RequestParam(defaultValue = \"20\") int size) {\n  158 |         return Result.ok(favoriteBrowseService.favorites(page, size));\n  159 |     }\n  160 | \n  161 |     @PostMapping(\"/api/favorites/{spuId}\")\n  162 |     public Result<Void> addFavorite(@PathVariable Long spuId) {\n  163 |         favoriteBrowseService.addFavorite(spuId);\n  164 |         return Result.ok();\n  165 |     }\n  166 | \n  167 |     @DeleteMapping(\"/api/favorites/{spuId}\")",
+        "source": "endpoint",
+        "frame": "StorefrontController#addFavorite（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cPOST_api_favorit.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/files/confirm]-093c48a7",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[malformed_json\\uff5cPOST /api/files/confirm]",
+      "name": "异常-畸形 JSON 请求体",
+      "endpoint": "/api/files/confirm",
+      "method": "POST",
+      "dimension": "异常",
+      "priority": "P2",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/CustomerFileController.java:117",
+        "snippet": "  112 |         data.put(\"headers\", result.headers());\n  113 |         return Result.ok(data);\n  114 |     }\n  115 | \n  116 |     @PostMapping(\"/confirm\")\n  117 |     public Result<Map<String, Object>> confirm(@RequestBody ConfirmReq req) {\n  118 |         Long customerId = SecurityContexts.requireUserId();\n  119 |         if (!StringUtils.hasText(req.getObjectKey())) {\n  120 |             throw new BizException(ErrorCode.BAD_REQUEST, \"objectKey不能为空\");\n  121 |         }\n  122 |         String biz = normalizeBiz(req.getBizType());",
+        "source": "endpoint",
+        "frame": "CustomerFileController#confirm（无应用堆栈，按端点映射）",
+        "className": "CustomerFileController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_malformed_json_uff5cPOST_api_files_co.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/orders/{id}]-e8c51e55",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/orders/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/orders/{id}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:206",
+        "snippet": "  201 |         Page<Order> p = orderMapper.selectPage(new Page<>(page, size), q);\n  202 |         return Result.ok(PageResult.of(p.getTotal(), p.getRecords()));\n  203 |     }\n  204 | \n  205 |     @GetMapping(\"/api/orders/{id}\")\n  206 |     public Result<Map<String, Object>> orderDetail(@PathVariable Long id) {\n  207 |         Long customerId = SecurityContexts.requireUserId();\n  208 |         Order order = orderMapper.selectById(id);\n  209 |         if (order == null || !customerId.equals(order.getCustomerId())) {\n  210 |             throw new BizException(ErrorCode.NOT_FOUND, \"订单不存在\");\n  211 |         }",
+        "source": "endpoint",
+        "frame": "StorefrontController#orderDetail（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_api_orders_i.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/orders/{id}/logistics]-90a2b4ca",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/orders/{id}/logistics]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/orders/{id}/logistics",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:232",
+        "snippet": "  227 |         orderSubmitService.confirmReceive(id);\n  228 |         return Result.ok();\n  229 |     }\n  230 | \n  231 |     @GetMapping(\"/api/orders/{id}/logistics\")\n  232 |     public Result<List<Shipment>> logistics(@PathVariable Long id) {\n  233 |         Long customerId = SecurityContexts.requireUserId();\n  234 |         Order order = orderMapper.selectById(id);\n  235 |         if (order == null || !customerId.equals(order.getCustomerId())) {\n  236 |             throw new BizException(ErrorCode.NOT_FOUND);\n  237 |         }",
+        "source": "endpoint",
+        "frame": "StorefrontController#logistics（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_api_orders_i.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/payment/{orderId}/status]-f34ad70f",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/payment/{orderId}/status]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/payment/{orderId}/status",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:248",
+        "snippet": "  243 |         Long orderId = Long.valueOf(body.get(\"orderId\").toString());\n  244 |         return Result.ok(paymentSandboxService.pay(orderId));\n  245 |     }\n  246 | \n  247 |     @GetMapping(\"/api/payment/{orderId}/status\")\n  248 |     public Result<Map<String, Object>> payStatus(@PathVariable Long orderId) {\n  249 |         return Result.ok(paymentSandboxService.status(orderId));\n  250 |     }\n  251 | \n  252 |     @PostMapping(\"/api/after-sales\")\n  253 |     public Result<Long> applyAfterSale(@RequestBody AfterSaleService.ApplyReq req) {",
+        "source": "endpoint",
+        "frame": "StorefrontController#payStatus（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_api_payment_.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/after-sales/{id}]-e13f955f",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/after-sales/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/after-sales/{id}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/AfterSaleController.java:40",
+        "snippet": "   35 |         return Result.ok(afterSaleService.page(page, size, status, type, afterSaleNo));\n   36 |     }\n   37 | \n   38 |     @GetMapping(\"/{id}\")\n   39 |     @Operation(summary = \"获取售后详情\", description = \"返回售后单信息及关联订单\")\n   40 |     public Result<Map<String, Object>> detail(\n   41 |             @Parameter(description = \"售后单ID\", example = \"1\") @PathVariable Long id) {\n   42 |         return Result.ok(afterSaleService.detail(id));\n   43 |     }\n   44 | \n   45 |     @PostMapping(\"/{id}/audit\")",
+        "source": "endpoint",
+        "frame": "AfterSaleController#detail（无应用堆栈，按端点映射）",
+        "className": "AfterSaleController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_admin_after-.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[list_boundary\\uff5cGET /admin/dict-items]-f648cd7c",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[list_boundary\\uff5cGET /admin/dict-items]",
+      "name": "边界-分页零值/负值/超大值",
+      "endpoint": "/admin/dict-items",
+      "method": "GET",
+      "dimension": "边界值",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DictController.java:91",
+        "snippet": "   86 |         return Result.ok();\n   87 |     }\n   88 | \n   89 |     @GetMapping(\"/admin/dict-items\")\n   90 |     @Operation(summary = \"查询字典项\", description = \"根据字典ID查询字典项列表\")\n   91 |     public Result<List<DictItem>> items(\n   92 |             @Parameter(description = \"字典ID\", example = \"1\", required = true) @RequestParam Long dictId) {\n   93 |         return Result.ok(dictItemMapper.selectList(new LambdaQueryWrapper<DictItem>()\n   94 |                 .eq(DictItem::getDictId, dictId)\n   95 |                 .orderByAsc(DictItem::getSort)));\n   96 |     }",
+        "source": "endpoint",
+        "frame": "DictController#items（无应用堆栈，按端点映射）",
+        "className": "DictController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_list_boundary_uff5cGET_admin_dict-ite.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[list_boundary\\uff5cGET /admin/dict-items/by-code]-d474c469",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[list_boundary\\uff5cGET /admin/dict-items/by-code]",
+      "name": "边界-分页零值/负值/超大值",
+      "endpoint": "/admin/dict-items/by-code",
+      "method": "GET",
+      "dimension": "边界值",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/DictController.java:100",
+        "snippet": "   95 |                 .orderByAsc(DictItem::getSort)));\n   96 |     }\n   97 | \n   98 |     @GetMapping(\"/admin/dict-items/by-code\")\n   99 |     @Operation(summary = \"按编码查询字典项\", description = \"根据字典编码查询字典项列表\")\n  100 |     public Result<List<DictItem>> itemsByCode(\n  101 |             @Parameter(description = \"字典编码\", example = \"user_status\", required = true) @RequestParam String code) {\n  102 |         Dict dict = dictMapper.selectOne(new LambdaQueryWrapper<Dict>().eq(Dict::getCode, code));\n  103 |         if (dict == null) {\n  104 |             return Result.ok(List.of());\n  105 |         }",
+        "source": "endpoint",
+        "frame": "DictController#itemsByCode（无应用堆栈，按端点映射）",
+        "className": "DictController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_list_boundary_uff5cGET_admin_dict-ite.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[list_boundary\\uff5cGET /admin/files/view]-29d13ae7",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[list_boundary\\uff5cGET /admin/files/view]",
+      "name": "边界-分页零值/负值/超大值",
+      "endpoint": "/admin/files/view",
+      "method": "GET",
+      "dimension": "边界值",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/FileController.java:49",
+        "snippet": "   44 |     private final OssProperties ossProperties;\n   45 |     private final FileObjectMapper fileObjectMapper;\n   46 | \n   47 |     @GetMapping(\"/view\")\n   48 |     @Operation(summary = \"查看/下载文件\", description = \"从 OSS 代理输出文件流，供前端 img 展示（桶私有时不可直链）\")\n   49 |     public void view(\n   50 |             @RequestParam(\"objectKey\") String objectKey,\n   51 |             HttpServletResponse response) throws java.io.IOException {\n   52 |         if (!StringUtils.hasText(objectKey) || objectKey.contains(\"..\") || objectKey.startsWith(\"/\")) {\n   53 |             throw new BizException(ErrorCode.BAD_REQUEST, \"非法 objectKey\");\n   54 |         }",
+        "source": "endpoint",
+        "frame": "FileController#view（无应用堆栈，按端点映射）",
+        "className": "FileController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_list_boundary_uff5cGET_admin_files_vi.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/operation-logs/{id}]-e951d09a",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /admin/operation-logs/{id}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/admin/operation-logs/{id}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/OperationLogController.java:111",
+        "snippet": "  106 |         }\n  107 |     }\n  108 | \n  109 |     @GetMapping(\"/{id}\")\n  110 |     @Operation(summary = \"操作日志详情\", description = \"根据日志 ID 查看完整审计信息（含参数、UA、TraceId）\")\n  111 |     public Result<OperationLog> detail(\n  112 |             @Parameter(description = \"日志ID\", example = \"1\") @PathVariable Long id) {\n  113 |         return Result.ok(operationLogService.getById(id));\n  114 |     }\n  115 | \n  116 |     private LambdaQueryWrapper<OperationLog> buildQuery(",
+        "source": "endpoint",
+        "frame": "OperationLogController#detail（无应用堆栈，按端点映射）",
+        "className": "OperationLogController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_admin_operat.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[list_boundary\\uff5cGET /api/files/view]-6f9cc6a9",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[list_boundary\\uff5cGET /api/files/view]",
+      "name": "边界-分页零值/负值/超大值",
+      "endpoint": "/api/files/view",
+      "method": "GET",
+      "dimension": "边界值",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-identity/src/main/java/com/shangpivot/identity/controller/CustomerFileController.java:44",
+        "snippet": "   39 |     private final OssProperties ossProperties;\n   40 |     private final FileObjectMapper fileObjectMapper;\n   41 | \n   42 |     @GetMapping(\"/view\")\n   43 |     @Operation(summary = \"查看文件\")\n   44 |     public void view(@RequestParam(\"objectKey\") String objectKey, HttpServletResponse response) throws java.io.IOException {\n   45 |         if (!StringUtils.hasText(objectKey) || objectKey.contains(\"..\") || objectKey.startsWith(\"/\")) {\n   46 |             throw new BizException(ErrorCode.BAD_REQUEST, \"非法 objectKey\");\n   47 |         }\n   48 |         try {\n   49 |             var meta = objectStorage.statObject(objectKey);",
+        "source": "endpoint",
+        "frame": "CustomerFileController#view（无应用堆栈，按端点映射）",
+        "className": "CustomerFileController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_list_boundary_uff5cGET_api_files_view.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/products/{spuId}]-e27e94ba",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/products/{spuId}]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/products/{spuId}",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:74",
+        "snippet": "   69 |             @RequestParam(defaultValue = \"comp\") String sort) {\n   70 |         return Result.ok(catalogReadService.productPage(categoryId, page, size, sort));\n   71 |     }\n   72 | \n   73 |     @GetMapping(\"/api/products/{spuId}\")\n   74 |     public Result<Map<String, Object>> productDetail(@PathVariable Long spuId) {\n   75 |         Map<String, Object> detail = catalogReadService.detail(spuId);\n   76 |         Long customerId = SecurityContexts.optionalUserId();\n   77 |         if (customerId != null) {\n   78 |             favoriteBrowseService.touchHistory(customerId, spuId);\n   79 |             detail.put(\"favorited\", favoriteBrowseService.isFavorite(spuId));",
+        "source": "endpoint",
+        "frame": "StorefrontController#productDetail（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_api_products.md"
+    },
+    {
+      "id": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/products/{spuId}/reviews]-49ef0a38",
+      "caseId": "tests/api/test_endpoint_sweep.py::test_endpoint_sweep[path_param_type\\uff5cGET /api/products/{spuId}/reviews]",
+      "name": "逆向-路径参数类型错误",
+      "endpoint": "/api/products/{spuId}/reviews",
+      "method": "GET",
+      "dimension": "功能逆向",
+      "priority": "",
+      "summary": "HTTP 500 系统异常",
+      "code": {
+        "location": "backend/shang-commerce/src/main/java/com/shangpivot/commerce/controller/StorefrontController.java:305",
+        "snippet": "  300 |         reviewMapper.insert(review);\n  301 |         return Result.ok(review.getId());\n  302 |     }\n  303 | \n  304 |     @GetMapping(\"/api/products/{spuId}/reviews\")\n  305 |     public Result<PageResult<Review>> productReviews(\n  306 |             @PathVariable Long spuId,\n  307 |             @RequestParam(defaultValue = \"1\") int page,\n  308 |             @RequestParam(defaultValue = \"10\") int size) {\n  309 |         Page<Review> p = reviewMapper.selectPage(new Page<>(page, size), new LambdaQueryWrapper<Review>()\n  310 |                 .eq(Review::getSpuId, spuId)",
+        "source": "endpoint",
+        "frame": "StorefrontController#productReviews（无应用堆栈，按端点映射）",
+        "className": "StorefrontController"
+      },
+      "reportLink": "../defects/tests_api_test_endpoint_sweep.py_test_endpoint_sweep_path_param_type_uff5cGET_api_products.md"
+    }
+  ]
+}

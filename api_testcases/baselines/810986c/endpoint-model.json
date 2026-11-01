@@ -1,0 +1,3535 @@
+{
+ "endpoints": [
+  {
+   "method": "GET",
+   "path": "/admin/after-sales",
+   "summary": "分页查询售后单",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/after-sales/{id}",
+   "summary": "获取售后详情",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "afterSale",
+    "order"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/after-sales/{id}/audit",
+   "summary": "审核售后单",
+   "dto_class": "AfterSaleService.AuditReq",
+   "dto_fields": [
+    "approved:Boolean",
+    "remark:String",
+    "orderId:Long",
+    "type:String",
+    "reason:String",
+    "evidenceKeys:java.util.List<String>",
+    "refundAmount:java.math.BigDecimal"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "approved",
+    "remark"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [
+    "reason",
+    "remark",
+    "type"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "AFTER_SALE_STATUS_INVALID",
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/attributes",
+   "summary": "查询属性列表",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/attributes",
+   "summary": "创建属性",
+   "dto_class": "Attribute",
+   "dto_fields": [
+    "categoryId:Long",
+    "name:String",
+    "type:String",
+    "options:List<String>",
+    "sort:Integer"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "categoryId",
+    "name",
+    "sort",
+    "type"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "categoryId",
+    "id",
+    "name",
+    "sort",
+    "type"
+   ],
+   "body_presence": [
+    "categoryId",
+    "name"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/attributes/{id}",
+   "summary": "删除属性",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/attributes/{id}",
+   "summary": "更新属性",
+   "dto_class": "Attribute",
+   "dto_fields": [
+    "categoryId:Long",
+    "name:String",
+    "type:String",
+    "options:List<String>",
+    "sort:Integer"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "categoryId",
+    "name",
+    "options",
+    "sort",
+    "type"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "categoryId",
+    "name",
+    "options",
+    "sort",
+    "type"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/auth/login",
+   "summary": "用户登录",
+   "dto_class": "LoginRequest",
+   "dto_fields": [
+    "username:String",
+    "password:String"
+   ],
+   "dto_required": [
+    "username",
+    "password"
+   ],
+   "biz_fields": [
+    "password",
+    "username"
+   ],
+   "resp_keys": [],
+   "auth": "免认证",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": true,
+   "param_enforced": true,
+   "codes": [
+    "ACCOUNT_LOCKED",
+    "FORBIDDEN",
+    "LOGIN_FAILED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/auth/logout",
+   "summary": "退出登录",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "TOKEN_EXPIRED",
+    "TOKEN_INVALID",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/auth/me",
+   "summary": "获取当前用户信息",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/auth/refresh",
+   "summary": "刷新令牌",
+   "dto_class": "RefreshRequest",
+   "dto_fields": [
+    "refreshToken:String"
+   ],
+   "dto_required": [
+    "refreshToken"
+   ],
+   "biz_fields": [
+    "refreshToken"
+   ],
+   "resp_keys": [],
+   "auth": "免认证",
+   "has_path_param": false,
+   "body_keys": [
+    "refreshToken"
+   ],
+   "body_presence": [],
+   "has_valid": true,
+   "param_enforced": true,
+   "codes": [
+    "TOKEN_EXPIRED",
+    "TOKEN_INVALID",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/brands",
+   "summary": "分页查询品牌",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/brands",
+   "summary": "创建品牌",
+   "dto_class": "Brand",
+   "dto_fields": [
+    "categoryId:Long",
+    "name:String",
+    "logo:String",
+    "sort:Integer",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "categoryId",
+    "name",
+    "sort",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "categoryId",
+    "id",
+    "name",
+    "sort",
+    "status"
+   ],
+   "body_presence": [
+    "categoryId",
+    "name"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/brands/{id}",
+   "summary": "删除品牌",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/brands/{id}",
+   "summary": "更新品牌",
+   "dto_class": "Brand",
+   "dto_fields": [
+    "categoryId:Long",
+    "name:String",
+    "logo:String",
+    "sort:Integer",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "categoryId",
+    "logo",
+    "name",
+    "sort",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "categoryId",
+    "logo",
+    "name",
+    "sort",
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/categories",
+   "summary": "获取类目列表",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/categories",
+   "summary": "创建类目",
+   "dto_class": "Category",
+   "dto_fields": [
+    "parentId:Long",
+    "name:String",
+    "level:Integer",
+    "sort:Integer",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "level",
+    "name",
+    "parentId",
+    "sort",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "id",
+    "level",
+    "name",
+    "parentId",
+    "sort",
+    "status"
+   ],
+   "body_presence": [
+    "name"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/categories/tree",
+   "summary": "获取类目树",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/categories/{id}",
+   "summary": "删除类目",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/categories/{id}",
+   "summary": "更新类目",
+   "dto_class": "Category",
+   "dto_fields": [
+    "parentId:Long",
+    "name:String",
+    "level:Integer",
+    "sort:Integer",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "level",
+    "name",
+    "parentId",
+    "sort",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "level",
+    "name",
+    "parentId",
+    "sort",
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/customers",
+   "summary": "分页查询会员",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "orderCount"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/customers/{id}",
+   "summary": "会员详情",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "orderCount"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/customers/{id}/status",
+   "summary": "冻结/解冻会员",
+   "dto_class": "Map<String, String>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/dashboard/stats",
+   "summary": "获取工作台统计",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "lowStockCount",
+    "onShelfProducts",
+    "orderTotal",
+    "pendingAfterSales",
+    "pendingShipOrders",
+    "skuTotal"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/depts",
+   "summary": "部门列表",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/depts",
+   "summary": "创建部门",
+   "dto_class": "Dept",
+   "dto_fields": [
+    "parentId:Long",
+    "name:String",
+    "sort:Integer",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "name",
+    "parentId",
+    "sort",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "id",
+    "name",
+    "parentId",
+    "sort",
+    "status"
+   ],
+   "body_presence": [
+    "name"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/depts/tree",
+   "summary": "部门树",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/depts/{id}",
+   "summary": "删除部门",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/depts/{id}",
+   "summary": "更新部门",
+   "dto_class": "Dept",
+   "dto_fields": [
+    "parentId:Long",
+    "name:String",
+    "sort:Integer",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "name",
+    "parentId",
+    "sort",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "name",
+    "parentId",
+    "sort",
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/dict-items",
+   "summary": "查询字典项",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/dict-items",
+   "summary": "创建字典项",
+   "dto_class": "DictItem",
+   "dto_fields": [
+    "dictId:Long",
+    "label:String",
+    "value:String",
+    "sort:Integer",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "dictId",
+    "label",
+    "sort",
+    "status",
+    "value"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "dictId",
+    "id",
+    "label",
+    "sort",
+    "status",
+    "value"
+   ],
+   "body_presence": [
+    "dictId",
+    "label",
+    "value"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/dict-items/by-code",
+   "summary": "按编码查询字典项",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/dict-items/{id}",
+   "summary": "删除字典项",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/dict-items/{id}",
+   "summary": "更新字典项",
+   "dto_class": "DictItem",
+   "dto_fields": [
+    "dictId:Long",
+    "label:String",
+    "value:String",
+    "sort:Integer",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "label",
+    "sort",
+    "status",
+    "value"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "label",
+    "sort",
+    "status",
+    "value"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/dicts",
+   "summary": "分页查询字典",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/dicts",
+   "summary": "创建字典",
+   "dto_class": "Dict",
+   "dto_fields": [
+    "code:String",
+    "name:String",
+    "remark:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "code",
+    "name"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "code",
+    "id",
+    "name"
+   ],
+   "body_presence": [
+    "code",
+    "name"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/dicts/{id}",
+   "summary": "删除字典",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/dicts/{id}",
+   "summary": "更新字典",
+   "dto_class": "Dict",
+   "dto_fields": [
+    "code:String",
+    "name:String",
+    "remark:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "name",
+    "remark"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "name",
+    "remark"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/files/confirm",
+   "summary": "确认上传完成",
+   "dto_class": "ConfirmReq",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "bizType",
+    "contentType",
+    "objectKey",
+    "sizeBytes",
+    "visibility"
+   ],
+   "resp_keys": [
+    "id",
+    "objectKey",
+    "url"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "bizType",
+    "contentType",
+    "objectKey",
+    "sizeBytes",
+    "visibility"
+   ],
+   "body_presence": [
+    "objectKey"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/files/presign",
+   "summary": "获取预签名上传地址",
+   "dto_class": "PresignReq",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "bizType",
+    "contentType",
+    "filename"
+   ],
+   "resp_keys": [
+    "headers",
+    "objectKey",
+    "publicUrl",
+    "uploadUrl"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "bizType",
+    "contentType",
+    "filename",
+    "size"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/files/upload",
+   "summary": "直传上传文件",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "id",
+    "objectKey",
+    "url"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/files/view",
+   "summary": "查看/下载文件",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "免认证（GET）",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/home/slots",
+   "summary": "运营位列表",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "code",
+    "id",
+    "itemCount",
+    "sort",
+    "status",
+    "title",
+    "validFrom",
+    "validTo"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/home/slots/{code}",
+   "summary": "运营位详情",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "code",
+    "extra",
+    "id",
+    "imageKey",
+    "items",
+    "linkType",
+    "linkValue",
+    "pic",
+    "price",
+    "soldCount",
+    "sort",
+    "spuId",
+    "spuName",
+    "spuStatus",
+    "status",
+    "title",
+    "validFrom",
+    "validTo"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/home/slots/{code}",
+   "summary": "保存运营位",
+   "dto_class": "HomeSlotService.SlotSaveReq",
+   "dto_fields": [
+    "title:String",
+    "status:String",
+    "sort:Integer",
+    "validFrom:OffsetDateTime",
+    "validTo:OffsetDateTime",
+    "items:List<SlotItemReq>",
+    "sort:Integer",
+    "spuId:Long",
+    "imageKey:String",
+    "linkType:String",
+    "linkValue:String",
+    "title:String",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "items",
+    "sort",
+    "status",
+    "title",
+    "validFrom",
+    "validTo"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [
+    "status",
+    "title"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/in-out",
+   "summary": "出入库分页",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "bill",
+    "id",
+    "items",
+    "qty",
+    "remark",
+    "skuId",
+    "skuTitle"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/in-out",
+   "summary": "创建出入库单",
+   "dto_class": "InOutOrderService.CreateReq",
+   "dto_fields": [
+    "type:String",
+    "warehouseId:Long",
+    "remark:String",
+    "items:List<ItemReq>",
+    "skuId:Long",
+    "qty:Integer",
+    "remark:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "items",
+    "remark",
+    "type",
+    "warehouseId"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/operation-logs",
+   "summary": "分页查询操作日志",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/operation-logs/export",
+   "summary": "导出操作日志",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/operation-logs/{id}",
+   "summary": "操作日志详情",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/orders",
+   "summary": "分页查询订单",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/orders/export",
+   "summary": "导出订单 CSV",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/orders/{id}",
+   "summary": "获取订单详情",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "clientType",
+    "customerPhoneMask",
+    "items",
+    "order",
+    "paidAt",
+    "payment",
+    "shipments",
+    "tradeNo"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/orders/{id}/ship",
+   "summary": "订单发货",
+   "dto_class": "OrderService.ShipReq",
+   "dto_fields": [
+    "carrier:String",
+    "trackingNo:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "carrier",
+    "trackingNo"
+   ],
+   "resp_keys": [
+    "desc",
+    "time"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [
+    "carrier",
+    "trackingNo"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "ORDER_STATUS_INVALID",
+    "STOCK_INSUFFICIENT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/permissions",
+   "summary": "权限列表",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/permissions",
+   "summary": "创建权限",
+   "dto_class": "Permission",
+   "dto_fields": [
+    "parentId:Long",
+    "code:String",
+    "name:String",
+    "type:String",
+    "path:String",
+    "component:String",
+    "icon:String",
+    "sort:Integer",
+    "visible:Boolean",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "code",
+    "name",
+    "parentId",
+    "sort",
+    "status",
+    "type",
+    "visible"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "code",
+    "id",
+    "name",
+    "parentId",
+    "sort",
+    "status",
+    "type",
+    "visible"
+   ],
+   "body_presence": [
+    "code",
+    "name",
+    "type"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/permissions/tree",
+   "summary": "权限树",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/permissions/{id}",
+   "summary": "删除权限",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/permissions/{id}",
+   "summary": "更新权限",
+   "dto_class": "Permission",
+   "dto_fields": [
+    "parentId:Long",
+    "code:String",
+    "name:String",
+    "type:String",
+    "path:String",
+    "component:String",
+    "icon:String",
+    "sort:Integer",
+    "visible:Boolean",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "code",
+    "component",
+    "icon",
+    "name",
+    "parentId",
+    "path",
+    "sort",
+    "status",
+    "type",
+    "visible"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "code",
+    "component",
+    "icon",
+    "name",
+    "parentId",
+    "path",
+    "sort",
+    "status",
+    "type",
+    "visible"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/products",
+   "summary": "分页查询商品",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/products",
+   "summary": "创建商品",
+   "dto_class": "ProductService.ProductSaveReq",
+   "dto_fields": [
+    "categoryId:Long",
+    "brandId:Long",
+    "name:String",
+    "subtitle:String",
+    "pics:List<String>",
+    "videos:List<String>",
+    "detailHtml:String",
+    "status:String",
+    "scheduleOnAt:java.time.OffsetDateTime",
+    "clearScheduleOnAt:Boolean",
+    "skus:List<SkuSave>",
+    "title:String",
+    "price:BigDecimal",
+    "costPrice:BigDecimal",
+    "barCode:String",
+    "pic:String",
+    "status:String",
+    "initStock:Integer",
+    "warehouseId:Long",
+    "lowThreshold:Integer"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "scheduleOnAt",
+    "skus"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [
+    "status"
+   ],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/products/batch-off",
+   "summary": "批量下架",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/products/{id}",
+   "summary": "删除商品",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/products/{id}",
+   "summary": "获取商品详情",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "barCode",
+    "costPrice",
+    "id",
+    "pic",
+    "price",
+    "skus",
+    "specs",
+    "spu",
+    "spuId",
+    "status",
+    "stock",
+    "title"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/products/{id}",
+   "summary": "更新商品",
+   "dto_class": "ProductService.ProductSaveReq",
+   "dto_fields": [
+    "categoryId:Long",
+    "brandId:Long",
+    "name:String",
+    "subtitle:String",
+    "pics:List<String>",
+    "videos:List<String>",
+    "detailHtml:String",
+    "status:String",
+    "scheduleOnAt:java.time.OffsetDateTime",
+    "clearScheduleOnAt:Boolean",
+    "skus:List<SkuSave>",
+    "title:String",
+    "price:BigDecimal",
+    "costPrice:BigDecimal",
+    "barCode:String",
+    "pic:String",
+    "status:String",
+    "initStock:Integer",
+    "warehouseId:Long",
+    "lowThreshold:Integer"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "brandId",
+    "categoryId",
+    "clearScheduleOnAt",
+    "detailHtml",
+    "name",
+    "pics",
+    "scheduleOnAt",
+    "skus",
+    "status",
+    "subtitle",
+    "videos"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [
+    "status"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/products/{id}/off",
+   "summary": "商品下架",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/products/{id}/on",
+   "summary": "商品上架",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/reviews",
+   "summary": "评价分页",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "content",
+    "createdAt",
+    "customerId",
+    "customerPhone",
+    "id",
+    "orderItemId",
+    "pics",
+    "rating",
+    "spuId",
+    "spuName",
+    "status"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/reviews/{id}/status",
+   "summary": "隐藏/恢复评价",
+   "dto_class": "Map<String, String>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/roles",
+   "summary": "分页查询角色",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "permissionIds",
+    "userCount"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/roles",
+   "summary": "创建角色",
+   "dto_class": "RoleSaveReq",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "code",
+    "dataScope",
+    "name",
+    "permissionIds",
+    "remark",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "code",
+    "dataScope",
+    "name",
+    "permissionIds",
+    "remark",
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/roles/all",
+   "summary": "查询全部角色",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/roles/{id}",
+   "summary": "删除角色",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/roles/{id}",
+   "summary": "更新角色",
+   "dto_class": "RoleSaveReq",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "dataScope",
+    "name",
+    "permissionIds",
+    "remark",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "dataScope",
+    "name",
+    "permissionIds",
+    "remark",
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/site/brand",
+   "summary": "获取站点品牌",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/site/brand",
+   "summary": "更新站点品牌",
+   "dto_class": "Map<String, String>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/stocks",
+   "summary": "分页查询库存",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "barCode",
+    "skuTitle",
+    "warehouseName"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/stocks/adjust",
+   "summary": "调整库存",
+   "dto_class": "StockService.AdjustReq",
+   "dto_fields": [
+    "skuId:Long",
+    "warehouseId:Long",
+    "changeQty:Integer",
+    "reason:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "changeQty",
+    "skuId",
+    "warehouseId"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "STOCK_INSUFFICIENT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/system-configs",
+   "summary": "查询系统配置",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/system-configs/{id}",
+   "summary": "更新系统配置",
+   "dto_class": "SystemConfig",
+   "dto_fields": [
+    "configKey:String",
+    "configValue:String",
+    "category:String",
+    "isSecret:Boolean",
+    "remark:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "configValue",
+    "remark"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "configValue",
+    "remark"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/users",
+   "summary": "分页查询用户",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "roleIds"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/users",
+   "summary": "创建用户",
+   "dto_class": "UserSaveReq",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "roleIds"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "roleIds"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/admin/users/{id}",
+   "summary": "删除用户",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/users/{id}",
+   "summary": "获取用户详情",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "roleIds"
+   ],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/users/{id}",
+   "summary": "更新用户",
+   "dto_class": "UserSaveReq",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "roleIds"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "roleIds"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/users/{id}/password",
+   "summary": "重置密码",
+   "dto_class": "Map<String, String>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "password"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "password"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/users/{id}/status",
+   "summary": "更新用户状态",
+   "dto_class": "Map<String, String>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "CONFLICT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/admin/warehouses",
+   "summary": "获取仓库列表",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/admin/warehouses",
+   "summary": "创建仓库",
+   "dto_class": "Warehouse",
+   "dto_fields": [
+    "name:String",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "name",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "id",
+    "name",
+    "status"
+   ],
+   "body_presence": [
+    "name"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/admin/warehouses/{id}",
+   "summary": "更新仓库",
+   "dto_class": "Warehouse",
+   "dto_fields": [
+    "name:String",
+    "status:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "name",
+    "status"
+   ],
+   "resp_keys": [],
+   "auth": "管理员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "name",
+    "status"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/addresses",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/addresses",
+   "summary": "",
+   "dto_class": "AddressService.AddressReq",
+   "dto_fields": [
+    "name:String",
+    "phone:String",
+    "province:String",
+    "city:String",
+    "district:String",
+    "detail:String",
+    "isDefault:Boolean"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "isDefault"
+   ],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/addresses/{id}",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/addresses/{id}",
+   "summary": "",
+   "dto_class": "AddressService.AddressReq",
+   "dto_fields": [
+    "name:String",
+    "phone:String",
+    "province:String",
+    "city:String",
+    "district:String",
+    "detail:String",
+    "isDefault:Boolean"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "isDefault"
+   ],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [
+    "city",
+    "detail",
+    "district",
+    "name",
+    "phone",
+    "province"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/addresses/{id}/default",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/after-sales",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/after-sales",
+   "summary": "",
+   "dto_class": "AfterSaleService.ApplyReq",
+   "dto_fields": [
+    "orderId:Long",
+    "type:String",
+    "reason:String",
+    "evidenceKeys:java.util.List<String>",
+    "refundAmount:java.math.BigDecimal"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "evidenceKeys",
+    "orderId",
+    "reason",
+    "refundAmount",
+    "type"
+   ],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [
+    "reason",
+    "type"
+   ],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "NOT_FOUND",
+    "ORDER_STATUS_INVALID",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/after-sales/{id}",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "afterSale",
+    "order"
+   ],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/auth/login",
+   "summary": "手机号验证码登录",
+   "dto_class": "CustomerLoginRequest",
+   "dto_fields": [
+    "phone:String",
+    "code:String",
+    "clientType:String"
+   ],
+   "dto_required": [
+    "phone",
+    "code",
+    "clientType"
+   ],
+   "biz_fields": [
+    "clientType",
+    "code",
+    "phone"
+   ],
+   "resp_keys": [],
+   "auth": "免认证",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": true,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "CUSTOMER_FROZEN",
+    "LOGIN_FAILED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/auth/logout",
+   "summary": "退出登录",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "免认证",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "TOKEN_EXPIRED",
+    "TOKEN_INVALID"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/auth/phone",
+   "summary": "手机号验证码登录",
+   "dto_class": "CustomerLoginRequest",
+   "dto_fields": [
+    "phone:String",
+    "code:String",
+    "clientType:String"
+   ],
+   "dto_required": [
+    "phone",
+    "code",
+    "clientType"
+   ],
+   "biz_fields": [
+    "clientType",
+    "code",
+    "phone"
+   ],
+   "resp_keys": [],
+   "auth": "免认证",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": true,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "CUSTOMER_FROZEN",
+    "LOGIN_FAILED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/auth/refresh",
+   "summary": "刷新令牌",
+   "dto_class": "RefreshRequest",
+   "dto_fields": [
+    "refreshToken:String"
+   ],
+   "dto_required": [
+    "refreshToken"
+   ],
+   "biz_fields": [
+    "refreshToken"
+   ],
+   "resp_keys": [],
+   "auth": "免认证",
+   "has_path_param": false,
+   "body_keys": [
+    "refreshToken"
+   ],
+   "body_presence": [],
+   "has_valid": true,
+   "param_enforced": true,
+   "codes": [
+    "CUSTOMER_FROZEN",
+    "TOKEN_EXPIRED",
+    "TOKEN_INVALID"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/auth/sms/send",
+   "summary": "发送验证码",
+   "dto_class": "SmsSendRequest",
+   "dto_fields": [
+    "phone:String"
+   ],
+   "dto_required": [
+    "phone"
+   ],
+   "biz_fields": [
+    "phone"
+   ],
+   "resp_keys": [],
+   "auth": "免认证",
+   "has_path_param": false,
+   "body_keys": [
+    "phone"
+   ],
+   "body_presence": [],
+   "has_valid": true,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/cart",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "available",
+    "items",
+    "selectedAmount"
+   ],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/cart/clear-invalid",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/cart/items",
+   "summary": "",
+   "dto_class": "Map<String, Object>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "quantity",
+    "skuId"
+   ],
+   "resp_keys": [
+    "cartItemId",
+    "quantity",
+    "selected"
+   ],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "quantity",
+    "skuId"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "STOCK_INSUFFICIENT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/cart/items/{id}",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/cart/items/{id}",
+   "summary": "",
+   "dto_class": "Map<String, Object>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "quantity",
+    "selected"
+   ],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [
+    "quantity",
+    "selected"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "STOCK_INSUFFICIENT",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/categories",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "免认证（GET）",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/favorites",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/favorites/{spuId}",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/favorites/{spuId}",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/files/confirm",
+   "summary": "",
+   "dto_class": "ConfirmReq",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "bizType",
+    "contentType",
+    "objectKey",
+    "sizeBytes"
+   ],
+   "resp_keys": [
+    "id",
+    "objectKey",
+    "url"
+   ],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "bizType",
+    "contentType",
+    "objectKey",
+    "sizeBytes"
+   ],
+   "body_presence": [
+    "objectKey"
+   ],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/files/presign",
+   "summary": "",
+   "dto_class": "PresignReq",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "bizType",
+    "contentType",
+    "filename",
+    "sizeBytes"
+   ],
+   "resp_keys": [
+    "headers",
+    "objectKey",
+    "publicUrl",
+    "uploadUrl"
+   ],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "bizType",
+    "contentType",
+    "filename",
+    "size",
+    "sizeBytes"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/files/upload",
+   "summary": "直传上传",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "id",
+    "objectKey",
+    "url"
+   ],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/files/view",
+   "summary": "查看文件",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "免认证（GET）",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/history",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/history",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "lastAt",
+    "name",
+    "pic",
+    "price",
+    "priceMax",
+    "soldCount",
+    "spuId",
+    "subtitle"
+   ],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/home",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "brand",
+    "code",
+    "feed",
+    "imageKey",
+    "imageUrl",
+    "items",
+    "linkType",
+    "linkValue",
+    "name",
+    "pic",
+    "price",
+    "slots",
+    "soldCount",
+    "spuId",
+    "title"
+   ],
+   "auth": "免认证（GET）",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/me",
+   "summary": "当前顾客资料",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "CUSTOMER_FROZEN",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/me",
+   "summary": "更新资料",
+   "dto_class": "Map<String, String>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "avatar",
+    "nickname"
+   ],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "avatar",
+    "nickname"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/orders",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/orders",
+   "summary": "",
+   "dto_class": "OrderSubmitService.SubmitReq",
+   "dto_fields": [
+    "addressId:Long",
+    "cartItemIds:List<Long>",
+    "skuId:Long",
+    "quantity:Integer",
+    "idempotentKey:String"
+   ],
+   "dto_required": [],
+   "biz_fields": [
+    "addressId",
+    "idempotentKey"
+   ],
+   "resp_keys": [
+    "city",
+    "detail",
+    "district",
+    "expireAt",
+    "name",
+    "phone",
+    "province"
+   ],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [
+    "idempotentKey"
+   ],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "BAD_REQUEST",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/orders/{id}",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "items",
+    "order",
+    "shipments"
+   ],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/orders/{id}/cancel",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "ORDER_STATUS_INVALID",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/orders/{id}/confirm",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "ORDER_STATUS_INVALID",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/orders/{id}/logistics",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/payment/sandbox",
+   "summary": "",
+   "dto_class": "Map<String, Object>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "orderId"
+   ],
+   "resp_keys": [
+    "orderId",
+    "paidAt",
+    "status",
+    "tradeNo"
+   ],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "orderId"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "CONFLICT",
+    "CUSTOMER_FROZEN",
+    "NOT_FOUND",
+    "ORDER_STATUS_INVALID",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/payment/{orderId}/status",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "orderId",
+    "orderStatus",
+    "paidAt",
+    "paymentStatus",
+    "tradeNo"
+   ],
+   "auth": "会员 token",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "NOT_FOUND",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/products",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "免认证（GET）",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/products/{spuId}",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [
+    "availableStock",
+    "favorited",
+    "pic",
+    "price",
+    "reviewsPreview",
+    "skuId",
+    "skus",
+    "soldCount",
+    "specs",
+    "spu",
+    "title"
+   ],
+   "auth": "免认证（GET）",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "PRODUCT_UNAVAILABLE",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/products/{spuId}/reviews",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "免认证（GET）",
+   "has_path_param": true,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": true,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/reviews",
+   "summary": "发表评价",
+   "dto_class": "Map<String, Object>",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [
+    "content",
+    "orderItemId",
+    "picKeys",
+    "rating"
+   ],
+   "resp_keys": [],
+   "auth": "会员 token",
+   "has_path_param": false,
+   "body_keys": [
+    "content",
+    "orderItemId",
+    "picKeys",
+    "rating"
+   ],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "CUSTOMER_FROZEN",
+    "NOT_FOUND",
+    "ORDER_STATUS_INVALID",
+    "REVIEW_EXISTS",
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/search",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "免认证（GET）",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/site/brand",
+   "summary": "",
+   "dto_class": "",
+   "dto_fields": [],
+   "dto_required": [],
+   "biz_fields": [],
+   "resp_keys": [],
+   "auth": "免认证（GET）",
+   "has_path_param": false,
+   "body_keys": [],
+   "body_presence": [],
+   "has_valid": false,
+   "param_enforced": false,
+   "codes": [
+    "UNAUTHORIZED"
+   ]
+  }
+ ]
+}

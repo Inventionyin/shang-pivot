@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.shangpivot</groupId>
+		<artifactId>shang-pivot</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>shang-commerce</artifactId>
+	<name>shang-commerce</name>
+	<description>Commerce bounded context implementation</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.shangpivot</groupId>
+			<artifactId>shang-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.shangpivot</groupId>
+			<artifactId>shang-commerce-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.shangpivot</groupId>
+			<artifactId>shang-identity-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations-jakarta</artifactId>
+		</dependency>
+	</dependencies>
+</project>

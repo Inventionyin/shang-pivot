@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+<style>
+.remember-row { display: flex; align-items: center; margin-bottom: 6px; }
+.remember { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--stone); }
+</style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img class="brand-logo" src="logo.png" alt="Shang">
+    </div>
+    <div class="auth-title">Shang 商城后台</div>
+    <div class="auth-sub">Shang 电商平台 · 管理控制台</div>
+
+    <form onsubmit="event.preventDefault();location.href='dashboard.html'">
+      <div class="field">
+        <label class="label">用户名</label>
+        <input class="input" value="admin" placeholder="请输入用户名" autofocus>
+      </div>
+      <div class="field">
+        <label class="label">密码</label>
+        <input class="input" type="password" value="••••••••" placeholder="请输入密码">
+      </div>
+      <div class="remember-row">
+        <label class="remember">
+          <input type="checkbox" checked> 记住我
+        </label>
+      </div>
+      <p class="hint" style="margin-bottom:18px">「记住我」仅在本机记住用户名，不会保存密码</p>
+      <button class="btn btn-primary auth-btn" type="submit">登 录</button>
+    </form>
+    <p class="hint" style="text-align:center;margin-top:18px">连续失败 5 次将锁定 15 分钟</p>
+  </div>
+
+  <!-- 演示触发：登录失败分支（截图与弹窗图鉴用） -->
+  <div data-demo-only style="margin-top:18px;display:flex;gap:8px;align-items:center">
+    <span class="hint">演示触发：</span>
+    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-login-fail">登录失败</button>
+    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-login-locked">账号锁定</button>
+    <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-login-disabled">账号已禁用</button>
+  </div>
+</div>
+
+<!-- ============ 登录失败（统一提示，不区分用户名/密码）============ -->
+<div class="modal" id="dlg-login-fail" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-login-fail-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-login-fail-t">账号或密码错误</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>用户名或密码不正确，请重新输入。</p>
+      <p class="hint">为防撞库，登录失败<b>不区分</b>是用户名不存在还是密码错误，统一返回本条提示；失败的登录尝试会写入操作日志。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>重新输入</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 连续失败锁定 ============ -->
+<div class="modal" id="dlg-login-locked" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-login-locked-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">🔒</span>
+      <div class="modal-title" id="dlg-login-locked-t">账号已锁定</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>连续第 <b>6</b> 次登录失败，该账号已锁定 <b>15</b> 分钟。</p>
+      <p class="alert alert-warn" style="justify-content:center">请在 <b class="code">14:32</b> 后重试</p>
+      <p class="hint" style="margin-top:10px">锁定规则：连续失败 5 次将锁定 15 分钟；锁定期间即使密码正确也无法登录。可联系超级管理员在「用户管理」中解锁（或直接重置密码）。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 账号已禁用 ============ -->
+<div class="modal" id="dlg-login-disabled" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-login-disabled-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-login-disabled-t">账号已禁用</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>该账号已被禁用，无法登录后台。</p>
+      <p class="hint">请联系超级管理员在「用户管理」中<b>启用</b>该账号后重试。禁用账号的在线会话会立即失效。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

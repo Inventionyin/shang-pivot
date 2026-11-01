@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>首页运营位 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='home-slots'; window.__NAV_VERSION__='v2'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">会员与内容 / <b>首页运营位</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <div class="page-title">首页运营位</div>
+          <div class="page-sub">固定槽位配置：Banner / 活动位 / 搜索热词 / 热门精选 · 每槽位最多 10 条 · 可启停与排序 · 下架商品自动过滤</div>
+        </div>
+        <button class="btn btn-primary" data-modal-open="dlg-slot-save">保存当前槽位</button>
+      </div>
+
+      <div class="split" style="grid-template-columns:260px 1fr;gap:16px">
+        <div class="card card-pad">
+          <div class="nav-group-title" style="margin-bottom:8px">槽位列表</div>
+          <a class="nav-item active" href="#banner" style="margin:0 0 4px">
+            <span>首页 Banner</span>
+            <span class="badge badge-forest" style="margin-left:auto">启用</span>
+          </a>
+          <a class="nav-item" href="#subsidy" style="margin:0 0 4px">
+            <span>活动位 · 热门精选</span>
+            <span class="badge badge-forest" style="margin-left:auto">启用</span>
+          </a>
+          <a class="nav-item" href="#flash" style="margin:0 0 4px">
+            <span>活动位 · 新品上架</span>
+            <span class="badge badge-amber" style="margin-left:auto">启用</span>
+          </a>
+          <a class="nav-item" href="#live" style="margin:0 0 4px">
+            <span>活动位 · 品牌专区</span>
+            <span class="badge" style="margin-left:auto;background:var(--sand);color:var(--stone)">停用</span>
+          </a>
+          <a class="nav-item" href="#keywords" style="margin:0 0 4px">
+            <span>搜索热词</span>
+            <span class="badge badge-forest" style="margin-left:auto">启用</span>
+          </a>
+          <a class="nav-item" href="#hot" style="margin:0">
+            <span>热门精选 SPU</span>
+            <span class="badge badge-coral" style="margin-left:auto">启用</span>
+          </a>
+          <p class="hint" style="margin-top:14px">本期为固定槽位配置：槽位与字段固定，运营只改内容、启停与时间窗，不提供自由布局能力。</p>
+        </div>
+
+        <div class="card card-pad" id="hot">
+          <div class="page-head" style="margin-bottom:14px">
+            <div>
+              <div class="page-title" style="font-size:15px">热门精选 · <span class="code" style="font-size:12px;color:var(--slate)">home_hot_spus</span></div>
+              <div class="page-sub">绑定已上架商品；下架品 C 端自动过滤；不足时按系统配置的补位排序回填</div>
+            </div>
+            <label class="switch" title="启用"><input type="checkbox" checked><span class="track"></span></label>
+          </div>
+
+          <div class="form-grid" style="margin-bottom:8px">
+            <div class="field">
+              <label class="label">展示标题</label>
+              <input class="input" value="热门活动">
+            </div>
+            <div class="field">
+              <label class="label">生效时间</label>
+              <input class="input" value="2026-09-01 00:00 ~ 2026-12-31 23:59">
+            </div>
+          </div>
+
+          <div class="toolbar" style="margin-bottom:12px">
+            <button class="btn btn-primary btn-sm" type="button" data-modal-open="dlg-slot-pick">+ 从商品库选品</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-slot-filter">下架商品过滤说明</button>
+            <span class="hint">已选 4 / 上限 10</span>
+            <div class="spacer"></div>
+            <span class="hint">用「上移 / 下移」调整顺序，序号越小越靠前</span>
+          </div>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="num" style="width:48px">序</th>
+                <th>商品</th>
+                <th class="code">SPU</th>
+                <th class="num">售价</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">1</td>
+                <td style="display:flex;align-items:center;gap:10px">
+                  <div class="thumb" style="background:linear-gradient(135deg,#FEBB4A,#FF8A5B)"></div>
+                  iPhone 15 Pro 128G
+                </td>
+                <td class="code">101</td>
+                <td class="num">¥7,999</td>
+                <td><span class="badge badge-forest">上架</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm" type="button">上移</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-slot-remove">移除</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="num">2</td>
+                <td style="display:flex;align-items:center;gap:10px">
+                  <div class="thumb" style="background:linear-gradient(135deg,#4A8A8A,#47704C)"></div>
+                  戴森 V12 吸尘器
+                </td>
+                <td class="code">143</td>
+                <td class="num">¥3,999</td>
+                <td><span class="badge badge-forest">上架</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm" type="button">上移</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-slot-remove">移除</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="num">3</td>
+                <td style="display:flex;align-items:center;gap:10px">
+                  <div class="thumb" style="background:linear-gradient(135deg,#9A8E7C,#241D15)"></div>
+                  折叠露营桌 铝合金
+                </td>
+                <td class="code">248</td>
+                <td class="num">¥359</td>
+                <td><span class="badge badge-brick">已下架</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm" type="button">上移</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-slot-remove">移除</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="num">4</td>
+                <td style="display:flex;align-items:center;gap:10px">
+                  <div class="thumb" style="background:linear-gradient(135deg,#FF8A5B,#C8453C)"></div>
+                  罗技 MX Master 3s
+                </td>
+                <td class="code">127</td>
+                <td class="num">¥599</td>
+                <td><span class="badge badge-forest">上架</span></td>
+                <td>
+                  <button class="btn btn-ghost btn-sm" type="button">上移</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-slot-remove">移除</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr style="border:0;border-top:1px solid var(--border);margin:18px 0">
+          <div class="page-title" style="font-size:14px;margin-bottom:10px">Banner 示例条目 · <span class="code" style="font-size:12px;color:var(--slate)">home_banner</span></div>
+          <table class="table">
+            <thead><tr><th class="num">序</th><th>封面</th><th>跳转</th><th class="code">生效至</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="num">1</td>
+                <td><div style="width:96px;height:36px;border-radius:6px;background:linear-gradient(90deg,#FEBB4A,#FF8A5B)"></div></td>
+                <td>商品 SPU 101 · iPhone 15 Pro 128G</td>
+                <td class="code">2026-10-31</td>
+                <td><a class="btn btn-ghost btn-sm" href="#">编辑</a></td>
+              </tr>
+              <tr>
+                <td class="num">2</td>
+                <td><div style="width:96px;height:36px;border-radius:6px;background:linear-gradient(90deg,#4A8A8A,#241D15)"></div></td>
+                <td>类目「电脑/办公」</td>
+                <td class="code">2026-09-30</td>
+                <td><a class="btn btn-ghost btn-sm" href="#">编辑</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 从商品库选品 ============ -->
+<div class="modal" id="dlg-slot-pick" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-lg" role="dialog" aria-modal="true" aria-labelledby="dlg-slot-pick-t">
+    <div class="modal-head">
+      <span class="modal-ico info">＋</span>
+      <div class="modal-title" id="dlg-slot-pick-t">从商品库选品</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:12px">仅列出<b>已上架</b>商品；已下架商品不可选，需要先到「商品列表」重新上架。当前槽位已选 <b>4</b> 条，本槽位上限 <b>10</b> 条。</p>
+      <table class="table">
+        <thead><tr><th style="width:44px"></th><th>商品</th><th class="code">SPU</th><th class="num">售价</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" checked></td>
+            <td>iPhone 15 Pro 128G</td>
+            <td class="code">101</td>
+            <td class="num">¥7,999</td>
+            <td><span class="badge badge-forest">上架</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>Xiaomi 14 Pro 12+256G</td>
+            <td class="code">103</td>
+            <td class="num">¥4,999</td>
+            <td><span class="badge badge-forest">上架</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>MacBook Air 13 M3 16G</td>
+            <td class="code">121</td>
+            <td class="num">¥9,999</td>
+            <td><span class="badge badge-forest">上架</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" checked></td>
+            <td>戴森 V12 吸尘器</td>
+            <td class="code">143</td>
+            <td class="num">¥3,999</td>
+            <td><span class="badge badge-forest">上架</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" checked></td>
+            <td>罗技 MX Master 3s</td>
+            <td class="code">127</td>
+            <td class="num">¥599</td>
+            <td><span class="badge badge-forest">上架</span></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" disabled></td>
+            <td class="hint">折叠露营桌 铝合金</td>
+            <td class="code hint">248</td>
+            <td class="num hint">¥359</td>
+            <td><span class="badge badge-brick">已下架 · 不可选</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-info" style="margin-top:12px">
+        <div>勾选后加入当前槽位并排在末尾，可在列表中用「上移 / 下移」调整顺序。同一商品在同一槽位内不可重复添加。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>加入槽位</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 移除槽位条目（需确认）============ -->
+<div class="modal" id="dlg-slot-remove" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-slot-remove-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-slot-remove-t">移除槽位条目</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认从「<b>热门精选</b>」中移除「折叠露营桌 铝合金」（SPU 248）？</p>
+      <p class="hint">移除后该条目不再出现在首页；商品本身不受影响，仍可在「商品列表」中管理。移除在<b>保存当前槽位</b>后对顾客端生效。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认移除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 保存当前槽位（需确认）============ -->
+<div class="modal" id="dlg-slot-save" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-slot-save-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✓</span>
+      <div class="modal-title" id="dlg-slot-save-t">保存当前槽位</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>将保存槽位「<b>热门精选</b>」的以下改动：</p>
+      <ul class="impact">
+        <li>内容条目 <b>4</b> 条（顺序：101 → 143 → 248 → 127）</li>
+        <li>展示标题：<b>热门活动</b></li>
+        <li>生效时间：<b>2026-09-01 00:00 ~ 2026-12-31 23:59</b></li>
+        <li>槽位状态：<b>启用</b></li>
+      </ul>
+      <div class="alert alert-warn" style="margin-top:12px">
+        <div>保存后<b>即时影响首页</b>：顺序与启停立即生效，顾客端刷新即可看到；已下架商品由 C 端自动过滤，不占用展示位。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 绑定商品已下架（过滤说明）============ -->
+<div class="modal" id="dlg-slot-filter" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true" aria-labelledby="dlg-slot-filter-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-slot-filter-t">有 1 个绑定商品已下架</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>「热门精选」绑定的 4 个商品中，有 <b>1</b> 个当前已下架：</p>
+      <ul class="impact">
+        <li><b>折叠露营桌 铝合金</b> · SPU <b>248</b> · 已下架</li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">
+        <div>
+          C 端按商品状态过滤：已下架商品<b>自动不展示</b>，无需手工移除；条目仍保留在槽位中，商品重新上架后自动恢复展示。
+          若展示位数不足，系统会按「系统设置 · 交易」中的补位排序（sold / new）回填上架商品。
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

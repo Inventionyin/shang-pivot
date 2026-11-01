@@ -1,0 +1,37 @@
+/* Element Plus 仅作交互组件；用原型色板覆盖默认紫/蓝主题 */
+
+:root {
+  --el-color-primary: #febb4a !important;
+  --el-color-primary-light-3: #fbc968 !important;
+  --el-color-primary-light-5: #fdd996 !important;
+  --el-color-primary-light-7: #fee9c4 !important;
+  --el-color-primary-light-9: #fef6e6 !important;
+  --el-color-primary-dark-2: #e07a1c !important;
+  --el-border-radius-base: 10px;
+  --el-font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", -apple-system, system-ui, sans-serif;
+}
+
+.el-button--primary {
+  --el-button-text-color: #241d15 !important;
+  --el-button-hover-text-color: #241d15 !important;
+  --el-button-active-text-color: #241d15 !important;
+}
+
+.el-message {
+  font-family: var(--font-ui, sans-serif);
+}
+
+.el-dialog {
+  border-radius: 14px;
+  border: 1px solid var(--border, #e9e0ce);
+}
+
+.el-pagination {
+  --el-pagination-button-bg-color: var(--surface, #fff);
+  --el-pagination-hover-color: #e07a1c;
+}
+
+.el-tree {
+  --el-tree-node-hover-bg-color: var(--sand, #f4eee0);
+  background: transparent;
+}

@@ -1,0 +1,4 @@
+# 质量门禁豁免（必须写明理由；仅限“故意调用未登记端点/特殊断言”的用例）
+unregistered_endpoints:
+  - node: tests/api/test_validation.py::test_unsupported_method_returns_405
+    reason: 验证未定义 HTTP 方法应返回 405（DELETE /admin/warehouses/{id} 在端点模型中不存在）

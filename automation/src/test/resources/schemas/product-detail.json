@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["spu", "skus"],
+  "properties": {
+    "spu": {
+      "type": "object",
+      "required": ["id", "name", "status"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string", "minLength": 1},
+        "status": {"type": "string"},
+        "pics": {"type": ["array", "string", "null"]}
+      }
+    },
+    "skus": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["skuId", "title", "price", "availableStock"],
+        "properties": {
+          "skuId": {"type": "string"},
+          "title": {"type": "string"},
+          "price": {"type": "number", "minimum": 0},
+          "availableStock": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "favorited": {"type": "boolean"}
+  }
+}

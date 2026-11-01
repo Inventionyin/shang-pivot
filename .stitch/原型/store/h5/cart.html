@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h5-doc">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>购物车 · 尚品汇 H5</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../h5.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="h5-shell">
+<header class="h5-header">
+  <span class="brand">购物车（2）</span>
+  <button type="button" class="right" style="border:0;background:transparent;font-size:13px" data-modal-open="sh-clear">清理失效</button>
+</header>
+
+<main class="h5-main" style="padding-bottom:130px">
+  <div class="card h5-cart-item">
+    <div class="check on">✓</div>
+    <div class="ph ph-acc"><span>索尼</span></div>
+    <div class="meta">
+      <div class="title">索尼 WH-1000XM5</div>
+      <div class="hint">官方标配 · 库存 8 件</div>
+      <div class="flex-between mt-12">
+        <span class="price">¥2,599</span>
+        <div class="qty"><button type="button">−</button><span>1</span><button type="button" data-modal-open="sh-stock-short">+</button></div>
+      </div>
+      <div class="mt-12" style="font-size:12px"><a href="#" style="color:var(--brick)" data-modal-open="sh-del">删除</a></div>
+    </div>
+  </div>
+
+  <div class="card h5-cart-item">
+    <div class="check on">✓</div>
+    <div class="ph ph-food"><span>坚果</span></div>
+    <div class="meta">
+      <div class="title">每日坚果 750g</div>
+      <div class="hint">750g / 袋 · 库存 200 件</div>
+      <div class="flex-between mt-12">
+        <span class="price">¥89</span>
+        <div class="qty"><button type="button">−</button><span>1</span><button type="button" data-modal-open="sh-stock-short">+</button></div>
+      </div>
+      <div class="mt-12" style="font-size:12px"><a href="#" style="color:var(--brick)" data-modal-open="sh-del">删除</a></div>
+    </div>
+  </div>
+
+  <!-- 失效商品：置灰、不可勾选、可清理失效 -->
+  <div class="card h5-cart-item is-invalid" style="align-items:center">
+    <div class="check"></div>
+    <div class="ph ph-sport"><span>帐篷</span></div>
+    <div class="meta">
+      <div class="title">双人帐篷 防雨款</div>
+      <div class="hint">已下架 · 不参与结算</div>
+      <div class="flex-between mt-12">
+        <span class="hint" style="text-decoration:line-through">¥599</span>
+        <button type="button" class="btn btn-sm btn-secondary" data-modal-open="sh-clear">清理失效</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="h5-section" style="margin-top:16px">
+    <div class="flex-between" style="margin-bottom:8px">
+      <strong style="font-size:14px">猜你喜欢</strong>
+      <a class="hint" href="category.html">更多 ›</a>
+    </div>
+    <div class="product-grid h5-product-grid" style="padding:0">
+      <a class="product-card" href="product.html"><div class="ph ph-acc"><span>AP</span></div><div class="info"><div class="title">AirPods Pro 2</div><div class="price">¥1,999</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-storage"><span>收纳</span></div><div class="info"><div class="title">抽屉式收纳盒</div><div class="price">¥69</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-food"><span>咖啡</span></div><div class="info"><div class="title">挂耳咖啡 20袋</div><div class="price">¥69</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-sport"><span>跑鞋</span></div><div class="info"><div class="title">减震跑步鞋 男款</div><div class="price">¥399</div></div></a>
+    </div>
+  </div>
+</main>
+
+<div class="h5-settle">
+  <div class="check on">✓</div>
+  <span class="muted" style="font-size:12px">全选</span>
+  <span style="margin-left:auto;font-size:13px">合计 <strong class="price" style="font-size:18px">¥2,688</strong></span>
+  <a class="btn btn-primary btn-sm" href="checkout.html">结算(2)</a>
+</div>
+
+<nav class="h5-tabbar h5-tabbar-portal">
+  <a href="home.html"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>首页</a>
+  <a href="category.html"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>分类</a>
+  <a href="home.html"><span class="tab-logo"><img src="../logo.png" alt=""></span></a>
+  <a class="active" href="cart.html"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h12L22 7H6"/></svg><span class="badge-dot">2</span></span>购物车</a>
+  <a href="profile.html"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></span>我的</a>
+</nav>
+
+<!-- ============ 半屏层 ============ -->
+
+<!-- HC-01 删除商品确认 -->
+<div class="sheet" id="sh-del" hidden>
+  <div class="sheet-mask"></div>
+  <div class="sheet-panel">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 14h10l1-14"/></svg></span>
+      <span class="sheet-title">删除该商品？</span>
+      <button type="button" class="sheet-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="dlg-goods">
+        <div class="ph ph-acc"><span>索尼</span></div>
+        <div class="meta">
+          <div class="t">索尼 WH-1000XM5</div>
+          <div class="s">官方标配 × 1</div>
+        </div>
+        <div class="price">¥2,599</div>
+      </div>
+      <p class="hint mt-12">删除后不再保留在购物车，需要时可在商品详情页重新加入。</p>
+    </div>
+    <div class="sheet-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- HC-02 清理失效商品确认 -->
+<div class="sheet" id="sh-clear" hidden>
+  <div class="sheet-mask"></div>
+  <div class="sheet-panel">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <span class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+      <span class="sheet-title">清理失效商品？</span>
+      <button type="button" class="sheet-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p class="hint">以下商品已下架或库存为 0，清理后不再显示在购物车。</p>
+      <div class="dlg-goods mt-12">
+        <div class="ph ph-sport" style="filter:grayscale(.7)"><span>帐篷</span></div>
+        <div class="meta">
+          <div class="t">双人帐篷 防雨款</div>
+          <div class="s">已下架 × 1</div>
+        </div>
+      </div>
+      <div class="kv-list mt-12">
+        <div class="kv"><span class="k">失效商品</span><span class="v num">1 件</span></div>
+        <div class="kv"><span class="k">有效商品</span><span class="v num">2 件（不受影响）</span></div>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close data-modal-open="sh-empty">确认清理</button>
+    </div>
+  </div>
+</div>
+
+<!-- HC-03 库存不足提示 -->
+<div class="sheet" id="sh-stock-short" hidden>
+  <div class="sheet-mask"></div>
+  <div class="sheet-panel">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+      <span class="sheet-title">库存不足</span>
+      <button type="button" class="sheet-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p>索尼 WH-1000XM5 当前可售 8 件，数量已停在最大可售数。</p>
+    </div>
+    <div class="sheet-bar"><button type="button" class="btn btn-primary" data-modal-close>知道了</button></div>
+  </div>
+</div>
+
+<!-- HC-04 空购物车空状态 -->
+<div class="sheet" id="sh-empty" hidden>
+  <div class="sheet-mask"></div>
+  <div class="sheet-panel">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <span class="sheet-title center">购物车</span>
+      <button type="button" class="sheet-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="empty">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h12L22 7H6"/></svg>
+        <div class="t">购物车还是空的</div>
+        <div class="d">去挑几件好物，满 99 元免运费。</div>
+      </div>
+    </div>
+    <div class="sheet-bar"><a class="btn btn-primary" href="category.html">去逛逛</a></div>
+  </div>
+</div>
+
+<script src="../modal.js"></script>
+</body>
+</html>

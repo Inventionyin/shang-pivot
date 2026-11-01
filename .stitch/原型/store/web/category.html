@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分类 · 尚品汇 Web</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../web.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="web-shell">
+<header class="web-topnav"><div class="web-topnav-inner">
+  <a class="web-brand" href="home.html"><img src="../logo.png" alt=""><span class="name">尚品汇</span></a>
+  <a class="web-nav-link" href="category.html">全部分类</a>
+  <div class="web-search"><input placeholder="搜索商品" readonly><button class="go" type="button">搜索</button></div>
+  <div class="web-topnav-actions">
+    <a class="web-cart-badge" href="cart.html">购物车<span>2</span></a>
+    <a href="orders.html">我的订单</a>
+    <a class="btn btn-sm btn-primary" href="login.html">登录</a>
+  </div>
+</div></header>
+
+<main class="web-main layout-split">
+  <!-- 左侧一级类目（与后台类目一致，共 8 个） -->
+  <aside class="cat-sidebar">
+    <div class="cat-side-head">商品分类</div>
+    <div class="cat-side-list">
+      <a class="active" href="#"><svg class="ico" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/></svg>手机</a>
+      <a href="#"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>电脑 / 办公</a>
+      <a href="#"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14.5" r="4"/><path d="M8 6h2"/></svg>家电</a>
+      <a href="#"><svg class="ico" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="2.5" y="13" width="4" height="7" rx="2"/><rect x="17.5" y="13" width="4" height="7" rx="2"/></svg>数码配件</a>
+      <a href="#"><svg class="ico" viewBox="0 0 24 24"><path d="M3 4h18v4H3z"/><path d="M4 8h16v12H4z"/><path d="M10 12h4"/></svg>家居收纳</a>
+      <a href="#"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 01-12 0c0-4 6-11 6-11z"/></svg>美妆个护</a>
+      <a href="#"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h13v8a6 6 0 01-6 6h-1a6 6 0 01-6-6V6z"/><path d="M17 8h2a2.5 2.5 0 010 5h-2"/></svg>食品生鲜</a>
+      <a href="#"><svg class="ico" viewBox="0 0 24 24"><path d="M3 20l6.5-11 4 7 2.5-4L21 20z"/></svg>运动户外</a>
+    </div>
+    <div class="cat-side-foot">共 8 个一级类目 · 商品 30 件</div>
+  </aside>
+
+  <section>
+    <div class="web-crumb"><a href="home.html">首页</a> / 手机</div>
+    <div class="web-toolbar">
+      <h1 class="page-title" style="margin:0">手机</h1>
+      <div class="web-filter-chips">
+        <span class="chip active">综合</span>
+        <span class="chip">销量</span>
+        <span class="chip">价格 ↑</span>
+        <span class="chip">价格 ↓</span>
+      </div>
+    </div>
+
+    <div class="product-grid web-product-grid">
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>iP</span></div><div class="info"><div class="title">iPhone 15 Pro 128G</div><div class="price">¥7,999 起</div><div class="hint">2 个规格 · 1.2 万+ 人付款</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>iP</span></div><div class="info"><div class="title">iPhone 15 128G</div><div class="price">¥5,999 起</div><div class="hint">2 个规格 · 9,800+ 人付款</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>Xi</span></div><div class="info"><div class="title">Xiaomi 14 Pro 12+256G</div><div class="price">¥4,999 起</div><div class="hint">2 个规格 · 7,600+ 人付款</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>Re</span></div><div class="info"><div class="title">Redmi K70 12+256G</div><div class="price">¥2,299</div><div class="hint">单规格 · 6,400+ 人付款</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>HW</span></div><div class="info"><div class="title">HUAWEI Mate X5</div><div class="price">¥12,999</div><div class="hint">单规格 · 3,600+ 人付款</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>OP</span></div><div class="info"><div class="title">OPPO Find N3</div><div class="price">¥9,999</div><div class="hint">单规格 · 2,900+ 人付款</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>荣耀</span></div><div class="info"><div class="title">荣耀 Magic6 Pro</div><div class="price">¥6,499</div><div class="hint">单规格 · 4,100+ 人付款</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>vi</span></div><div class="info"><div class="title">vivo X100</div><div class="price">¥5,299</div><div class="hint">单规格 · 3,300+ 人付款</div></div></a>
+    </div>
+
+    <nav class="pagination" aria-label="商品分页">
+      <a class="disabled" href="#" aria-disabled="true">上一页</a>
+      <a class="active" href="#">1</a>
+      <a class="disabled" href="#" aria-disabled="true">下一页</a>
+      <span class="pager-info">共 8 件 · 每页 8 件</span>
+    </nav>
+  </section>
+</main>
+
+<footer class="web-footer">尚品汇 · V2.0 Web 门店 · 分类与商品列表</footer>
+<script src="../modal.js"></script>
+</body>
+</html>

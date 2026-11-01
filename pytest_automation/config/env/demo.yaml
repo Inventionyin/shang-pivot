@@ -1,0 +1,19 @@
+# 部署演示环境（默认）：商城 60084 / 后台 60085
+# 写用例默认打这里；每次运行使用随机会员，避免污染固定演示账号。
+api:
+  mall_base: http://111.170.33.2:60084
+  admin_base: http://111.170.33.2:60085
+
+ui:
+  mall_url: http://111.170.33.2:60084
+  admin_url: http://111.170.33.2:60085
+
+timeout: 30
+ui_timeout_ms: 15000
+
+auth:
+  sms_code: "123456"
+  # 固定演示会员；仅用于登录类 UI 用例。其余用例自动注册随机会员。
+  customer_phone: "13900000009"
+  admin_username: "qa"
+  # 密码不落文件：运行时通过 ADMIN_PASSWORD 注入

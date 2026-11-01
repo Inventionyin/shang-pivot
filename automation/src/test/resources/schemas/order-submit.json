@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["orderId", "orderNo", "status", "goodsAmount", "freight", "payAmount"],
+  "properties": {
+    "orderId": {"type": "string"},
+    "orderNo": {"type": "string", "pattern": "^O[0-9]{10,}"},
+    "status": {"const": "PENDING_PAY"},
+    "goodsAmount": {"type": "number", "minimum": 0},
+    "freight": {"type": "number", "minimum": 0},
+    "payAmount": {"type": "number", "minimum": 0}
+  }
+}

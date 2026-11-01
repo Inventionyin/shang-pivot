@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.shangpivot</groupId>
+		<artifactId>shang-pivot</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>shang-server</artifactId>
+	<name>shang-server</name>
+	<description>Executable Spring Boot aggregator</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.shangpivot</groupId>
+			<artifactId>shang-identity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.shangpivot</groupId>
+			<artifactId>shang-commerce</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.shangpivot</groupId>
+			<artifactId>shang-customerservice</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.baizhukui</groupId>
+			<artifactId>knife4j-openapi3-boot4-spring-boot-starter</artifactId>
+		</dependency>
+
+		<!-- 可观测平台指标端点 /actuator/prometheus（见 observability/ 与 docs/可观测平台.md） -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- 工作目录固定为后端根，日志写入 backend/logs 而非 shang-server/logs -->
+					<workingDirectory>${maven.multiModuleProjectDirectory}</workingDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

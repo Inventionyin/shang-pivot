@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>评价管理 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='reviews'; window.__NAV_VERSION__='v2'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">会员与内容 / <b>评价管理</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content list-page">
+      <div class="page-head">
+        <div>
+          <div class="page-title">评价管理</div>
+          <div class="page-sub">顾客订单评价 · 发表即展示 · 后台可隐藏 / 恢复 · 支持按商品、会员手机尾号与星级筛选</div>
+        </div>
+      </div>
+
+      <div class="card card-pad list-card">
+        <div class="tabs">
+          <div class="tab active">全部 <span class="c">4</span></div>
+          <div class="tab">展示中 <span class="c">3</span></div>
+          <div class="tab">已隐藏 <span class="c">1</span></div>
+        </div>
+        <div class="toolbar">
+          <input class="input" placeholder="商品名 / 会员手机尾号" style="min-width:240px">
+          <select class="select" style="width:auto">
+            <option>全部星级</option>
+            <option>5 星</option>
+            <option>4 星</option>
+            <option>1～2 星（低星）</option>
+          </select>
+          <div class="spacer"></div>
+          <span class="hint">低星评价 = 1～2 星，用星级筛选直接筛出</span>
+          <button class="btn btn-secondary btn-sm">重置</button>
+          <button class="btn btn-primary btn-sm">查询</button>
+        </div>
+
+        <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="code">评价 ID</th>
+              <th>商品</th>
+              <th>会员</th>
+              <th class="num">星级</th>
+              <th>内容摘要</th>
+              <th>可见性</th>
+              <th class="code">发表时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code">8501</td>
+              <td>AirPods Pro 2</td>
+              <td>张三 · 138****0001</td>
+              <td class="num">5</td>
+              <td>音质很棒，降噪出色，续航也够用，强烈推荐！</td>
+              <td><span class="badge badge-forest">展示</span></td>
+              <td class="code">2026-09-19 15:30</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-review-hide">隐藏</button></td>
+            </tr>
+            <tr>
+              <td class="code">8502</td>
+              <td>MacBook Air 13 M3 16G</td>
+              <td>李四 · 137****0003</td>
+              <td class="num">4</td>
+              <td>轻薄好用，续航满意；键盘手感一般。</td>
+              <td><span class="badge badge-forest">展示</span></td>
+              <td class="code">2026-09-22 12:05</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-review-hide">隐藏</button></td>
+            </tr>
+            <tr>
+              <td class="code">8503</td>
+              <td>罗技 MX Master 3s</td>
+              <td>李四 · 137****0003</td>
+              <td class="num">5</td>
+              <td>打工人神器，跨设备切换很顺。</td>
+              <td><span class="badge badge-forest">展示</span></td>
+              <td class="code">2026-09-22 14:20</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-review-hide">隐藏</button></td>
+            </tr>
+            <tr>
+              <td class="code">8504</td>
+              <td>iPhone 15 Pro 128G</td>
+              <td>张三 · 138****0001</td>
+              <td class="num">3</td>
+              <td>外观不错，但发货有点慢。</td>
+              <td><span class="badge badge-brick">隐藏</span></td>
+              <td class="code">2026-09-22 09:48</td>
+              <td><button class="btn btn-primary btn-sm" type="button" data-modal-open="dlg-review-restore">恢复</button></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="pager pager-fixed">
+          <span>共 4 条 · 每页 10 条</span>
+          <button class="btn btn-secondary btn-sm" disabled>‹</button>
+          <span class="badge badge-amber">1 / 1</span>
+          <button class="btn btn-secondary btn-sm">›</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 隐藏评价（需确认）============ -->
+<div class="modal" id="dlg-review-hide" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true" aria-labelledby="dlg-review-hide-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">!</span>
+      <div class="modal-title" id="dlg-review-hide-t">隐藏评价</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认隐藏评价「<b class="code">8504</b>」？</p>
+      <ul class="impact">
+        <li>商品：<b>iPhone 15 Pro 128G</b> · 会员：张三 · 138****0001</li>
+        <li>星级：<b>3</b> 星 · 发表时间：2026-09-22 09:48</li>
+      </ul>
+      <div class="alert alert-warn" style="margin-top:12px">
+        <div>隐藏后<b>商品详情不再展示</b>该条评价，也不再计入评分；评价数据与晒图保留，可随时恢复。本次操作会写入操作日志。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认隐藏</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 恢复评价（需确认）============ -->
+<div class="modal" id="dlg-review-restore" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-review-restore-t">
+    <div class="modal-head">
+      <span class="modal-ico ok">✓</span>
+      <div class="modal-title" id="dlg-review-restore-t">恢复评价</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认恢复评价「<b class="code">8504</b>」？</p>
+      <ul class="impact">
+        <li>商品：<b>iPhone 15 Pro 128G</b> · 会员：张三 · 138****0001</li>
+        <li>星级：<b>3</b> 星 · 发表时间：2026-09-22 09:48</li>
+      </ul>
+      <div class="alert alert-ok" style="margin-top:12px">
+        <div>恢复后该评价<b>立即回到商品详情</b>并重新计入商品评分；顾客端刷新即可看到，无需重新审核。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认恢复</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

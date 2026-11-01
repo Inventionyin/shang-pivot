@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h5-doc">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>分类 · 尚品汇 H5</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../h5.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="h5-shell">
+<header class="h5-header">
+  <div class="h5-search">搜索分类商品</div>
+</header>
+
+<div class="h5-cat-layout">
+  <!-- 左侧一级类目（与后台类目一致，共 8 个） -->
+  <nav class="h5-cat-nav">
+    <a class="active" href="#">手机</a>
+    <a href="#">电脑办公</a>
+    <a href="#">家电</a>
+    <a href="#">数码配件</a>
+    <a href="#">家居收纳</a>
+    <a href="#">美妆个护</a>
+    <a href="#">食品生鲜</a>
+    <a href="#">运动户外</a>
+  </nav>
+  <div class="h5-cat-main">
+    <div class="flex-between" style="margin-bottom:10px">
+      <strong style="font-size:14px">手机</strong>
+      <span class="hint">共 8 件</span>
+    </div>
+    <div class="product-grid h5-product-grid" style="padding:0">
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>iP</span></div><div class="info"><div class="title">iPhone 15 Pro 128G</div><div class="price">¥7,999 起</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>iP</span></div><div class="info"><div class="title">iPhone 15 128G</div><div class="price">¥5,999 起</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>Xi</span></div><div class="info"><div class="title">Xiaomi 14 Pro 12+256G</div><div class="price">¥4,999 起</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>Re</span></div><div class="info"><div class="title">Redmi K70 12+256G</div><div class="price">¥2,299</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>HW</span></div><div class="info"><div class="title">HUAWEI Mate X5</div><div class="price">¥12,999</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>OP</span></div><div class="info"><div class="title">OPPO Find N3</div><div class="price">¥9,999</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>荣耀</span></div><div class="info"><div class="title">荣耀 Magic6 Pro</div><div class="price">¥6,499</div></div></a>
+      <a class="product-card" href="product.html"><div class="ph ph-phone"><span>vi</span></div><div class="info"><div class="title">vivo X100</div><div class="price">¥5,299</div></div></a>
+    </div>
+    <p class="hint" style="text-align:center;padding:14px 0">已加载全部 8 件</p>
+  </div>
+</div>
+
+<nav class="h5-tabbar h5-tabbar-portal">
+  <a href="home.html"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>首页</a>
+  <a class="active" href="category.html"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>分类</a>
+  <a href="home.html"><span class="tab-logo"><img src="../logo.png" alt=""></span></a>
+  <a href="cart.html"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h12L22 7H6"/></svg><span class="badge-dot">2</span></span>购物车</a>
+  <a href="profile.html"><span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></span>我的</a>
+</nav>
+
+<script src="../modal.js"></script>
+</body>
+</html>

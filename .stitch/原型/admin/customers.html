@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>会员管理 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='customers'; window.__NAV_VERSION__='v2'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">会员与内容 / <b>会员管理</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content list-page">
+      <div class="page-head">
+        <div>
+          <div class="page-title">会员管理</div>
+          <div class="page-sub">C 端顾客账号 · 手机号脱敏展示 · 冻结后不可登录与下单 · 可跳转查看该会员订单</div>
+        </div>
+      </div>
+
+      <div class="card card-pad list-card">
+        <div class="toolbar">
+          <input class="input" placeholder="手机号 / 昵称" style="min-width:220px">
+          <select class="select" style="width:auto"><option>全部状态</option><option>正常</option><option>已冻结</option></select>
+          <div class="spacer"></div>
+          <button class="btn btn-secondary btn-sm">重置</button>
+          <button class="btn btn-primary btn-sm">查询</button>
+        </div>
+
+        <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="code">会员 ID</th>
+              <th class="code">手机号</th>
+              <th>昵称</th>
+              <th>状态</th>
+              <th class="num">订单数</th>
+              <th class="code">注册时间</th>
+              <th class="code">最近登录</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code">9001</td>
+              <td class="code">138****0001</td>
+              <td>张三</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="num">2</td>
+              <td class="code">2026-08-14 09:20</td>
+              <td class="code">2026-09-23 10:05</td>
+              <td>
+                <a class="btn btn-ghost btn-sm" href="orders.html">订单</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cust-freeze">冻结</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">9002</td>
+              <td class="code">139****0002</td>
+              <td>Alice</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="num">2</td>
+              <td class="code">2026-08-19 14:02</td>
+              <td class="code">2026-09-23 08:40</td>
+              <td>
+                <a class="btn btn-ghost btn-sm" href="orders.html">订单</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cust-freeze">冻结</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">9003</td>
+              <td class="code">137****0003</td>
+              <td>李四</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="num">2</td>
+              <td class="code">2026-08-24 11:35</td>
+              <td class="code">2026-09-22 19:12</td>
+              <td>
+                <a class="btn btn-ghost btn-sm" href="orders.html">订单</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cust-freeze">冻结</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">9004</td>
+              <td class="code">136****0004</td>
+              <td>王五</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="num">0</td>
+              <td class="code">2026-09-03 16:48</td>
+              <td class="code">2026-09-21 09:30</td>
+              <td>
+                <a class="btn btn-ghost btn-sm" href="orders.html">订单</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cust-freeze">冻结</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">9005</td>
+              <td class="code">135****0005</td>
+              <td>赵六</td>
+              <td><span class="badge badge-brick">已冻结</span></td>
+              <td class="num">0</td>
+              <td class="code">2026-08-29 10:10</td>
+              <td class="code">2026-09-08 20:55</td>
+              <td>
+                <a class="btn btn-ghost btn-sm" href="orders.html">订单</a>
+                <button class="btn btn-primary btn-sm" type="button" data-modal-open="dlg-cust-unfreeze">解冻</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">9006</td>
+              <td class="code">134****0006</td>
+              <td>陈七</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="num">0</td>
+              <td class="code">2026-09-11 08:05</td>
+              <td class="code">2026-09-23 06:20</td>
+              <td>
+                <a class="btn btn-ghost btn-sm" href="orders.html">订单</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cust-freeze">冻结</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">9007</td>
+              <td class="code">133****0007</td>
+              <td>周八</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="num">0</td>
+              <td class="code">2026-09-18 21:14</td>
+              <td class="code">—</td>
+              <td>
+                <a class="btn btn-ghost btn-sm" href="orders.html">订单</a>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-cust-freeze">冻结</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="pager pager-fixed">
+          <span>共 7 条 · 每页 10 条</span>
+          <button class="btn btn-secondary btn-sm" disabled>‹</button>
+          <span class="badge badge-amber">1 / 1</span>
+          <button class="btn btn-secondary btn-sm">›</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 冻结会员（需确认）============ -->
+<div class="modal" id="dlg-cust-freeze" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true" aria-labelledby="dlg-cust-freeze-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-cust-freeze-t">冻结会员</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认冻结会员「张三 · 138****0001」？</p>
+      <ul class="impact">
+        <li>立即<b>不能登录</b>购物端：Web / H5 登录态同时失效</li>
+        <li>立即<b>不能下单</b>与提交售后；购物车、收藏、足迹保留</li>
+        <li>已生成订单不受影响，可继续发货与售后</li>
+      </ul>
+      <div class="alert alert-warn" style="margin-top:12px">
+        <div>冻结为可逆操作：历史订单与评价记录全部保留，可随时在「会员管理」中解冻。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认冻结</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 解冻会员（需确认）============ -->
+<div class="modal" id="dlg-cust-unfreeze" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-cust-unfreeze-t">
+    <div class="modal-head">
+      <span class="modal-ico ok">✓</span>
+      <div class="modal-title" id="dlg-cust-unfreeze-t">解冻会员</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认解冻会员「赵六 · 135****0005」？</p>
+      <ul class="impact">
+        <li>恢复<b>登录</b>与<b>下单</b>能力，登录态需重新登录获取</li>
+        <li>购物车、收藏、足迹等账户数据沿用冻结前状态</li>
+        <li>冻结期间的订单与评价记录不受影响</li>
+      </ul>
+      <div class="alert alert-ok" style="margin-top:12px">
+        <div>解冻后顾客即可正常使用购物端；本次操作会写入操作日志（操作人、时间、会员 ID）。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认解冻</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

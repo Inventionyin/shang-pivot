@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用户管理 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='users'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">系统管理 / <b>用户管理</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div><div class="page-title">用户管理</div><div class="page-sub">后台用户 · 角色绑定 · 启用/禁用 · 超管账号受保护</div></div>
+        <button class="btn btn-primary" data-modal-open="dlg-user-form">+ 新增用户</button>
+      </div>
+
+      <div class="card card-pad">
+        <div class="toolbar">
+          <input class="input" placeholder="搜索用户名 / 手机号" style="min-width:240px">
+          <select class="select" style="width:auto"><option>全部状态</option><option>启用</option><option>禁用</option></select>
+          <select class="select" style="width:auto"><option>全部部门</option><option>总部</option><option>运营中心</option><option>仓储中心</option><option>客服组</option></select>
+          <div class="spacer"></div>
+          <button class="btn btn-secondary btn-sm">重置</button>
+          <button class="btn btn-primary btn-sm">查询</button>
+        </div>
+
+        <table class="table">
+          <thead><tr><th class="code">用户名</th><th>姓名</th><th class="code">手机号</th><th>部门</th><th>角色</th><th>状态</th><th class="num">最近登录</th><th class="col-op">操作</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="code">admin</td><td>陈思远</td><td class="code">138****2041</td><td>总部</td>
+              <td><span class="badge badge-amber">超级管理员</span></td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="num">2026-09-11 14:02</td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-reset">重置</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-self">禁用</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-admin">删除</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">lin.xiaohan</td><td>林晓涵</td><td class="code">139****8830</td><td>运营中心</td>
+              <td><span class="badge badge-coral">运营</span></td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="num">2026-09-11 09:21</td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-reset">重置</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-disable">禁用</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-del">删除</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">hu.jian</td><td>胡健</td><td class="code">136****0042</td><td>运营中心</td>
+              <td><span class="badge badge-coral">运营</span></td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="num">2026-09-11 10:05</td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-reset">重置</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-disable">禁用</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-del">删除</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">zhou.kai</td><td>周凯</td><td class="code">137****5512</td><td>仓储中心</td>
+              <td><span class="badge badge-coral">仓库</span></td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="num">2026-09-10 18:40</td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-reset">重置</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-disable">禁用</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-del">删除</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="code">wang.meili</td><td>王美丽</td><td class="code">135****7790</td><td>运营中心</td>
+              <td><span class="badge badge-coral">客服</span></td>
+              <td><span class="badge badge-brick">禁用</span></td>
+              <td class="num">2026-08-30 11:15</td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-reset">重置</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-enable">启用</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-user-del">删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pager pager-fixed">
+          <span>共 5 条 · 每页 10 条</span>
+          <button class="btn btn-secondary btn-sm" disabled>‹</button>
+          <span class="badge badge-amber">1 / 1</span>
+          <button class="btn btn-secondary btn-sm" disabled>›</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 新增 / 编辑用户 ============ -->
+<div class="modal" id="dlg-user-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-lg" role="dialog" aria-modal="true" aria-labelledby="dlg-user-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-user-form-t">新增 / 编辑用户</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">用户名<span class="req">*</span></label>
+          <input class="input" value="lin.xiaohan" autofocus>
+          <span class="hint">4～30 位，字母开头，仅字母 / 数字 / 下划线</span>
+        </div>
+        <div class="field">
+          <label class="label">姓名<span class="req">*</span></label>
+          <input class="input" value="林晓涵">
+          <span class="hint">1～30 字符</span>
+        </div>
+        <div class="field">
+          <label class="label">密码</label>
+          <input class="input" type="password" placeholder="留空则不修改">
+          <span class="hint">8～20 位，须同时包含字母与数字；新增时必填</span>
+        </div>
+        <div class="field">
+          <label class="label">手机号<span class="req">*</span></label>
+          <input class="input" value="13900008830">
+          <span class="hint">11 位手机号</span>
+        </div>
+        <div class="field">
+          <label class="label">邮箱</label>
+          <input class="input" value="lin.xiaohan@shangpivot.com">
+          <span class="hint">标准邮箱格式</span>
+        </div>
+        <div class="field">
+          <label class="label">部门</label>
+          <select class="select">
+            <option>总部</option>
+            <option selected>运营中心</option>
+            <option>仓储中心</option>
+            <option>客服组</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label class="label">角色<span class="req">*</span>（可多选，至少 1 个）</label>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;padding:9px 12px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--cream)">
+            <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 超级管理员</label>
+            <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 运营</label>
+            <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 仓库</label>
+            <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 客服</label>
+            <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 财务</label>
+          </div>
+          <span class="error-text">请至少选择一个角色</span>
+        </div>
+        <div class="field full">
+          <label class="label">状态</label>
+          <select class="select" style="max-width:180px">
+            <option selected>启用</option>
+            <option>禁用</option>
+          </select>
+        </div>
+      </div>
+      <div class="alert alert-info">用户名在系统内唯一，重复时提交会返回「用户名已存在」；新增用户默认状态为<b>启用</b>。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 重置密码 ============ -->
+<div class="modal" id="dlg-user-reset" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-user-reset-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">🔑</span>
+      <div class="modal-title" id="dlg-user-reset-t">重置密码 · lin.xiaohan</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:14px">用户 <b>林晓涵（lin.xiaohan）</b> · 运营中心 · 运营</p>
+      <div class="field">
+        <label class="label">新密码<span class="req">*</span></label>
+        <input class="input" type="password" placeholder="请输入新密码" autofocus>
+        <span class="hint">8～20 位，须同时包含字母与数字</span>
+      </div>
+      <div class="field">
+        <label class="label">确认新密码<span class="req">*</span></label>
+        <input class="input" type="password" placeholder="再次输入新密码">
+      </div>
+      <div class="alert alert-warn">提交后该用户的<b>所有在线会话立即失效</b>，需使用新密码重新登录。管理员无法查看原密码。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认重置</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 禁用用户 ============ -->
+<div class="modal" id="dlg-user-disable" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-user-disable-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-user-disable-t">禁用用户</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认禁用用户「林晓涵（lin.xiaohan）」？</p>
+      <p class="hint">禁用后该用户立即无法登录，在线会话失效；角色绑定与历史操作日志保留，可随时重新启用。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认禁用</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 启用用户 ============ -->
+<div class="modal" id="dlg-user-enable" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="dialog" aria-modal="true" aria-labelledby="dlg-user-enable-t">
+    <div class="modal-head">
+      <span class="modal-ico ok">✓</span>
+      <div class="modal-title" id="dlg-user-enable-t">启用用户</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认启用用户「王美丽（wang.meili）」？</p>
+      <p class="hint">启用后可立即登录后台，权限沿用已分配的「客服」角色；上次登录时间 2026-08-30 11:15。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认启用</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除用户（危险确认）============ -->
+<div class="modal" id="dlg-user-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-user-del-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-user-del-t">删除用户</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除用户「林晓涵（lin.xiaohan）」？</p>
+      <p class="hint">删除后其角色绑定一并解除，被删除的账号<b>不可恢复</b>；历史操作日志按审计要求保留。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 超管账号不可删除：拒绝 -->
+<div class="modal" id="dlg-user-admin" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-user-admin-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-user-admin-t">无法删除用户</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>「admin · 陈思远」是内置<b>超级管理员</b>账号，不允许删除。</p>
+      <p class="hint">超管账号受保护：既不能删除也不能禁用。如需停用请先新建一个超级管理员账号并转移职责。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 不能禁用自己：拒绝 -->
+<div class="modal" id="dlg-user-self" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-user-self-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-user-self-t">无法禁用当前账号</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>「admin」是当前登录账号，不能禁用自己。</p>
+      <p class="hint">禁用后你会立即失去后台访问权限且无法自行恢复。请改用其他管理员账号操作，或使用「重置密码」轮换本账号密码。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

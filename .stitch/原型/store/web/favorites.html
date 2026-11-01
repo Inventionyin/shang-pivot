@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的收藏 · 尚品汇 Web</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../web.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="web-shell web-page-wide">
+<div class="web-utility-bar">
+  <div class="web-utility-bar-inner">
+    <span><a href="home.html">尚品汇首页</a></span>
+    <div>
+      <a href="profile.html">我的尚品汇</a>
+      <a href="cart.html">购物车</a>
+      <a href="favorites.html">我的收藏</a>
+      <a href="orders.html">我的订单</a>
+    </div>
+  </div>
+</div>
+<header class="web-topnav"><div class="web-topnav-inner">
+  <a class="web-brand" href="home.html">
+    <img src="../logo.png" alt="">
+    <div>
+      <div class="name">尚品汇</div>
+      <div class="hint" style="font-size:11px;font-weight:500">我的尚品汇</div>
+    </div>
+  </a>
+  <div class="web-search" style="margin-left:auto;max-width:420px">
+    <input placeholder="搜索尚品汇" readonly>
+    <button class="go" type="button">搜索</button>
+  </div>
+</div></header>
+
+<main class="web-main account-layout">
+  <nav class="account-side">
+    <div class="group-label">账户</div>
+    <a href="profile.html">我的尚品汇</a>
+    <a href="cart.html">我的购物车</a>
+    <a href="orders.html">已买到的宝贝</a>
+    <div class="group-label">收藏与足迹</div>
+    <a class="active" href="favorites.html">收藏的宝贝</a>
+    <a href="profile.html">我的足迹</a>
+    <div class="group-label">地址与设置</div>
+    <a href="profile.html">收货地址</a>
+    <a href="login.html">账号设置</a>
+  </nav>
+
+  <section>
+    <div class="fav-toolbar">
+      <h1>收藏的宝贝</h1>
+    </div>
+
+    <div class="fav-grid">
+      <div class="fav-card">
+        <a href="product.html"><div class="ph ph-phone"><span>iP</span></div></a>
+        <div class="hover-ops">
+          <a href="#" data-modal-open="dlg-unfav">取消收藏</a>
+        </div>
+        <div class="body">
+          <div class="title">iPhone 15 Pro 128G</div>
+          <div class="meta">1.2 万+ 人收藏</div>
+          <div class="price">¥7,999 起</div>
+        </div>
+      </div>
+      <div class="fav-card">
+        <a href="product.html"><div class="ph ph-pc"><span>MB</span></div></a>
+        <div class="hover-ops">
+          <a href="#" data-modal-open="dlg-unfav">取消收藏</a>
+        </div>
+        <div class="body">
+          <div class="title">MacBook Air 13 M3 16G</div>
+          <div class="meta">8,600+ 人收藏</div>
+          <div class="price">¥9,999 起</div>
+        </div>
+      </div>
+      <div class="fav-card">
+        <a href="product.html"><div class="ph ph-appliance"><span>戴森</span></div></a>
+        <div class="hover-ops">
+          <a href="#" data-modal-open="dlg-unfav">取消收藏</a>
+        </div>
+        <div class="body">
+          <div class="title">戴森 V12 吸尘器</div>
+          <div class="meta">5,200+ 人收藏</div>
+          <div class="price">¥3,999</div>
+        </div>
+      </div>
+      <div class="fav-card">
+        <a href="product.html"><div class="ph ph-acc"><span>AP</span></div></a>
+        <div class="hover-ops">
+          <a href="#" data-modal-open="dlg-unfav">取消收藏</a>
+        </div>
+        <div class="body">
+          <div class="title">AirPods Pro 2</div>
+          <div class="meta">1.1 万+ 人收藏</div>
+          <div class="price">¥1,999</div>
+        </div>
+      </div>
+      <div class="fav-card">
+        <a href="product.html"><div class="ph ph-food"><span>坚果</span></div></a>
+        <div class="hover-ops">
+          <a href="#" data-modal-open="dlg-unfav">取消收藏</a>
+        </div>
+        <div class="body">
+          <div class="title">每日坚果 750g</div>
+          <div class="meta">3,400+ 人收藏</div>
+          <div class="price">¥89</div>
+        </div>
+      </div>
+      <div class="fav-card">
+        <a href="#"><div class="ph ph-sport" style="filter:grayscale(.75);opacity:.65"><span>帐篷</span></div></a>
+        <div class="body">
+          <div class="title">双人帐篷 防雨款</div>
+          <div class="invalid">宝贝已失效</div>
+          <div class="hint mt-12">已下架或售罄</div>
+          <div class="mt-12"><button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-unfav">取消收藏</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="web-footer">尚品汇 · V2.0 Web 门店 · 我的收藏</footer>
+
+<!-- ============ 弹窗层 ============ -->
+
+<!-- F-01 取消收藏确认 -->
+<div class="modal" id="dlg-unfav" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-9.5A4 4 0 0112 7a4 4 0 017 3.5C19 15.5 12 20 12 20z"/></svg></span>
+      <span class="modal-title">取消收藏？</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="dlg-goods">
+        <div class="ph ph-phone"><span>iP</span></div>
+        <div class="meta">
+          <div class="t">iPhone 15 Pro 128G</div>
+          <div class="s">已收藏</div>
+        </div>
+      </div>
+      <p class="hint mt-12">取消后可再次收藏。</p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-danger" data-modal-close>取消收藏</button>
+    </div>
+  </div>
+</div>
+
+<script src="../modal.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>系统设置 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='settings'; window.__NAV_VERSION__='v2'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">系统管理 / <b>系统设置</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <div class="page-title">系统设置</div>
+          <div class="page-sub">交易分组表单：待付款超时、免运门槛、默认运费、推荐补位排序与沙箱支付参数 · 保存即对新订单生效</div>
+        </div>
+        <button class="btn btn-primary btn-sm" data-modal-open="dlg-trade-save">保存</button>
+      </div>
+
+      <div class="cfg-tabs">
+        <div class="cfg-tab active">交易</div>
+        <div class="cfg-tab">沙箱支付</div>
+        <div class="cfg-tab">小程序</div>
+        <div class="cfg-tab">系统参数</div>
+      </div>
+
+      <div class="card card-pad" style="max-width:760px">
+        <div class="page-title" style="font-size:14px;margin-bottom:12px">交易规则</div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="label">待付款超时（分钟）</label>
+            <input class="input num" value="15">
+            <span class="hint">5～120 的整数，默认 15；超时自动关单并释放库存</span>
+          </div>
+          <div class="field">
+            <label class="label">免运门槛（元）</label>
+            <input class="input num" value="99">
+            <span class="hint">≥ 0，默认 99；商品金额达到该值即免运费</span>
+          </div>
+          <div class="field">
+            <label class="label">默认运费（元）</label>
+            <input class="input num" value="8">
+            <span class="hint">≥ 0，默认 8；未达免运门槛时按此金额收取</span>
+          </div>
+          <div class="field">
+            <label class="label">推荐补位排序</label>
+            <select class="select">
+              <option selected>sold · 销量优先</option>
+              <option>new · 上新优先</option>
+            </select>
+            <span class="hint">仅 <span class="code">sold</span> / <span class="code">new</span>；运营位不足时按此策略回填商品</span>
+          </div>
+        </div>
+        <hr style="border:0;border-top:1px solid var(--border);margin:18px 0">
+        <div class="page-title" style="font-size:14px;margin-bottom:12px">沙箱支付</div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="label">沙箱渠道开关</label>
+            <label class="switch"><input type="checkbox" checked><span class="track"></span></label>
+            <span class="hint">开启后购物端调「模拟支付」接口完成订单流转</span>
+          </div>
+          <div class="field">
+            <label class="label">渠道标识</label>
+            <input class="input" value="sandbox-mock">
+            <span class="hint">下单时写入支付单的渠道字段</span>
+          </div>
+          <div class="field">
+            <label class="label">模拟支付商户号</label>
+            <input class="input" value="shang_mock_001">
+          </div>
+          <div class="field">
+            <label class="label">默认成功延时（ms）</label>
+            <input class="input num" value="800">
+            <span class="hint">≥ 0，默认 800；用于演示支付成功与失败的中间态</span>
+          </div>
+          <div class="field full">
+            <label class="label">回调地址</label>
+            <input class="input" value="https://api.shang.example/payment/sandbox/notify">
+          </div>
+        </div>
+      </div>
+
+      <!-- 演示触发：保存校验不通过的分支（截图与弹窗图鉴用） -->
+      <div data-demo-only style="margin-top:16px;display:flex;gap:8px;align-items:center">
+        <span class="hint">演示触发：</span>
+        <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-trade-invalid">保存校验失败</button>
+      </div>
+
+      <div class="alert alert-info" style="max-width:760px;margin-top:16px">
+        <div>
+          <b>原型说明 · 两套入口不要混看</b><br>
+          <b>V1</b> <a href="settings.html">settings.html</a>：配置 KV 列表（分类 Tab 过滤、逐条 / 批量保存、敏感值掩码显示），是兜底入口。<br>
+          <b>V2</b> 本页：同一个「系统设置」下新增<b>「交易」分组表单</b>，字段带默认值与范围校验，保存即对新订单生效。<br>
+          两者读写同一批 <span class="code">identity.system_config</span> 数据（category = TRADE / PAYMENT）；截图与验收时请分开归档，勿混看。
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 保存交易设置（需确认）============ -->
+<div class="modal" id="dlg-trade-save" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-trade-save-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✓</span>
+      <div class="modal-title" id="dlg-trade-save-t">保存交易设置</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>将保存以下交易参数：</p>
+      <ul class="impact">
+        <li>待付款超时：<b>15</b> 分钟</li>
+        <li>免运门槛：<b>¥99</b> · 默认运费：<b>¥8</b></li>
+        <li>推荐补位排序：<b>sold</b> · 销量优先</li>
+        <li>沙箱渠道：<b>开启</b> · 成功延时 <b>800</b> ms</li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">
+        <div>保存后<b>立即对新订单生效</b>：新单按新门槛计算运费、按下新的超时时间关单；已生成订单的金额与超时时间不变。修改会写入操作日志。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 保存校验失败（逐条列原因）============ -->
+<div class="modal" id="dlg-trade-invalid" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true" aria-labelledby="dlg-trade-invalid-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-trade-invalid-t">无法保存</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>交易设置有 <b>3</b> 处不符合要求，请修正后重试：</p>
+      <ul class="impact">
+        <li>待付款超时 <b>180</b> 分钟，超出 <b>5～120</b> 分钟范围</li>
+        <li>默认运费 <b>−8</b> 元，金额不能为负数</li>
+        <li>推荐补位排序 <b class="code">sale_desc</b>，仅支持 <span class="code">sold</span> / <span class="code">new</span></li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">
+        <div>
+          校验口径：待付款超时 5～120 的整数；免运门槛与默认运费 ≥ 0；补位排序取 sold（销量优先）或 new（上新优先）；
+          沙箱成功延时 ≥ 0 的整数。校验不通过时<b>不写库</b>，本页已填内容保留。
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>去修正</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

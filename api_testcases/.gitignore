@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Reports
+reports/allure_results/
+reports/allure_report/data/attachments/
+reports/allure_report/export/
+reports/allure_report/history/
+reports/allure_report/plugin/
+reports/allure_report/widgets/
+reports/allure_report/app.js
+reports/allure_report/styles.css
+
+# OS
+.DS_Store
+Thumbs.db

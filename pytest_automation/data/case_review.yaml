@@ -1,0 +1,4668 @@
+API-ADDR-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 49fea63141554125
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADDR-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e41f1c319e9b0bb2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADDR-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 939176159f908720
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADDR-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1fb46645984cf6ee
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADDR-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 67adf8701c38dc2b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADDR-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 86ce49f047032dd8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADDR-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4319356ca272e015
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 025f206e759e2ebe
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 94cca03e81910a52
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 02220c3fe427be17
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 755aa9ff8c718a9e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 15f849a9cacd7b99
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d745b90b58bb1973
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7c2fafe69e033a27
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a6b71bbf260b83d6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9ef46ad62fb9893d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 97b18c854d93b1b2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ADMIN-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3a60edcff3284126
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ASR-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ea2161f3bd749c9f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ASR-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ed7f9b763810fa1a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ASR-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ed8847f09709fccd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ASR-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e200e7732eb78c53
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ASR-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 73f81a679ba7823b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ASR-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7080b4b4c841eb62
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ba295876766bba97
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 39615772b666f72a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d6b5c1a1ee905570
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: db39b8c53f6b40b7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5ed53ba7955abd68
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4689dde2d6f7aa6b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 45658ad13d817dee
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a236748ab8413af4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7b3ce1c0dc124a04
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6f3908a56317d985
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 14774db4c82e19bf
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-012:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 89dfc46703b181d3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-013:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 59820c9277e62ade
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-AUTH-014:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 28fad82e64338cd0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-BULK-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 652cfc187e7b57ca
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-BULK-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a229830481e5a95f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-BULK-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1aef13c5e52c2a67
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-BULK-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 94b33756a8c4c633
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-BULK-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e00fefc6366fbc10
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-BULK-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b08cc2f10861bbc5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CACHE-001:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 9f767ca9efff8bb3
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-002:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 9fd6b35272bf6690
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-003:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: dabda860656d75d7
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-004:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 344eb2b48998978e
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-005:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: b4139bcc9e1cf579
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-006:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 44b24325ab205c04
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-007:
+  comment: 新增组件/DB 断言用例已执行通过；待业务方复核
+  content_hash: f13f19af9fad4fc5
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-008:
+  comment: 新增组件/DB 断言用例已执行通过；待业务方复核
+  content_hash: 02d49ff616e28b30
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-009:
+  comment: 新增组件/DB 断言用例已执行通过；待业务方复核
+  content_hash: ac136e7432416413
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CACHE-010:
+  comment: 新增组件/DB 断言用例已执行通过；待业务方复核
+  content_hash: b410042e67bdf3db
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-CART-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 73f14a60da0fee41
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ea43d596c1e581d9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: cfada2e7152d042f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2ce9963e1afe3267
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 31d484124a5f26fe
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8b4f12545ae5ddae
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9d5d3d194e28af10
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4db635c7cda38409
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b554bdb485ecae60
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 01189f4b68c692d0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CART-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4a9d2d83c711c017
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 18bbe732a6830562
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 787f352b54e91200
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 16df5e289cf1b2d3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 492708c91886e8e4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a131b2fa6ae3ba4d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c59aec404a7300ac
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e52aca57b193fffb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 09310ad48e1bef56
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 497d2e4a26a0396d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1dc3c46b6948f6e8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 15677bd9829108a3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-012:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ef72cae6d0d0d03b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-013:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f90bd8566c3a690e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-014:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4977d88aee5e31bd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-015:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 96d898c3a80d7ece
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CAT-016:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 374352bb2670fd37
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CRUD-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: bf402402b2e376ab
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CRUD-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3e4fe1e0319f2e79
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CRUD-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3fdc3a719bbe2c3b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CRUD-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ea7943bc8f158c40
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-CRUD-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d7a089c6de322019
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-DATA-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4b8e1ccb1ed3ba04
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-DATA-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9dd58a0da7428615
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-DATA-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1896a943c8e58800
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-DATA-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: aa32cefcb1e1abf3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-DEMO-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ebe2d99ac64c1e41
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-DEMO-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b4bc3d8498b4a60e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-FAV-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e61cbb0050af1219
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-FAV-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ca77203e6aa01188
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-FAV-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 46d35cd7ed82ac80
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-FAV-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a4736a9fe07bdf70
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDEM-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: bf6283b745342592
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDEM-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ee6c8db1679be748
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDEM-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5b7212ce85883561
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDEM-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a2aa1bf2cdd1a6a2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDEM-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b7e0935b0949e2dd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDEM-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8d9e2ed219e242b2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDEM-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 403007732c767cb0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDOR-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 16c55afa81dd98fb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDOR-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a33b793dd2efd2c3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDOR-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b9d1cb6470f567bb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDOR-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dfbd3879acc88c16
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDOR-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 88b045e78db3af0a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDOR-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 040edf910de5be2f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-IDOR-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d5b3384413b9b8d2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-INV-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7bfb48ac55daa9b0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-INV-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 46c83b39d2042f08
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-INV-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d39596c8fdafec78
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-INV-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b4b30eb510191474
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-INV-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e7796a2ec165b71f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-INV-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 06ebe9ba4b64a270
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-INV-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5c7d480c70776ade
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-INV-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 553bc7e925bc6250
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 25fa39e547a25ae2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 83dbcedc58c209a5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2036712047e0c240
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0be20d425290e22b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4e77c8a230c5449e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 182bda823e935e03
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b7eedb7cb96998f4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6391c2ccad12706e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 21e9184246ff64de
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3d1b84c44e6722df
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 44f49136fe742992
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-012:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ddb23a32ee80693a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-013:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6ebc20ce9f2f828c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-014:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5d3d732c8245aea9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-015:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 287265311d2ecd60
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-016:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 56d11e1e9af059e4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-017:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dfebdd14175bf5df
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-018:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 60d1e9974d6533c4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-019:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 003b58dc53f46fdb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-020:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5b0e0f81eade31c5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-021:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 23de53ed5c981ee3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-022:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ffdf178ace4237f9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-023:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 19ffaaf9c1d643bd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-024:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 39ebdc6a6bfc4033
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-025:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 49b758dc4b445e62
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-026:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 74bafd93fd1198ed
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-027:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: be3ca43baad65d17
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-028:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1fb4e15171a9326b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-029:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a800b9836a1461cf
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-030:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0da7245771af18a2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-031:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0fb72f4517d3c7ef
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-032:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a9627b75c83eec4f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-033:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f3abf534151799cc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-034:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2da3e128f0efbdbb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-035:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 58a16c5570a75dfc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-036:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b74c1efb9572c5ea
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-037:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b9ec8e9f8334e2ab
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-038:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dcd44e8605b509f4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-039:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 39677f6b582f595f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-040:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 647b3c42ca6e68ac
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-041:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0e2fadf988ae0ef5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-LINK-042:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a63f1661fe5e2abb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-MISC-001:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 64a61dd3cf4e46e0
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-002:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 299b0da3d759d599
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-003:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 265487501a557fe4
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-004:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 9d1884061f879b21
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-005:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: e6658f09659e3813
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-006:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: e719b9b42e982546
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-007:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 06b94c42f1b0cfa1
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-008:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: f4440e997b4d1ca8
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-009:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 56b89448f6166350
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-010:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 6043ecc70ae702c2
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-011:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 8470e1a92d941f79
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MISC-012:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 8787f2c8505d83f6
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MQ-001:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 3a25483186310597
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MQ-002:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 13d9d8b80cfaf14d
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-MQ-003:
+  comment: 新增用例已执行通过；DB/MQ 断言可重复，待业务方复核
+  content_hash: 808727355755cf6e
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-OMX-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2263ae0d2c14ad71
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f5b851819f159699
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5ee586c7cd0f0d2d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7c41c1f99c67f5c7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1301f11b7e084940
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e599323037666834
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 852dc26cfc2c977b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 02e48170b7139a42
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 53025f4b37855b50
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d568e5cfe8b82f19
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: df1b9f04561f388a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-012:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4c803ecdc0030148
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-013:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e660aba2eec383a6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-014:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7305724eef971d21
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-015:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fe3eaac62b642a5f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-016:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c90cecb667142396
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-OMX-017:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 59f5e798fb111079
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e5ced24802e375fe
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 29e08be3d9d7f582
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 358af440d72f7a26
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 567e0112771016e2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e7ac825abf6ad4e7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 68320eec872a5a83
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9e512dac85678223
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d4cac7b951fe659f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1e6c564158d511f1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3d068e6860fbc6ff
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b911ec92743218f9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-012:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7f7dfc30be799fda
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-013:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a27007e2a0dccdee
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-014:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c50e36cb8753b0ca
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-015:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 484a921ec6fb1844
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-ORDER-016:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ca6264a2dd6fca25
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SEC-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 705002bc0f9a047c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SEC-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 25aecb278e918b7e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SEC-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8d9a85f10d098afb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SEC-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6670b0ad667400d6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SEC-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 35d4715b9942a209
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SEC-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7d375bf4e2d6b7f6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SMOKE-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 29c5b530d8156afb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SMOKE-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3a7abcf9e39254cb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SMOKE-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 26f1b34ce27c50a2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e6ddd785e1ee938a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f9aa5c4709945e8d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6d235cc756103ae5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0ee0b1de3d0fec66
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a40c8a921a00f6b2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e4ea9a96936c3613
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4173329727de176a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 42bc5f328ba4862d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 675bba018a1ff075
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d1c815b1201006b0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dc05837fae2be18e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-012:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5c52c8e89501e80c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-013:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9ac10c947a1e96c7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-014:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f88dc022878fae5c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-015:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: bbcf4d5950b6b95c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-016:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4cb4287a748502e6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-017:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7271cb5b297e8cf6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-018:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dc4cb14e5ad6d974
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-019:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 51c9ce1fe25f233f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-020:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e4be48042ccea29d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-021:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b7fb4f9828f88914
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-022:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f4bfeb9108db57f7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-023:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4d06b9de41bccd9a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-024:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9b93bb29ef13252b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-025:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 71cffd32f0e4d349
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-026:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2362b948f22ca07b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-027:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2987f8551e8d9106
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-028:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 66c9eceaad751e3d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-029:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ed81a5910ce6933f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-030:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: cfca0ee89a268742
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-031:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5bf29d6f269837a3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-032:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0f6338c7c19c0b4b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-033:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 45e1662f78e4364e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-034:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1175d9ab01d9613b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-035:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d65c1c5ee444edd3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-036:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: cd77a891531d73f9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-037:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 86fe3e7b90d03821
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-038:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a2b63012e65d15f3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-039:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 137170330e5cc13b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-040:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 21074c276ea1b1ad
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-041:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 512d037f2cd7dd21
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-042:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 22637de58320323d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-043:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ce81af300d02e00d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-044:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1dd5700603709c4c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-045:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8a1d723cdd572550
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-046:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 83fed803ef14f43b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-047:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d92025381f1a4e3d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-048:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 42855c87978895e6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-049:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 592fb5c5dfb3a96d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-050:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7be0cf8fbb1fe854
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-051:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a934a97d89938584
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-052:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1eeb36b89f7a38a4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-053:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1ece25bc1dd58add
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-054:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d682fc76494ac927
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-055:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 51f59cb2b228b5b1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-056:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6126672185640f9c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-057:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 148ab45fad5db619
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-058:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0a42a4aab7012b99
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-059:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 48e0a4f6774fec5a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-060:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ed8b3b3850d87173
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-061:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a405a20f2a75cbc6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-062:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9f5f2228ac6605ec
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-063:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0fd7ed921e9724bd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-064:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 096ca1106c92ca12
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-065:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: bbd6303a23124d67
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-066:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 48c9a6fd8b0f5748
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-067:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 35b4115a4325b1ff
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-068:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: be0515bbaa2e7b83
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-069:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3cfa84df6b8b41e8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-070:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 931b56842cf71d37
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-071:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b49f105c21c23daa
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-072:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 85993a37a153a0ec
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-073:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0e3246c27835ca37
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-074:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4374afafb45c4fdb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-075:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: db194c127f980543
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-076:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fbe9daae040c7cc1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-077:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a572c612ad2dcc9a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-078:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 050e286649467da2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-079:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: abdaafb392061fac
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-080:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 24813f51168d5fbe
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-081:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fa3c53264ec8a459
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-082:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9061e04e4b49e6fd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-083:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2ee1a85384b9d445
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-084:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7ac92e2f40c4ae0f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-085:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c5dd05291b213354
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-086:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3b60cb974cdd9b0c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-087:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 62021ae826d7e84e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-088:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 01fefbd7e444c433
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-089:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 19c317bb6a44171f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-090:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ed114a1de5c5c1c3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-091:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: bbd45969ba145813
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-092:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1ba5e0d4c3b61230
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-093:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3db136a6fa4d807e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-094:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a38fffe7f288a47e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-095:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 03c54b97b909cac7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-096:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 096c38b8220df13f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-097:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 392a78f98affacda
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-098:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dbe629896a9c45a0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-099:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dd07abf7db63a715
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-100:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e5a195f3b858e79a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-101:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: da387dfa0fc58fb0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-102:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 25fc328fbcbba5fa
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-103:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2bf9288934d352fc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-104:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5a5693ba77231b0f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-105:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9c72edd47b933510
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-106:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 54fb13353de51ad2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-107:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fec9d880da0e4b70
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-108:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: aa8e46ac84b27f04
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-109:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e9e7493d54c0df98
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-110:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 742b22cafd861d80
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-111:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a8501a03e7f04e7e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-112:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 75b6379d6d775d02
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-113:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2c4cb1715b248825
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-114:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b3431a220036e12f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-115:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1c4c14bf9224a0da
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-116:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fb453f0952ddb568
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-117:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 10faa3927f724069
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-118:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7b2d876ddba6e3d1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-119:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5d6781107e474ef0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-120:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9576b1a13fce7bac
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-121:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 28e41e7471a959e3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-122:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: cb3327591e1c8133
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-123:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b03385eb4693f0a3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-124:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: de5a03c8fc3fefb6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-125:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e53920c38065887f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-126:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 65616ef30286a22e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-127:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f887c790fd59549c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-128:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4a8f06c0c5047c58
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-129:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 53e9e1c325f55036
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-130:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 05a360787a2526ab
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-131:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b8c9edd52e371ca5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-132:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 51f58f82407d9a76
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-133:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c4030a17f2fa512c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-134:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 504d7ede2f339d40
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-135:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1338aeaac19a4eb9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-136:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2a963ecd34c6d5e1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-137:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b5cbc9c90d4f33a8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-138:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a0614960d38a1401
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-139:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a5847f020ec84ec4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-140:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fdbc755b226d04e3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-141:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 15f519ba31ae6581
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-142:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8023721e0bd98518
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-143:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c7ff412af3458950
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-144:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7d07eae9bad75ad9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-145:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 776c81bb20985ec1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-146:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 001098fc6e1e4e6e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-147:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ed413289d7d7aa37
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-148:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d13cce2bbfab93a0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-149:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 34035006889e711b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-150:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 007cc9875a755b83
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-151:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 64e9368fb272e55c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-152:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: aa4f5051c428be7b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-153:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9fc0cdf695d3f52f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-154:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1bd2c95ef67603d8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-155:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f622f55b46432701
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-156:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6ab4dbc7b08d52c6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-157:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8e4da2a4a36c009f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-158:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 641f1a569e9dea2c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-159:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c4ff4246986db0f6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-160:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 724f6bc84d07cf31
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-161:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b3fb3cede29f8dfa
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-162:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8e146b4fba736c33
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-163:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 097108a333e37ce1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-164:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 507518497188aeaf
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-165:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f74b41d7eb6076a4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-166:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 97895b3c7bc8dd02
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-167:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c056739fe959ef23
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-168:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4b29142484434ab0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-169:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5decc5c34480eb7c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-170:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 25bb0a119b821aef
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-171:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 50f0580c9286dd33
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-172:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b06cceb59a5f853c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-173:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 797825cd40fc9e98
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-174:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 26740e9629e20cd2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-175:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f51df1b44c043bb7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-176:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c1f76d7ee2a3e31c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-177:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e311defe2b5caebc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-178:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 83f4bcfce5cf00f1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-179:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5a1ce53a1f4649c4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-180:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 808f6db88d734a7f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-181:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: bca62ffe74bc9df8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-182:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ebbd0b5f799ede9f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-183:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 44c02542288baaaf
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-184:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6e4464d4de3e989a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-185:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6c74b1229abd2ce6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-186:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ff7479c99e80154e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-187:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: be19c373a5229ba9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-188:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 26412e6150e03dfd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-189:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 649a0bb38bfac599
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-190:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0ab598ea706e0049
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-191:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dfc3be08baeefabe
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-192:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c77bf0702bca6e2f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-193:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 39c7564ca137414e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-194:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 020ede103f593ccd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-195:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b16ca6a7053d2275
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-196:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f2b2159e3ec22a7a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-197:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d32cdbc53c3afbf4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-198:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: aa9500c09305d6f5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-199:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fab526bb7bad58ef
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-200:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f05623cf8530bdf4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-201:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 879d875b967493f9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-202:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8db3c0a5c0382f8b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-203:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 08945e4fabd0c05c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-204:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2fea140ae81216d1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-205:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: df3098f99d53cae3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-206:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6c23114b3ab2af85
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-207:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2fa14393e1b8602f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-208:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3ef07e088391d2bf
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-209:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5286d0e6db67b197
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-210:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9b951bacff395739
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-211:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: beb5279cffbb74e0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-212:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6ebdf401f28fcd8d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-213:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f7554406ef55dd3e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-214:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2a3026a8ddf13061
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-215:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0c61977f0778baaf
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-216:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6f9c4de60670b983
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-217:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 219514f820f23fcd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-218:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a455146dd84c51d2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-219:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 360773058759b67f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-220:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9586766278f8cee0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-221:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ee98eef05572e20d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-222:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fe497bb3545a66bc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-223:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5c3fc2bd0e4e12c4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-224:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 028ad6cc88e2bfdc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-225:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 52201ae1a9d71aaa
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-226:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 177cef2c066db7f7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-227:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8a610bf695890f2b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-228:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a7a5a390e5a26ca6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-229:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8f41fd6436399017
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-230:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: aac4ddf2f5fb1315
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-231:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 594a2cdd74e8eae3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-232:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 691cb3c104d9c1a0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-233:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 80090b272e671601
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-234:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f995e3aa1bb15e84
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-235:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c8e22ffb763b11e8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-236:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 459f877ed8855ee4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-237:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fabb68101b9fbd8b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-238:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7984756a4844ea90
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-239:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6778d8235707910b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-240:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c342b4ffb756fd99
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-241:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 124c60e96d9372b0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-242:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ac274a72ff57f891
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-243:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c36c2a9f2a1109e1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-244:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e4e0b2441f9ca7cd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-245:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4cd1b51652f6fe5f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-246:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 57d7070c12347ac9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-247:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1af2d32297b8795b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-248:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 28441be918e2f870
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-249:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 30a858252061b84f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-250:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: babce01c89f3bd32
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-251:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 20b589bc3826c1b6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-252:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 499d948fe7a774eb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-253:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5b309694fb2d746a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-254:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 487dcf2523d4ac2a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-255:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 789ba38b7ab9ab17
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-256:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 66bdee64311e0b14
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-257:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ad348de4a783f116
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-258:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a3267f3d5015ca79
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-259:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 71687ef7680cc26f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-260:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 418035a06654a6c6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-261:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c7bf54dc6fbe9e4e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-262:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 426e9e23f5c17af3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-263:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 189610a072ed3829
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-264:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 72560d2e2cc6643d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-265:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 65dff5e2767adf40
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-266:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1f6e36abfdf3972a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-267:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0d01cf24e1a175c5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-268:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a9063739c51219ba
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-269:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: de0e1cf59634d17a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-270:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 99b3cf817f1c34f3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-271:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ff5260931af57a62
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-272:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 20ab9933ce348a68
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-273:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ea90233b00e666e1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-274:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c3da24e7e028e309
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-275:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3e8effeb391531ee
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-276:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 971ffcdc62524f2f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-277:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 588570dfd5b09a31
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-278:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d868a073af8d9d45
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-279:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ce5a12da8194bdac
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-280:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1c05b3720701e989
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-281:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f42c737eccf4c6a7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-282:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b8b0f385e37a9e32
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-283:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ce13ccc60a57e71a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-284:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e8ef1ac7abcfe5ce
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-285:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f9e6d66921251665
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-286:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b04349a2432c2755
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-287:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d9705c581952d89b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-288:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 50422532421d27ed
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-289:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a520ad5a9a1a83a0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-290:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b2f8ecdb083498a1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-291:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 17c3a8e108b2ba52
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-292:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 68a722195464bd20
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-293:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f4a3072c273d8b69
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-294:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 415f6e7617bdcc2a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-295:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 17f7f4d35585eb21
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-296:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3cd79f4b6a6915cd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-297:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 806c31539638e455
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-298:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a974290c1c9e6fe7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-299:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a9a1aee18ddb6bcb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-300:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3280ba76cb8d3a06
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-301:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c47e18e994d669b0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-302:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e50f90eaac93ad38
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-303:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1dec6accf81df139
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-304:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e733c6a3aaaf4052
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-305:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7bc384066724c430
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-306:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: af031f16fad00072
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-307:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 73aa3ce6443a0c41
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-308:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3ecd11a4490dc2b9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-309:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ce17f5311d46ba2b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-310:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 03d86ea7e1d67efc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-311:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: cd1f4bae80e409db
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-312:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f57a91e934dd2570
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-313:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 93b132f7bca83fad
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-314:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 846a4d7fcd3e3322
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-315:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 496d270ea791206c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-316:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0daa1d152ecdd5a7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-317:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9ced2e0150576eee
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-318:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 82a32d70a63fc20d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-319:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6e834398b8adb3b2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-320:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 19ec18d9a757c73a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-321:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8bb2f78fc7a854b1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-322:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e316a59f9a59e7b6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-323:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0034be986390d7d9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-324:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 491612ad68731c7e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-325:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8f96e14d3bc5cce8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-326:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 70ae450a7de53caa
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-327:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d859d7684d00587a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-328:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 177251891e48b5b1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-329:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a91525a43b969f8f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-330:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 23027e74131fee7b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-331:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0c1730b90b412d07
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-332:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 67ffbf9b058ff9e2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-333:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ceeff456761dd9b0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-334:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: da0345a1d7a573c3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-335:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: aa82a826fdba0ace
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-336:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 35e38f5ff7766cea
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-337:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f9cef48d9db52d1d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-338:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a9255127fdd870e5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-339:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b3722ccc2134dcf5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-340:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6aba4b74242d1b78
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-341:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 72548ef8d554876d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-342:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3b045fa961f88383
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-343:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6b403772fb810cb4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-344:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0e173eaae7aa9894
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-345:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a82c197e4204551f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-346:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ac1644395ff0def0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-347:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2f22b3bd26d45a3b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-348:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c1525a2e0c27fd69
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-349:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 76d2821626a37c14
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-350:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 582f17d7221f7d6a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-351:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3ac0d724e935837e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-352:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 45c2a2662ed5ef46
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-353:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d431dfb2e78e39ad
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-354:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 33b007d207b95a5c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-355:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7601aebbe94f1bd2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-356:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 76e81eac6666ce74
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-357:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0b108345814d7e55
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-358:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7cc412551d782001
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-359:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 498183a119c100ff
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-360:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: bac9c960d16c69ef
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-361:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4b658d2b0477f2ef
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-362:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 97c6fdaa3f108bf8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-363:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e69f175659a1de9c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-364:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d20044c8c645e00a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-365:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0df6d994c2297223
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-366:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 907cf81160520063
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-367:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2605bbcc4583d540
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-368:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a0a42942b830d92a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-369:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f2423cad592e61c5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-370:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 96a54b252fcba7f6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-371:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ebb61d95f70cf797
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-372:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 675563bef2a64647
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-373:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f0037514af5b3ab4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-374:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 81ae38ec41090556
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-375:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8b928153c10660fd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-376:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2913f012fa1d054e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-377:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: bd40a8415ff2e1e4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-378:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6d1b660602842849
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-379:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 873f9f8009653899
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-380:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e2d895c1b176eedc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-381:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ed2ebd207d0ab600
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-382:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2699ef0a4d43bffc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-383:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4ee592cec21bc921
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-384:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 64162c3724550484
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-385:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f6ad5139c5653c85
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-386:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ae7eaad17f6bb8cb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-387:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9b41cc42086cb704
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-388:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 04b893a5382d1a29
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-389:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3234acd3dbea3536
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-390:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f1cf0081037ca6c6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-391:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ced74256b3e23ba0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-392:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 38e97dd118386067
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-393:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e52d476f70c3289a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-394:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 58970daf707043e6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-395:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ff7b54bfd3bc9c5d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-396:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 84756526ba80bd8d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-397:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1e05307bf2aac423
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-398:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6477c1f327a38965
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-399:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9f2e43ac6ef71151
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-400:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 06193dfacb360539
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-401:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 341acc9db1bd7355
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-402:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5a90aa214d1267b1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-403:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 355a78d953e52fdb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-404:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 528aa89517057f15
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-405:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 314444cce203c4db
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-406:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b8b496ef4d67adbe
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-407:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: de2687a2e160b7b7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-408:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6ca4b8b27be57042
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-409:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1590e8e946cd3bc4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-410:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1f985c0ad6ee05ed
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-411:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dfc44f4b7f361ca1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-412:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6955da60889a3e80
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-413:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c2066dd6fbdb16bc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-414:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e1b680a5cddf0979
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-415:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8a118584f325d5cb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-416:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 98007852269d0f13
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-417:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2ae8152dfdf06116
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-418:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 174ecc790135b4f3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-419:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: deee3656621af315
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-420:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2f38ec91a5cbb3e0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-421:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f06995a15e4027fe
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-422:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 749e86585e957ab3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-423:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f490d9b2bbf5ff07
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-424:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ec6314cfb936a688
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-425:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 37e7d4994b40a513
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-426:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ef5adb89332fa3ed
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-427:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dcb43ff06bbe0622
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-428:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 712994b92b4be791
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-429:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 874931d334f2465c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-430:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ee40cb291356efb7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-431:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a9a5d77623e89029
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-432:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 062b06bc482e7f5a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-433:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: cbbc866273f63824
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-434:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: acd679b156db289d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-435:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e65204526ef09a6a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-436:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6d6f34732fbd37d0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-437:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: fde7fc559397d585
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-438:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d9b22057e2701392
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-439:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a960b188a0baf345
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-440:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6d2e2270e27ae3ad
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-441:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 56631120b08a8500
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-442:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6c87ee95a1c5aab6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-443:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c943a7b3dee1d09c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-444:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4481ecf4f8c13a87
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-445:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 02d18ef8d723c409
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-446:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: df524c1d3271eac7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-447:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c1d9642501462a29
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-448:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0b78ef76cbe08619
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-449:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ee11d5641c734761
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-450:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7db62fb2a2e871ba
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-451:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3ed321144473debc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-452:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c39d775d3dab6173
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-453:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 150873a4b8ddf18a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-454:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6f15b9c211ed8063
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-455:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 889ab202ecefc0ff
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-456:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ace3e8aa569cbebd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-457:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b64fbe4ee2ab4406
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-458:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 59d6e67c7b8d55ab
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-459:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 223f2282cb97d5ae
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-460:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: cdd519613fa8da5e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-461:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e66aa5cc9a0b8fd0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-462:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b386df9a1dfadb04
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-463:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c6f3606e00b64f97
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-464:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d351f5ddfc6b590e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-465:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 42123974fdc927b7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-466:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 68552ca5b1bc771d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-467:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3dc751b573c5e753
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-468:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2b06b55e009035a3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-469:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0fde15fea1a75e9b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-470:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f3719eef8f894171
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-471:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a5443fb36229d5d8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-472:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 83db8e00db40c1cd
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-473:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 039fac27bd7b2e2c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-474:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5e33b734beefd4ae
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-475:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 09bfcceb8292d8e5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-476:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d2a7b1906328239a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-477:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6494fd577bdc71bc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-478:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5e7be30561ba56d0
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-479:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 010dd070c81c8d40
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-480:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 10bd343c1a584be2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-481:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dbca9b154b0c3126
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-482:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9fe0b375b079797d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-483:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 86d16d956d2b25d2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-484:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f4dfb91812f54d26
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-485:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 1f4db1bd8d3740be
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-486:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3cdbc9edbaa78b6b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-SWEEP-487:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9c179133bcb162b9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0c10610265776a83
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e7b5456725046be6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7f76f63bd6c1d55d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4b38e7401f57d224
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7cda779943c39fba
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3f554165400a48b6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 4ae6e65e41fb9377
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6bd8df428ec039f9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e5121f185e198f0c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a68410b24f878675
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: cd79744d73d2311d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-012:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 99c840f29ddce83f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-013:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b7e35f69057638d5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-014:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a46eb659477ed964
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-015:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a3d20f107337fb8c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-016:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 481c8497091c0b14
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-017:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 381f3997528f9af2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-018:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dae9bdf9a781f16b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-019:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5b50d23f8b1f3509
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-020:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 669dcf736cf5d949
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-021:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6fca8e06acfb9f7a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-022:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 64fee73b93df5104
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-VAL-023:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 90f7ad0c572a5389
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+API-WDB-001:
+  comment: 新增组件/DB 断言用例已执行通过；待业务方复核
+  content_hash: 786e6cf96e784449
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-WDB-002:
+  comment: 新增组件/DB 断言用例已执行通过；待业务方复核
+  content_hash: dd4f33579e4c7b51
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+API-WDB-003:
+  comment: 新增组件/DB 断言用例已执行通过；待业务方复核
+  content_hash: 71d3b21596f05950
+  date: '2026-10-30'
+  reviewer: ZCode 自动化自检
+  status: approved
+E2E-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6e938ca77fa9b8ed
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+E2E-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 919925bee8c59c4b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ACCOUNT-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0aff3ddd7e3611ad
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ACCOUNT-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 63ca3b82a4e2e033
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ACCOUNT-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 112a02b533cb2dbf
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ACCOUNT-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 42cda0f39cc92a58
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ACCOUNT-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 32cf48bcbb01af5a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ACCOUNT-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 74035a47a7b51bac
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ACCOUNT-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0f49c63e9cd40ac6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ACCOUNT-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 66b2b736462758b6
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: de2523875736ad5f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: a3c5249f73c26556
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6e93df362097e99d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8e8f8e06c9c8e56d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: e9b73d9097aeac89
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-006:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 7d2cb005ccf17336
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-007:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 87968d22401ede09
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-008:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 904379bf31e9c89c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-009:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3cdeef8524943ca1
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-010:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b286d574716cb305
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-011:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d15ab74b0bf1bf38
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-012:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d787076ce1bfd40b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-013:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b5d981898001adeb
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-014:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6ff60708da6c2b6b
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-015:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: b3a7f894fc92f400
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-016:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c37eb63595ce57c8
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-017:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: ec78124023a4daa2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-018:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 22cfee2765422efc
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-019:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 8ee0ee53aebaceb5
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ADMIN-020:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0cafa9c7af96190e
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-BROWSE-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 96fcac2c81e5019a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-BROWSE-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 32693706ef1a957a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-BROWSE-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 9d6befc16dd4a2c7
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-BROWSE-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 6604129cc2fc0cc2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-CART-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: acc71c3376e23591
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-CART-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 951700641fe4f49f
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-CART-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 28dc394f09f34ced
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-CART-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: d0d41ac14d48a9ea
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-CART-005:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: f92a6f7de4ad150d
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-LOGIN-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 0c74365e7b176ba3
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-LOGIN-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2c7584e27305a8b2
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-LOGIN-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c8246407577693e4
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ORDER-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 3ba48827b4376fec
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ORDER-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: dad3f4e640da55e9
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ORDER-003:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 05cdd87ea4768a8c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-ORDER-004:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 5f13291a14d69109
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-PRODUCT-001:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: c8528edebd9b690a
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)
+UI-PRODUCT-002:
+  comment: 存量用例一次性豁免；内容变化后须人工评审
+  content_hash: 2a3ec80d78b1fa2c
+  date: '2026-10-29'
+  reviewer: auto
+  status: legacy(auto)

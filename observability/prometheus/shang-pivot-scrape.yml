@@ -1,0 +1,18 @@
+  # >>> shang-pivot（本块由 observability/scripts/server-apply-platform.sh 维护，勿手改）
+  # 尚品汇应用指标：actuator 管理端口只监听回环 8087（application.yaml 的 management.server.*），
+  # 采集目标与元气购那套在同一台机器上，直接打回环，不需要隧道。
+  - job_name: shang-pivot
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["127.0.0.1:8087"]
+        labels:
+          instance: shang-pivot
+          env: perf
+  # 主机指标与元气购共用同一个 node_exporter（127.0.0.1:9100），另起一个 job 便于按 job 过滤面板与告警
+  - job_name: shang-pivot-host
+    static_configs:
+      - targets: ["127.0.0.1:9100"]
+        labels:
+          instance: shang-pivot-host
+          env: perf
+  # <<< shang-pivot

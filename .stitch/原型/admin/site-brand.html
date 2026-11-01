@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>站点品牌 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='site-brand'; window.__NAV_VERSION__='v2'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">会员与内容 / <b>站点品牌</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <div class="page-title">站点品牌</div>
+          <div class="page-sub">站点 Logo、站点名与 Slogan 的统一维护入口 · 保存后顾客端刷新生效 · 供顶栏、登录页与页脚取用</div>
+        </div>
+        <button class="btn btn-primary" data-modal-open="dlg-brand-save">保存</button>
+      </div>
+
+      <div class="split" style="grid-template-columns:1fr 320px;gap:16px">
+        <div class="card card-pad">
+          <div class="form-grid">
+            <div class="field full">
+              <label class="label">站点 Logo</label>
+              <div style="display:flex;align-items:center;gap:16px">
+                <img src="logo.png" alt="logo" style="width:72px;height:72px;border-radius:16px;object-fit:cover;box-shadow:var(--sh-2);border:1px solid var(--border)">
+                <div>
+                  <button class="btn btn-secondary btn-sm" type="button" data-modal-open="dlg-brand-logo-bad">上传新 Logo</button>
+                  <p class="hint" style="margin-top:8px">仅 1 张，jpeg / png / webp，≤10MB，建议 256×256（正方形）</p>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">站点名称 <span style="color:var(--brick)">*</span></label>
+              <input class="input" value="尚品汇">
+              <span class="hint">1～30 字符，展示于顶栏与登录页标题</span>
+            </div>
+            <div class="field">
+              <label class="label">Favicon（可选）</label>
+              <input class="input" value="favicon.ico" placeholder="上传或填写 objectKey">
+              <span class="hint">建议 32×32 或 64×64 的 ico / png</span>
+            </div>
+            <div class="field full">
+              <label class="label">Slogan</label>
+              <input class="input" value="选好物，享生活">
+              <span class="hint">≤50 字符，展示于登录页与页脚</span>
+            </div>
+          </div>
+          <hr style="border:0;border-top:1px solid var(--border);margin:8px 0 18px">
+          <dl class="kv">
+            <dt>C 端接口</dt><dd class="code">GET /api/site/brand</dd>
+            <dt>生效方式</dt><dd>保存后立即写库；顾客端刷新生效，允许 5～10 分钟缓存延迟</dd>
+            <dt>权限</dt><dd><span class="badge badge-amber">content:brand</span></dd>
+          </dl>
+        </div>
+
+        <div class="card card-pad" style="background:var(--cream)">
+          <div class="page-title" style="font-size:14px;margin-bottom:12px">C 端预览</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--sh-1)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <img src="logo.png" alt="" style="width:36px;height:36px;border-radius:10px">
+              <div>
+                <div style="font-weight:700;font-size:15px">尚品汇</div>
+                <div style="font-size:12px;color:var(--slate)">选好物，享生活</div>
+              </div>
+            </div>
+            <div style="height:8px;background:var(--sand);border-radius:4px;margin-bottom:8px"></div>
+            <div style="height:8px;background:var(--sand);border-radius:4px;width:70%"></div>
+          </div>
+          <p class="hint" style="margin-top:12px">预览仅示意顶栏品牌区；真实布局见购物端原型。</p>
+        </div>
+      </div>
+
+      <!-- 演示触发：保存校验不通过的分支（截图与弹窗图鉴用） -->
+      <div data-demo-only style="margin-top:18px;display:flex;gap:8px;align-items:center">
+        <span class="hint">演示触发：</span>
+        <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-brand-invalid">保存校验失败</button>
+        <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-brand-logo-bad">Logo 不符合要求</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 保存站点品牌（需确认）============ -->
+<div class="modal" id="dlg-brand-save" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-brand-save-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✓</span>
+      <div class="modal-title" id="dlg-brand-save-t">保存站点品牌</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>将保存以下品牌信息，并立即对顾客端生效：</p>
+      <ul class="impact">
+        <li>Logo：<b>logo.png</b>（256×256）</li>
+        <li>站点名称：<b>尚品汇</b></li>
+        <li>Slogan：<b>选好物，享生活</b></li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">
+        <div>保存后顾客端<b>刷新生效</b>；客户端有 5～10 分钟短缓存，缓存期内可能仍显示旧品牌，属正常现象。本次修改会写入操作日志。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 保存校验失败（逐条列原因）============ -->
+<div class="modal" id="dlg-brand-invalid" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true" aria-labelledby="dlg-brand-invalid-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-brand-invalid-t">无法保存</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>站点品牌有 <b>3</b> 处不符合要求，请修正后重试：</p>
+      <ul class="impact">
+        <li>站点名称 <b>32</b> 字符，超出 1～30 字符上限</li>
+        <li>Slogan <b>68</b> 字符，超出 50 字符上限</li>
+        <li>Logo 格式为 <b>gif</b>，仅支持 jpeg / png / webp</li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">
+        <div>
+          校验口径：Logo 1 张、jpeg / png / webp、≤10MB、建议 256×256；站点名 1～30 字符；Slogan ≤50 字符。
+          校验不通过时<b>不写库</b>，已填内容保留在本页。
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>去修正</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 上传新 Logo 不符合要求 ============ -->
+<div class="modal" id="dlg-brand-logo-bad" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-brand-logo-bad-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-brand-logo-bad-t">Logo 不符合要求</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>仅支持 <b>jpeg / png / webp</b>，单张不超过 <b>10MB</b>，且只能上传 <b>1</b> 张。</p>
+      <p class="hint">建议使用 256×256 的正方形图片。上传失败不影响已填写的站点名与 Slogan，可重新选择文件。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>重新选择</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

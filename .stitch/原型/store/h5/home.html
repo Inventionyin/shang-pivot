@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h5-doc">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>首页 · 尚品汇 H5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../h5.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="h5-shell h5-portal">
+
+<div class="h5-sticky-head">
+  <nav class="h5-top-tabs">
+    <a class="active" href="#">推荐</a>
+    <a href="category.html">手机</a>
+    <a href="category.html">电脑办公</a>
+    <a href="category.html">家电</a>
+    <a href="category.html">数码配件</a>
+    <a href="category.html">家居收纳</a>
+    <a href="category.html">食品生鲜</a>
+  </nav>
+  <div class="h5-search-row">
+    <div class="h5-search-tb">
+      <input placeholder="iPhone 15 Pro" readonly>
+      <button type="button" class="go">搜索</button>
+    </div>
+  </div>
+</div>
+
+<main class="h5-main">
+  <!-- 类目入口（8 个一级类目） -->
+  <div class="h5-services" style="grid-template-columns:repeat(4,minmax(0,1fr));row-gap:10px">
+    <a href="category.html"><div class="ico amber"><svg class="ico" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/></svg></div>手机</a>
+    <a href="category.html"><div class="ico coral"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg></div>电脑办公</a>
+    <a href="category.html"><div class="ico teal"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14.5" r="4"/><path d="M8 6h2"/></svg></div>家电</a>
+    <a href="category.html"><div class="ico forest"><svg class="ico" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="2.5" y="13" width="4" height="7" rx="2"/><rect x="17.5" y="13" width="4" height="7" rx="2"/></svg></div>数码配件</a>
+    <a href="category.html"><div class="ico amber"><svg class="ico" viewBox="0 0 24 24"><path d="M3 4h18v4H3z"/><path d="M4 8h16v12H4z"/><path d="M10 12h4"/></svg></div>家居收纳</a>
+    <a href="category.html"><div class="ico coral"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 01-12 0c0-4 6-11 6-11z"/></svg></div>美妆个护</a>
+    <a href="category.html"><div class="ico amber"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h13v8a6 6 0 01-6 6h-1a6 6 0 01-6-6V6z"/><path d="M17 8h2a2.5 2.5 0 010 5h-2"/></svg></div>食品生鲜</a>
+    <a href="category.html"><div class="ico forest"><svg class="ico" viewBox="0 0 24 24"><path d="M3 20l6.5-11 4 7 2.5-4L21 20z"/></svg></div>运动户外</a>
+  </div>
+
+  <!-- Banner 位（奶油底 + 琥珀珊瑚暖光） -->
+  <div class="h5-banner">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--amber-press);margin-bottom:6px">BANNER 位</div>
+    <h2>换新季 · 好物直达</h2>
+    <p class="hint" style="margin-top:4px">满 99 元免运费 · 正品保障 · 7 天无理由</p>
+    <a class="btn btn-sm btn-primary" href="category.html" style="margin-top:12px">去逛逛</a>
+  </div>
+
+  <!-- 活动位（后台首页运营位配置） -->
+  <div class="h5-promo-strip">
+    <div class="h5-promo-card">
+      <div class="tit">活动位 · 热门精选</div>
+      <div class="ph ph-phone is-sm"><span>iP</span></div>
+      <div class="price">¥7,999</div>
+    </div>
+    <div class="h5-promo-card">
+      <div class="tit">活动位 · 新品上架</div>
+      <div class="ph ph-pc is-sm"><span>MB</span></div>
+      <div class="price">¥9,999</div>
+    </div>
+    <div class="h5-promo-card">
+      <div class="tit forest">满 99 免运</div>
+      <div class="ph ph-acc is-sm"><span>索尼</span></div>
+      <div class="sub">商品金额满 99 元免运费，未满收 ¥8</div>
+    </div>
+  </div>
+
+  <div class="h5-section" style="margin-bottom:8px">
+    <div class="flex-between">
+      <strong style="font-size:15px">猜你喜欢</strong>
+      <a class="hint" href="category.html">全部分类 ›</a>
+    </div>
+  </div>
+
+  <!-- 推荐流：仅上架商品 -->
+  <div class="h5-waterfall">
+    <a class="h5-feed-card tall" href="product.html">
+      <div class="ph ph-phone"><span>iP</span></div>
+      <div class="body">
+        <div class="title">iPhone 15 Pro 128G</div>
+        <div class="tags"><span class="tag">满 99 免运</span></div>
+        <div class="foot"><span class="price">¥7,999 起</span><span class="sold">1.2 万+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card wide" href="product.html">
+      <div class="ph ph-pc"><span>MB</span></div>
+      <div class="body">
+        <div class="title">MacBook Air 13 M3 16G</div>
+        <div class="tags"><span class="tag green">新品</span></div>
+        <div class="foot"><span class="price">¥9,999 起</span><span class="sold">4,800+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card" href="product.html">
+      <div class="ph ph-appliance"><span>戴森</span></div>
+      <div class="body">
+        <div class="title">戴森 V12 吸尘器</div>
+        <div class="foot"><span class="price">¥3,999</span><span class="sold">6,100+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card tall" href="product.html">
+      <div class="ph ph-acc"><span>索尼</span></div>
+      <div class="body">
+        <div class="title">索尼 WH-1000XM5</div>
+        <div class="tags"><span class="tag">旗舰降噪</span></div>
+        <div class="foot"><span class="price">¥2,599</span><span class="sold">9,300+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card wide" href="product.html">
+      <div class="ph ph-food"><span>坚果</span></div>
+      <div class="body">
+        <div class="title">每日坚果 750g</div>
+        <div class="foot"><span class="price">¥89</span><span class="sold">3.4 万+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card" href="product.html">
+      <div class="ph ph-sport"><span>跑鞋</span></div>
+      <div class="body">
+        <div class="title">减震跑步鞋 男款</div>
+        <div class="tags"><span class="tag green">日常慢跑</span></div>
+        <div class="foot"><span class="price">¥399</span><span class="sold">5,200+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card" href="product.html">
+      <div class="ph ph-pc"><span>TP</span></div>
+      <div class="body">
+        <div class="title">ThinkPad X1 Carbon</div>
+        <div class="tags"><span class="tag">商务轻薄</span></div>
+        <div class="foot"><span class="price">¥12,999</span><span class="sold">1,900+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card" href="product.html">
+      <div class="ph ph-appliance"><span>海尔</span></div>
+      <div class="body">
+        <div class="title">海尔 纤诺 洗衣机</div>
+        <div class="foot"><span class="price">¥3,299</span><span class="sold">1,500+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card" href="product.html">
+      <div class="ph ph-appliance"><span>美的</span></div>
+      <div class="body">
+        <div class="title">美的 风冷 冰箱</div>
+        <div class="foot"><span class="price">¥4,599</span><span class="sold">1,100+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card" href="product.html">
+      <div class="ph ph-pc"><span>罗技</span></div>
+      <div class="body">
+        <div class="title">罗技 MX Master 3s</div>
+        <div class="foot"><span class="price">¥599</span><span class="sold">6,700+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card" href="product.html">
+      <div class="ph ph-food"><span>咖啡</span></div>
+      <div class="body">
+        <div class="title">挂耳咖啡 20袋</div>
+        <div class="tags"><span class="tag">满 99 免运</span></div>
+        <div class="foot"><span class="price">¥69</span><span class="sold">2.6 万+ 付款</span></div>
+      </div>
+    </a>
+    <a class="h5-feed-card" href="product.html">
+      <div class="ph ph-sport"><span>帐篷</span></div>
+      <div class="body">
+        <div class="title">双人帐篷 防雨款</div>
+        <div class="foot"><span class="price">¥599</span><span class="sold">900+ 付款</span></div>
+      </div>
+    </a>
+  </div>
+</main>
+
+<nav class="h5-tabbar h5-tabbar-portal">
+  <a class="active" href="home.html">
+    <span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>首页
+  </a>
+  <a href="category.html">
+    <span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>分类
+  </a>
+  <a href="home.html">
+    <span class="tab-logo"><img src="../logo.png" alt="尚品汇"></span>
+  </a>
+  <a href="cart.html">
+    <span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h12L22 7H6"/></svg><span class="badge-dot">2</span></span>购物车
+  </a>
+  <a href="profile.html">
+    <span class="tab-ico"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></span>我的
+  </a>
+</nav>
+
+<script src="../modal.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工作台 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='dashboard'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">概览 / <b>工作台</b></div>
+      <div class="topbar-right">
+        <span class="badge badge-forest">在线</span>
+        <div class="avatar">管</div>
+      </div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <div class="page-title">工作台</div>
+          <div class="page-sub">下午好，管理员 · Phase 1 供给侧工作台 · 示例数据</div>
+        </div>
+        <a class="btn btn-secondary" href="product-edit.html">去上架商品</a>
+      </div>
+
+      <div class="stats">
+        <a class="stat" href="products.html" style="color:inherit;display:block">
+          <div class="stat-label">在售商品（SPU）</div>
+          <div class="stat-value">30</div>
+          <div class="stat-delta" style="color:var(--stone)">8 个一级类目 · 含 1 草稿 1 下架</div>
+        </a>
+        <a class="stat" href="inventory.html" style="color:inherit;display:block">
+          <div class="stat-label">SKU 总数</div>
+          <div class="stat-value">47</div>
+          <div class="stat-delta" style="color:var(--stone)">默认仓单一仓库</div>
+        </a>
+        <a class="stat" href="inventory.html" style="color:inherit;display:block">
+          <div class="stat-label">低库存预警</div>
+          <div class="stat-value" style="color:var(--brick)">3</div>
+          <div class="stat-delta" style="color:var(--brick)">需补货 · 另有 2 个关注</div>
+        </a>
+        <a class="stat" href="orders.html" style="color:inherit;display:block">
+          <div class="stat-label">待发货订单</div>
+          <div class="stat-value">2</div>
+          <div class="stat-delta" style="color:var(--stone)">已付款待出库</div>
+        </a>
+      </div>
+
+      <div class="card card-pad">
+        <div class="page-head" style="margin-bottom:14px">
+          <div>
+            <div class="page-title" style="font-size:16px">库存预警</div>
+            <div class="hint" style="margin-top:4px">低库存 = 可售 ≤ 阈值；关注 = 阈值 &lt; 可售 ≤ 阈值 × 1.5（可售 = 总库存 − 锁定占用）</div>
+          </div>
+          <a class="btn btn-ghost btn-sm" href="inventory.html">全部库存 →</a>
+        </div>
+        <table class="table">
+          <thead><tr><th class="code">SKU</th><th style="min-width:220px">商品</th><th class="num">可售</th><th class="num">阈值</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td class="code">10009</td><td>HUAWEI Mate X5</td><td class="num">80</td><td class="num">100</td><td><span class="badge badge-brick">低库存</span></td></tr>
+            <tr><td class="code">10015</td><td>ThinkPad X1 Carbon</td><td class="num">80</td><td class="num">100</td><td><span class="badge badge-brick">低库存</span></td></tr>
+            <tr><td class="code">10016</td><td>ROG 枪神 笔记本</td><td class="num">80</td><td class="num">100</td><td><span class="badge badge-brick">低库存</span></td></tr>
+            <tr><td class="code">10013</td><td>MacBook Air 13 M3 16G</td><td class="num">80</td><td class="num">60</td><td><span class="badge badge-amber">关注</span></td></tr>
+            <tr><td class="code">10012</td><td>vivo X100</td><td class="num">140</td><td class="num">100</td><td><span class="badge badge-amber">关注</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="modal.js"></script>
+</body>
+</html>

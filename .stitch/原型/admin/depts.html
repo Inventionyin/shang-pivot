@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>部门管理 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='depts'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">系统管理 / <b>部门管理</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div><div class="page-title">部门管理</div><div class="page-sub">组织架构 · 树形部门 · 有下级或被用户引用时不可删除</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm">全部展开</button>
+          <button class="btn btn-secondary btn-sm">全部收起</button>
+          <button class="btn btn-primary" data-modal-open="dlg-dept-form">+ 新增部门</button>
+        </div>
+      </div>
+      <div class="card card-pad">
+        <div class="toolbar">
+          <input class="input" placeholder="搜索部门名称" />
+          <select class="select"><option>全部状态</option><option>启用</option><option>禁用</option></select>
+        </div>
+        <table class="table">
+          <thead>
+            <tr><th style="min-width:200px">名称</th><th>上级</th><th class="num center">排序</th><th class="num">用户数</th><th>状态</th><th class="col-op">操作</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>▾ <b>总部</b></td>
+              <td>—</td>
+              <td class="num center">0</td>
+              <td class="num">1</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-form">下级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-haschild">删除</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td style="padding-left:28px">运营中心</td>
+              <td>总部</td>
+              <td class="num center">1</td>
+              <td class="num">3</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-form">下级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-inuse">删除</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td style="padding-left:28px">仓储中心</td>
+              <td>总部</td>
+              <td class="num center">2</td>
+              <td class="num">1</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-form">下级</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-inuse">删除</button>
+              </td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td style="padding-left:28px">客服组</td>
+              <td>总部</td>
+              <td class="num center">3</td>
+              <td class="num">0</td>
+              <td><span class="badge badge-forest">启用</span></td>
+              <td class="col-op">
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-form">编辑</button>
+                <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dept-del">删除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 新增 / 编辑部门 ============ -->
+<div class="modal" id="dlg-dept-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-dept-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-dept-form-t">新增 / 编辑部门</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">部门名称<span class="req">*</span></label>
+        <input class="input" value="客服组" autofocus>
+        <span class="hint">1～30 字符，同一上级下不能重名</span>
+      </div>
+      <div class="field">
+        <label class="label">上级部门<span class="req">*</span></label>
+        <select class="select">
+          <option selected>总部</option>
+          <option>　└ 运营中心</option>
+          <option>　└ 仓储中心</option>
+        </select>
+        <span class="hint">顶级部门选「—（顶级）」，同样不能选自己或自己的下级</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">排序<span class="req">*</span></label>
+          <input class="input" value="3">
+          <span class="hint">0～999，同级越小越靠前</span>
+        </div>
+        <div class="field">
+          <label class="label">状态<span class="req">*</span></label>
+          <select class="select">
+            <option selected>启用</option>
+            <option>禁用</option>
+          </select>
+          <span class="hint">禁用后不再出现在用户归属下拉中</span>
+        </div>
+      </div>
+      <div class="alert alert-info">部门被用户引用或有下级部门时<b>不能删除</b>；如需下线请先迁移用户与下级部门。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除部门（危险确认）============ -->
+<div class="modal" id="dlg-dept-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-dept-del-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-dept-del-t">删除部门</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除部门「客服组」？</p>
+      <p class="hint">该部门<b>无下级部门、无用户引用</b>，可以删除；删除后不可恢复。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- 部门被用户引用：拒绝 -->
+<div class="modal" id="dlg-dept-inuse" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-dept-inuse-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-dept-inuse-t">无法删除部门</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>部门「运营中心」仍被 <b>3</b> 个用户引用（林晓涵、胡健、王美丽），不能删除。</p>
+      <p class="hint">请先在「用户管理」中把这些用户改到其他部门，待引用归零后再删除；仓储中心同样被 1 个用户（周凯）引用。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 部门有下级：拒绝 -->
+<div class="modal" id="dlg-dept-haschild" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-dept-haschild-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-dept-haschild-t">无法删除部门</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>部门「总部」仍有 <b>3</b> 个下级部门（运营中心、仓储中心、客服组），不能删除。</p>
+      <p class="hint">请先删除或迁移全部下级部门，再删除该部门。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

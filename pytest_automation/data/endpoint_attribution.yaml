@@ -1,0 +1,20 @@
+# 用例 → 接口归属覆盖表
+#
+# 说明：ApiClient 埋点只采集用例 call 阶段的请求；有些用例的接口调用发生在夹具里
+# （如 customer 夹具登录、order 夹具下单），或只做数据库校验。这里显式补归属，
+# 保证「接口视图」的测试点与原报告对得上。
+#
+# 键：pytest nodeid（不含参数）；值：接口列表（METHOD path，必须是端点模型中的路径）
+
+"tests/api/test_auth.py::TestCustomerAuth::test_login_contract":
+  - "POST /api/auth/login"
+
+# 管理员登录 + 查询当前用户（登录发生在 admin 夹具中）
+"tests/api/test_auth.py::TestAdminAuth::test_admin_login_and_me":
+  - "POST /admin/auth/login"
+
+"tests/api/test_invariants.py::test_order_amount_conservation":
+  - "POST /api/orders"
+
+"tests/api/test_invariants.py::test_stock_conservation_on_order_and_cancel":
+  - "POST /api/orders"

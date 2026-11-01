@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h5-doc">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>登录 · 尚品汇 H5</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../h5.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="h5-shell no-tab">
+<header class="h5-header">
+  <a class="back" href="home.html">‹</a>
+  <span class="brand center">登录</span>
+  <span class="right"></span>
+</header>
+
+<div class="h5-login">
+  <img src="../logo.png" alt="">
+  <h1 class="page-title" style="margin:0">尚品汇</h1>
+  <p class="muted">选好物，享生活</p>
+
+  <div class="field" style="width:100%;max-width:320px;text-align:left">
+    <span class="field-label">手机号<span class="req">*</span></span>
+    <input class="input" placeholder="请输入 11 位手机号" maxlength="11">
+  </div>
+
+  <div class="field" style="width:100%;max-width:320px;text-align:left">
+    <span class="field-label">验证码<span class="req">*</span></span>
+    <div style="display:flex;gap:8px">
+      <input class="input" placeholder="6 位验证码" maxlength="6" style="flex:1">
+      <button class="btn btn-secondary" type="button" style="white-space:nowrap;flex-shrink:0" data-countdown="60">获取验证码</button>
+    </div>
+    <span class="hint">演示环境验证码固定为 123456；发送后 60 秒内不可重发</span>
+  </div>
+
+  <a class="btn btn-primary btn-block" href="home.html" style="max-width:320px">手机号登录</a>
+  <p class="hint">游客可浏览首页、分类、详情与搜索；加购、下单、个人中心需登录</p>
+</div>
+
+<!-- 登录状态示例 -->
+<div class="card" style="margin:0 12px 16px;padding:14px">
+  <div class="hint mb-12" style="font-weight:700">登录状态示例</div>
+  <div class="field">
+    <span class="field-label">① 发送验证码后（60 秒防重发）</span>
+    <button class="btn btn-secondary btn-sm" type="button" disabled style="align-self:flex-start">58s 后重发</button>
+  </div>
+  <div class="field">
+    <span class="field-label">② 验证码错误</span>
+    <input class="input is-err" value="123456">
+    <span class="error-text">验证码错误，请重新输入</span>
+  </div>
+  <div class="field" style="margin-bottom:0">
+    <span class="field-label">③ 未注册手机号</span>
+    <p class="hint">手机号未注册时自动注册为会员</p>
+  </div>
+  <div class="flex-between mt-16">
+    <button type="button" class="btn btn-sm btn-secondary" data-modal-open="sh-login">登录半屏</button>
+    <button type="button" class="btn btn-sm btn-secondary" data-modal-open="sh-register-tip">自动注册提示</button>
+  </div>
+</div>
+
+<!-- ============ 半屏层 ============ -->
+
+<!-- HL-01 登录半屏（未登录点加购 / 下单时弹出，成功后回到原场景） -->
+<div class="sheet" id="sh-login" hidden>
+  <div class="sheet-mask"></div>
+  <div class="sheet-panel">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <span class="sheet-title center">登录尚品汇</span>
+      <button type="button" class="sheet-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p class="hint">登录后才能加入购物车、下单与查看个人中心，登录成功后会回到刚才的页面。</p>
+      <div class="field mt-12">
+        <span class="field-label">手机号<span class="req">*</span></span>
+        <input class="input" placeholder="请输入 11 位手机号" maxlength="11">
+      </div>
+      <div class="field">
+        <span class="field-label">验证码<span class="req">*</span></span>
+        <div style="display:flex;gap:8px">
+          <input class="input" placeholder="6 位验证码" maxlength="6" style="flex:1">
+          <button class="btn btn-secondary" type="button" style="white-space:nowrap;flex-shrink:0" data-countdown="60">获取验证码</button>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <a class="btn btn-primary" href="home.html">登录</a>
+    </div>
+  </div>
+</div>
+
+<!-- HL-02 验证码错误提示态 -->
+<div class="sheet" id="sh-code-err" hidden>
+  <div class="sheet-mask"></div>
+  <div class="sheet-panel">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+      <span class="sheet-title">验证码错误</span>
+      <button type="button" class="sheet-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="field">
+        <span class="field-label">验证码<span class="req">*</span></span>
+        <input class="input is-err" value="000000" maxlength="6">
+        <span class="error-text">验证码错误，请重新输入</span>
+      </div>
+      <p class="hint">演示环境验证码固定为 123456；连续输错可重新获取。</p>
+    </div>
+    <div class="sheet-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>关闭</button>
+      <button type="button" class="btn btn-primary" data-modal-close data-modal-open="sh-login">重新登录</button>
+    </div>
+  </div>
+</div>
+
+<!-- HL-03 未注册手机号自动注册提示 -->
+<div class="sheet" id="sh-register-tip" hidden>
+  <div class="sheet-mask"></div>
+  <div class="sheet-panel">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <span class="modal-ico ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+      <span class="sheet-title">该手机号未注册</span>
+      <button type="button" class="sheet-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <p class="hint">验证码校验通过后将自动注册为尚品汇会员，无需单独注册流程。</p>
+    </div>
+    <div class="sheet-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>换个号码</button>
+      <a class="btn btn-primary" href="home.html">继续登录</a>
+    </div>
+  </div>
+</div>
+
+<script src="../modal.js"></script>
+</body>
+</html>

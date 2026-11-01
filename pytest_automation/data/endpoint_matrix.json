@@ -1,0 +1,4843 @@
+[
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/after-sales",
+    "auth": "admin",
+    "summary": "分页查询售后单",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/after-sales",
+    "auth": "admin",
+    "summary": "分页查询售后单",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/after-sales",
+    "auth": "admin",
+    "summary": "分页查询售后单",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/after-sales",
+    "auth": "admin",
+    "summary": "分页查询售后单",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/after-sales",
+    "auth": "admin",
+    "summary": "分页查询售后单",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/after-sales/{id}",
+    "auth": "admin",
+    "summary": "获取售后详情",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/after-sales/{id}",
+    "auth": "admin",
+    "summary": "获取售后详情",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/admin/after-sales/{id}",
+    "auth": "admin",
+    "summary": "获取售后详情",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/admin/after-sales/{id}",
+    "auth": "admin",
+    "summary": "获取售后详情",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/admin/after-sales/{id}",
+    "auth": "admin",
+    "summary": "获取售后详情",
+    "sibling": "/admin/after-sales",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/after-sales/{id}/audit",
+    "auth": "admin",
+    "summary": "审核售后单",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/after-sales/{id}/audit",
+    "auth": "admin",
+    "summary": "审核售后单",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "POST",
+    "path": "/admin/after-sales/{id}/audit",
+    "auth": "admin",
+    "summary": "审核售后单",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/after-sales/{id}/audit",
+    "auth": "admin",
+    "summary": "审核售后单",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/after-sales/{id}/audit",
+    "auth": "admin",
+    "summary": "审核售后单",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "查询属性列表",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "查询属性列表",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "查询属性列表",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "查询属性列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "查询属性列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "创建属性",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "创建属性",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "创建属性",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/attributes",
+    "auth": "admin",
+    "summary": "创建属性",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/attributes/{id}",
+    "auth": "admin",
+    "summary": "删除属性",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/attributes/{id}",
+    "auth": "admin",
+    "summary": "删除属性",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/attributes/{id}",
+    "auth": "admin",
+    "summary": "删除属性",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/attributes/{id}",
+    "auth": "admin",
+    "summary": "更新属性",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/attributes/{id}",
+    "auth": "admin",
+    "summary": "更新属性",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/attributes/{id}",
+    "auth": "admin",
+    "summary": "更新属性",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/auth/login",
+    "auth": "none",
+    "summary": "用户登录",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/auth/login",
+    "auth": "none",
+    "summary": "用户登录",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/auth/logout",
+    "auth": "admin",
+    "summary": "退出登录",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/auth/logout",
+    "auth": "admin",
+    "summary": "退出登录",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/auth/me",
+    "auth": "admin",
+    "summary": "获取当前用户信息",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/auth/me",
+    "auth": "admin",
+    "summary": "获取当前用户信息",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/auth/me",
+    "auth": "admin",
+    "summary": "获取当前用户信息",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/auth/me",
+    "auth": "admin",
+    "summary": "获取当前用户信息",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/auth/me",
+    "auth": "admin",
+    "summary": "获取当前用户信息",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/auth/refresh",
+    "auth": "none",
+    "summary": "刷新令牌",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/auth/refresh",
+    "auth": "none",
+    "summary": "刷新令牌",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "分页查询品牌",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "分页查询品牌",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "分页查询品牌",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "分页查询品牌",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "分页查询品牌",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "创建品牌",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "创建品牌",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "创建品牌",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/brands",
+    "auth": "admin",
+    "summary": "创建品牌",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/brands/{id}",
+    "auth": "admin",
+    "summary": "删除品牌",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/brands/{id}",
+    "auth": "admin",
+    "summary": "删除品牌",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/brands/{id}",
+    "auth": "admin",
+    "summary": "删除品牌",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/brands/{id}",
+    "auth": "admin",
+    "summary": "更新品牌",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/brands/{id}",
+    "auth": "admin",
+    "summary": "更新品牌",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/brands/{id}",
+    "auth": "admin",
+    "summary": "更新品牌",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "获取类目列表",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "获取类目列表",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "获取类目列表",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "获取类目列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "获取类目列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "创建类目",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "创建类目",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "创建类目",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/categories",
+    "auth": "admin",
+    "summary": "创建类目",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/categories/tree",
+    "auth": "admin",
+    "summary": "获取类目树",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/categories/tree",
+    "auth": "admin",
+    "summary": "获取类目树",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/categories/tree",
+    "auth": "admin",
+    "summary": "获取类目树",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/categories/tree",
+    "auth": "admin",
+    "summary": "获取类目树",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/categories/tree",
+    "auth": "admin",
+    "summary": "获取类目树",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/categories/{id}",
+    "auth": "admin",
+    "summary": "删除类目",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/categories/{id}",
+    "auth": "admin",
+    "summary": "删除类目",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/categories/{id}",
+    "auth": "admin",
+    "summary": "删除类目",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/categories/{id}",
+    "auth": "admin",
+    "summary": "更新类目",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/categories/{id}",
+    "auth": "admin",
+    "summary": "更新类目",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/categories/{id}",
+    "auth": "admin",
+    "summary": "更新类目",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/customers",
+    "auth": "admin",
+    "summary": "分页查询会员",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/customers",
+    "auth": "admin",
+    "summary": "分页查询会员",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/customers",
+    "auth": "admin",
+    "summary": "分页查询会员",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/customers",
+    "auth": "admin",
+    "summary": "分页查询会员",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/customers",
+    "auth": "admin",
+    "summary": "分页查询会员",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/customers/{id}",
+    "auth": "admin",
+    "summary": "会员详情",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/customers/{id}",
+    "auth": "admin",
+    "summary": "会员详情",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/admin/customers/{id}",
+    "auth": "admin",
+    "summary": "会员详情",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/admin/customers/{id}",
+    "auth": "admin",
+    "summary": "会员详情",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/admin/customers/{id}",
+    "auth": "admin",
+    "summary": "会员详情",
+    "sibling": "/admin/customers",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/customers/{id}/status",
+    "auth": "admin",
+    "summary": "冻结/解冻会员",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/customers/{id}/status",
+    "auth": "admin",
+    "summary": "冻结/解冻会员",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/customers/{id}/status",
+    "auth": "admin",
+    "summary": "冻结/解冻会员",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/dashboard/stats",
+    "auth": "admin",
+    "summary": "获取工作台统计",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/dashboard/stats",
+    "auth": "admin",
+    "summary": "获取工作台统计",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/dashboard/stats",
+    "auth": "admin",
+    "summary": "获取工作台统计",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/dashboard/stats",
+    "auth": "admin",
+    "summary": "获取工作台统计",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/dashboard/stats",
+    "auth": "admin",
+    "summary": "获取工作台统计",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "部门列表",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "部门列表",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "部门列表",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "部门列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "部门列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "创建部门",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "创建部门",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "创建部门",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/depts",
+    "auth": "admin",
+    "summary": "创建部门",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/depts/tree",
+    "auth": "admin",
+    "summary": "部门树",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/depts/tree",
+    "auth": "admin",
+    "summary": "部门树",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/depts/tree",
+    "auth": "admin",
+    "summary": "部门树",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/depts/tree",
+    "auth": "admin",
+    "summary": "部门树",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/depts/tree",
+    "auth": "admin",
+    "summary": "部门树",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/depts/{id}",
+    "auth": "admin",
+    "summary": "删除部门",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/depts/{id}",
+    "auth": "admin",
+    "summary": "删除部门",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/depts/{id}",
+    "auth": "admin",
+    "summary": "删除部门",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/depts/{id}",
+    "auth": "admin",
+    "summary": "更新部门",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/depts/{id}",
+    "auth": "admin",
+    "summary": "更新部门",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/depts/{id}",
+    "auth": "admin",
+    "summary": "更新部门",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/dict-items",
+    "auth": "admin",
+    "summary": "查询字典项",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/dict-items",
+    "auth": "admin",
+    "summary": "查询字典项",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/dict-items",
+    "auth": "admin",
+    "summary": "查询字典项",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/dict-items",
+    "auth": "admin",
+    "summary": "创建字典项",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/dict-items",
+    "auth": "admin",
+    "summary": "创建字典项",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/dict-items",
+    "auth": "admin",
+    "summary": "创建字典项",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/dict-items",
+    "auth": "admin",
+    "summary": "创建字典项",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/dict-items/by-code",
+    "auth": "admin",
+    "summary": "按编码查询字典项",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/dict-items/by-code",
+    "auth": "admin",
+    "summary": "按编码查询字典项",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/dict-items/by-code",
+    "auth": "admin",
+    "summary": "按编码查询字典项",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/dict-items/{id}",
+    "auth": "admin",
+    "summary": "删除字典项",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/dict-items/{id}",
+    "auth": "admin",
+    "summary": "删除字典项",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/dict-items/{id}",
+    "auth": "admin",
+    "summary": "删除字典项",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/dict-items/{id}",
+    "auth": "admin",
+    "summary": "更新字典项",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/dict-items/{id}",
+    "auth": "admin",
+    "summary": "更新字典项",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/dict-items/{id}",
+    "auth": "admin",
+    "summary": "更新字典项",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "分页查询字典",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "分页查询字典",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "分页查询字典",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "分页查询字典",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "分页查询字典",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "创建字典",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "创建字典",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "创建字典",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/dicts",
+    "auth": "admin",
+    "summary": "创建字典",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/dicts/{id}",
+    "auth": "admin",
+    "summary": "删除字典",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/dicts/{id}",
+    "auth": "admin",
+    "summary": "删除字典",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/dicts/{id}",
+    "auth": "admin",
+    "summary": "删除字典",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/dicts/{id}",
+    "auth": "admin",
+    "summary": "更新字典",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/dicts/{id}",
+    "auth": "admin",
+    "summary": "更新字典",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/dicts/{id}",
+    "auth": "admin",
+    "summary": "更新字典",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/files/confirm",
+    "auth": "admin",
+    "summary": "确认上传完成",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/files/confirm",
+    "auth": "admin",
+    "summary": "确认上传完成",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/files/confirm",
+    "auth": "admin",
+    "summary": "确认上传完成",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/files/confirm",
+    "auth": "admin",
+    "summary": "确认上传完成",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/files/presign",
+    "auth": "admin",
+    "summary": "获取预签名上传地址",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/files/presign",
+    "auth": "admin",
+    "summary": "获取预签名上传地址",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/files/upload",
+    "auth": "admin",
+    "summary": "直传上传文件",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/files/upload",
+    "auth": "admin",
+    "summary": "直传上传文件",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/files/view",
+    "auth": "none",
+    "summary": "查看/下载文件",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/home/slots",
+    "auth": "admin",
+    "summary": "运营位列表",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/home/slots",
+    "auth": "admin",
+    "summary": "运营位列表",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/home/slots",
+    "auth": "admin",
+    "summary": "运营位列表",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/home/slots",
+    "auth": "admin",
+    "summary": "运营位列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/home/slots",
+    "auth": "admin",
+    "summary": "运营位列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "运营位详情",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "运营位详情",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "运营位详情",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "运营位详情",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "运营位详情",
+    "sibling": "/admin/home/slots",
+    "id_key": "code",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "保存运营位",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "保存运营位",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "保存运营位",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "PUT",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "保存运营位",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "PUT",
+    "path": "/admin/home/slots/{code}",
+    "auth": "admin",
+    "summary": "保存运营位",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/in-out",
+    "auth": "admin",
+    "summary": "出入库分页",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/in-out",
+    "auth": "admin",
+    "summary": "出入库分页",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/in-out",
+    "auth": "admin",
+    "summary": "出入库分页",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/in-out",
+    "auth": "admin",
+    "summary": "出入库分页",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/in-out",
+    "auth": "admin",
+    "summary": "出入库分页",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/in-out",
+    "auth": "admin",
+    "summary": "创建出入库单",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/in-out",
+    "auth": "admin",
+    "summary": "创建出入库单",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/operation-logs",
+    "auth": "admin",
+    "summary": "分页查询操作日志",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/operation-logs",
+    "auth": "admin",
+    "summary": "分页查询操作日志",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/operation-logs",
+    "auth": "admin",
+    "summary": "分页查询操作日志",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/operation-logs",
+    "auth": "admin",
+    "summary": "分页查询操作日志",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/operation-logs",
+    "auth": "admin",
+    "summary": "分页查询操作日志",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/operation-logs/export",
+    "auth": "admin",
+    "summary": "导出操作日志",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/operation-logs/export",
+    "auth": "admin",
+    "summary": "导出操作日志",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/operation-logs/export",
+    "auth": "admin",
+    "summary": "导出操作日志",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/operation-logs/{id}",
+    "auth": "admin",
+    "summary": "操作日志详情",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/operation-logs/{id}",
+    "auth": "admin",
+    "summary": "操作日志详情",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/admin/operation-logs/{id}",
+    "auth": "admin",
+    "summary": "操作日志详情",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/admin/operation-logs/{id}",
+    "auth": "admin",
+    "summary": "操作日志详情",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/admin/operation-logs/{id}",
+    "auth": "admin",
+    "summary": "操作日志详情",
+    "sibling": "/admin/operation-logs",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/orders",
+    "auth": "admin",
+    "summary": "分页查询订单",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/orders",
+    "auth": "admin",
+    "summary": "分页查询订单",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/orders",
+    "auth": "admin",
+    "summary": "分页查询订单",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/orders",
+    "auth": "admin",
+    "summary": "分页查询订单",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/orders",
+    "auth": "admin",
+    "summary": "分页查询订单",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/orders/export",
+    "auth": "admin",
+    "summary": "导出订单 CSV",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/orders/export",
+    "auth": "admin",
+    "summary": "导出订单 CSV",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/orders/export",
+    "auth": "admin",
+    "summary": "导出订单 CSV",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/orders/{id}",
+    "auth": "admin",
+    "summary": "获取订单详情",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/orders/{id}",
+    "auth": "admin",
+    "summary": "获取订单详情",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/admin/orders/{id}",
+    "auth": "admin",
+    "summary": "获取订单详情",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/admin/orders/{id}",
+    "auth": "admin",
+    "summary": "获取订单详情",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/admin/orders/{id}",
+    "auth": "admin",
+    "summary": "获取订单详情",
+    "sibling": "/admin/orders",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/orders/{id}/ship",
+    "auth": "admin",
+    "summary": "订单发货",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/orders/{id}/ship",
+    "auth": "admin",
+    "summary": "订单发货",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "POST",
+    "path": "/admin/orders/{id}/ship",
+    "auth": "admin",
+    "summary": "订单发货",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/orders/{id}/ship",
+    "auth": "admin",
+    "summary": "订单发货",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/orders/{id}/ship",
+    "auth": "admin",
+    "summary": "订单发货",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "权限列表",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "权限列表",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "权限列表",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "权限列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "权限列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "创建权限",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "创建权限",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "创建权限",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/permissions",
+    "auth": "admin",
+    "summary": "创建权限",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/permissions/tree",
+    "auth": "admin",
+    "summary": "权限树",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/permissions/tree",
+    "auth": "admin",
+    "summary": "权限树",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/permissions/tree",
+    "auth": "admin",
+    "summary": "权限树",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/permissions/tree",
+    "auth": "admin",
+    "summary": "权限树",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/permissions/tree",
+    "auth": "admin",
+    "summary": "权限树",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/permissions/{id}",
+    "auth": "admin",
+    "summary": "删除权限",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/permissions/{id}",
+    "auth": "admin",
+    "summary": "删除权限",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/permissions/{id}",
+    "auth": "admin",
+    "summary": "删除权限",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/permissions/{id}",
+    "auth": "admin",
+    "summary": "更新权限",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/permissions/{id}",
+    "auth": "admin",
+    "summary": "更新权限",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/permissions/{id}",
+    "auth": "admin",
+    "summary": "更新权限",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "分页查询商品",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "分页查询商品",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "分页查询商品",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "分页查询商品",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "分页查询商品",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "创建商品",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "创建商品",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "创建商品",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/products",
+    "auth": "admin",
+    "summary": "创建商品",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/products/batch-off",
+    "auth": "admin",
+    "summary": "批量下架",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/products/batch-off",
+    "auth": "admin",
+    "summary": "批量下架",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "删除商品",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "删除商品",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "删除商品",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "获取商品详情",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "获取商品详情",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "获取商品详情",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "获取商品详情",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "获取商品详情",
+    "sibling": "/admin/products",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "更新商品",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "更新商品",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "更新商品",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "PUT",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "更新商品",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "PUT",
+    "path": "/admin/products/{id}",
+    "auth": "admin",
+    "summary": "更新商品",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/products/{id}/off",
+    "auth": "admin",
+    "summary": "商品下架",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/products/{id}/off",
+    "auth": "admin",
+    "summary": "商品下架",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/products/{id}/off",
+    "auth": "admin",
+    "summary": "商品下架",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/products/{id}/on",
+    "auth": "admin",
+    "summary": "商品上架",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/products/{id}/on",
+    "auth": "admin",
+    "summary": "商品上架",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/products/{id}/on",
+    "auth": "admin",
+    "summary": "商品上架",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/reviews",
+    "auth": "admin",
+    "summary": "评价分页",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/reviews",
+    "auth": "admin",
+    "summary": "评价分页",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/reviews",
+    "auth": "admin",
+    "summary": "评价分页",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/reviews",
+    "auth": "admin",
+    "summary": "评价分页",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/reviews",
+    "auth": "admin",
+    "summary": "评价分页",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/reviews/{id}/status",
+    "auth": "admin",
+    "summary": "隐藏/恢复评价",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/reviews/{id}/status",
+    "auth": "admin",
+    "summary": "隐藏/恢复评价",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/reviews/{id}/status",
+    "auth": "admin",
+    "summary": "隐藏/恢复评价",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/roles",
+    "auth": "admin",
+    "summary": "分页查询角色",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/roles",
+    "auth": "admin",
+    "summary": "分页查询角色",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/roles",
+    "auth": "admin",
+    "summary": "分页查询角色",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/roles",
+    "auth": "admin",
+    "summary": "分页查询角色",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/roles",
+    "auth": "admin",
+    "summary": "分页查询角色",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/roles",
+    "auth": "admin",
+    "summary": "创建角色",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/roles",
+    "auth": "admin",
+    "summary": "创建角色",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/roles/all",
+    "auth": "admin",
+    "summary": "查询全部角色",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/roles/all",
+    "auth": "admin",
+    "summary": "查询全部角色",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/roles/all",
+    "auth": "admin",
+    "summary": "查询全部角色",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/roles/all",
+    "auth": "admin",
+    "summary": "查询全部角色",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/roles/all",
+    "auth": "admin",
+    "summary": "查询全部角色",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/roles/{id}",
+    "auth": "admin",
+    "summary": "删除角色",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/roles/{id}",
+    "auth": "admin",
+    "summary": "删除角色",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/roles/{id}",
+    "auth": "admin",
+    "summary": "删除角色",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/roles/{id}",
+    "auth": "admin",
+    "summary": "更新角色",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/roles/{id}",
+    "auth": "admin",
+    "summary": "更新角色",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/roles/{id}",
+    "auth": "admin",
+    "summary": "更新角色",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/site/brand",
+    "auth": "admin",
+    "summary": "获取站点品牌",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/site/brand",
+    "auth": "admin",
+    "summary": "获取站点品牌",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/site/brand",
+    "auth": "admin",
+    "summary": "获取站点品牌",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/site/brand",
+    "auth": "admin",
+    "summary": "获取站点品牌",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/site/brand",
+    "auth": "admin",
+    "summary": "获取站点品牌",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/site/brand",
+    "auth": "admin",
+    "summary": "更新站点品牌",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/site/brand",
+    "auth": "admin",
+    "summary": "更新站点品牌",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/stocks",
+    "auth": "admin",
+    "summary": "分页查询库存",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/stocks",
+    "auth": "admin",
+    "summary": "分页查询库存",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/stocks",
+    "auth": "admin",
+    "summary": "分页查询库存",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/stocks",
+    "auth": "admin",
+    "summary": "分页查询库存",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/stocks",
+    "auth": "admin",
+    "summary": "分页查询库存",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/stocks/adjust",
+    "auth": "admin",
+    "summary": "调整库存",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/stocks/adjust",
+    "auth": "admin",
+    "summary": "调整库存",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/system-configs",
+    "auth": "admin",
+    "summary": "查询系统配置",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/system-configs",
+    "auth": "admin",
+    "summary": "查询系统配置",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/system-configs",
+    "auth": "admin",
+    "summary": "查询系统配置",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/system-configs",
+    "auth": "admin",
+    "summary": "查询系统配置",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/system-configs",
+    "auth": "admin",
+    "summary": "查询系统配置",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/system-configs/{id}",
+    "auth": "admin",
+    "summary": "更新系统配置",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/system-configs/{id}",
+    "auth": "admin",
+    "summary": "更新系统配置",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/system-configs/{id}",
+    "auth": "admin",
+    "summary": "更新系统配置",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/users",
+    "auth": "admin",
+    "summary": "分页查询用户",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/users",
+    "auth": "admin",
+    "summary": "分页查询用户",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/users",
+    "auth": "admin",
+    "summary": "分页查询用户",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/users",
+    "auth": "admin",
+    "summary": "分页查询用户",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/users",
+    "auth": "admin",
+    "summary": "分页查询用户",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/users",
+    "auth": "admin",
+    "summary": "创建用户",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/users",
+    "auth": "admin",
+    "summary": "创建用户",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "删除用户",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "DELETE",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "删除用户",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "删除用户",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "获取用户详情",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "获取用户详情",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "获取用户详情",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "获取用户详情",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "获取用户详情",
+    "sibling": "/admin/users",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "更新用户",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "更新用户",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/users/{id}",
+    "auth": "admin",
+    "summary": "更新用户",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/users/{id}/password",
+    "auth": "admin",
+    "summary": "重置密码",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/users/{id}/password",
+    "auth": "admin",
+    "summary": "重置密码",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/users/{id}/password",
+    "auth": "admin",
+    "summary": "重置密码",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/users/{id}/status",
+    "auth": "admin",
+    "summary": "更新用户状态",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/users/{id}/status",
+    "auth": "admin",
+    "summary": "更新用户状态",
+    "token": "customer",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/users/{id}/status",
+    "auth": "admin",
+    "summary": "更新用户状态",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "获取仓库列表",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "GET",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "获取仓库列表",
+    "token": "customer",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "获取仓库列表",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "获取仓库列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "获取仓库列表",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "创建仓库",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "POST",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "创建仓库",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "创建仓库",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/admin/warehouses",
+    "auth": "admin",
+    "summary": "创建仓库",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/admin/warehouses/{id}",
+    "auth": "admin",
+    "summary": "更新仓库",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-会员 token 越权管理端被拒",
+    "method": "PUT",
+    "path": "/admin/warehouses/{id}",
+    "auth": "admin",
+    "summary": "更新仓库",
+    "token": "customer",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/admin/warehouses/{id}",
+    "auth": "admin",
+    "summary": "更新仓库",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/addresses",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/addresses",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/addresses",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/addresses",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/addresses",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/addresses",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/addresses",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/api/addresses/{id}",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "DELETE",
+    "path": "/api/addresses/{id}",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/api/addresses/{id}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/api/addresses/{id}",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "PUT",
+    "path": "/api/addresses/{id}",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/api/addresses/{id}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "PUT",
+    "path": "/api/addresses/{id}",
+    "auth": "customer",
+    "summary": "",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "PUT",
+    "path": "/api/addresses/{id}",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/api/addresses/{id}/default",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "PUT",
+    "path": "/api/addresses/{id}/default",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/api/addresses/{id}/default",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/api/after-sales",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/after-sales/{id}",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/after-sales/{id}",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/api/after-sales/{id}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/api/after-sales/{id}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/api/after-sales/{id}",
+    "auth": "customer",
+    "summary": "",
+    "sibling": "/api/after-sales",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/api/auth/login",
+    "auth": "none",
+    "summary": "手机号验证码登录",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/api/auth/login",
+    "auth": "none",
+    "summary": "手机号验证码登录",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/api/auth/logout",
+    "auth": "none",
+    "summary": "退出登录",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/api/auth/phone",
+    "auth": "none",
+    "summary": "手机号验证码登录",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/api/auth/phone",
+    "auth": "none",
+    "summary": "手机号验证码登录",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/api/auth/refresh",
+    "auth": "none",
+    "summary": "刷新令牌",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/api/auth/refresh",
+    "auth": "none",
+    "summary": "刷新令牌",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/api/auth/sms/send",
+    "auth": "none",
+    "summary": "发送验证码",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/api/auth/sms/send",
+    "auth": "none",
+    "summary": "发送验证码",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/cart",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/cart",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/cart",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/cart",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/cart",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/cart/clear-invalid",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/cart/clear-invalid",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/cart/items",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/cart/items",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/api/cart/items/{id}",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "DELETE",
+    "path": "/api/cart/items/{id}",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/api/cart/items/{id}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/api/cart/items/{id}",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "PUT",
+    "path": "/api/cart/items/{id}",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "PUT",
+    "path": "/api/cart/items/{id}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/categories",
+    "auth": "none",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/categories",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/categories",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/favorites",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/favorites",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/favorites",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/favorites",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/favorites",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/api/favorites/{spuId}",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "DELETE",
+    "path": "/api/favorites/{spuId}",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "DELETE",
+    "path": "/api/favorites/{spuId}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/favorites/{spuId}",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/favorites/{spuId}",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "POST",
+    "path": "/api/favorites/{spuId}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/files/confirm",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/files/confirm",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/api/files/confirm",
+    "auth": "customer",
+    "summary": "",
+    "expect": "400",
+    "risk": "P1"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/api/files/confirm",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/files/presign",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/files/presign",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/files/upload",
+    "auth": "customer",
+    "summary": "直传上传",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/files/upload",
+    "auth": "customer",
+    "summary": "直传上传",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/files/view",
+    "auth": "none",
+    "summary": "查看文件",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "DELETE",
+    "path": "/api/history",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "DELETE",
+    "path": "/api/history",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/history",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/history",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/history",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/history",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/history",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/home",
+    "auth": "none",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/home",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/home",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/me",
+    "auth": "customer",
+    "summary": "当前顾客资料",
+    "risk": "P2"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/me",
+    "auth": "customer",
+    "summary": "当前顾客资料",
+    "token": "admin",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/me",
+    "auth": "customer",
+    "summary": "当前顾客资料",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/me",
+    "auth": "customer",
+    "summary": "当前顾客资料",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/me",
+    "auth": "customer",
+    "summary": "当前顾客资料",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "PUT",
+    "path": "/api/me",
+    "auth": "customer",
+    "summary": "更新资料",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "PUT",
+    "path": "/api/me",
+    "auth": "customer",
+    "summary": "更新资料",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "malformed_json",
+    "title": "异常-畸形 JSON 请求体",
+    "method": "POST",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "expect": "400",
+    "risk": "P0"
+  },
+  {
+    "check": "empty_body",
+    "title": "异常-空请求体",
+    "method": "POST",
+    "path": "/api/orders",
+    "auth": "customer",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/orders/{id}",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/orders/{id}",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/api/orders/{id}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/api/orders/{id}",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/api/orders/{id}",
+    "auth": "customer",
+    "summary": "",
+    "sibling": "/api/orders",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/orders/{id}/cancel",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/orders/{id}/cancel",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "POST",
+    "path": "/api/orders/{id}/cancel",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/orders/{id}/confirm",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/orders/{id}/confirm",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "POST",
+    "path": "/api/orders/{id}/confirm",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/orders/{id}/logistics",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/orders/{id}/logistics",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/api/orders/{id}/logistics",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/api/orders/{id}/logistics",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/api/orders/{id}/logistics",
+    "auth": "customer",
+    "summary": "",
+    "sibling": "/api/orders",
+    "id_key": "id",
+    "expect": "2xx",
+    "risk": "P1"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/payment/sandbox",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/payment/sandbox",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "GET",
+    "path": "/api/payment/{orderId}/status",
+    "auth": "customer",
+    "summary": "",
+    "risk": "P1"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "GET",
+    "path": "/api/payment/{orderId}/status",
+    "auth": "customer",
+    "summary": "",
+    "token": "admin",
+    "risk": "P1"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/api/payment/{orderId}/status",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/api/payment/{orderId}/status",
+    "auth": "customer",
+    "summary": "",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P1"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/products",
+    "auth": "none",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/products",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/products",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/api/products/{spuId}",
+    "auth": "none",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/api/products/{spuId}",
+    "auth": "none",
+    "summary": "",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/api/products/{spuId}",
+    "auth": "none",
+    "summary": "",
+    "sibling": "/api/products",
+    "id_key": "spuId",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "path_param_type",
+    "title": "逆向-路径参数类型错误",
+    "method": "GET",
+    "path": "/api/products/{spuId}/reviews",
+    "auth": "none",
+    "summary": "",
+    "path_params": "abc",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "detail_not_found",
+    "title": "逆向-资源不存在",
+    "method": "GET",
+    "path": "/api/products/{spuId}/reviews",
+    "auth": "none",
+    "summary": "",
+    "path_params": "999999999",
+    "expect": "4xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_detail",
+    "title": "功能正向-列表取 ID 后查详情",
+    "method": "GET",
+    "path": "/api/products/{spuId}/reviews",
+    "auth": "none",
+    "summary": "",
+    "sibling": "/api/products",
+    "id_key": "spuId",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "security_anonymous",
+    "title": "安全-匿名访问被拒",
+    "method": "POST",
+    "path": "/api/reviews",
+    "auth": "customer",
+    "summary": "发表评价",
+    "risk": "P0"
+  },
+  {
+    "check": "security_role",
+    "title": "安全-管理端 token 越权 C 端被拒",
+    "method": "POST",
+    "path": "/api/reviews",
+    "auth": "customer",
+    "summary": "发表评价",
+    "token": "admin",
+    "risk": "P0"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/search",
+    "auth": "none",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/search",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/search",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "list_boundary",
+    "title": "边界-分页零值/负值/超大值",
+    "method": "GET",
+    "path": "/api/site/brand",
+    "auth": "none",
+    "summary": "",
+    "expect": "not_5xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_list",
+    "title": "功能正向-列表成功返回",
+    "method": "GET",
+    "path": "/api/site/brand",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "bulk_page",
+    "title": "大数据量-size=100 大分页",
+    "method": "GET",
+    "path": "/api/site/brand",
+    "auth": "none",
+    "summary": "",
+    "expect": "2xx",
+    "risk": "P2"
+  },
+  {
+    "check": "positive_login",
+    "title": "功能正向-正确凭证登录成功",
+    "method": "POST",
+    "path": "/admin/auth/login",
+    "auth": "none",
+    "summary": "登录",
+    "expect": "2xx",
+    "risk": "P0"
+  },
+  {
+    "check": "positive_login",
+    "title": "功能正向-正确凭证登录成功",
+    "method": "POST",
+    "path": "/api/auth/login",
+    "auth": "none",
+    "summary": "登录",
+    "expect": "2xx",
+    "risk": "P0"
+  }
+]

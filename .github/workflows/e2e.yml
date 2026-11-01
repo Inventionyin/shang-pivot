@@ -1,0 +1,146 @@
+name: e2e
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: shang
+          POSTGRES_USER: shang
+          POSTGRES_PASSWORD: shang
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U shang -d shang"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    env:
+      DB_URL: jdbc:postgresql://127.0.0.1:5432/shang?sslmode=disable&stringtype=unspecified&connectTimeout=5&socketTimeout=30&tcpKeepAlive=true
+      DB_USERNAME: shang
+      DB_PASSWORD: shang
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+      SERVER_PORT: 8086
+      MANAGEMENT_PORT: 8087
+      MINIO_ENDPOINT: 127.0.0.1:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET_NAME: shang-pivot
+      JWT_SECRET: shang-pivot-ci-jwt-secret-32bytes-minimum!!
+      SHANG_CORS_ALLOWED_ORIGINS: http://127.0.0.1:5173,http://127.0.0.1:5174
+      SHANG_API_BASE_URL: http://127.0.0.1:8086
+      SHANG_MALL_BASE_URL: http://127.0.0.1:5174
+      SHANG_ADMIN_BASE_URL: http://127.0.0.1:5173
+      SHANG_UI_HEADLESS: "true"
+      CI: "true"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            shang-mall/package-lock.json
+            shang-admin-web/package-lock.json
+
+      - name: 构建后端
+        run: mvn -q -DskipTests -f backend/pom.xml -pl shang-server -am package
+
+      - name: 启动后端
+        run: |
+          nohup java -jar backend/shang-server/target/shang-server-0.0.1-SNAPSHOT.jar \
+            > /tmp/backend.log 2>&1 &
+          for i in $(seq 1 120); do
+            if curl -fsS http://127.0.0.1:8086/api/home >/dev/null 2>&1; then
+              echo "backend ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "backend failed"; tail -100 /tmp/backend.log; exit 1
+
+      - name: 安装前端依赖
+        run: |
+          (cd shang-mall && npm ci --no-audit --no-fund || npm install --no-audit --no-fund)
+          (cd shang-admin-web && npm ci --no-audit --no-fund || npm install --no-audit --no-fund)
+
+      - name: 启动前端
+        run: |
+          (cd shang-mall && nohup npm run dev -- --host 127.0.0.1 --port 5174 > /tmp/mall.log 2>&1 &)
+          (cd shang-admin-web && nohup npm run dev -- --host 127.0.0.1 --port 5173 > /tmp/admin.log 2>&1 &)
+          for i in $(seq 1 90); do
+            if curl -fsS http://127.0.0.1:5174/ >/dev/null 2>&1 \
+              && curl -fsS http://127.0.0.1:5173/ >/dev/null 2>&1; then
+              echo "frontends ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "frontends failed"; tail -50 /tmp/mall.log /tmp/admin.log; exit 1
+
+      - name: 安装 Playwright Chromium
+        working-directory: automation
+        run: mvn -q exec:java -Dexec.args="install --with-deps chromium"
+
+      - name: 执行全量测试
+        working-directory: automation
+        run: mvn clean test
+
+      - name: 安装 Allure CLI
+        if: always()
+        run: |
+          curl -fsSLo /tmp/allure.zip https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.34.1/allure-commandline-2.34.1.zip
+          unzip -q /tmp/allure.zip -d /tmp/allure
+          echo "/tmp/allure/allure-2.34.1/bin" >> "$GITHUB_PATH"
+
+      - name: 生成 Allure 报告
+        if: always()
+        working-directory: automation
+        run: |
+          if [ -d target/allure-results ]; then
+            allure generate target/allure-results -o artifacts/allure-report --clean
+          fi
+
+      - name: 上传测试产物
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts-${{ github.run_id }}
+          retention-days: 14
+          path: |
+            automation/artifacts
+            automation/target/allure-results
+            automation/target/cucumber-report.html
+            automation/target/automation.log
+          if-no-files-found: warn

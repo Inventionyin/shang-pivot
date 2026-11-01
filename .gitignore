@@ -1,0 +1,83 @@
+# ============================================================
+# shang-pivot 仓库根忽略规则
+# 子项目另有各自的 .gitignore：backend/、shang-admin-web/、shang-mall/
+# 本文件只负责仓库级通用规则与跨项目产物
+# ============================================================
+
+# ---------- 操作系统 ----------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+
+# ---------- 编辑器 / IDE ----------
+.idea/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+
+# ---------- 依赖 ----------
+node_modules/
+bower_components/
+jspm_packages/
+
+# ---------- 构建产物 ----------
+dist/
+dist-ssr/
+build/
+out/
+target/
+*.tsbuildinfo
+.eslintcache
+.vite/
+
+# ---------- 测试 / 覆盖率 ----------
+coverage/
+.nyc_output/
+lcov-report/
+__screenshots__/
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
+# ---------- 日志与临时文件 ----------
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+*.pid
+*.local
+
+# ---------- 环境变量：含数据库/JWT/MinIO/LLM 密钥，切勿提交 ----------
+# 模板文件 .env.example 必须保留，供他人复制出本地 .env
+.env
+.env.*
+!.env.example
+
+# ---------- 本地 issue tracker ----------
+# AGENT.md 约定：.scratch/<feature>/ 仅存本地 markdown，不进 git
+.scratch/
+
+# ---------- 智能体工具链 ----------
+# .agents/ 是团队全局 skills 的本地副本，与项目源码无关；
+# 若希望随仓库共享技能定义，删掉下面这行即可
+.agents/
+# 可观测平台的运行记录（告警日志等）
+observability/records/
+
+.zcode/
+# ---------- 测试运行产物（保留 README 与人工整理的 defects 报告） ----------
+api_testcases/artifacts/**
+!api_testcases/artifacts/README.md

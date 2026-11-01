@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>出入库单 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='stock-io'; window.__NAV_VERSION__='v2'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">商品中心 / <b>出入库单</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content list-page">
+      <div class="page-head">
+        <div>
+          <div class="page-title">出入库单</div>
+          <div class="page-sub">采购入库 / 盘点调整 / 销售出库三本流水 · 订单发货自动生成出库单并关联订单号 · 每次库存变动可追溯</div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-secondary" data-modal-open="dlg-io-stocktake">盘点调整</button>
+          <button class="btn btn-primary" data-modal-open="dlg-io-in">+ 新建入库</button>
+        </div>
+      </div>
+
+      <div class="card card-pad list-card">
+        <div class="tabs">
+          <div class="tab active">全部 <span class="c">8</span></div>
+          <div class="tab">采购入库 <span class="c">4</span></div>
+          <div class="tab">盘点调整 <span class="c">2</span></div>
+          <div class="tab">销售出库 <span class="c">2</span></div>
+        </div>
+        <div class="toolbar">
+          <input class="input" placeholder="单号 / SKU" style="min-width:200px">
+          <input class="input" placeholder="时间范围" style="width:200px">
+          <div class="spacer"></div>
+          <button class="btn btn-secondary btn-sm">重置</button>
+          <button class="btn btn-primary btn-sm">查询</button>
+        </div>
+
+        <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="code">单据号</th>
+              <th>类型</th>
+              <th>来源</th>
+              <th class="code">SKU</th>
+              <th>商品</th>
+              <th class="num">数量</th>
+              <th>操作人</th>
+              <th class="code">时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code">PI202609200002</td>
+              <td><span class="badge badge-forest">采购入库</span></td>
+              <td>后台新建</td>
+              <td class="code">10025</td>
+              <td>AirPods Pro 2 · 单规格</td>
+              <td class="num">+40</td>
+              <td>陈思远</td>
+              <td class="code">2026-09-23 02:10</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-io">详情</button></td>
+            </tr>
+            <tr>
+              <td class="code">SO202609200001</td>
+              <td><span class="badge badge-coral">销售出库</span></td>
+              <td>订单发货</td>
+              <td class="code">10013</td>
+              <td>MacBook Air 13 M3 16G · 16GB / 午夜色</td>
+              <td class="num">−1</td>
+              <td>陈思远</td>
+              <td class="code">2026-09-22 10:22</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-io">详情</button></td>
+            </tr>
+            <tr>
+              <td class="code">SO202609200001</td>
+              <td><span class="badge badge-coral">销售出库</span></td>
+              <td>订单发货</td>
+              <td class="code">10019</td>
+              <td>罗技 MX Master 3s · 单规格</td>
+              <td class="num">−1</td>
+              <td>陈思远</td>
+              <td class="code">2026-09-22 10:22</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-io">详情</button></td>
+            </tr>
+            <tr>
+              <td class="code">ST202609200001</td>
+              <td><span class="badge badge-amber">盘点调整</span></td>
+              <td>后台盘点</td>
+              <td class="code">10019</td>
+              <td>罗技 MX Master 3s · 单规格</td>
+              <td class="num">−2</td>
+              <td>陈思远</td>
+              <td class="code">2026-09-20 17:40</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-io">详情</button></td>
+            </tr>
+            <tr>
+              <td class="code">ST202609200001</td>
+              <td><span class="badge badge-amber">盘点调整</span></td>
+              <td>后台盘点</td>
+              <td class="code">10022</td>
+              <td>戴森 V12 吸尘器 · 单规格</td>
+              <td class="num">+3</td>
+              <td>陈思远</td>
+              <td class="code">2026-09-20 17:40</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-io">详情</button></td>
+            </tr>
+            <tr>
+              <td class="code">PI202609200001</td>
+              <td><span class="badge badge-forest">采购入库</span></td>
+              <td>后台新建</td>
+              <td class="code">10001</td>
+              <td>iPhone 15 Pro 128G · 128GB / 原色钛金属</td>
+              <td class="num">+50</td>
+              <td>陈思远</td>
+              <td class="code">2026-09-17 09:10</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-io">详情</button></td>
+            </tr>
+            <tr>
+              <td class="code">PI202609200001</td>
+              <td><span class="badge badge-forest">采购入库</span></td>
+              <td>后台新建</td>
+              <td class="code">10006</td>
+              <td>Xiaomi 14 Pro 12+256G · 12GB / 256GB / 黑色</td>
+              <td class="num">+30</td>
+              <td>陈思远</td>
+              <td class="code">2026-09-17 09:10</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-io">详情</button></td>
+            </tr>
+            <tr>
+              <td class="code">PI202609200001</td>
+              <td><span class="badge badge-forest">采购入库</span></td>
+              <td>后台新建</td>
+              <td class="code">10025</td>
+              <td>AirPods Pro 2 · 单规格</td>
+              <td class="num">+80</td>
+              <td>陈思远</td>
+              <td class="code">2026-09-17 09:10</td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="drw-io">详情</button></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="pager pager-fixed">
+          <span>共 8 条 · 每页 10 条</span>
+          <button class="btn btn-secondary btn-sm" disabled>‹</button>
+          <span class="badge badge-amber">1 / 1</span>
+          <button class="btn btn-secondary btn-sm">›</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 新建入库单 ============ -->
+<div class="modal" id="dlg-io-in" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-io-in-t">
+    <div class="modal-head">
+      <span class="modal-ico info">↓</span>
+      <div class="modal-title" id="dlg-io-in-t">新建入库单</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">SKU<span class="req">*</span></label>
+        <select class="select">
+          <option selected>10025 · AirPods Pro 2 · 单规格</option>
+          <option>10001 · iPhone 15 Pro 128G · 128GB / 原色钛金属</option>
+          <option>10006 · Xiaomi 14 Pro 12+256G · 12GB / 256GB / 黑色</option>
+          <option>10019 · 罗技 MX Master 3s · 单规格</option>
+          <option>10022 · 戴森 V12 吸尘器 · 单规格</option>
+        </select>
+        <span class="hint">按 SKU 入库，一次一单；同一单多 SKU 请分次录入</span>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">仓库</label>
+          <select class="select"><option selected>默认仓</option></select>
+          <span class="hint">当前仅一个仓库</span>
+        </div>
+        <div class="field">
+          <label class="label">入库数量<span class="req">*</span></label>
+          <input class="input num" value="40">
+          <span class="hint">必须为 <b>&gt; 0</b> 的整数</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">备注</label>
+        <input class="input" value="耳机配件补货">
+        <span class="hint">≤100 字符，随单据一并保存</span>
+      </div>
+      <div class="alert alert-info">
+        <div>保存后立即增加该 SKU 库存并生成<b>采购入库</b>流水，单据号形如 <span class="code">PIyyyyMMddNNNN</span>；单据生成后不可修改，录错请用「盘点调整」冲正。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认入库</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 盘点调整 ============ -->
+<div class="modal" id="dlg-io-stocktake" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-io-stocktake-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">±</span>
+      <div class="modal-title" id="dlg-io-stocktake-t">盘点调整</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">SKU<span class="req">*</span></label>
+        <select class="select">
+          <option selected>10019 · 罗技 MX Master 3s · 单规格</option>
+          <option>10001 · iPhone 15 Pro 128G · 128GB / 原色钛金属</option>
+          <option>10022 · 戴森 V12 吸尘器 · 单规格</option>
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">账面数量</label>
+          <input class="input num" value="200" readonly>
+          <span class="hint">取当前总库存，只读</span>
+        </div>
+        <div class="field">
+          <label class="label">实盘数量<span class="req">*</span></label>
+          <input class="input num" value="198">
+          <span class="hint">必须为 ≥ 0 的整数</span>
+        </div>
+        <div class="field">
+          <label class="label">数量差异</label>
+          <input class="input num" value="−2" readonly>
+          <span class="hint">实盘 − 账面，系统自动计算</span>
+        </div>
+        <div class="field">
+          <label class="label">差异原因<span class="req">*</span></label>
+          <select class="select">
+            <option selected>盘亏</option>
+            <option>盘盈</option>
+            <option>破损报废</option>
+          </select>
+        </div>
+      </div>
+      <div class="alert alert-warn">
+        <div>差异为负数（盘亏）会<b>减少总库存</b>；调整后若总库存小于锁定占用，本次调整将被拒绝。保存后生成 <span class="code">STyyyyMMddNNNN</span> 盘点单。</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认调整</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 单据详情抽屉 ============ -->
+<div class="drawer" id="drw-io" hidden>
+  <div class="modal-mask"></div>
+  <div class="drawer-panel" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div class="modal-title">单据详情</div>
+      <span class="badge badge-forest">采购入库</span>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body" style="flex:1">
+      <dl class="kv" style="grid-template-columns:110px 1fr;margin-bottom:18px">
+        <dt>类型</dt><dd>采购入库（PURCHASE_IN）</dd>
+        <dt>单据号</dt><dd class="code">PI202609200001</dd>
+        <dt>来源</dt><dd>后台新建</dd>
+        <dt>SKU</dt><dd class="code">10001 · 10006 · 10025</dd>
+        <dt>数量合计</dt><dd class="num" style="font-weight:700">+160</dd>
+        <dt>关联订单号</dt><dd class="hint">—（销售出库单才有）</dd>
+        <dt>操作人</dt><dd>陈思远（admin）</dd>
+        <dt>时间</dt><dd class="code">2026-09-17 09:10:22</dd>
+        <dt>备注</dt><dd>秋季补货入库</dd>
+      </dl>
+
+      <div class="page-title" style="font-size:13px;margin-bottom:10px">单据明细</div>
+      <table class="table" style="margin-bottom:18px">
+        <thead><tr><th class="code">SKU</th><th>商品</th><th class="num">数量</th><th>行备注</th></tr></thead>
+        <tbody>
+          <tr><td class="code">10001</td><td>iPhone 15 Pro 128G · 128GB / 原色钛金属</td><td class="num">+50</td><td>iPhone 补货</td></tr>
+          <tr><td class="code">10006</td><td>Xiaomi 14 Pro 12+256G · 12GB / 256GB / 黑色</td><td class="num">+30</td><td>小米补货</td></tr>
+          <tr><td class="code">10025</td><td>AirPods Pro 2 · 单规格</td><td class="num">+80</td><td>AirPods 补货</td></tr>
+        </tbody>
+      </table>
+
+      <div class="page-title" style="font-size:13px;margin-bottom:10px">来源说明</div>
+      <div class="timeline">
+        <div class="tl-item done"><div class="tl-time">2026-09-17 09:10</div><div class="tl-label">后台「新建入库」提交 · 生成采购入库单</div></div>
+        <div class="tl-item done"><div class="tl-time">2026-09-17 09:10</div><div class="tl-label">库存增加 +160，写入操作日志</div></div>
+      </div>
+
+      <details style="margin-top:18px">
+        <summary class="hint" style="cursor:pointer">原始数据（JSON 调试视图）</summary>
+        <pre class="code" style="background:var(--sand);padding:12px;border-radius:var(--r-md);font-size:12px;overflow:auto;margin-top:8px">{
+  "billNo": "PI202609200001",
+  "type": "PURCHASE_IN",
+  "warehouseId": 1,
+  "operatorId": 1,
+  "source": "ADMIN",
+  "relatedOrderNo": null,
+  "items": [
+    { "skuId": 10001, "qty": 50 },
+    { "skuId": 10006, "qty": 30 },
+    { "skuId": 10025, "qty": 80 }
+  ]
+}</pre>
+      </details>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>关闭</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

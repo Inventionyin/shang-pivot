@@ -1,0 +1,112 @@
+# 本地一键起基础设施（PostgreSQL+pgvector / Redis / MinIO）与应用。
+# 自动读取同目录 backend/.env；未提供则用 ${VAR:-默认} 兜底。
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: shang-postgres
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-shang}
+      POSTGRES_USER: ${DB_USERNAME:-shang}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-shang}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-shang} -d ${DB_DATABASE:-shang}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: shang-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: shang-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  minio:
+    image: minio/minio:latest
+    container_name: shang-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - miniodata:/data
+    # 官方镜像无 curl；就绪由 minio-init 重试保证
+
+  # 创建公开/私有桶；重试等待 MinIO 就绪
+  minio-init:
+    image: minio/mc:latest
+    container_name: shang-minio-init
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      for i in 1 2 3 4 5 6 7 8 9 10; do
+        mc alias set local http://minio:9000 \"$$MINIO_ROOT_USER\" \"$$MINIO_ROOT_PASSWORD\" && break;
+        echo waiting for minio...; sleep 2;
+      done;
+      mc mb -p local/luoshu-rag || true;
+      mc anonymous set download local/luoshu-rag;
+      echo 'MinIO buckets ready';
+      "
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    restart: "no"
+
+  # TODO: 后端应用打包后启用（当前为脚手架，尚无 Dockerfile）。
+  # 启动 app: docker compose --profile app up
+  app:
+    image: shang-server:latest
+    # build: .
+    profiles: ["app"]
+    environment:
+      SERVER_PORT: ${SERVER_PORT:-8080}
+      DB_URL: jdbc:postgresql://postgres:5432/${DB_DATABASE:-shang}
+      DB_USERNAME: ${DB_USERNAME:-shang}
+      DB_PASSWORD: ${DB_PASSWORD:-shang}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME:-luoshu-rag}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      minio-init:
+        condition: service_completed_successfully
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+
+volumes:
+  pgdata:
+  miniodata:

@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>尚品汇 · Web 弹窗图鉴</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../web.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body>
+<!-- 图鉴页不带顶栏 / 页脚，只保留轻量页框，便于截图归档 -->
+<div class="spec-page">
+  <h1>尚品汇 · Web 弹窗图鉴</h1>
+  <p class="lead">V2.0 C 端 Web 全部弹窗，按内联方式铺开，便于逐条截图归档。弹窗实现在 <code>../modal.css</code> + <code>../modal.js</code>。</p>
+  <div class="legend">
+    <span>尺寸：is-sm 380 / is-md 460 / is-lg 640</span>
+    <span>关闭：ESC · 点遮罩 · 关闭按钮</span>
+    <span>命名：L/PD/CT/CO/RD/AD/TS 分组编号</span>
+  </div>
+
+  <div class="spec-sec-title">A · 账号与登录（web/login.html）<span class="hint">4 条</span></div>
+  <div class="spec-grid cols-2">
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">L-01</span>登录层</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-head">
+              <span class="modal-title">登录尚品汇</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p class="muted">登录后才能加入购物车、下单与查看个人中心，登录成功后会回到刚才的页面。</p>
+              <div class="field mt-16">
+                <span class="field-label">手机号<span class="req">*</span></span>
+                <input class="input" placeholder="请输入 11 位手机号" maxlength="11">
+              </div>
+              <div class="field">
+                <span class="field-label">验证码<span class="req">*</span></span>
+                <div style="display:flex;gap:8px">
+                  <input class="input" placeholder="6 位验证码" maxlength="6" style="flex:1">
+                  <button class="btn btn-secondary" type="button" style="white-space:nowrap">获取验证码</button>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>未登录时点「加入购物车 / 立即购买 / 结算 / 个人中心」；首页与购物车为游客可浏览，不弹。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">L-02</span>验证码错误态</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+              <span class="modal-title">验证码错误</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="field">
+                <span class="field-label">验证码<span class="req">*</span></span>
+                <input class="input is-err" value="000000" maxlength="6">
+                <span class="error-text">验证码错误，请重新输入</span>
+              </div>
+              <p class="hint">演示环境验证码固定为 123456；连续输错可重新获取。</p>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">关闭</button>
+              <button type="button" class="btn btn-primary">重新登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>登录时输入非 123456 的 6 位验证码，或在 login.html 点「登录」演示。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">L-03</span>未注册手机号自动注册提示</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-center">
+              <div class="modal-ico ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
+              <div class="t">该手机号未注册</div>
+              <div class="d">验证码校验通过后将自动注册为尚品汇会员，无需单独注册流程。</div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">换个号码</button>
+              <button type="button" class="btn btn-primary">继续登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>login.html 点「自动注册提示」；真实流程中为手机号未注册时自动注册。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">L-04</span>退出登录确认</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-center">
+              <div class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><path d="M15 4h3a2 2 0 012 2v12a2 2 0 01-2 2h-3"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/></svg></div>
+              <div class="t">退出登录？</div>
+              <div class="d">退出后需重新用手机号验证码登录，本端登录态会被清除。</div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-danger">退出登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>web/profile.html 侧栏「退出登录」或账号区「退出登录」。</div>
+    </div>
+  </div>
+
+  <div class="spec-sec-title">B · 商品详情（web/product.html）<span class="hint">6 条</span></div>
+  <div class="spec-grid cols-2">
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">PD-01</span>规格选择层</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-head">
+              <span class="modal-title">选择规格</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="dlg-goods">
+                <div class="ph ph-phone"><span>iP</span></div>
+                <div class="meta">
+                  <div class="t">iPhone 15 Pro 128G</div>
+                  <div class="s">已选：128GB · 原色钛金属</div>
+                  <div class="price" style="font-size:18px;margin-top:4px">¥7,999</div>
+                </div>
+              </div>
+              <hr class="divider">
+              <div class="field">
+                <span class="field-label">容量<span class="req">*</span></span>
+                <div class="sku-row">
+                  <span class="chip active">128GB</span>
+                  <span class="chip" style="color:var(--slate);text-decoration:line-through">256GB 缺货</span>
+                  <span class="chip">512GB · ¥10,999</span>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label">颜色<span class="req">*</span></span>
+                <div class="sku-row">
+                  <span class="chip active">原色钛金属</span>
+                  <span class="chip">白色钛金属</span>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label">数量</span>
+                <div class="flex-between">
+                  <div class="qty"><button type="button">−</button><span>1</span><button type="button">+</button></div>
+                  <span class="hint">库存 12 件可售</span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">加入购物车</button>
+              <button type="button" class="btn btn-primary">立即购买</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>点详情页任意规格 chip、数量步进器，或点「加入购物车」后的「去选择规格」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">PD-02</span>未选规格提示</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-center">
+              <div class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></div>
+              <div class="t">请选择规格</div>
+              <div class="d">该商品有容量与颜色两组规格，选好后才能加入购物车或立即购买。</div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">去选择规格</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>详情页未选规格直接点「加入购物车」或「立即购买」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">PD-03</span>库存不足提示</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-center">
+              <div class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></div>
+              <div class="t">库存不足</div>
+              <div class="d">该规格当前可售 12 件，数量已停在最大可售数。</div>
+            </div>
+            <div class="modal-foot"><button type="button" class="btn btn-primary">知道了</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>规格层或购物车把数量加到可售上限后继续点「+」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">PD-04</span>缺货态（暂时缺货）</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/></svg></span>
+              <span class="modal-title">256GB 暂时缺货</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p>该规格可售库存为 0，商品仍可浏览，但「加入购物车」「立即购买」按钮显示为「暂时缺货」且不可点击。</p>
+              <div class="alert alert-info mt-12"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>可切换到 128GB / 512GB 规格下单。</div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">返回</button>
+              <button type="button" class="btn is-disabled" disabled>暂时缺货</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>详情页点「256GB · 缺货」chip；库存为 0 的 SPU 直接进入此态。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">PD-05</span>加入购物车成功</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-ico ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span>
+              <span class="modal-title">已加入购物车</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="dlg-goods">
+                <div class="ph ph-phone"><span>iP</span></div>
+                <div class="meta">
+                  <div class="t">iPhone 15 Pro 128G</div>
+                  <div class="s">128GB · 原色钛金属 × 1</div>
+                </div>
+                <div class="price">¥7,999</div>
+              </div>
+              <div class="kv-list mt-16">
+                <div class="kv"><span class="k">购物车商品</span><span class="v num">3 件</span></div>
+                <div class="kv"><span class="k">商品金额</span><span class="v num">¥10,687</span></div>
+                <div class="kv"><span class="k">运费</span><span class="v">免运费（满 99 元）</span></div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">继续逛逛</button>
+              <button type="button" class="btn btn-primary">去购物车结算</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>规格层选好规格后点「加入购物车」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">PD-06</span>立即购买确认</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-title">确认下单信息</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="kv-list">
+                <div class="kv"><span class="k">商品</span><span class="v">iPhone 15 Pro 128G</span></div>
+                <div class="kv"><span class="k">规格</span><span class="v">128GB · 原色钛金属</span></div>
+                <div class="kv"><span class="k">数量</span><span class="v num">1</span></div>
+                <div class="kv"><span class="k">商品金额</span><span class="v num">¥7,999</span></div>
+                <div class="kv"><span class="k">运费</span><span class="v">免运费</span></div>
+                <div class="kv"><span class="k">应付</span><span class="v num" style="color:var(--coral)">¥7,999</span></div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">再想想</button>
+              <button type="button" class="btn btn-primary">去确认订单</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>规格层选好规格后点「立即购买」。</div>
+    </div>
+  </div>
+
+  <div class="spec-sec-title">C · 购物车（web/cart.html）<span class="hint">4 条</span></div>
+  <div class="spec-grid cols-2">
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CT-01</span>删除商品确认</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 14h10l1-14"/></svg></span>
+              <span class="modal-title">删除选中商品？</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="dlg-goods">
+                <div class="ph ph-acc"><span>索尼</span></div>
+                <div class="meta">
+                  <div class="t">索尼 WH-1000XM5</div>
+                  <div class="s">官方标配 × 1</div>
+                </div>
+                <div class="price">¥2,599</div>
+              </div>
+              <div class="alert alert-warn mt-16">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+                删除后该商品不再保留在购物车，需要时可在商品详情页重新加入。
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-danger">确认删除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>购物车工具条「删除」或条目右侧「删除」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CT-02</span>清理失效商品确认</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+              <span class="modal-title">清理失效商品？</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p class="muted">以下商品已下架或库存为 0，清理后不再显示在购物车。</p>
+              <div class="dlg-goods mt-12">
+                <div class="ph ph-sport" style="filter:grayscale(.7)"><span>帐篷</span></div>
+                <div class="meta">
+                  <div class="t">双人帐篷 防雨款</div>
+                  <div class="s">已下架 × 1</div>
+                </div>
+              </div>
+              <div class="kv-list mt-16">
+                <div class="kv"><span class="k">失效商品</span><span class="v num">1 件</span></div>
+                <div class="kv"><span class="k">有效商品</span><span class="v num">2 件（不受影响）</span></div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">确认清理</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>「失效商品」分组右上角「清理失效商品」或失效条目「清理失效」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CT-03</span>库存不足提示</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-center">
+              <div class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></div>
+              <div class="t">库存不足</div>
+              <div class="d">索尼 WH-1000XM5 当前可售 8 件，数量已停在最大可售数。</div>
+            </div>
+            <div class="modal-foot"><button type="button" class="btn btn-primary">知道了</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>购物车条目数量步进器加到可售上限后继续点「+」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CT-04</span>空购物车空状态</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-title">购物车</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="empty">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h12L22 7H6"/></svg>
+                <div class="t">购物车还是空的</div>
+                <div class="d">去挑几件好物，满 99 元免运费。</div>
+                <button type="button" class="btn btn-primary">去逛逛</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>购物车无有效商品时直接展示。</div>
+    </div>
+  </div>
+
+  <div class="spec-sec-title">D · 确认订单与支付（web/checkout.html）<span class="hint">11 条</span></div>
+  <div class="spec-grid cols-2">
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CO-01</span>提交订单确认</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-head">
+              <span class="modal-title">确认提交订单</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="kv-list">
+                <div class="kv"><span class="k">收货人</span><span class="v">张三 · 138****0000</span></div>
+                <div class="kv"><span class="k">收货地址</span><span class="v">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</span></div>
+                <div class="kv"><span class="k">商品</span><span class="v">索尼 WH-1000XM5 等 2 件</span></div>
+                <div class="kv"><span class="k">商品金额</span><span class="v num">¥2,688</span></div>
+                <div class="kv"><span class="k">运费</span><span class="v">免运费</span></div>
+                <div class="kv"><span class="k">应付</span><span class="v num" style="color:var(--coral)">¥2,688</span></div>
+              </div>
+              <div class="alert alert-info mt-16">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>
+                提交后生成待付款订单并锁定库存，15 分钟内未支付将自动关闭并释放库存。
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">再看看</button>
+              <button type="button" class="btn btn-primary">确认提交</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>确认订单页点「提交订单」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CO-02</span>提交时库存不足</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+              <span class="modal-title">提交失败 · 库存不足</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p>提交时校验库存，以下商品可售库存不足，订单未生成：</p>
+              <div class="dlg-goods mt-12">
+                <div class="ph ph-acc"><span>索尼</span></div>
+                <div class="meta">
+                  <div class="t">索尼 WH-1000XM5</div>
+                  <div class="s">官方标配 × 8</div>
+                  <div class="error-text mt-12">仅剩 5 件可售</div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">返回修改</button>
+              <button type="button" class="btn btn-primary">去购物车调整</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>提交订单时库存被其他订单抢占；订单不生成，停留在确认订单页。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CO-03</span>切换收货地址</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-head">
+              <span class="modal-title">选择收货地址</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <label class="card" style="padding:14px;display:flex;gap:10px;margin-bottom:10px;border-color:var(--amber)">
+                <input type="radio" name="spec-addr" checked style="margin-top:4px">
+                <div>
+                  <div style="font-weight:600">张三 · 138****0000 <span class="badge badge-coral" style="margin-left:6px">默认</span></div>
+                  <div class="hint mt-12">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</div>
+                </div>
+              </label>
+              <label class="card" style="padding:14px;display:flex;gap:10px">
+                <input type="radio" name="spec-addr" style="margin-top:4px">
+                <div>
+                  <div style="font-weight:600">李四 · 139****0001</div>
+                  <div class="hint mt-12">北京市 海淀区 中关村大街 1 号 A 座 903</div>
+                </div>
+              </label>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">使用该地址</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>确认订单页收货地址区「切换地址」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CO-04</span>无地址时引导新增</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-center">
+              <div class="modal-ico info"><svg class="ico" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="11" r="2.5"/></svg></div>
+              <div class="t">还没有收货地址</div>
+              <div class="d">下单前需要先添加一条收货地址，填好后可设为默认地址。</div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">稍后再说</button>
+              <button type="button" class="btn btn-primary">新增收货地址</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>会员没有任何收货地址时点「提交订单」；也可从地址列表连到本层。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">AD-01</span>新增收货地址表单</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-head">
+              <span class="modal-title">新增收货地址</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-grid">
+                <div class="field">
+                  <span class="field-label">收货人<span class="req">*</span></span>
+                  <input class="input" placeholder="请输入收货人姓名" maxlength="25">
+                  <span class="hint">1～25 字符</span>
+                </div>
+                <div class="field">
+                  <span class="field-label">手机号<span class="req">*</span></span>
+                  <input class="input" placeholder="请输入 11 位手机号" maxlength="11">
+                  <span class="hint">11 位数字，1 开头</span>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label">所在地区<span class="req">*</span></span>
+                <div class="form-grid" style="gap:0 10px">
+                  <select class="select"><option>省 / 直辖市</option></select>
+                  <select class="select"><option>市 / 区</option></select>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label">详细地址<span class="req">*</span></span>
+                <input class="input" placeholder="街道、门牌号、楼层等" maxlength="100">
+                <span class="hint">1～100 字符</span>
+              </div>
+              <div class="field">
+                <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox"> 设为默认地址</label>
+                <span class="hint">默认地址仅一个，设置新默认自动取消旧默认</span>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">保存地址</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>确认订单页「新增地址」、个人中心「+ 新增收货地址」、无地址引导「新增收货地址」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">AD-02</span>编辑收货地址（校验错误态）</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-head">
+              <span class="modal-title">编辑收货地址</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-grid">
+                <div class="field">
+                  <span class="field-label">收货人<span class="req">*</span></span>
+                  <input class="input" value="张三" maxlength="25">
+                </div>
+                <div class="field">
+                  <span class="field-label">手机号<span class="req">*</span></span>
+                  <input class="input is-err" value="1380000" maxlength="11">
+                  <span class="error-text">手机号格式不正确</span>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label">所在地区<span class="req">*</span></span>
+                <div class="form-grid" style="gap:0 10px">
+                  <select class="select"><option selected>上海市</option></select>
+                  <select class="select"><option selected>浦东新区</option></select>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label">详细地址<span class="req">*</span></span>
+                <input class="input" value="张江路 88 号 尚品汇大楼 12F" maxlength="100">
+              </div>
+              <div class="field">
+                <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" checked> 设为默认地址</label>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">保存修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>web/profile.html 收货地址「编辑」；手机号非 11 位时给出「手机号格式不正确」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">AD-03</span>删除地址确认</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-ico danger"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 14h10l1-14"/></svg></span>
+              <span class="modal-title">删除该地址？</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p style="font-weight:600">张三 · 138****0000</p>
+              <p class="muted">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</p>
+              <div class="alert alert-warn mt-12">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+                删除后不可恢复；已被待付款订单引用的地址快照不受影响。
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-danger">确认删除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>web/profile.html 收货地址「删除」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CO-05</span>支付中（loading）</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-pay">
+            <div class="modal-head">
+              <span class="modal-title">收银台</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="pay-spin"></div>
+              <div style="font-weight:600;margin-bottom:6px">支付中…</div>
+              <div class="pay-amount">¥2,688</div>
+              <p class="hint mt-12">沙箱支付（模拟），约 1 秒返回结果</p>
+            </div>
+            <div class="modal-foot">
+              <div class="foot-left">
+                <button type="button" class="btn btn-secondary">取消支付</button>
+                <button type="button" class="btn btn-secondary">模拟支付失败</button>
+                <button type="button" class="btn btn-primary">模拟支付成功</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>提交订单确认后自动进入支付中；剩余支付时间由待付款订单 15 分钟倒计时控制。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CO-06</span>支付成功</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-pay">
+            <div class="modal-head">
+              <span class="modal-title">收银台</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="pay-state ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
+              <div style="font-weight:700;font-size:16px;margin-bottom:6px">支付成功</div>
+              <div class="muted">订单号 202609140001 · 待发货</div>
+              <p class="hint mt-12">商家将尽快为你发货，发货后可查看物流轨迹</p>
+            </div>
+            <div class="modal-foot">
+              <div class="foot-left">
+                <button type="button" class="btn btn-secondary">返回首页</button>
+                <button type="button" class="btn btn-primary">查看支付结果</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>支付中约 1 秒后成功；订单由待付款变为待发货。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CO-07</span>支付失败（可重试）</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-pay">
+            <div class="modal-head">
+              <span class="modal-title">收银台</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="pay-state err"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></div>
+              <div style="font-weight:700;font-size:16px;margin-bottom:6px">支付失败</div>
+              <div class="muted">订单仍为待付款，可重新支付</div>
+              <p class="hint mt-12">剩余支付时间 12:48，超时订单将自动关闭并释放库存</p>
+            </div>
+            <div class="modal-foot">
+              <div class="foot-left">
+                <button type="button" class="btn btn-secondary">稍后支付</button>
+                <button type="button" class="btn btn-primary">重试支付</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>支付返回失败；订单保持待付款，可在订单列表「去支付」重试。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">CO-08</span>支付结果页</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-body">
+              <div class="pay-state ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
+              <div style="text-align:center;font-weight:700;font-size:17px;margin-bottom:4px">支付成功</div>
+              <div class="hint" style="text-align:center;margin-bottom:16px">订单已进入待发货，商家将尽快发货</div>
+              <div class="kv-list">
+                <div class="kv"><span class="k">订单号</span><span class="v num">202609140001</span></div>
+                <div class="kv"><span class="k">支付金额</span><span class="v num" style="color:var(--coral)">¥2,688</span></div>
+                <div class="kv"><span class="k">支付方式</span><span class="v">沙箱支付（模拟）</span></div>
+                <div class="kv"><span class="k">订单状态</span><span class="v">待发货</span></div>
+                <div class="kv"><span class="k">收货人</span><span class="v">张三 · 138****0000</span></div>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">返回首页</button>
+              <button type="button" class="btn btn-primary">查看订单</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>支付成功层点「查看支付结果」。</div>
+    </div>
+  </div>
+
+  <div class="spec-sec-title">E · 订单与售后（web/orders.html）<span class="hint">7 条</span></div>
+  <div class="spec-grid cols-2">
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">RD-01</span>取消订单确认</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+              <span class="modal-title">取消订单？</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p>订单号 <span style="font-family:var(--font-mono)">202609140001</span>，应付 ¥2,688。</p>
+              <div class="alert alert-warn mt-12">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+                取消后订单关闭并释放已锁定库存，需要时请重新下单。
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">再想想</button>
+              <button type="button" class="btn btn-danger">确认取消</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>订单列表待付款订单「取消订单」；只有待付款可取消。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">RD-02</span>确认收货</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-title">确认收货</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="dlg-goods">
+                <div class="ph ph-phone"><span>iP</span></div>
+                <div class="meta">
+                  <div class="t">iPhone 15 Pro 128G</div>
+                  <div class="s">512GB · 白色钛金属 × 1</div>
+                </div>
+              </div>
+              <div class="alert alert-info mt-16">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>
+                请确认已收到商品。确认后订单变为已完成，可进行评价或申请售后。
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">还没收到</button>
+              <button type="button" class="btn btn-primary">确认收货</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>订单列表待收货订单「确认收货」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">RD-03</span>物流轨迹</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-head">
+              <span class="modal-title">物流轨迹</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="dlg-goods">
+                <div class="ph ph-phone"><span>iP</span></div>
+                <div class="meta">
+                  <div class="t">iPhone 15 Pro 128G</div>
+                  <div class="s">512GB · 白色钛金属 × 1</div>
+                </div>
+              </div>
+              <div class="kv-list mt-16">
+                <div class="kv"><span class="k">承运商</span><span class="v">顺丰速运</span></div>
+                <div class="kv"><span class="k">运单号</span><span class="v num">SF1234567890123</span></div>
+              </div>
+              <hr class="divider">
+              <ul class="timeline">
+                <li class="now">
+                  <div class="t">派送中</div>
+                  <div class="d">2026-09-13 09:20</div>
+                  <div class="x">快件已到达【上海浦东张江营业点】，快递员正在派送</div>
+                </li>
+                <li class="done">
+                  <div class="t">运输中</div>
+                  <div class="d">2026-09-12 21:05</div>
+                  <div class="x">快件已到达【上海转运中心】</div>
+                </li>
+                <li class="done">
+                  <div class="t">已发货</div>
+                  <div class="d">2026-09-11 18:40</div>
+                  <div class="x">商家已发货，顺丰速运已揽收</div>
+                </li>
+              </ul>
+            </div>
+            <div class="modal-foot"><button type="button" class="btn btn-primary">知道了</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>待收货订单「查看物流」；发货后可见运单号与轨迹节点。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">RD-04</span>售后申请（类型 / 原因 / 凭证 / 补充说明）</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-lg">
+            <div class="modal-head">
+              <span class="modal-title">申请售后</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="dlg-goods">
+                <div class="ph ph-acc"><span>AP</span></div>
+                <div class="meta">
+                  <div class="t">AirPods Pro 2</div>
+                  <div class="s">官方标配 × 1 · 实付 ¥1,999</div>
+                </div>
+              </div>
+              <hr class="divider">
+              <div class="field">
+                <span class="field-label">售后类型<span class="req">*</span></span>
+                <div class="sku-row">
+                  <span class="chip active">仅退款</span>
+                  <span class="chip">退货退款</span>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label">售后原因<span class="req">*</span></span>
+                <select class="select">
+                  <option selected>商品与描述不符</option>
+                  <option>商品破损 / 有瑕疵</option>
+                  <option>少件 / 发错货</option>
+                  <option>不想要了</option>
+                </select>
+              </div>
+              <div class="field">
+                <span class="field-label">凭证图片（选填，最多 3 张）</span>
+                <div class="upload-row">
+                  <div class="up-box is-done"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l4.5-4.5L12 16l3-3 6 6"/></svg><span>已上传</span><span class="del">删除</span></div>
+                  <div class="up-box"><svg class="ico" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg><span>上传凭证</span></div>
+                </div>
+                <span class="hint">jpeg / png / webp，单张 ≤10MB；凭证仅你与售后审核人员可见</span>
+              </div>
+              <div class="field">
+                <span class="field-label">补充说明（选填）</span>
+                <textarea class="input" maxlength="200" placeholder="请补充说明问题，最多 200 字"></textarea>
+                <span class="hint">0 / 200</span>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">提交申请</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>待收货 / 已完成订单「申请售后」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">RD-05</span>售后进度</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-md">
+            <div class="modal-head">
+              <span class="modal-title">售后进度</span>
+              <span class="badge badge-coral">待审核</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="kv-list">
+                <div class="kv"><span class="k">售后单号</span><span class="v num">AS202609140001</span></div>
+                <div class="kv"><span class="k">关联订单</span><span class="v num">202609010012</span></div>
+                <div class="kv"><span class="k">售后类型</span><span class="v">仅退款</span></div>
+                <div class="kv"><span class="k">退款金额</span><span class="v num" style="color:var(--coral)">¥1,999</span></div>
+              </div>
+              <hr class="divider">
+              <ul class="timeline">
+                <li class="now">
+                  <div class="t">待审核</div>
+                  <div class="d">2026-09-14 16:02</div>
+                  <div class="x">售后申请已提交，等待后台审核</div>
+                </li>
+                <li>
+                  <div class="t">退款中</div>
+                  <div class="d">—</div>
+                  <div class="x">审核通过后进入模拟退款</div>
+                </li>
+                <li>
+                  <div class="t">已完成</div>
+                  <div class="d">—</div>
+                  <div class="x">退款成功，售后单关闭</div>
+                </li>
+              </ul>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">关闭</button>
+              <button type="button" class="btn btn-primary">修改申诉</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>提交售后申请后自动展示；已完成订单「售后进度」。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">RD-06</span>评价表单（1~5 星 / ≤500 字 / ≤3 图）</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-lg">
+            <div class="modal-head">
+              <span class="modal-title">发表评价</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <div class="dlg-goods">
+                <div class="ph ph-acc"><span>AP</span></div>
+                <div class="meta">
+                  <div class="t">AirPods Pro 2</div>
+                  <div class="s">官方标配 × 1</div>
+                </div>
+              </div>
+              <hr class="divider">
+              <div class="field">
+                <span class="field-label">商品评分<span class="req">*</span></span>
+                <div class="star-row">
+                  <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+                  <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+                  <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+                  <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+                  <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+                  <span class="score">5 分</span>
+                </div>
+              </div>
+              <div class="field">
+                <span class="field-label">评价内容（选填）</span>
+                <textarea class="input" maxlength="500" placeholder="说说使用感受，最多 500 字">降噪很到位，通勤路上几乎听不到地铁噪音。</textarea>
+                <span class="hint">17 / 500</span>
+              </div>
+              <div class="field">
+                <span class="field-label">晒图（选填，最多 3 张）</span>
+                <div class="upload-row">
+                  <div class="up-box is-done"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l4.5-4.5L12 16l3-3 6 6"/></svg><span>已上传</span><span class="del">删除</span></div>
+                  <div class="up-box"><svg class="ico" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg><span>上传图片</span></div>
+                </div>
+                <span class="hint">jpeg / png，单张 ≤10MB</span>
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">提交评价</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>已完成订单「评价」；每个订单项一次，提交后不可修改。</div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-cap"><span class="id">RD-07</span>再次购买</div>
+      <div class="spec-stage">
+        <div class="modal is-inline">
+          <div class="modal-mask"></div>
+          <div class="modal-panel is-sm">
+            <div class="modal-head">
+              <span class="modal-title">再次购买</span>
+              <button type="button" class="modal-x"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="modal-body">
+              <p class="muted">按原订单商品重新加入购物车，失效商品不可加入。</p>
+              <div class="dlg-goods mt-12">
+                <div class="ph ph-storage"><span>收纳</span></div>
+                <div class="meta">
+                  <div class="t">抽屉式收纳盒</div>
+                  <div class="s">单规格 × 1 · ¥69</div>
+                </div>
+              </div>
+              <div class="alert alert-warn mt-16">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+                该订单中的「双人帐篷 防雨款」已下架，将不会加入购物车。
+              </div>
+            </div>
+            <div class="modal-foot">
+              <button type="button" class="btn btn-secondary">取消</button>
+              <button type="button" class="btn btn-primary">加入购物车</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>已完成 / 已关闭订单「再次购买」。</div>
+    </div>
+  </div>
+
+  <div class="spec-sec-title">F · 轻提示 Toast<span class="hint">1 条</span></div>
+  <div class="spec-grid cols-2">
+    <div class="spec">
+      <div class="spec-cap"><span class="id">TS-01</span>成功 / 失败 / 警告三种语气</div>
+      <div class="spec-stage" style="place-items:start stretch">
+        <div class="toast-stack" style="position:static;transform:none;align-items:flex-start;margin:0 auto">
+          <div class="toast ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>已加入购物车</div>
+          <div class="toast err"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>库存不足，数量已停在最大可售</div>
+          <div class="toast warn"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>请选择规格</div>
+        </div>
+      </div>
+      <div class="spec-trigger"><span class="k">怎么触发</span>加购成功用 ok；库存不足、验证码错误用 err；未选规格、缺货提醒用 warn。</div>
+    </div>
+  </div>
+
+  <p class="hint" style="margin-top:32px">对应实现：<code>../modal.css</code>（.modal / .modal-panel / .toast / .spec-grid）与 <code>../modal.js</code>（data-modal-open / data-modal-close / ESC / 遮罩点击 / 60 秒倒计时 / 支付三态）。</p>
+</div>
+<script src="../modal.js"></script>
+</body>
+</html>

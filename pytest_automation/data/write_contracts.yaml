@@ -1,0 +1,258 @@
+# 写接口 → DB 落库契约（请求字段 → 表列）
+# locate 说明：
+#   response_id      响应 data 就是新行主键
+#   response_field   响应 data[key] 是新行主键
+#   path_param       路径参数是新行主键（更新/删除）
+#   natural          用 natural_value 按列定位（订单/支付/发货）
+# generated 列只断言非空，不与请求字段比对。
+endpoints:
+  "POST /api/addresses":
+    table: commerce.address
+    locate: {type: response_id}
+    fields:
+      name: {column: name}
+      phone: {column: phone}
+      province: {column: province}
+      city: {column: city}
+      district: {column: district}
+      detail: {column: detail}
+      isDefault: {column: is_default, type: bool}
+    # trace_id 未落库（BaseEntity.traceId 缺 @TableField(fill=INSERT)，缺陷 D-23），暂不纳入生成列断言
+    generated: [id, customer_id]
+
+  "PUT /api/addresses/{id}":
+    table: commerce.address
+    locate: {type: path_param, key: id}
+    fields:
+      name: {column: name}
+      phone: {column: phone}
+      province: {column: province}
+      city: {column: city}
+      district: {column: district}
+      detail: {column: detail}
+      isDefault: {column: is_default, type: bool, optional: true}
+    generated: [id]
+
+  "POST /api/cart/items":
+    table: commerce.cart_item
+    locate: {type: response_field, key: cartItemId}
+    fields:
+      skuId: {column: sku_id, type: string}
+      quantity: {column: quantity, type: int}
+    generated: [id, cart_id, selected]
+
+  "PUT /api/cart/items/{id}":
+    table: commerce.cart_item
+    locate: {type: path_param, key: id}
+    fields:
+      quantity: {column: quantity, type: int, optional: true}
+      selected: {column: selected, type: bool, optional: true}
+    generated: [id]
+
+  "POST /api/reviews":
+    table: commerce.review
+    locate: {type: response_id}
+    fields:
+      orderItemId: {column: order_item_id, type: string}
+      rating: {column: rating, type: int}
+      content: {column: content, optional: true}
+    special:
+      - {json_from: picKeys, column: pics}
+    generated: [id, customer_id, spu_id, status]
+
+  "POST /api/after-sales":
+    table: commerce.after_sale
+    locate: {type: response_id}
+    fields:
+      orderId: {column: order_id, type: string}
+      type: {column: type}
+      reason: {column: reason}
+    special:
+      - {json_from: evidenceKeys, column: evidence_pics}
+    generated: [id, after_sale_no, status, customer_id]
+
+  "POST /api/payment/sandbox":
+    table: commerce.payment
+    locate: {type: natural, column: order_id}
+    generated: [id, channel, amount, status, trade_no, paid_at]
+
+  "POST /admin/orders/{id}/ship":
+    table: commerce.shipment
+    locate: {type: natural, column: order_id}
+    fields:
+      carrier: {column: carrier}
+      trackingNo: {column: tracking_no}
+    generated: [id, status]
+
+  "POST /admin/brands":
+    table: commerce.brand
+    locate: {type: response_id}
+    fields:
+      name: {column: name}
+      categoryId: {column: category_id, type: string, optional: true}
+    generated: [id, status, sort]
+
+  "POST /admin/categories":
+    table: commerce.category
+    locate: {type: response_id}
+    fields:
+      name: {column: name}
+    generated: [id, status, sort, level]
+
+  "POST /admin/dicts":
+    table: identity.dict
+    locate: {type: response_id}
+    fields:
+      code: {column: code}
+      name: {column: name}
+    generated: [id]
+
+  "POST /admin/depts":
+    table: identity.dept
+    locate: {type: response_id}
+    fields:
+      name: {column: name}
+    generated: [id, status, sort]
+
+  "POST /admin/warehouses":
+    table: commerce.warehouse
+    locate: {type: response_id}
+    fields:
+      name: {column: name}
+    generated: [id, status]
+
+  "PUT /admin/brands/{id}":
+    table: commerce.brand
+    locate: {type: path_param, key: id}
+    fields:
+      name: {column: name}
+      categoryId: {column: category_id, type: string, optional: true}
+      status: {column: status, optional: true}
+    generated: [id]
+
+  "DELETE /admin/brands/{id}":
+    table: commerce.brand
+    locate: {type: path_param, key: id}
+    expect_deleted: true
+
+  "PUT /admin/categories/{id}":
+    table: commerce.category
+    locate: {type: path_param, key: id}
+    fields:
+      name: {column: name}
+      parentId: {column: parent_id, type: string, optional: true}
+      status: {column: status, optional: true}
+    generated: [id]
+
+  "DELETE /admin/categories/{id}":
+    table: commerce.category
+    locate: {type: path_param, key: id}
+    expect_deleted: true
+
+  "PUT /admin/dicts/{id}":
+    table: identity.dict
+    locate: {type: path_param, key: id}
+    fields:
+      code: {column: code}
+      name: {column: name}
+    generated: [id]
+
+  "DELETE /admin/dicts/{id}":
+    table: identity.dict
+    locate: {type: path_param, key: id}
+    expect_deleted: true
+
+  "PUT /admin/depts/{id}":
+    table: identity.dept
+    locate: {type: path_param, key: id}
+    fields:
+      name: {column: name}
+      parentId: {column: parent_id, type: string, optional: true}
+    generated: [id]
+
+  "DELETE /admin/depts/{id}":
+    table: identity.dept
+    locate: {type: path_param, key: id}
+    expect_deleted: true
+
+  "PUT /admin/warehouses/{id}":
+    table: commerce.warehouse
+    locate: {type: path_param, key: id}
+    fields:
+      name: {column: name}
+      status: {column: status, optional: true}
+    generated: [id]
+
+  "PUT /admin/reviews/{id}/status":
+    table: commerce.review
+    locate: {type: path_param, key: id}
+    fields:
+      status: {column: status, optional: true}
+    generated: [id]
+
+  "PUT /api/addresses/{id}/default":
+    table: commerce.address
+    locate: {type: path_param, key: id}
+    fields:
+      isDefault: {column: is_default, type: bool}
+    generated: [id]
+
+  "DELETE /api/addresses/{id}":
+    table: commerce.address
+    locate: {type: path_param, key: id}
+    expect_deleted: true
+
+  "DELETE /api/cart/items/{id}":
+    table: commerce.cart_item
+    locate: {type: path_param, key: id}
+    expect_deleted: true
+
+  "POST /admin/after-sales/{id}/audit":
+    table: commerce.after_sale
+    locate: {type: path_param, key: id}
+    fields:
+      remark: {column: audit_remark}
+    generated: [id]
+
+  "PUT /admin/customers/{id}/status":
+    table: identity.customer
+    locate: {type: path_param, key: id}
+    fields:
+      status: {column: status}
+    generated: [id]
+
+  "POST /admin/permissions":
+    table: identity.permission
+    locate: {type: response_id}
+    fields:
+      code: {column: code}
+      name: {column: name}
+      type: {column: type}
+    generated: [id, parent_id, sort, visible, status]
+
+  "PUT /admin/permissions/{id}":
+    table: identity.permission
+    locate: {type: path_param, key: id}
+    fields:
+      name: {column: name}
+      type: {column: type}
+      path: {column: path, optional: true}
+      status: {column: status, optional: true}
+    generated: [id]
+
+  "DELETE /admin/permissions/{id}":
+    table: identity.permission
+    locate: {type: path_param, key: id}
+    expect_deleted: true
+
+  "POST /api/orders/{id}/cancel":
+    table: commerce.order
+    locate: {type: path_param, key: id}
+    fields: {}
+    generated: [id]
+
+  "POST /api/orders/{id}/confirm":
+    table: commerce.order
+    locate: {type: path_param, key: id}
+    fields: {}
+    generated: [id]

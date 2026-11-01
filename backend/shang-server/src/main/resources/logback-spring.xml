@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  日志栈：SLF4J + Logback。
+  MDC: traceId / userId / username（TraceIdFilter + JwtAuthFilter）
+-->
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty name="APP_NAME" source="spring.application.name" defaultValue="shang-pivot"/>
+    <!-- 统一落到后端根目录 backend/logs（勿写 shang-server/logs）
+         覆盖：-DLOG_HOME=/abs/path 或环境变量 LOG_HOME
+         默认 logs/：依赖启动工作目录为 backend/（见 spring-boot:run / IDEA Run 配置） -->
+    <property name="LOG_HOME" value="${LOG_HOME:-logs}"/>
+
+    <!-- 控制台：彩色、短时间、trace + 用户名前置，便于扫读 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(%-5level) %clr([%X{traceId:-}]){magenta} %clr(%X{username:--}){cyan} %clr(%logger{28}){blue} %msg%n"/>
+
+    <!-- 文件：完整时间 + 线程，便于检索 -->
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [trace=%X{traceId:-}] [user=%X{userId:--}/%X{username:--}] %logger{40} - %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}-access.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}-access.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.shangpivot.common.filter.AccessLogFilter" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ACCESS_FILE"/>
+    </logger>
+
+    <logger name="com.shangpivot" level="INFO"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.mybatis" level="WARN"/>
+    <!-- SpringDoc 仅提醒生产可关闭文档，本地开发噪声 -->
+    <logger name="org.springframework.core.events.SpringDocAppInitializer" level="ERROR"/>
+    <!-- 远程库掐空闲连接时 housekeeper 会刷屏 -->
+    <logger name="com.zaxxer.hikari.pool.PoolBase" level="ERROR"/>
+    <logger name="com.zaxxer.hikari.HikariConfig" level="ERROR"/>
+    <logger name="io.netty.resolver.dns.DnsServerAddressStreamProviders" level="ERROR"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

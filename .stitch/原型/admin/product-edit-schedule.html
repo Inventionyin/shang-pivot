@@ -1,0 +1,265 @@
+<!-- V2.0 增量页：product-edit.html 的带「上架方式（定时上架）」变体
+     维护约定：V1 语义改动先改 product-edit.html，再同步到这里。 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>新增/编辑商品（定时上架）· Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='products'; window.__NAV_VERSION__='v2'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">商品中心 / <b>商品列表</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div><div class="page-title">编辑商品</div><div class="page-sub">SPU 信息 + 规格组合自动生成 SKU · 含上架方式（立即 / 定时 / 仅草稿）</div></div>
+        <div style="display:flex;gap:8px">
+          <a class="btn btn-secondary" href="products.html">取消</a>
+          <button class="btn btn-secondary" data-modal-open="dlg-draft">存草稿</button>
+          <button class="btn btn-primary" data-modal-open="dlg-schedule">保存并定时上架</button>
+        </div>
+      </div>
+
+      <div class="card card-pad" style="margin-bottom:16px">
+        <div class="page-title" style="font-size:15px;margin-bottom:14px">基本信息</div>
+        <div class="form-grid">
+          <div class="field full">
+            <label class="label">商品名称 (SPU)<span class="req">*</span></label>
+            <input class="input" value="iPhone 15 Pro 128G">
+            <span class="hint">1～60 字符；不允许表情符号</span>
+          </div>
+          <div class="field"><label class="label">类目<span class="req">*</span></label><select class="select"><option>手机</option><option>电脑/办公</option></select></div>
+          <div class="field"><label class="label">品牌</label><select class="select"><option>Apple</option><option>联想/ThinkPad</option></select></div>
+          <div class="field full"><label class="label">副标题</label><input class="input" value="A17 Pro 芯片，旗舰性能"><span class="hint">≤100 字符</span></div>
+          <div class="field full">
+            <label class="label">主图</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div class="thumb" style="width:64px;height:64px;background:linear-gradient(135deg,#FEBB4A,#FF8A5B)"></div>
+              <button class="thumb" type="button" data-modal-open="dlg-upload-bad" style="width:64px;height:64px;background:var(--sand);display:grid;place-items:center;color:var(--slate);border:1px dashed var(--border);border-radius:8px;cursor:pointer">+</button>
+            </div>
+            <p class="hint" style="margin-top:6px">jpeg / png / webp，≤10MB，建议 256×256；上传至 MinIO，展示走 `/admin/files/view` 代理。上架至少需要 1 张主图。</p>
+          </div>
+          <div class="field full"><label class="label">商品详情</label><textarea class="input" rows="3" placeholder="文本 / HTML">A17 Pro 芯片，旗舰性能</textarea></div>
+        </div>
+      </div>
+
+      <div class="card card-pad" style="margin-bottom:16px">
+        <div class="page-title" style="font-size:15px;margin-bottom:14px">上架方式</div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="label">上架方式<span class="req">*</span></label>
+            <select class="select">
+              <option>立即上架</option>
+              <option selected>定时上架</option>
+              <option>仅存草稿</option>
+            </select>
+            <span class="hint">仅存草稿 = 保存为草稿，不进入顾客端</span>
+          </div>
+          <div class="field">
+            <label class="label">定时上架时间<span class="req">*</span></label>
+            <input class="input" value="2026-09-25 10:00">
+            <span class="hint">须晚于当前时间，精确到分钟；到点由系统自动上架，校验规则与立即上架一致</span>
+          </div>
+        </div>
+        <div class="alert alert-info">定时期间商品保持「草稿/下架」状态，顾客端不可见；到点校验通过才上架，校验失败保留草稿并记录日志。</div>
+      </div>
+
+      <div class="card card-pad" style="margin-bottom:16px">
+        <div class="page-head" style="margin-bottom:14px">
+          <div class="page-title" style="font-size:15px">规格与 SKU</div>
+          <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-gen-sku">生成 SKU</button>
+        </div>
+        <p class="hint" style="margin-bottom:12px">先填写规格维度名称与可选值（用 / 分隔），点「生成 SKU」按全组合生成；也可在表格内逐行改规格值。规格一/规格二最多 2 个维度。</p>
+        <div class="form-grid" style="margin-bottom:16px">
+          <div class="field"><label class="label">规格一 · 名称</label><input class="input" value="容量"></div>
+          <div class="field"><label class="label">规格一 · 可选值</label><input class="input" value="128GB / 256GB / 512GB"></div>
+          <div class="field"><label class="label">规格二 · 名称</label><input class="input" value="颜色"></div>
+          <div class="field"><label class="label">规格二 · 可选值</label><input class="input" value="原色钛金属 / 白色钛金属"></div>
+        </div>
+        <p class="hint" style="margin-bottom:12px">当前 3 个 SKU（已保存）；按「容量 × 颜色」全组合共 6 种，生成时已存在的组合会跳过</p>
+        <table class="table" style="table-layout:fixed;width:100%">
+          <thead><tr><th style="width:14%">容量</th><th style="width:16%">颜色</th><th class="num" style="width:12%">售价</th><th class="num" style="width:12%">成本价</th><th class="num" style="width:11%">库存</th><th class="code" style="width:16%">条码</th><th style="width:9%">操作</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><input class="input" value="128GB"></td>
+              <td><input class="input" value="原色钛金属"></td>
+              <td class="num"><input class="input" value="7999" style="width:100%"></td>
+              <td class="num"><input class="input" value="5599.30" style="width:100%"></td>
+              <td class="num"><input class="input" value="100" style="width:100%"></td>
+              <td class="code"><input class="input" value="PKU-10001" style="width:100%"></td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-del-sku">删</button></td>
+            </tr>
+            <tr>
+              <td><input class="input" value="256GB"></td>
+              <td><input class="input" value="原色钛金属"></td>
+              <td class="num"><input class="input" value="8999" style="width:100%"></td>
+              <td class="num"><input class="input" value="6299.30" style="width:100%"></td>
+              <td class="num"><input class="input" value="80" style="width:100%"></td>
+              <td class="code"><input class="input" value="PKU-10002" style="width:100%"></td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-del-sku">删</button></td>
+            </tr>
+            <tr>
+              <td><input class="input" value="512GB"></td>
+              <td><input class="input" value="白色钛金属"></td>
+              <td class="num"><input class="input" value="10999" style="width:100%"></td>
+              <td class="num"><input class="input" value="7699.30" style="width:100%"></td>
+              <td class="num"><input class="input" value="80" style="width:100%"></td>
+              <td class="code"><input class="input" value="PKU-10003" style="width:100%"></td>
+              <td><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-del-sku">删</button></td>
+            </tr>
+            
+          </tbody>
+        </table>
+        <p class="hint" style="margin-top:10px">库存为 0 允许上架：顾客端可展示，下单时再校验可售库存。SKU 行内校验：售价必填且最多两位小数、库存 ≥0 整数。</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 上架校验失败（逐条列原因）============ -->
+<div class="modal" id="dlg-onshelf-fail" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title">无法上架</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p>商品「iPhone 15 Pro 128G」不满足上架条件，请修正后重试：</p>
+      <ul class="impact">
+        <li>上架需要至少一张主图</li>
+        <li>上架需要至少一个已填售价的 SKU</li>
+      </ul>
+      <div class="alert alert-info" style="margin-top:12px">上架校验：主图非空、至少 1 个启用 SKU、售价 &gt; 0。库存为 0 不阻止上架。校验不通过时<b>停留本页</b>，已填内容不丢失。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>去补充</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 存草稿 ============ -->
+<div class="modal" id="dlg-draft" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico info">✓</span>
+      <div class="modal-title">存为草稿</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p>保存为草稿后商品状态为 <span class="badge badge-amber">草稿</span>，顾客端不可见，可随时回到本页继续编辑或上架。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 生成 SKU 预览 ============ -->
+<div class="modal" id="dlg-gen-sku" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-lg" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico info">⚙</span>
+      <div class="modal-title">生成 SKU</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:12px">按「容量 × 颜色」全组合共 <b>6</b> 行，其中 <b>3</b> 行已存在（显示现有价格/库存，将跳过），<b>3</b> 行为新增待填。</p>
+      <table class="table">
+        <thead><tr><th>容量</th><th>颜色</th><th class="num">售价</th><th class="num">库存</th></tr></thead>
+        <tbody>
+          <tr><td>128GB</td><td>原色钛金属</td><td class="num">¥7,999</td><td class="num">100</td></tr>
+          <tr><td>128GB</td><td>白色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+          <tr><td>256GB</td><td>原色钛金属</td><td class="num">¥8,999</td><td class="num">80</td></tr>
+          <tr><td>256GB</td><td>白色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+          <tr><td>512GB</td><td>原色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+          <tr><td>512GB</td><td>白色钛金属</td><td class="num">¥10,999</td><td class="num">80</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-info" style="margin-top:12px">规格值重复或为空时不生成；两个规格维度都留空则按单规格 SKU 处理。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>确认生成</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除 SKU 行 ============ -->
+<div class="modal" id="dlg-del-sku" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title">删除 SKU</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除规格组合「128GB / 原色钛金属」？</p>
+      <p class="hint">保存后该 SKU 及其库存记录一并删除，不可恢复。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 主图上传校验失败 ============ -->
+<div class="modal" id="dlg-upload-bad" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title">图片不符合要求</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p>仅支持 jpeg / png / webp，单张不超过 10MB。</p>
+      <p class="hint">上传失败可重试，不影响已填写的表单内容。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>重新选择</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 定时时间校验（V2.0 增量）============ -->
+<div class="modal" id="dlg-schedule" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="alertdialog" aria-modal="true">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title">定时上架时间不合法</div>
+      <button class="modal-x" data-modal-close>×</button>
+    </div>
+    <div class="modal-body">
+      <p>定时上架时间须晚于当前时间（当前 <b class="code">2026-09-23 10:12</b>）。</p>
+      <p class="hint">请重新选择一个未来的时间点，精确到分钟。改为「立即上架」或「仅存草稿」则不受此限制。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>重新选择</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

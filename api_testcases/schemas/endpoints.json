@@ -1,0 +1,8600 @@
+{
+ "endpoints": {
+  "GET /api/me": {
+   "method": "GET",
+   "path": "/api/me",
+   "summary": "当前顾客资料",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "id": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "phone": {
+        "type": "string"
+       },
+       "nickname": {
+        "type": "string"
+       },
+       "avatar": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string"
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "PUT /api/me": {
+   "method": "PUT",
+   "path": "/api/me",
+   "summary": "更新资料",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "id": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "phone": {
+        "type": "string"
+       },
+       "nickname": {
+        "type": "string"
+       },
+       "avatar": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string"
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "additionalProperties": {
+     "type": "string"
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "PUT /api/cart/items/{id}": {
+   "method": "PUT",
+   "path": "/api/cart/items/{id}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "additionalProperties": {}
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /api/cart/items/{id}": {
+   "method": "DELETE",
+   "path": "/api/cart/items/{id}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /api/addresses/{id}": {
+   "method": "PUT",
+   "path": "/api/addresses/{id}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "phone": {
+      "type": "string"
+     },
+     "province": {
+      "type": "string"
+     },
+     "city": {
+      "type": "string"
+     },
+     "district": {
+      "type": "string"
+     },
+     "detail": {
+      "type": "string"
+     },
+     "isDefault": {
+      "type": "boolean"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /api/addresses/{id}": {
+   "method": "DELETE",
+   "path": "/api/addresses/{id}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /api/addresses/{id}/default": {
+   "method": "PUT",
+   "path": "/api/addresses/{id}/default",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/warehouses/{id}": {
+   "method": "PUT",
+   "path": "/admin/warehouses/{id}",
+   "summary": "更新仓库",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "仓库",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string",
+      "description": "仓库名称",
+      "example": "华东仓"
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /admin/users/{id}": {
+   "method": "GET",
+   "path": "/admin/users/{id}",
+   "summary": "获取用户详情",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/users/{id}": {
+   "method": "PUT",
+   "path": "/admin/users/{id}",
+   "summary": "更新用户",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "用户保存请求",
+    "properties": {
+     "username": {
+      "type": "string",
+      "description": "用户名",
+      "example": "zhangsan"
+     },
+     "password": {
+      "type": "string",
+      "description": "密码（创建时必填）",
+      "example": "Admin@123"
+     },
+     "realName": {
+      "type": "string",
+      "description": "真实姓名",
+      "example": "张三"
+     },
+     "phone": {
+      "type": "string",
+      "description": "手机号",
+      "example": "13800138000"
+     },
+     "email": {
+      "type": "string",
+      "description": "邮箱",
+      "example": "zhangsan@example.com"
+     },
+     "deptId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "部门ID",
+      "example": 1
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     },
+     "roleIds": {
+      "type": "array",
+      "description": "角色ID列表",
+      "example": [
+       1,
+       2
+      ],
+      "items": {
+       "type": "integer",
+       "format": "int64"
+      }
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/users/{id}": {
+   "method": "DELETE",
+   "path": "/admin/users/{id}",
+   "summary": "删除用户",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/users/{id}/status": {
+   "method": "PUT",
+   "path": "/admin/users/{id}/status",
+   "summary": "更新用户状态",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "string",
+    "example": {
+     "status": "ENABLED"
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/users/{id}/password": {
+   "method": "PUT",
+   "path": "/admin/users/{id}/password",
+   "summary": "重置密码",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "string",
+    "example": {
+     "password": "Admin@123"
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/system-configs/{id}": {
+   "method": "PUT",
+   "path": "/admin/system-configs/{id}",
+   "summary": "更新系统配置",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "configKey": {
+      "type": "string"
+     },
+     "configValue": {
+      "type": "string"
+     },
+     "category": {
+      "type": "string"
+     },
+     "isSecret": {
+      "type": "boolean"
+     },
+     "remark": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/stocks/adjust": {
+   "method": "PUT",
+   "path": "/admin/stocks/adjust",
+   "summary": "调整库存",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "库存调整请求",
+    "properties": {
+     "skuId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "SKU ID",
+      "example": 1
+     },
+     "warehouseId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "仓库ID，不传默认 1",
+      "example": 1
+     },
+     "changeQty": {
+      "type": "integer",
+      "format": "int32",
+      "description": "调整数量，正数入库、负数出库",
+      "example": 10
+     },
+     "reason": {
+      "type": "string",
+      "description": "调整原因",
+      "example": "盘点盈余"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/site/brand": {
+   "method": "GET",
+   "path": "/admin/site/brand",
+   "summary": "获取站点品牌",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "PUT /admin/site/brand": {
+   "method": "PUT",
+   "path": "/admin/site/brand",
+   "summary": "更新站点品牌",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "additionalProperties": {
+     "type": "string"
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "PUT /admin/roles/{id}": {
+   "method": "PUT",
+   "path": "/admin/roles/{id}",
+   "summary": "更新角色",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "角色保存请求",
+    "properties": {
+     "code": {
+      "type": "string",
+      "description": "角色编码（创建时必填）",
+      "example": "OPERATOR"
+     },
+     "name": {
+      "type": "string",
+      "description": "角色名称",
+      "example": "运营人员"
+     },
+     "dataScope": {
+      "type": "string",
+      "description": "数据权限范围：ALL / DEPT / SELF",
+      "example": "ALL"
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     },
+     "remark": {
+      "type": "string",
+      "description": "备注",
+      "example": "负责日常运营"
+     },
+     "permissionIds": {
+      "type": "array",
+      "description": "权限ID列表",
+      "example": [
+       1,
+       2,
+       3
+      ],
+      "items": {
+       "type": "integer",
+       "format": "int64"
+      }
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/roles/{id}": {
+   "method": "DELETE",
+   "path": "/admin/roles/{id}",
+   "summary": "删除角色",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/reviews/{id}/status": {
+   "method": "PUT",
+   "path": "/admin/reviews/{id}/status",
+   "summary": "隐藏/恢复评价",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "additionalProperties": {
+     "type": "string"
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /admin/products/{id}": {
+   "method": "GET",
+   "path": "/admin/products/{id}",
+   "summary": "获取商品详情",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/products/{id}": {
+   "method": "PUT",
+   "path": "/admin/products/{id}",
+   "summary": "更新商品",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "商品保存请求",
+    "properties": {
+     "categoryId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "类目ID",
+      "example": 1
+     },
+     "brandId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "品牌ID",
+      "example": 1
+     },
+     "name": {
+      "type": "string",
+      "description": "商品名称",
+      "example": "iPhone 16 Pro"
+     },
+     "subtitle": {
+      "type": "string",
+      "description": "副标题",
+      "example": "A18 Pro 芯片，钛金属机身"
+     },
+     "pics": {
+      "type": "array",
+      "description": "主图 URL 列表",
+      "example": [
+       "https://cdn.example.com/spu/1.jpg"
+      ],
+      "items": {
+       "type": "string"
+      }
+     },
+     "videos": {
+      "type": "array",
+      "description": "视频 URL 列表",
+      "example": [
+       "https://cdn.example.com/spu/1.mp4"
+      ],
+      "items": {
+       "type": "string"
+      }
+     },
+     "detailHtml": {
+      "type": "string",
+      "description": "详情 HTML",
+      "example": "<p>商品详情</p>"
+     },
+     "status": {
+      "type": "string",
+      "description": "商品状态：ON / OFF / DRAFT",
+      "example": "DRAFT"
+     },
+     "scheduleOnAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "定时上架时间（须晚于当前）；与立即上架互斥"
+     },
+     "clearScheduleOnAt": {
+      "type": "boolean",
+      "description": "是否清空定时上架时间"
+     },
+     "skus": {
+      "type": "array",
+      "description": "SKU 列表",
+      "items": {
+       "type": "object",
+       "description": "SKU 保存项",
+       "properties": {
+        "title": {
+         "type": "string",
+         "description": "SKU 标题",
+         "example": "256GB 沙漠钛"
+        },
+        "price": {
+         "type": "number",
+         "description": "销售价",
+         "example": 8999.0
+        },
+        "costPrice": {
+         "type": "number",
+         "description": "成本价",
+         "example": 7500.0
+        },
+        "barCode": {
+         "type": "string",
+         "description": "条形码",
+         "example": "6901234567890"
+        },
+        "specs": {
+         "type": "object",
+         "additionalProperties": {},
+         "description": "规格键值",
+         "example": {
+          "颜色": "沙漠钛",
+          "容量": "256GB"
+         }
+        },
+        "pic": {
+         "type": "string",
+         "description": "SKU 图片 URL",
+         "example": "https://cdn.example.com/sku/1.jpg"
+        },
+        "status": {
+         "type": "string",
+         "description": "SKU 状态：ENABLED / DISABLED",
+         "example": "ENABLED"
+        },
+        "initStock": {
+         "type": "integer",
+         "format": "int32",
+         "description": "初始库存数量",
+         "example": 100
+        },
+        "warehouseId": {
+         "type": "integer",
+         "format": "int64",
+         "description": "仓库ID",
+         "example": 1
+        },
+        "lowThreshold": {
+         "type": "integer",
+         "format": "int32",
+         "description": "低库存预警阈值",
+         "example": 10
+        }
+       }
+      }
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/products/{id}": {
+   "method": "DELETE",
+   "path": "/admin/products/{id}",
+   "summary": "删除商品",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/products/{id}/on": {
+   "method": "PUT",
+   "path": "/admin/products/{id}/on",
+   "summary": "商品上架",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/products/{id}/off": {
+   "method": "PUT",
+   "path": "/admin/products/{id}/off",
+   "summary": "商品下架",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/products/batch-off": {
+   "method": "PUT",
+   "path": "/admin/products/batch-off",
+   "summary": "批量下架",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "array",
+    "items": {
+     "type": "integer",
+     "format": "int64"
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "PUT /admin/permissions/{id}": {
+   "method": "PUT",
+   "path": "/admin/permissions/{id}",
+   "summary": "更新权限",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "parentId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "code": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "type": {
+      "type": "string"
+     },
+     "path": {
+      "type": "string"
+     },
+     "component": {
+      "type": "string"
+     },
+     "icon": {
+      "type": "string"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32"
+     },
+     "visible": {
+      "type": "boolean"
+     },
+     "status": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/permissions/{id}": {
+   "method": "DELETE",
+   "path": "/admin/permissions/{id}",
+   "summary": "删除权限",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /admin/home/slots/{code}": {
+   "method": "GET",
+   "path": "/admin/home/slots/{code}",
+   "summary": "运营位详情",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "code"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/home/slots/{code}": {
+   "method": "PUT",
+   "path": "/admin/home/slots/{code}",
+   "summary": "保存运营位",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "title": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32"
+     },
+     "validFrom": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "validTo": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "items": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "sort": {
+         "type": "integer",
+         "format": "int32"
+        },
+        "spuId": {
+         "type": "integer",
+         "format": "int64"
+        },
+        "imageKey": {
+         "type": "string"
+        },
+        "linkType": {
+         "type": "string"
+        },
+        "linkValue": {
+         "type": "string"
+        },
+        "title": {
+         "type": "string"
+        },
+        "extra": {
+         "type": "object",
+         "additionalProperties": {}
+        },
+        "status": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   },
+   "path_params": [
+    "code"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/dicts/{id}": {
+   "method": "PUT",
+   "path": "/admin/dicts/{id}",
+   "summary": "更新字典",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "code": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "remark": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/dicts/{id}": {
+   "method": "DELETE",
+   "path": "/admin/dicts/{id}",
+   "summary": "删除字典",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/dict-items/{id}": {
+   "method": "PUT",
+   "path": "/admin/dict-items/{id}",
+   "summary": "更新字典项",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "dictId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "label": {
+      "type": "string"
+     },
+     "value": {
+      "type": "string"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32"
+     },
+     "status": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/dict-items/{id}": {
+   "method": "DELETE",
+   "path": "/admin/dict-items/{id}",
+   "summary": "删除字典项",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/depts/{id}": {
+   "method": "PUT",
+   "path": "/admin/depts/{id}",
+   "summary": "更新部门",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "parentId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "name": {
+      "type": "string"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32"
+     },
+     "status": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/depts/{id}": {
+   "method": "DELETE",
+   "path": "/admin/depts/{id}",
+   "summary": "删除部门",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/customers/{id}/status": {
+   "method": "PUT",
+   "path": "/admin/customers/{id}/status",
+   "summary": "冻结/解冻会员",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "additionalProperties": {
+     "type": "string"
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/categories/{id}": {
+   "method": "PUT",
+   "path": "/admin/categories/{id}",
+   "summary": "更新类目",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "商品类目",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "parentId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "父类目ID，顶级为 0",
+      "example": 0
+     },
+     "name": {
+      "type": "string",
+      "description": "类目名称",
+      "example": "数码电器"
+     },
+     "level": {
+      "type": "integer",
+      "format": "int32",
+      "description": "层级",
+      "example": 1
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32",
+      "description": "排序值",
+      "example": 0
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/categories/{id}": {
+   "method": "DELETE",
+   "path": "/admin/categories/{id}",
+   "summary": "删除类目",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/brands/{id}": {
+   "method": "PUT",
+   "path": "/admin/brands/{id}",
+   "summary": "更新品牌",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "商品品牌",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "categoryId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "所属类目 ID",
+      "example": 10
+     },
+     "name": {
+      "type": "string",
+      "description": "品牌名称",
+      "example": "华为"
+     },
+     "logo": {
+      "type": "string",
+      "description": "品牌 Logo URL",
+      "example": "https://cdn.example.com/brand/huawei.png"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32",
+      "description": "排序值",
+      "example": 0
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/brands/{id}": {
+   "method": "DELETE",
+   "path": "/admin/brands/{id}",
+   "summary": "删除品牌",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "PUT /admin/attributes/{id}": {
+   "method": "PUT",
+   "path": "/admin/attributes/{id}",
+   "summary": "更新属性",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "商品属性",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "categoryId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "所属类目ID",
+      "example": 1
+     },
+     "name": {
+      "type": "string",
+      "description": "属性名称",
+      "example": "颜色"
+     },
+     "type": {
+      "type": "string",
+      "description": "属性类型：SPEC / PARAM",
+      "example": "SPEC"
+     },
+     "options": {
+      "type": "array",
+      "description": "可选值列表",
+      "example": [
+       "红色",
+       "蓝色",
+       "黑色"
+      ],
+      "items": {
+       "type": "string"
+      }
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32",
+      "description": "排序值",
+      "example": 0
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "DELETE /admin/attributes/{id}": {
+   "method": "DELETE",
+   "path": "/admin/attributes/{id}",
+   "summary": "删除属性",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "POST /api/reviews": {
+   "method": "POST",
+   "path": "/api/reviews",
+   "summary": "发表评价",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "additionalProperties": {}
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/payment/sandbox": {
+   "method": "POST",
+   "path": "/api/payment/sandbox",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "additionalProperties": {}
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /api/orders": {
+   "method": "GET",
+   "path": "/api/orders",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "createdAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "updatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "deleted": {
+           "type": "boolean"
+          },
+          "traceId": {
+           "type": "string"
+          },
+          "orderNo": {
+           "type": "string"
+          },
+          "customerId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "customerName": {
+           "type": "string"
+          },
+          "status": {
+           "type": "string"
+          },
+          "totalAmount": {
+           "type": "number"
+          },
+          "payAmount": {
+           "type": "number"
+          },
+          "freight": {
+           "type": "number"
+          },
+          "addressSnapshot": {
+           "type": "object",
+           "additionalProperties": {}
+          },
+          "remark": {
+           "type": "string"
+          },
+          "paidAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "shipAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "receivedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "closeReason": {
+           "type": "string"
+          },
+          "clientType": {
+           "type": "string"
+          },
+          "customerPhoneMask": {
+           "type": "string"
+          },
+          "idempotentKey": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "status",
+    "page",
+    "size"
+   ]
+  },
+  "POST /api/orders": {
+   "method": "POST",
+   "path": "/api/orders",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "addressId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "cartItemIds": {
+      "type": "array",
+      "items": {
+       "type": "integer",
+       "format": "int64"
+      }
+     },
+     "skuId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "quantity": {
+      "type": "integer",
+      "format": "int32"
+     },
+     "idempotentKey": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/orders/{id}/confirm": {
+   "method": "POST",
+   "path": "/api/orders/{id}/confirm",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "POST /api/orders/{id}/cancel": {
+   "method": "POST",
+   "path": "/api/orders/{id}/cancel",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "POST /api/files/upload": {
+   "method": "POST",
+   "path": "/api/files/upload",
+   "summary": "直传上传",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "file": {
+      "type": "string",
+      "format": "binary"
+     }
+    },
+    "required": [
+     "file"
+    ]
+   },
+   "path_params": [],
+   "query_params": [
+    "bizType"
+   ]
+  },
+  "POST /api/files/presign": {
+   "method": "POST",
+   "path": "/api/files/presign",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "bizType": {
+      "type": "string"
+     },
+     "contentType": {
+      "type": "string"
+     },
+     "size": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "sizeBytes": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "filename": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/files/confirm": {
+   "method": "POST",
+   "path": "/api/files/confirm",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "objectKey": {
+      "type": "string"
+     },
+     "contentType": {
+      "type": "string"
+     },
+     "sizeBytes": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "bizType": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/favorites/{spuId}": {
+   "method": "POST",
+   "path": "/api/favorites/{spuId}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "spuId"
+   ],
+   "query_params": []
+  },
+  "DELETE /api/favorites/{spuId}": {
+   "method": "DELETE",
+   "path": "/api/favorites/{spuId}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "spuId"
+   ],
+   "query_params": []
+  },
+  "POST /api/cart/items": {
+   "method": "POST",
+   "path": "/api/cart/items",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "additionalProperties": {}
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/cart/clear-invalid": {
+   "method": "POST",
+   "path": "/api/cart/clear-invalid",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/auth/sms/send": {
+   "method": "POST",
+   "path": "/api/auth/sms/send",
+   "summary": "发送验证码",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "发送短信验证码请求",
+    "properties": {
+     "phone": {
+      "type": "string",
+      "description": "手机号",
+      "example": "13800138000",
+      "minLength": 1,
+      "pattern": "^1\\d{10}$"
+     }
+    },
+    "required": [
+     "phone"
+    ]
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/auth/refresh": {
+   "method": "POST",
+   "path": "/api/auth/refresh",
+   "summary": "刷新令牌",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "accessToken": {
+        "type": "string"
+       },
+       "refreshToken": {
+        "type": "string"
+       },
+       "expiresIn": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "customer": {
+        "type": "object",
+        "description": "顾客资料",
+        "properties": {
+         "id": {
+          "type": [
+           "string",
+           "integer"
+          ],
+          "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+         },
+         "phone": {
+          "type": "string"
+         },
+         "nickname": {
+          "type": "string"
+         },
+         "avatar": {
+          "type": "string"
+         },
+         "status": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "刷新令牌请求",
+    "properties": {
+     "refreshToken": {
+      "type": "string",
+      "description": "刷新令牌",
+      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "minLength": 1
+     }
+    },
+    "required": [
+     "refreshToken"
+    ]
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/auth/logout": {
+   "method": "POST",
+   "path": "/api/auth/logout",
+   "summary": "退出登录",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/auth/phone": {
+   "method": "POST",
+   "path": "/api/auth/phone",
+   "summary": "手机号验证码登录",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "accessToken": {
+        "type": "string"
+       },
+       "refreshToken": {
+        "type": "string"
+       },
+       "expiresIn": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "customer": {
+        "type": "object",
+        "description": "顾客资料",
+        "properties": {
+         "id": {
+          "type": [
+           "string",
+           "integer"
+          ],
+          "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+         },
+         "phone": {
+          "type": "string"
+         },
+         "nickname": {
+          "type": "string"
+         },
+         "avatar": {
+          "type": "string"
+         },
+         "status": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "顾客手机号登录请求",
+    "properties": {
+     "phone": {
+      "type": "string",
+      "description": "手机号",
+      "example": "13800138000",
+      "minLength": 1,
+      "pattern": "^1\\d{10}$"
+     },
+     "code": {
+      "type": "string",
+      "description": "验证码",
+      "example": "123456",
+      "minLength": 1
+     },
+     "clientType": {
+      "type": "string",
+      "description": "客户端类型",
+      "enum": [
+       "web",
+       "h5"
+      ],
+      "example": "h5",
+      "minLength": 1,
+      "pattern": "^(?i)(web|h5)$"
+     }
+    },
+    "required": [
+     "clientType",
+     "code",
+     "phone"
+    ]
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/auth/login": {
+   "method": "POST",
+   "path": "/api/auth/login",
+   "summary": "手机号验证码登录",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "accessToken": {
+        "type": "string"
+       },
+       "refreshToken": {
+        "type": "string"
+       },
+       "expiresIn": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "customer": {
+        "type": "object",
+        "description": "顾客资料",
+        "properties": {
+         "id": {
+          "type": [
+           "string",
+           "integer"
+          ],
+          "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+         },
+         "phone": {
+          "type": "string"
+         },
+         "nickname": {
+          "type": "string"
+         },
+         "avatar": {
+          "type": "string"
+         },
+         "status": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "顾客手机号登录请求",
+    "properties": {
+     "phone": {
+      "type": "string",
+      "description": "手机号",
+      "example": "13800138000",
+      "minLength": 1,
+      "pattern": "^1\\d{10}$"
+     },
+     "code": {
+      "type": "string",
+      "description": "验证码",
+      "example": "123456",
+      "minLength": 1
+     },
+     "clientType": {
+      "type": "string",
+      "description": "客户端类型",
+      "enum": [
+       "web",
+       "h5"
+      ],
+      "example": "h5",
+      "minLength": 1,
+      "pattern": "^(?i)(web|h5)$"
+     }
+    },
+    "required": [
+     "clientType",
+     "code",
+     "phone"
+    ]
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /api/after-sales": {
+   "method": "GET",
+   "path": "/api/after-sales",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {}
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "status",
+    "page",
+    "size"
+   ]
+  },
+  "POST /api/after-sales": {
+   "method": "POST",
+   "path": "/api/after-sales",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "C 端申请售后",
+    "properties": {
+     "orderId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "type": {
+      "type": "string"
+     },
+     "reason": {
+      "type": "string"
+     },
+     "evidenceKeys": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "refundAmount": {
+      "type": "number"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /api/addresses": {
+   "method": "GET",
+   "path": "/api/addresses",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {}
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /api/addresses": {
+   "method": "POST",
+   "path": "/api/addresses",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string"
+     },
+     "phone": {
+      "type": "string"
+     },
+     "province": {
+      "type": "string"
+     },
+     "city": {
+      "type": "string"
+     },
+     "district": {
+      "type": "string"
+     },
+     "detail": {
+      "type": "string"
+     },
+     "isDefault": {
+      "type": "boolean"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/warehouses": {
+   "method": "GET",
+   "path": "/admin/warehouses",
+   "summary": "获取仓库列表",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "description": "仓库",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string",
+         "description": "仓库名称",
+         "example": "华东仓"
+        },
+        "status": {
+         "type": "string",
+         "description": "状态：ENABLED / DISABLED",
+         "example": "ENABLED"
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/warehouses": {
+   "method": "POST",
+   "path": "/admin/warehouses",
+   "summary": "创建仓库",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "仓库",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string",
+      "description": "仓库名称",
+      "example": "华东仓"
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/users": {
+   "method": "GET",
+   "path": "/admin/users",
+   "summary": "分页查询用户",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "username",
+    "phone",
+    "status",
+    "deptId"
+   ]
+  },
+  "POST /admin/users": {
+   "method": "POST",
+   "path": "/admin/users",
+   "summary": "创建用户",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "用户保存请求",
+    "properties": {
+     "username": {
+      "type": "string",
+      "description": "用户名",
+      "example": "zhangsan"
+     },
+     "password": {
+      "type": "string",
+      "description": "密码（创建时必填）",
+      "example": "Admin@123"
+     },
+     "realName": {
+      "type": "string",
+      "description": "真实姓名",
+      "example": "张三"
+     },
+     "phone": {
+      "type": "string",
+      "description": "手机号",
+      "example": "13800138000"
+     },
+     "email": {
+      "type": "string",
+      "description": "邮箱",
+      "example": "zhangsan@example.com"
+     },
+     "deptId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "部门ID",
+      "example": 1
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     },
+     "roleIds": {
+      "type": "array",
+      "description": "角色ID列表",
+      "example": [
+       1,
+       2
+      ],
+      "items": {
+       "type": "integer",
+       "format": "int64"
+      }
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/roles": {
+   "method": "GET",
+   "path": "/admin/roles",
+   "summary": "分页查询角色",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "name",
+    "code"
+   ]
+  },
+  "POST /admin/roles": {
+   "method": "POST",
+   "path": "/admin/roles",
+   "summary": "创建角色",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "角色保存请求",
+    "properties": {
+     "code": {
+      "type": "string",
+      "description": "角色编码（创建时必填）",
+      "example": "OPERATOR"
+     },
+     "name": {
+      "type": "string",
+      "description": "角色名称",
+      "example": "运营人员"
+     },
+     "dataScope": {
+      "type": "string",
+      "description": "数据权限范围：ALL / DEPT / SELF",
+      "example": "ALL"
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     },
+     "remark": {
+      "type": "string",
+      "description": "备注",
+      "example": "负责日常运营"
+     },
+     "permissionIds": {
+      "type": "array",
+      "description": "权限ID列表",
+      "example": [
+       1,
+       2,
+       3
+      ],
+      "items": {
+       "type": "integer",
+       "format": "int64"
+      }
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/products": {
+   "method": "GET",
+   "path": "/admin/products",
+   "summary": "分页查询商品",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "description": "商品列表项（含聚合字段）",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "description": "SPU ID",
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "name": {
+           "type": "string",
+           "description": "商品名称"
+          },
+          "categoryId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "description": "类目 ID",
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "categoryName": {
+           "type": "string",
+           "description": "类目名称"
+          },
+          "brandId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "description": "品牌 ID",
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "status": {
+           "type": "string",
+           "description": "状态：ON / OFF / DRAFT"
+          },
+          "pics": {
+           "type": "array",
+           "description": "主图列表",
+           "items": {
+            "type": "string"
+           }
+          },
+          "skuCount": {
+           "type": "integer",
+           "format": "int32",
+           "description": "SKU 数量"
+          },
+          "stock": {
+           "type": "integer",
+           "format": "int32",
+           "description": "可售库存合计（物理库存 - 锁定）"
+          },
+          "minPrice": {
+           "type": "number",
+           "description": "最低价"
+          },
+          "maxPrice": {
+           "type": "number",
+           "description": "最高价"
+          },
+          "priceRange": {
+           "type": "string",
+           "description": "价格区间展示文案",
+           "example": "¥7999 ~ ¥10999"
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "name",
+    "status",
+    "categoryId"
+   ]
+  },
+  "POST /admin/products": {
+   "method": "POST",
+   "path": "/admin/products",
+   "summary": "创建商品",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "商品保存请求",
+    "properties": {
+     "categoryId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "类目ID",
+      "example": 1
+     },
+     "brandId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "品牌ID",
+      "example": 1
+     },
+     "name": {
+      "type": "string",
+      "description": "商品名称",
+      "example": "iPhone 16 Pro"
+     },
+     "subtitle": {
+      "type": "string",
+      "description": "副标题",
+      "example": "A18 Pro 芯片，钛金属机身"
+     },
+     "pics": {
+      "type": "array",
+      "description": "主图 URL 列表",
+      "example": [
+       "https://cdn.example.com/spu/1.jpg"
+      ],
+      "items": {
+       "type": "string"
+      }
+     },
+     "videos": {
+      "type": "array",
+      "description": "视频 URL 列表",
+      "example": [
+       "https://cdn.example.com/spu/1.mp4"
+      ],
+      "items": {
+       "type": "string"
+      }
+     },
+     "detailHtml": {
+      "type": "string",
+      "description": "详情 HTML",
+      "example": "<p>商品详情</p>"
+     },
+     "status": {
+      "type": "string",
+      "description": "商品状态：ON / OFF / DRAFT",
+      "example": "DRAFT"
+     },
+     "scheduleOnAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "定时上架时间（须晚于当前）；与立即上架互斥"
+     },
+     "clearScheduleOnAt": {
+      "type": "boolean",
+      "description": "是否清空定时上架时间"
+     },
+     "skus": {
+      "type": "array",
+      "description": "SKU 列表",
+      "items": {
+       "type": "object",
+       "description": "SKU 保存项",
+       "properties": {
+        "title": {
+         "type": "string",
+         "description": "SKU 标题",
+         "example": "256GB 沙漠钛"
+        },
+        "price": {
+         "type": "number",
+         "description": "销售价",
+         "example": 8999.0
+        },
+        "costPrice": {
+         "type": "number",
+         "description": "成本价",
+         "example": 7500.0
+        },
+        "barCode": {
+         "type": "string",
+         "description": "条形码",
+         "example": "6901234567890"
+        },
+        "specs": {
+         "type": "object",
+         "additionalProperties": {},
+         "description": "规格键值",
+         "example": {
+          "颜色": "沙漠钛",
+          "容量": "256GB"
+         }
+        },
+        "pic": {
+         "type": "string",
+         "description": "SKU 图片 URL",
+         "example": "https://cdn.example.com/sku/1.jpg"
+        },
+        "status": {
+         "type": "string",
+         "description": "SKU 状态：ENABLED / DISABLED",
+         "example": "ENABLED"
+        },
+        "initStock": {
+         "type": "integer",
+         "format": "int32",
+         "description": "初始库存数量",
+         "example": 100
+        },
+        "warehouseId": {
+         "type": "integer",
+         "format": "int64",
+         "description": "仓库ID",
+         "example": 1
+        },
+        "lowThreshold": {
+         "type": "integer",
+         "format": "int32",
+         "description": "低库存预警阈值",
+         "example": 10
+        }
+       }
+      }
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/permissions": {
+   "method": "GET",
+   "path": "/admin/permissions",
+   "summary": "权限列表",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "parentId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "type": {
+         "type": "string"
+        },
+        "path": {
+         "type": "string"
+        },
+        "component": {
+         "type": "string"
+        },
+        "icon": {
+         "type": "string"
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32"
+        },
+        "visible": {
+         "type": "boolean"
+        },
+        "status": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/permissions": {
+   "method": "POST",
+   "path": "/admin/permissions",
+   "summary": "创建权限",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "parentId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "code": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "type": {
+      "type": "string"
+     },
+     "path": {
+      "type": "string"
+     },
+     "component": {
+      "type": "string"
+     },
+     "icon": {
+      "type": "string"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32"
+     },
+     "visible": {
+      "type": "boolean"
+     },
+     "status": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/orders/{id}/ship": {
+   "method": "POST",
+   "path": "/admin/orders/{id}/ship",
+   "summary": "订单发货",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "订单发货请求",
+    "properties": {
+     "carrier": {
+      "type": "string",
+      "description": "承运商",
+      "example": "顺丰速运"
+     },
+     "trackingNo": {
+      "type": "string",
+      "description": "物流单号",
+      "example": "SF1234567890"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /admin/in-out": {
+   "method": "GET",
+   "path": "/admin/in-out",
+   "summary": "出入库分页",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "type",
+    "billNo",
+    "skuId",
+    "from",
+    "to"
+   ]
+  },
+  "POST /admin/in-out": {
+   "method": "POST",
+   "path": "/admin/in-out",
+   "summary": "创建出入库单",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "type": {
+      "type": "string",
+      "enum": [
+       "PURCHASE_IN",
+       "STOCKTAKE"
+      ]
+     },
+     "warehouseId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "remark": {
+      "type": "string"
+     },
+     "items": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "skuId": {
+         "type": "integer",
+         "format": "int64"
+        },
+        "qty": {
+         "type": "integer",
+         "format": "int32"
+        },
+        "remark": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/files/upload": {
+   "method": "POST",
+   "path": "/admin/files/upload",
+   "summary": "直传上传文件",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "file": {
+      "type": "string",
+      "format": "binary"
+     }
+    },
+    "required": [
+     "file"
+    ]
+   },
+   "path_params": [],
+   "query_params": [
+    "bizType"
+   ]
+  },
+  "POST /admin/files/presign": {
+   "method": "POST",
+   "path": "/admin/files/presign",
+   "summary": "获取预签名上传地址",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "bizType": {
+      "type": "string"
+     },
+     "contentType": {
+      "type": "string"
+     },
+     "size": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "sizeBytes": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "filename": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/files/confirm": {
+   "method": "POST",
+   "path": "/admin/files/confirm",
+   "summary": "确认上传完成",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "objectKey": {
+      "type": "string"
+     },
+     "contentType": {
+      "type": "string"
+     },
+     "sizeBytes": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "bizType": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/dicts": {
+   "method": "GET",
+   "path": "/admin/dicts",
+   "summary": "分页查询字典",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "createdAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "updatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "deleted": {
+           "type": "boolean"
+          },
+          "traceId": {
+           "type": "string"
+          },
+          "code": {
+           "type": "string"
+          },
+          "name": {
+           "type": "string"
+          },
+          "remark": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "code",
+    "name"
+   ]
+  },
+  "POST /admin/dicts": {
+   "method": "POST",
+   "path": "/admin/dicts",
+   "summary": "创建字典",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "code": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "remark": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/dict-items": {
+   "method": "GET",
+   "path": "/admin/dict-items",
+   "summary": "查询字典项",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "dictId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "label": {
+         "type": "string"
+        },
+        "value": {
+         "type": "string"
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32"
+        },
+        "status": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "dictId"
+   ]
+  },
+  "POST /admin/dict-items": {
+   "method": "POST",
+   "path": "/admin/dict-items",
+   "summary": "创建字典项",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "dictId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "label": {
+      "type": "string"
+     },
+     "value": {
+      "type": "string"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32"
+     },
+     "status": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/depts": {
+   "method": "GET",
+   "path": "/admin/depts",
+   "summary": "部门列表",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "parentId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "name": {
+         "type": "string"
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32"
+        },
+        "status": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/depts": {
+   "method": "POST",
+   "path": "/admin/depts",
+   "summary": "创建部门",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "parentId": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "name": {
+      "type": "string"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32"
+     },
+     "status": {
+      "type": "string"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/categories": {
+   "method": "GET",
+   "path": "/admin/categories",
+   "summary": "获取类目列表",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "description": "商品类目",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "parentId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "description": "父类目ID，顶级为 0",
+         "example": 0,
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "name": {
+         "type": "string",
+         "description": "类目名称",
+         "example": "数码电器"
+        },
+        "level": {
+         "type": "integer",
+         "format": "int32",
+         "description": "层级",
+         "example": 1
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32",
+         "description": "排序值",
+         "example": 0
+        },
+        "status": {
+         "type": "string",
+         "description": "状态：ENABLED / DISABLED",
+         "example": "ENABLED"
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/categories": {
+   "method": "POST",
+   "path": "/admin/categories",
+   "summary": "创建类目",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "商品类目",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "parentId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "父类目ID，顶级为 0",
+      "example": 0
+     },
+     "name": {
+      "type": "string",
+      "description": "类目名称",
+      "example": "数码电器"
+     },
+     "level": {
+      "type": "integer",
+      "format": "int32",
+      "description": "层级",
+      "example": 1
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32",
+      "description": "排序值",
+      "example": 0
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/brands": {
+   "method": "GET",
+   "path": "/admin/brands",
+   "summary": "分页查询品牌",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "categoryId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "name": {
+           "type": "string"
+          },
+          "logo": {
+           "type": "string"
+          },
+          "sort": {
+           "type": "integer",
+           "format": "int32"
+          },
+          "status": {
+           "type": "string"
+          },
+          "spuCount": {
+           "type": "integer",
+           "format": "int32"
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "name",
+    "categoryId"
+   ]
+  },
+  "POST /admin/brands": {
+   "method": "POST",
+   "path": "/admin/brands",
+   "summary": "创建品牌",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "商品品牌",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "categoryId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "所属类目 ID",
+      "example": 10
+     },
+     "name": {
+      "type": "string",
+      "description": "品牌名称",
+      "example": "华为"
+     },
+     "logo": {
+      "type": "string",
+      "description": "品牌 Logo URL",
+      "example": "https://cdn.example.com/brand/huawei.png"
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32",
+      "description": "排序值",
+      "example": 0
+     },
+     "status": {
+      "type": "string",
+      "description": "状态：ENABLED / DISABLED",
+      "example": "ENABLED"
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/auth/refresh": {
+   "method": "POST",
+   "path": "/admin/auth/refresh",
+   "summary": "刷新令牌",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "accessToken": {
+        "type": "string",
+        "description": "访问令牌",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+       },
+       "refreshToken": {
+        "type": "string",
+        "description": "刷新令牌",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+       },
+       "expiresIn": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "访问令牌过期时间（秒）",
+        "example": 7200,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "user": {
+        "type": "object",
+        "description": "当前用户信息",
+        "properties": {
+         "id": {
+          "type": [
+           "string",
+           "integer"
+          ],
+          "description": "用户ID",
+          "example": 1,
+          "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+         },
+         "username": {
+          "type": "string",
+          "description": "用户名",
+          "example": "admin"
+         },
+         "realName": {
+          "type": "string",
+          "description": "真实姓名",
+          "example": "管理员"
+         },
+         "roles": {
+          "type": "array",
+          "description": "角色编码集合",
+          "example": [
+           "ADMIN"
+          ],
+          "items": {
+           "type": "string"
+          },
+          "uniqueItems": true
+         },
+         "permissions": {
+          "type": "array",
+          "description": "权限编码集合",
+          "example": [
+           "user:list",
+           "user:create"
+          ],
+          "items": {
+           "type": "string"
+          },
+          "uniqueItems": true
+         },
+         "menus": {
+          "type": "array",
+          "description": "菜单树",
+          "items": {
+           "type": "object",
+           "properties": {
+            "id": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "parentId": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "code": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "name": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "type": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "path": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "component": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "icon": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "sort": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "visible": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "children": {
+             "description": "（$ref 嵌套过深，已截断）"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "刷新令牌请求",
+    "properties": {
+     "refreshToken": {
+      "type": "string",
+      "description": "刷新令牌",
+      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "minLength": 1
+     }
+    },
+    "required": [
+     "refreshToken"
+    ]
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/auth/logout": {
+   "method": "POST",
+   "path": "/admin/auth/logout",
+   "summary": "退出登录",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/auth/login": {
+   "method": "POST",
+   "path": "/admin/auth/login",
+   "summary": "用户登录",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "accessToken": {
+        "type": "string",
+        "description": "访问令牌",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+       },
+       "refreshToken": {
+        "type": "string",
+        "description": "刷新令牌",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+       },
+       "expiresIn": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "访问令牌过期时间（秒）",
+        "example": 7200,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "user": {
+        "type": "object",
+        "description": "当前用户信息",
+        "properties": {
+         "id": {
+          "type": [
+           "string",
+           "integer"
+          ],
+          "description": "用户ID",
+          "example": 1,
+          "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+         },
+         "username": {
+          "type": "string",
+          "description": "用户名",
+          "example": "admin"
+         },
+         "realName": {
+          "type": "string",
+          "description": "真实姓名",
+          "example": "管理员"
+         },
+         "roles": {
+          "type": "array",
+          "description": "角色编码集合",
+          "example": [
+           "ADMIN"
+          ],
+          "items": {
+           "type": "string"
+          },
+          "uniqueItems": true
+         },
+         "permissions": {
+          "type": "array",
+          "description": "权限编码集合",
+          "example": [
+           "user:list",
+           "user:create"
+          ],
+          "items": {
+           "type": "string"
+          },
+          "uniqueItems": true
+         },
+         "menus": {
+          "type": "array",
+          "description": "菜单树",
+          "items": {
+           "type": "object",
+           "properties": {
+            "id": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "parentId": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "code": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "name": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "type": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "path": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "component": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "icon": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "sort": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "visible": {
+             "description": "（$ref 嵌套过深，已截断）"
+            },
+            "children": {
+             "description": "（$ref 嵌套过深，已截断）"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "登录请求",
+    "properties": {
+     "username": {
+      "type": "string",
+      "description": "用户名",
+      "example": "admin",
+      "minLength": 1
+     },
+     "password": {
+      "type": "string",
+      "description": "密码",
+      "example": "Admin@123",
+      "minLength": 1
+     }
+    },
+    "required": [
+     "password",
+     "username"
+    ]
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/attributes": {
+   "method": "GET",
+   "path": "/admin/attributes",
+   "summary": "查询属性列表",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "description": "商品属性",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "categoryId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "description": "所属类目ID",
+         "example": 1,
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "name": {
+         "type": "string",
+         "description": "属性名称",
+         "example": "颜色"
+        },
+        "type": {
+         "type": "string",
+         "description": "属性类型：SPEC / PARAM",
+         "example": "SPEC"
+        },
+        "options": {
+         "type": "array",
+         "description": "可选值列表",
+         "example": [
+          "红色",
+          "蓝色",
+          "黑色"
+         ],
+         "items": {
+          "type": "string"
+         }
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32",
+         "description": "排序值",
+         "example": 0
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "categoryId"
+   ]
+  },
+  "POST /admin/attributes": {
+   "method": "POST",
+   "path": "/admin/attributes",
+   "summary": "创建属性",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": [
+       "string",
+       "integer"
+      ],
+      "description": "业务数据",
+      "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "商品属性",
+    "properties": {
+     "id": {
+      "type": "integer",
+      "format": "int64"
+     },
+     "createdAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+     },
+     "deleted": {
+      "type": "boolean"
+     },
+     "traceId": {
+      "type": "string"
+     },
+     "categoryId": {
+      "type": "integer",
+      "format": "int64",
+      "description": "所属类目ID",
+      "example": 1
+     },
+     "name": {
+      "type": "string",
+      "description": "属性名称",
+      "example": "颜色"
+     },
+     "type": {
+      "type": "string",
+      "description": "属性类型：SPEC / PARAM",
+      "example": "SPEC"
+     },
+     "options": {
+      "type": "array",
+      "description": "可选值列表",
+      "example": [
+       "红色",
+       "蓝色",
+       "黑色"
+      ],
+      "items": {
+       "type": "string"
+      }
+     },
+     "sort": {
+      "type": "integer",
+      "format": "int32",
+      "description": "排序值",
+      "example": 0
+     }
+    }
+   },
+   "path_params": [],
+   "query_params": []
+  },
+  "POST /admin/after-sales/{id}/audit": {
+   "method": "POST",
+   "path": "/admin/after-sales/{id}/audit",
+   "summary": "审核售后单",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {
+    "type": "object",
+    "description": "售后审核请求",
+    "properties": {
+     "approved": {
+      "type": "boolean",
+      "description": "是否通过：true 通过，false 驳回",
+      "example": true
+     },
+     "remark": {
+      "type": "string",
+      "description": "审核备注",
+      "example": "同意退款"
+     }
+    }
+   },
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /api/site/brand": {
+   "method": "GET",
+   "path": "/api/site/brand",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /api/search": {
+   "method": "GET",
+   "path": "/api/search",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "q",
+    "page",
+    "size"
+   ]
+  },
+  "GET /api/products": {
+   "method": "GET",
+   "path": "/api/products",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "categoryId",
+    "page",
+    "size",
+    "sort"
+   ]
+  },
+  "GET /api/products/{spuId}": {
+   "method": "GET",
+   "path": "/api/products/{spuId}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "spuId"
+   ],
+   "query_params": []
+  },
+  "GET /api/products/{spuId}/reviews": {
+   "method": "GET",
+   "path": "/api/products/{spuId}/reviews",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "createdAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "updatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "deleted": {
+           "type": "boolean"
+          },
+          "traceId": {
+           "type": "string"
+          },
+          "orderItemId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "customerId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "spuId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "rating": {
+           "type": "integer",
+           "format": "int32"
+          },
+          "content": {
+           "type": "string"
+          },
+          "pics": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "status": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "spuId"
+   ],
+   "query_params": [
+    "page",
+    "size"
+   ]
+  },
+  "GET /api/payment/{orderId}/status": {
+   "method": "GET",
+   "path": "/api/payment/{orderId}/status",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "orderId"
+   ],
+   "query_params": []
+  },
+  "GET /api/orders/{id}": {
+   "method": "GET",
+   "path": "/api/orders/{id}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /api/orders/{id}/logistics": {
+   "method": "GET",
+   "path": "/api/orders/{id}/logistics",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "orderId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "carrier": {
+         "type": "string"
+        },
+        "trackingNo": {
+         "type": "string"
+        },
+        "status": {
+         "type": "string"
+        },
+        "traces": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": {}
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /api/home": {
+   "method": "GET",
+   "path": "/api/home",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "feedSize"
+   ]
+  },
+  "GET /api/history": {
+   "method": "GET",
+   "path": "/api/history",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size"
+   ]
+  },
+  "DELETE /api/history": {
+   "method": "DELETE",
+   "path": "/api/history",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /api/files/view": {
+   "method": "GET",
+   "path": "/api/files/view",
+   "summary": "查看文件",
+   "has_schema": false,
+   "response": {},
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "objectKey"
+   ]
+  },
+  "GET /api/favorites": {
+   "method": "GET",
+   "path": "/api/favorites",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size"
+   ]
+  },
+  "GET /api/categories": {
+   "method": "GET",
+   "path": "/api/categories",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "additionalProperties": {}
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /api/cart": {
+   "method": "GET",
+   "path": "/api/cart",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /api/after-sales/{id}": {
+   "method": "GET",
+   "path": "/api/after-sales/{id}",
+   "summary": "",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /admin/system-configs": {
+   "method": "GET",
+   "path": "/admin/system-configs",
+   "summary": "查询系统配置",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "additionalProperties": {}
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "category"
+   ]
+  },
+  "GET /admin/stocks": {
+   "method": "GET",
+   "path": "/admin/stocks",
+   "summary": "分页查询库存",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "skuId",
+    "warehouseId",
+    "lowOnly",
+    "warnOnly"
+   ]
+  },
+  "GET /admin/roles/all": {
+   "method": "GET",
+   "path": "/admin/roles/all",
+   "summary": "查询全部角色",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "dataScope": {
+         "type": "string"
+        },
+        "status": {
+         "type": "string"
+        },
+        "remark": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/reviews": {
+   "method": "GET",
+   "path": "/admin/reviews",
+   "summary": "评价分页",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "rating",
+    "ratingMax",
+    "status",
+    "keyword"
+   ]
+  },
+  "GET /admin/permissions/tree": {
+   "method": "GET",
+   "path": "/admin/permissions/tree",
+   "summary": "权限树",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "parentId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "type": {
+         "type": "string"
+        },
+        "path": {
+         "type": "string"
+        },
+        "component": {
+         "type": "string"
+        },
+        "icon": {
+         "type": "string"
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32"
+        },
+        "visible": {
+         "type": "boolean"
+        },
+        "children": {
+         "type": "array",
+         "items": {
+          "description": "（循环引用 MenuTreeVO）"
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/orders": {
+   "method": "GET",
+   "path": "/admin/orders",
+   "summary": "分页查询订单",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "createdAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "updatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "deleted": {
+           "type": "boolean"
+          },
+          "traceId": {
+           "type": "string"
+          },
+          "orderNo": {
+           "type": "string"
+          },
+          "customerId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "customerName": {
+           "type": "string"
+          },
+          "status": {
+           "type": "string"
+          },
+          "totalAmount": {
+           "type": "number"
+          },
+          "payAmount": {
+           "type": "number"
+          },
+          "freight": {
+           "type": "number"
+          },
+          "addressSnapshot": {
+           "type": "object",
+           "additionalProperties": {}
+          },
+          "remark": {
+           "type": "string"
+          },
+          "paidAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "shipAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "receivedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "closeReason": {
+           "type": "string"
+          },
+          "clientType": {
+           "type": "string"
+          },
+          "customerPhoneMask": {
+           "type": "string"
+          },
+          "idempotentKey": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "orderNo",
+    "status",
+    "customerName",
+    "phoneTail",
+    "clientType",
+    "createdFrom",
+    "createdTo"
+   ]
+  },
+  "GET /admin/orders/{id}": {
+   "method": "GET",
+   "path": "/admin/orders/{id}",
+   "summary": "获取订单详情",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /admin/orders/export": {
+   "method": "GET",
+   "path": "/admin/orders/export",
+   "summary": "导出订单 CSV",
+   "has_schema": false,
+   "response": {},
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "orderNo",
+    "status",
+    "customerName",
+    "phoneTail",
+    "clientType",
+    "createdFrom",
+    "createdTo"
+   ]
+  },
+  "GET /admin/operation-logs": {
+   "method": "GET",
+   "path": "/admin/operation-logs",
+   "summary": "分页查询操作日志",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "createdAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "updatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "deleted": {
+           "type": "boolean"
+          },
+          "traceId": {
+           "type": "string"
+          },
+          "userId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "username": {
+           "type": "string"
+          },
+          "module": {
+           "type": "string"
+          },
+          "action": {
+           "type": "string"
+          },
+          "params": {
+           "type": "string"
+          },
+          "ip": {
+           "type": "string"
+          },
+          "ua": {
+           "type": "string"
+          },
+          "result": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "username",
+    "module",
+    "userId",
+    "from",
+    "to"
+   ]
+  },
+  "GET /admin/operation-logs/{id}": {
+   "method": "GET",
+   "path": "/admin/operation-logs/{id}",
+   "summary": "操作日志详情",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "createdAt": {
+        "type": "string",
+        "format": "date-time"
+       },
+       "updatedAt": {
+        "type": "string",
+        "format": "date-time"
+       },
+       "deleted": {
+        "type": "boolean"
+       },
+       "traceId": {
+        "type": "string"
+       },
+       "userId": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "username": {
+        "type": "string"
+       },
+       "module": {
+        "type": "string"
+       },
+       "action": {
+        "type": "string"
+       },
+       "params": {
+        "type": "string"
+       },
+       "ip": {
+        "type": "string"
+       },
+       "ua": {
+        "type": "string"
+       },
+       "result": {
+        "type": "string"
+       }
+      },
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /admin/operation-logs/export": {
+   "method": "GET",
+   "path": "/admin/operation-logs/export",
+   "summary": "导出操作日志",
+   "has_schema": false,
+   "response": {},
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "username",
+    "module",
+    "userId",
+    "from",
+    "to"
+   ]
+  },
+  "GET /admin/home/slots": {
+   "method": "GET",
+   "path": "/admin/home/slots",
+   "summary": "运营位列表",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "additionalProperties": {}
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/files/view": {
+   "method": "GET",
+   "path": "/admin/files/view",
+   "summary": "查看/下载文件",
+   "has_schema": false,
+   "response": {},
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "objectKey"
+   ]
+  },
+  "GET /admin/dict-items/by-code": {
+   "method": "GET",
+   "path": "/admin/dict-items/by-code",
+   "summary": "按编码查询字典项",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "createdAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "updatedAt": {
+         "type": "string",
+         "format": "date-time"
+        },
+        "deleted": {
+         "type": "boolean"
+        },
+        "traceId": {
+         "type": "string"
+        },
+        "dictId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "label": {
+         "type": "string"
+        },
+        "value": {
+         "type": "string"
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32"
+        },
+        "status": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "code"
+   ]
+  },
+  "GET /admin/depts/tree": {
+   "method": "GET",
+   "path": "/admin/depts/tree",
+   "summary": "部门树",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "description": "部门树节点",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "description": "部门ID",
+         "example": 1,
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "parentId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "description": "上级部门ID，根节点为 0",
+         "example": 0,
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "name": {
+         "type": "string",
+         "description": "部门名称",
+         "example": "技术部"
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32",
+         "description": "排序号",
+         "example": 1
+        },
+        "status": {
+         "type": "string",
+         "description": "状态：ENABLED / DISABLED",
+         "example": "ENABLED"
+        },
+        "children": {
+         "type": "array",
+         "description": "子部门列表",
+         "items": {
+          "description": "（循环引用 DeptTree）"
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/dashboard/stats": {
+   "method": "GET",
+   "path": "/admin/dashboard/stats",
+   "summary": "获取工作台统计",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/customers": {
+   "method": "GET",
+   "path": "/admin/customers",
+   "summary": "分页查询会员",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "additionalProperties": {}
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "phone",
+    "nickname",
+    "status",
+    "clientType"
+   ]
+  },
+  "GET /admin/customers/{id}": {
+   "method": "GET",
+   "path": "/admin/customers/{id}",
+   "summary": "会员详情",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  },
+  "GET /admin/categories/tree": {
+   "method": "GET",
+   "path": "/admin/categories/tree",
+   "summary": "获取类目树",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "array",
+      "description": "业务数据",
+      "items": {
+       "type": "object",
+       "description": "类目树节点",
+       "properties": {
+        "id": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "description": "类目ID",
+         "example": 1,
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "parentId": {
+         "type": [
+          "string",
+          "integer"
+         ],
+         "description": "父类目ID，顶级为 0",
+         "example": 0,
+         "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+        },
+        "name": {
+         "type": "string",
+         "description": "类目名称",
+         "example": "数码电器"
+        },
+        "level": {
+         "type": "integer",
+         "format": "int32",
+         "description": "层级",
+         "example": 1
+        },
+        "sort": {
+         "type": "integer",
+         "format": "int32",
+         "description": "排序值",
+         "example": 0
+        },
+        "status": {
+         "type": "string",
+         "description": "状态：ENABLED / DISABLED",
+         "example": "ENABLED"
+        },
+        "children": {
+         "type": "array",
+         "description": "子类目列表",
+         "items": {
+          "description": "（循环引用 Node）"
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/auth/me": {
+   "method": "GET",
+   "path": "/admin/auth/me",
+   "summary": "获取当前用户信息",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "id": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "用户ID",
+        "example": 1,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "username": {
+        "type": "string",
+        "description": "用户名",
+        "example": "admin"
+       },
+       "realName": {
+        "type": "string",
+        "description": "真实姓名",
+        "example": "管理员"
+       },
+       "roles": {
+        "type": "array",
+        "description": "角色编码集合",
+        "example": [
+         "ADMIN"
+        ],
+        "items": {
+         "type": "string"
+        },
+        "uniqueItems": true
+       },
+       "permissions": {
+        "type": "array",
+        "description": "权限编码集合",
+        "example": [
+         "user:list",
+         "user:create"
+        ],
+        "items": {
+         "type": "string"
+        },
+        "uniqueItems": true
+       },
+       "menus": {
+        "type": "array",
+        "description": "菜单树",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "parentId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "code": {
+           "type": "string"
+          },
+          "name": {
+           "type": "string"
+          },
+          "type": {
+           "type": "string"
+          },
+          "path": {
+           "type": "string"
+          },
+          "component": {
+           "type": "string"
+          },
+          "icon": {
+           "type": "string"
+          },
+          "sort": {
+           "type": "integer",
+           "format": "int32"
+          },
+          "visible": {
+           "type": "boolean"
+          },
+          "children": {
+           "type": "array",
+           "items": {
+            "description": "（循环引用 MenuTreeVO）"
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": []
+  },
+  "GET /admin/after-sales": {
+   "method": "GET",
+   "path": "/admin/after-sales",
+   "summary": "分页查询售后单",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "description": "业务数据",
+      "properties": {
+       "total": {
+        "type": [
+         "string",
+         "integer"
+        ],
+        "description": "总条数",
+        "example": 100,
+        "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+       },
+       "records": {
+        "type": "array",
+        "description": "当前页数据列表",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "createdAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "updatedAt": {
+           "type": "string",
+           "format": "date-time"
+          },
+          "deleted": {
+           "type": "boolean"
+          },
+          "traceId": {
+           "type": "string"
+          },
+          "afterSaleNo": {
+           "type": "string"
+          },
+          "orderId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "customerId": {
+           "type": [
+            "string",
+            "integer"
+           ],
+           "x-serialized-as": "string（Long 经 Jackson 转字符串）"
+          },
+          "type": {
+           "type": "string"
+          },
+          "reason": {
+           "type": "string"
+          },
+          "evidencePics": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "status": {
+           "type": "string"
+          },
+          "refundAmount": {
+           "type": "number"
+          },
+          "auditRemark": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [],
+   "query_params": [
+    "page",
+    "size",
+    "status",
+    "type",
+    "afterSaleNo"
+   ]
+  },
+  "GET /admin/after-sales/{id}": {
+   "method": "GET",
+   "path": "/admin/after-sales/{id}",
+   "summary": "获取售后详情",
+   "has_schema": true,
+   "response": {
+    "type": "object",
+    "description": "统一响应体",
+    "properties": {
+     "code": {
+      "type": "integer",
+      "format": "int32",
+      "description": "业务码，0 表示成功",
+      "example": 0
+     },
+     "msg": {
+      "type": "string",
+      "description": "提示信息",
+      "example": "ok"
+     },
+     "data": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "业务数据"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "链路追踪 ID",
+      "example": "d8d822c1006a4eebbf66e62ebacdbcfb"
+     }
+    }
+   },
+   "request": {},
+   "path_params": [
+    "id"
+   ],
+   "query_params": []
+  }
+ }
+}

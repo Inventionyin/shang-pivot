@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shang 后台 · 弹窗与交互图鉴（V2.0 增量）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+<style>
+  /* 本页为「光页框」：只有内容区，不带 sidebar / topbar 应用外壳 */
+  .spec-group { margin-bottom: 34px; }
+  .group-head {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 0 0 10px; margin-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+  }
+  .group-head .page-title { font-size: 17px; }
+  .group-note { font-size: 12px; color: var(--slate); margin: -4px 0 14px; }
+  /* 内联抽屉的遮罩不参与文档流（modal.css 只处理了 .modal.is-inline 的遮罩） */
+  .drawer.is-inline .modal-mask { display: none; }
+</style>
+</head>
+<body>
+<div class="content" style="max-width:1440px;margin:0 auto;padding:40px 32px 56px">
+  <div class="auth-logo" style="justify-content:flex-start;margin-bottom:10px">
+    <img class="brand-logo" src="logo.png" alt="Shang"><div class="brand-name">Shang · 后台原型</div>
+  </div>
+  <div class="page-title">Shang 后台 · 弹窗与交互图鉴（V2.0 增量）</div>
+  <p class="page-sub" style="margin-bottom:8px">
+    V2.0 增量弹窗清单 · 共 <b>18</b> 条（弹窗 17 + 抽屉 1）· 按模块分组，每条标注「怎么触发」。
+  </p>
+  <p class="hint" style="margin-bottom:28px">
+    本页是 V2.0 增量页面弹窗 / 抽屉的<b>唯一截图来源</b>，与 V1.0 图鉴 <a href="dialogs.html">dialogs.html</a> 分开归档，两侧截图不得互相串档；
+    所有弹窗以 <span class="code">.is-inline</span> 静态内联方式展示，与页面上的真实弹窗为同一份 markup。
+    交付 Vue 时对应 Element Plus 的 <span class="code">ElMessageBox / ElDialog / ElDrawer / ElMessage</span>。
+  </p>
+
+  <!-- ==================== 1 · 会员管理 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">1 · 会员管理 · customers.html</span>
+      <span class="hint">2 条</span>
+    </div>
+    <p class="group-note">
+      说明：手机号一律脱敏展示；冻结 / 解冻都必须二次确认，冻结为可逆操作。「跳转该会员订单」是普通链接（<span class="code">&lt;a href="orders.html"&gt;</span>），不弹窗。
+    </p>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-01</span> 冻结会员（需确认，说明不能登录/下单）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-cust-freeze">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">冻结会员</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认冻结会员「张三 · 138****0001」？</p>
+                <ul class="impact">
+                  <li>立即<b>不能登录</b>购物端：Web / H5 登录态同时失效</li>
+                  <li>立即<b>不能下单</b>与提交售后；购物车、收藏、足迹保留</li>
+                  <li>已生成订单不受影响，可继续发货与售后</li>
+                </ul>
+                <div class="alert alert-warn" style="margin-top:12px">
+                  <div>冻结为可逆操作：历史订单与评价记录全部保留，可随时在「会员管理」中解冻。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认冻结</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>customers.html · 正常状态会员行内「冻结」。破坏性操作走 btn-danger，文案必须写明冻结后不能登录、不能下单。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-02</span> 解冻会员（需确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-cust-unfreeze">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico ok">✓</span>
+                <div class="modal-title">解冻会员</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认解冻会员「赵六 · 135****0005」？</p>
+                <ul class="impact">
+                  <li>恢复<b>登录</b>与<b>下单</b>能力，登录态需重新登录获取</li>
+                  <li>购物车、收藏、足迹等账户数据沿用冻结前状态</li>
+                  <li>冻结期间的订单与评价记录不受影响</li>
+                </ul>
+                <div class="alert alert-ok" style="margin-top:12px">
+                  <div>解冻后顾客即可正常使用购物端；本次操作会写入操作日志（操作人、时间、会员 ID）。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认解冻</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>customers.html · 已冻结会员行内「解冻」。恢复类操作用 btn-primary，文案说明账户数据沿用冻结前状态。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2 · 站点品牌 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">2 · 站点品牌 · site-brand.html</span>
+      <span class="hint">3 条</span>
+    </div>
+    <p class="group-note">
+      说明：校验口径 —— Logo 1 张、jpeg / png / webp、≤10MB、建议 256×256；站点名 1～30 字符；Slogan ≤50 字符。保存后顾客端刷新生效，允许 5～10 分钟缓存延迟。
+    </p>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-03</span> 保存站点品牌（需确认，含缓存说明）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-brand-save">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✓</span>
+                <div class="modal-title">保存站点品牌</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>将保存以下品牌信息，并立即对顾客端生效：</p>
+                <ul class="impact">
+                  <li>Logo：<b>logo.png</b>（256×256）</li>
+                  <li>站点名称：<b>尚品汇</b></li>
+                  <li>Slogan：<b>选好物，享生活</b></li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">
+                  <div>保存后顾客端<b>刷新生效</b>；客户端有 5～10 分钟短缓存，缓存期内可能仍显示旧品牌，属正常现象。本次修改会写入操作日志。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>site-brand.html · 右上「保存」。必须说明「刷新生效」与 5～10 分钟缓存窗口，避免被当成未生效。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-04</span> 保存校验失败（逐条列原因）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-brand-invalid">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法保存</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>站点品牌有 <b>3</b> 处不符合要求，请修正后重试：</p>
+                <ul class="impact">
+                  <li>站点名称 <b>32</b> 字符，超出 1～30 字符上限</li>
+                  <li>Slogan <b>68</b> 字符，超出 50 字符上限</li>
+                  <li>Logo 格式为 <b>gif</b>，仅支持 jpeg / png / webp</li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">
+                  <div>
+                    校验口径：Logo 1 张、jpeg / png / webp、≤10MB、建议 256×256；站点名 1～30 字符；Slogan ≤50 字符。
+                    校验不通过时<b>不写库</b>，已填内容保留在本页。
+                  </div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">去修正</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>site-brand.html · 站点名超长 / Slogan 超长 / Logo 不符合要求时点「保存」（页面底部「演示触发 · 保存校验失败」）。纯提示，只有「去修正」一个按钮。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-05</span> 上传新 Logo 不符合要求</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-brand-logo-bad">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">Logo 不符合要求</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>仅支持 <b>jpeg / png / webp</b>，单张不超过 <b>10MB</b>，且只能上传 <b>1</b> 张。</p>
+                <p class="hint">建议使用 256×256 的正方形图片。上传失败不影响已填写的站点名与 Slogan，可重新选择文件。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">重新选择</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>site-brand.html · Logo 区「上传新 Logo」选择不符合要求的文件（格式或体积超限）。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 3 · 首页运营位 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">3 · 首页运营位 · home-slots.html</span>
+      <span class="hint">4 条</span>
+    </div>
+    <p class="group-note">
+      说明：槽位固定为 Banner / 活动位（活动位 · 热门精选、活动位 · 新品上架、活动位 · 品牌专区）/ 搜索热词 / 热门精选，每槽位内容上限 10 条；排序与启停即时影响首页；已下架商品由 C 端自动过滤。
+    </p>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-06</span> 从商品库选品（下架商品不可选）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-slot-pick">
+            <div class="modal-panel is-lg" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">＋</span>
+                <div class="modal-title">从商品库选品</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p class="hint" style="margin-bottom:12px">仅列出<b>已上架</b>商品；已下架商品不可选，需要先到「商品列表」重新上架。当前槽位已选 <b>4</b> 条，本槽位上限 <b>10</b> 条。</p>
+                <table class="table">
+                  <thead><tr><th style="width:44px"></th><th>商品</th><th class="code">SPU</th><th class="num">售价</th><th>状态</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><input type="checkbox" checked></td>
+                      <td>iPhone 15 Pro 128G</td>
+                      <td class="code">101</td>
+                      <td class="num">¥7,999</td>
+                      <td><span class="badge badge-forest">上架</span></td>
+                    </tr>
+                    <tr>
+                      <td><input type="checkbox"></td>
+                      <td>Xiaomi 14 Pro 12+256G</td>
+                      <td class="code">103</td>
+                      <td class="num">¥4,999</td>
+                      <td><span class="badge badge-forest">上架</span></td>
+                    </tr>
+                    <tr>
+                      <td><input type="checkbox" checked></td>
+                      <td>戴森 V12 吸尘器</td>
+                      <td class="code">143</td>
+                      <td class="num">¥3,999</td>
+                      <td><span class="badge badge-forest">上架</span></td>
+                    </tr>
+                    <tr>
+                      <td><input type="checkbox" disabled></td>
+                      <td class="hint">折叠露营桌 铝合金</td>
+                      <td class="code hint">248</td>
+                      <td class="num hint">¥359</td>
+                      <td><span class="badge badge-brick">已下架 · 不可选</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="alert alert-info" style="margin-top:12px">
+                  <div>勾选后加入当前槽位并排在末尾，可在列表中用「上移 / 下移」调整顺序。同一商品在同一槽位内不可重复添加。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">加入槽位</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>home-slots.html · 热门精选槽位工具栏「+ 从商品库选品」。已下架行置灰 + disabled，并在标题区写明「下架商品不可选」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-07</span> 移除槽位条目（危险确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-slot-remove">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">移除槽位条目</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认从「<b>热门精选</b>」中移除「折叠露营桌 铝合金」（SPU 248）？</p>
+                <p class="hint">移除后该条目不再出现在首页；商品本身不受影响，仍可在「商品列表」中管理。移除在<b>保存当前槽位</b>后对顾客端生效。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认移除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>home-slots.html · 槽位条目行内「移除」。文案说明只移除条目、不动商品，并提示需保存才生效。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-08</span> 保存当前槽位（即时影响首页）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-slot-save">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✓</span>
+                <div class="modal-title">保存当前槽位</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>将保存槽位「<b>热门精选</b>」的以下改动：</p>
+                <ul class="impact">
+                  <li>内容条目 <b>4</b> 条（顺序：101 → 143 → 248 → 127）</li>
+                  <li>展示标题：<b>热门活动</b></li>
+                  <li>生效时间：<b>2026-09-01 00:00 ~ 2026-12-31 23:59</b></li>
+                  <li>槽位状态：<b>启用</b></li>
+                </ul>
+                <div class="alert alert-warn" style="margin-top:12px">
+                  <div>保存后<b>即时影响首页</b>：顺序与启停立即生效，顾客端刷新即可看到；已下架商品由 C 端自动过滤，不占用展示位。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>home-slots.html · 右上「保存当前槽位」。确认弹窗回显本次改动的条目数与顺序，并写明即时影响首页。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-09</span> 绑定商品已下架（过滤说明）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-slot-filter">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">有 1 个绑定商品已下架</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>「热门精选」绑定的 4 个商品中，有 <b>1</b> 个当前已下架：</p>
+                <ul class="impact">
+                  <li><b>折叠露营桌 铝合金</b> · SPU <b>248</b> · 已下架</li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">
+                  <div>
+                    C 端按商品状态过滤：已下架商品<b>自动不展示</b>，无需手工移除；条目仍保留在槽位中，商品重新上架后自动恢复展示。
+                    若展示位数不足，系统会按「系统设置 · 交易」中的补位排序（sold / new）回填上架商品。
+                  </div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>home-slots.html · 热门精选工具栏「下架商品过滤说明」（绑定商品中有已下架时）。纯提示，只有「知道了」一个按钮。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 4 · 评价管理 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">4 · 评价管理 · reviews.html</span>
+      <span class="hint">2 条</span>
+    </div>
+    <p class="group-note">
+      说明：评价发表即展示、后台只做隐藏 / 恢复，两条都即时生效；低星筛选在 toolbar 的星级下拉里直接选（1～2 星），不弹窗。
+    </p>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-10</span> 隐藏评价（需确认，商品详情不再展示）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-review-hide">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">!</span>
+                <div class="modal-title">隐藏评价</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认隐藏评价「<b class="code">8504</b>」？</p>
+                <ul class="impact">
+                  <li>商品：<b>iPhone 15 Pro 128G</b> · 会员：张三 · 138****0001</li>
+                  <li>星级：<b>3</b> 星 · 发表时间：2026-09-22 09:48</li>
+                </ul>
+                <div class="alert alert-warn" style="margin-top:12px">
+                  <div>隐藏后<b>商品详情不再展示</b>该条评价，也不再计入评分；评价数据与晒图保留，可随时恢复。本次操作会写入操作日志。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认隐藏</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>reviews.html · 展示中的评价行内「隐藏」。必须写明隐藏后商品详情不再展示。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-11</span> 恢复评价（需确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-review-restore">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico ok">✓</span>
+                <div class="modal-title">恢复评价</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认恢复评价「<b class="code">8504</b>」？</p>
+                <ul class="impact">
+                  <li>商品：<b>iPhone 15 Pro 128G</b> · 会员：张三 · 138****0001</li>
+                  <li>星级：<b>3</b> 星 · 发表时间：2026-09-22 09:48</li>
+                </ul>
+                <div class="alert alert-ok" style="margin-top:12px">
+                  <div>恢复后该评价<b>立即回到商品详情</b>并重新计入商品评分；顾客端刷新即可看到，无需重新审核。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认恢复</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>reviews.html · 已隐藏的评价行内「恢复」。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 5 · 出入库单 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">5 · 出入库单 · stock-io.html</span>
+      <span class="hint">3 条</span>
+    </div>
+    <p class="group-note">
+      说明：入库数量必须 &gt; 0；盘点按「实盘 − 账面」计算差异，差异为负即盘亏；销售出库由订单发货自动生成并关联订单号，后台不能手工新建。
+    </p>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-12</span> 新建入库单（数量 &gt; 0）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-io-in">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">↓</span>
+                <div class="modal-title">新建入库单</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">SKU<span class="req">*</span></label>
+                  <select class="select">
+                    <option selected>10025 · AirPods Pro 2 · 单规格</option>
+                    <option>10001 · iPhone 15 Pro 128G · 128GB / 原色钛金属</option>
+                    <option>10006 · Xiaomi 14 Pro 12+256G · 12GB / 256GB / 黑色</option>
+                  </select>
+                  <span class="hint">按 SKU 入库，一次一单；同一单多 SKU 请分次录入</span>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">仓库</label>
+                    <select class="select"><option selected>默认仓</option></select>
+                    <span class="hint">当前仅一个仓库</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">入库数量<span class="req">*</span></label>
+                    <input class="input num" value="40">
+                    <span class="hint">必须为 <b>&gt; 0</b> 的整数</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">备注</label>
+                  <input class="input" value="耳机配件补货">
+                  <span class="hint">≤100 字符，随单据一并保存</span>
+                </div>
+                <div class="alert alert-info">
+                  <div>保存后立即增加该 SKU 库存并生成<b>采购入库</b>流水，单据号形如 <span class="code">PIyyyyMMddNNNN</span>；单据生成后不可修改，录错请用「盘点调整」冲正。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认入库</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>stock-io.html · 右上「+ 新建入库」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-13</span> 盘点调整（数量差异 + 原因）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-io-stocktake">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">±</span>
+                <div class="modal-title">盘点调整</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">SKU<span class="req">*</span></label>
+                  <select class="select">
+                    <option selected>10019 · 罗技 MX Master 3s · 单规格</option>
+                    <option>10001 · iPhone 15 Pro 128G · 128GB / 原色钛金属</option>
+                  </select>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">账面数量</label>
+                    <input class="input num" value="200" readonly>
+                    <span class="hint">取当前总库存，只读</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">实盘数量<span class="req">*</span></label>
+                    <input class="input num" value="198">
+                    <span class="hint">必须为 ≥ 0 的整数</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">数量差异</label>
+                    <input class="input num" value="−2" readonly>
+                    <span class="hint">实盘 − 账面，系统自动计算</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">差异原因<span class="req">*</span></label>
+                    <select class="select">
+                      <option selected>盘亏</option>
+                      <option>盘盈</option>
+                      <option>破损报废</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="alert alert-warn">
+                  <div>差异为负数（盘亏）会<b>减少总库存</b>；调整后若总库存小于锁定占用，本次调整将被拒绝。保存后生成 <span class="code">STyyyyMMddNNNN</span> 盘点单。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认调整</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>stock-io.html · 右上「盘点调整」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-14</span> 单据详情抽屉（含来源与关联订单号）</div>
+        <div class="spec-stage">
+          <div class="drawer is-inline" id="drw-io">
+            <div class="drawer-panel" role="dialog">
+              <div class="modal-head">
+                <div class="modal-title">单据详情</div>
+                <span class="badge badge-forest">采购入库</span>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <dl class="kv" style="grid-template-columns:110px 1fr;margin-bottom:18px">
+                  <dt>类型</dt><dd>采购入库（PURCHASE_IN）</dd>
+                  <dt>单据号</dt><dd class="code">PI202609200001</dd>
+                  <dt>来源</dt><dd>后台新建</dd>
+                  <dt>SKU</dt><dd class="code">10001 · 10006 · 10025</dd>
+                  <dt>数量合计</dt><dd class="num" style="font-weight:700">+160</dd>
+                  <dt>关联订单号</dt><dd class="hint">—（销售出库单才有）</dd>
+                  <dt>操作人</dt><dd>陈思远（admin）</dd>
+                  <dt>时间</dt><dd class="code">2026-09-17 09:10:22</dd>
+                  <dt>备注</dt><dd>秋季补货入库</dd>
+                </dl>
+                <div class="page-title" style="font-size:13px;margin-bottom:10px">单据明细</div>
+                <table class="table" style="margin-bottom:18px">
+                  <thead><tr><th class="code">SKU</th><th>商品</th><th class="num">数量</th><th>行备注</th></tr></thead>
+                  <tbody>
+                    <tr><td class="code">10001</td><td>iPhone 15 Pro 128G · 128GB / 原色钛金属</td><td class="num">+50</td><td>iPhone 补货</td></tr>
+                    <tr><td class="code">10006</td><td>Xiaomi 14 Pro 12+256G · 12GB / 256GB / 黑色</td><td class="num">+30</td><td>小米补货</td></tr>
+                    <tr><td class="code">10025</td><td>AirPods Pro 2 · 单规格</td><td class="num">+80</td><td>AirPods 补货</td></tr>
+                  </tbody>
+                </table>
+                <div class="page-title" style="font-size:13px;margin-bottom:10px">来源说明</div>
+                <div class="timeline">
+                  <div class="tl-item done"><div class="tl-time">2026-09-17 09:10</div><div class="tl-label">后台「新建入库」提交 · 生成采购入库单</div></div>
+                  <div class="tl-item done"><div class="tl-time">2026-09-17 09:10</div><div class="tl-label">库存增加 +160，写入操作日志</div></div>
+                </div>
+                <details style="margin-top:18px">
+                  <summary class="hint" style="cursor:pointer">原始数据（JSON 调试视图）</summary>
+                  <pre class="code" style="background:var(--sand);padding:12px;border-radius:var(--r-md);font-size:12px;overflow:auto;margin-top:8px">{
+  "billNo": "PI202609200001",
+  "type": "PURCHASE_IN",
+  "warehouseId": 1,
+  "operatorId": 1,
+  "source": "ADMIN",
+  "relatedOrderNo": null,
+  "items": [
+    { "skuId": 10001, "qty": 50 },
+    { "skuId": 10006, "qty": 30 },
+    { "skuId": 10025, "qty": 80 }
+  ]
+}</pre>
+                </details>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">关闭</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>stock-io.html · 单据行内「详情」。抽屉右侧滑出，含类型 / 单号 / SKU / 数量 / 关联订单号 / 操作人 / 时间 / 来源与 JSON 调试视图。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 6 · 系统设置（交易分组） ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">6 · 系统设置（交易分组）· settings-trade.html</span>
+      <span class="hint">2 条</span>
+    </div>
+    <p class="group-note">
+      说明：待付款超时 5～120 分钟（默认 15）；免运门槛与默认运费 ≥ 0（默认 99 / 8）；补位排序取 sold / new；沙箱成功延时 ≥ 0。保存即对新订单生效。本页与 V1 的 KV 列表（settings.html）是同一「系统设置」的两种视图，截图分开归档。
+    </p>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-15</span> 保存交易设置（保存即对新单生效）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-trade-save">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✓</span>
+                <div class="modal-title">保存交易设置</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>将保存以下交易参数：</p>
+                <ul class="impact">
+                  <li>待付款超时：<b>15</b> 分钟</li>
+                  <li>免运门槛：<b>¥99</b> · 默认运费：<b>¥8</b></li>
+                  <li>推荐补位排序：<b>sold</b> · 销量优先</li>
+                  <li>沙箱渠道：<b>开启</b> · 成功延时 <b>800</b> ms</li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">
+                  <div>保存后<b>立即对新订单生效</b>：新单按新门槛计算运费、按下新的超时时间关单；已生成订单的金额与超时时间不变。修改会写入操作日志。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>settings-trade.html · 右上「保存」。必须说明「保存即对新订单生效」与存量订单不受影响。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-16</span> 保存校验失败（逐条列原因）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-trade-invalid">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法保存</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>交易设置有 <b>3</b> 处不符合要求，请修正后重试：</p>
+                <ul class="impact">
+                  <li>待付款超时 <b>180</b> 分钟，超出 <b>5～120</b> 分钟范围</li>
+                  <li>默认运费 <b>−8</b> 元，金额不能为负数</li>
+                  <li>推荐补位排序 <b class="code">sale_desc</b>，仅支持 <span class="code">sold</span> / <span class="code">new</span></li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">
+                  <div>
+                    校验口径：待付款超时 5～120 的整数；免运门槛与默认运费 ≥ 0；补位排序取 sold（销量优先）或 new（上新优先）；
+                    沙箱成功延时 ≥ 0 的整数。校验不通过时<b>不写库</b>，本页已填内容保留。
+                  </div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">去修正</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>settings-trade.html · 待付款超时越界 / 金额为负数 / 补位排序非法值时点「保存」（页面底部「演示触发 · 保存校验失败」）。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 7 · V2.0 页面上的既有增量弹窗 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">7 · V2.0 页面上的既有增量弹窗</span>
+      <span class="hint">2 条</span>
+    </div>
+    <p class="group-note">
+      说明：两条来自 V2.0 的 V1 页面变体（订单列表增强 / 商品编辑定时上架），维护约定是「语义改动先改 V1 页面，再同步到变体」，弹窗本体与 V1 页面同源，仅触发条件为 V2.0 增量。
+    </p>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-17</span> 导出当前筛选（订单列表增强）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-export">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">↓</span>
+                <div class="modal-title">导出当前筛选</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>将按<b>当前筛选条件</b>导出订单表格文件：</p>
+                <ul class="impact">
+                  <li>Tab：<b>全部</b>（6 条）</li>
+                  <li>订单号：<b>（未填）</b></li>
+                  <li>手机尾号：<b>（未填）</b></li>
+                  <li>来源端：<b>全部来源端</b></li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">
+                  <div>导出内容包含订单号、顾客、手机（脱敏）、来源端、金额、状态、下单时间、支付单号。导出为后台操作，会写入操作日志。</div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">开始导出</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>orders-enhanced.html · 工具栏「导出当前筛选」。确认弹窗回显当前 Tab 与筛选值，避免导出范围与预期不符。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2V-18</span> 定时上架时间不合法（商品编辑增强）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-schedule">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">定时上架时间不合法</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>定时上架时间须晚于当前时间（当前 <b class="code">2026-09-23 10:12</b>）。</p>
+                <p class="hint">请重新选择一个未来的时间点，精确到分钟。改为「立即上架」或「仅存草稿」则不受此限制。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">重新选择</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>product-edit-schedule.html · 上架方式选「定时」并填入早于当前的时间 → 右上「保存并定时上架」。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="hint" style="margin-top:8px">
+    口径说明：本页弹窗与抽屉均取自各 V2.0 页面真实 markup（本页追加 <span class="code">.is-inline</span> 转为静态内联，并去掉 <span class="code">data-modal-open / data-modal-close</span> 触发属性，避免在静态页里互相弹出）；
+    遮罩、ESC 关闭、点遮罩关闭等行为见 <span class="code">modal.js</span>。V1.0 全量弹窗见 <a href="dialogs.html">dialogs.html</a>；索引见 <a href="index.html">index.html</a>。
+  </p>
+</div>
+<script src="modal.js"></script>
+</body>
+</html>

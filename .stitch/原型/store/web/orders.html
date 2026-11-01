@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的订单 · 尚品汇 Web</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../web.css">
+<link rel="stylesheet" href="../modal.css">
+</head>
+<body class="web-shell web-page-wide">
+<div class="web-utility-bar">
+  <div class="web-utility-bar-inner">
+    <span><a href="home.html">尚品汇首页</a></span>
+    <div>
+      <a href="profile.html">我的尚品汇</a>
+      <a href="cart.html">购物车</a>
+      <a href="favorites.html">我的收藏</a>
+    </div>
+  </div>
+</div>
+<header class="web-topnav"><div class="web-topnav-inner">
+  <a class="web-brand" href="home.html"><img src="../logo.png" alt=""><span class="name">尚品汇</span></a>
+  <div class="web-search"><input placeholder="搜索商品" readonly><button class="go" type="button">搜索</button></div>
+  <div class="web-topnav-actions">
+    <a class="web-cart-badge" href="cart.html">购物车<span>2</span></a>
+    <a href="profile.html">Jean</a>
+  </div>
+</div></header>
+
+<main class="web-main account-layout">
+  <nav class="account-side">
+    <div class="group-label">账户</div>
+    <a href="profile.html">我的尚品汇</a>
+    <a href="cart.html">我的购物车</a>
+    <a class="active" href="orders.html">已买到的宝贝</a>
+    <div class="group-label">收藏与足迹</div>
+    <a href="favorites.html">收藏的宝贝</a>
+    <a href="profile.html">我的足迹</a>
+    <div class="group-label">地址与设置</div>
+    <a href="profile.html">收货地址</a>
+    <a href="login.html">账号设置</a>
+  </nav>
+
+  <section>
+    <h1 class="page-title">我的订单</h1>
+    <div class="order-tabs">
+      <a href="#">全部</a>
+      <a class="active" href="#">待付款</a>
+      <a href="#">待发货</a>
+      <a href="#">待收货</a>
+      <a href="#">已完成</a>
+      <a href="#">已关闭</a>
+    </div>
+
+    <!-- 待付款：15 分钟倒计时（mm:ss），可取消、可支付 -->
+    <div class="order-card">
+      <div class="head">
+        <span class="hint">订单号 202609140001 · 2026-09-14 15:20</span>
+        <span class="badge badge-coral">待付款</span>
+      </div>
+      <div class="row">
+        <div class="ph ph-acc"><span>索尼</span></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600">索尼 WH-1000XM5</div>
+          <div class="hint">官方标配 × 1</div>
+        </div>
+        <div class="price">¥2,599</div>
+      </div>
+      <div class="row">
+        <div class="ph ph-food"><span>坚果</span></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600">每日坚果 750g</div>
+          <div class="hint">750g / 袋 × 1</div>
+        </div>
+        <div class="price">¥89</div>
+      </div>
+      <div class="flex-between">
+        <span class="hint">需付款 <strong class="price">¥2,688</strong> · 剩余 <span style="font-family:var(--font-mono);color:var(--brick)">12:48</span>（超时自动关闭并释放库存）</span>
+        <div class="actions">
+          <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-cancel">取消订单</button>
+          <button type="button" class="btn btn-sm btn-primary" data-modal-open="dlg-pay" data-pay="loading">去支付</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 待收货：可确认收货、查看物流 -->
+    <div class="order-card">
+      <div class="head">
+        <span class="hint">订单号 202609100088 · 2026-09-10 09:12</span>
+        <span class="badge badge-forest">待收货</span>
+      </div>
+      <div class="row">
+        <div class="ph ph-phone"><span>iP</span></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600">iPhone 15 Pro 128G</div>
+          <div class="hint">512GB · 白色钛金属 × 1</div>
+        </div>
+        <div class="price">¥10,999</div>
+      </div>
+      <div class="flex-between">
+        <span class="hint">实付 <strong class="price">¥10,999</strong> · 顺丰速运 已发货</span>
+        <div class="actions">
+          <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-logistics">查看物流</button>
+          <button type="button" class="btn btn-sm btn-primary" data-modal-open="dlg-receive">确认收货</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 已完成：可评价、售后、再次购买 -->
+    <div class="order-card">
+      <div class="head">
+        <span class="hint">订单号 202609010012 · 2026-09-01 20:05</span>
+        <span class="badge badge-forest">已完成</span>
+      </div>
+      <div class="row">
+        <div class="ph ph-acc"><span>AP</span></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600">AirPods Pro 2</div>
+          <div class="hint">官方标配 × 1</div>
+        </div>
+        <div class="price">¥1,999</div>
+      </div>
+      <div class="flex-between">
+        <span class="hint">实付 <strong class="price">¥1,999</strong> · 2026-09-03 已确认收货</span>
+        <div class="actions">
+          <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-aftersale">申请售后</button>
+          <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-aftersale-progress">售后进度</button>
+          <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-rebuy">再次购买</button>
+          <button type="button" class="btn btn-sm btn-primary" data-modal-open="dlg-review">评价</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 已关闭 -->
+    <div class="order-card">
+      <div class="head">
+        <span class="hint">订单号 202608280033 · 2026-08-28 11:40</span>
+        <span class="badge" style="background:var(--sand);color:var(--stone)">已关闭</span>
+      </div>
+      <div class="row">
+        <div class="ph ph-storage"><span>收纳</span></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600">抽屉式收纳盒</div>
+          <div class="hint">单规格 × 1</div>
+        </div>
+        <div class="price">¥69</div>
+      </div>
+      <div class="flex-between">
+        <span class="hint">超时未付款，订单已自动关闭，库存已释放</span>
+        <div class="actions">
+          <button type="button" class="btn btn-sm btn-secondary" data-modal-open="dlg-rebuy">再次购买</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="web-footer">尚品汇 · V2.0 Web 门店 · 订单列表</footer>
+
+<!-- ============ 弹窗层 ============ -->
+
+<!-- R-01 取消订单确认 -->
+<div class="modal" id="dlg-cancel" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-ico warn"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></span>
+      <span class="modal-title">取消订单？</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p>订单号 <span style="font-family:var(--font-mono)">202609140001</span>，应付 ¥2,688。</p>
+      <div class="alert alert-warn mt-12">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        取消后订单关闭并释放已锁定库存，需要时请重新下单。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>再想想</button>
+      <button type="button" class="btn btn-danger" data-modal-close>确认取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- R-02 确认收货 -->
+<div class="modal" id="dlg-receive" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-title">确认收货</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="dlg-goods">
+        <div class="ph ph-phone"><span>iP</span></div>
+        <div class="meta">
+          <div class="t">iPhone 15 Pro 128G</div>
+          <div class="s">512GB · 白色钛金属 × 1</div>
+        </div>
+      </div>
+      <div class="alert alert-info mt-16">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>
+        请确认已收到商品。确认后订单变为已完成，可进行评价或申请售后。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>还没收到</button>
+      <button type="button" class="btn btn-primary" data-modal-close>确认收货</button>
+    </div>
+  </div>
+</div>
+
+<!-- R-03 物流轨迹 -->
+<div class="modal" id="dlg-logistics" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-head">
+      <span class="modal-title">物流轨迹</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="dlg-goods">
+        <div class="ph ph-phone"><span>iP</span></div>
+        <div class="meta">
+          <div class="t">iPhone 15 Pro 128G</div>
+          <div class="s">512GB · 白色钛金属 × 1</div>
+        </div>
+      </div>
+      <div class="kv-list mt-16">
+        <div class="kv"><span class="k">承运商</span><span class="v">顺丰速运</span></div>
+        <div class="kv"><span class="k">运单号</span><span class="v num">SF1234567890123</span></div>
+        <div class="kv"><span class="k">收货地址</span><span class="v">上海市 浦东新区 张江路 88 号 尚品汇大楼 12F</span></div>
+      </div>
+      <hr class="divider">
+      <ul class="timeline">
+        <li class="now">
+          <div class="t">派送中</div>
+          <div class="d">2026-09-13 09:20</div>
+          <div class="x">快件已到达【上海浦东张江营业点】，快递员正在派送</div>
+        </li>
+        <li class="done">
+          <div class="t">运输中</div>
+          <div class="d">2026-09-12 21:05</div>
+          <div class="x">快件已到达【上海转运中心】</div>
+        </li>
+        <li class="done">
+          <div class="t">已发货</div>
+          <div class="d">2026-09-11 18:40</div>
+          <div class="x">商家已发货，顺丰速运已揽收</div>
+        </li>
+        <li class="done">
+          <div class="t">订单支付成功</div>
+          <div class="d">2026-09-10 09:12</div>
+          <div class="x">订单进入待发货</div>
+        </li>
+      </ul>
+    </div>
+    <div class="modal-foot"><button type="button" class="btn btn-primary" data-modal-close>知道了</button></div>
+  </div>
+</div>
+
+<!-- R-04 售后申请（类型 / 原因 / 凭证 1~3 张 / 补充说明 ≤200 字） -->
+<div class="modal" id="dlg-aftersale" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-lg">
+    <div class="modal-head">
+      <span class="modal-title">申请售后</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="dlg-goods">
+        <div class="ph ph-acc"><span>AP</span></div>
+        <div class="meta">
+          <div class="t">AirPods Pro 2</div>
+          <div class="s">官方标配 × 1 · 实付 ¥1,999</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="field">
+        <span class="field-label">售后类型<span class="req">*</span></span>
+        <div class="sku-row">
+          <span class="chip active">仅退款</span>
+          <span class="chip">退货退款</span>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">售后原因<span class="req">*</span></span>
+        <select class="select">
+          <option>请选择售后原因</option>
+          <option selected>商品与描述不符</option>
+          <option>商品破损 / 有瑕疵</option>
+          <option>少件 / 发错货</option>
+          <option>不想要了</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">凭证图片（选填，最多 3 张）</span>
+        <div class="upload-row">
+          <div class="up-box is-done"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l4.5-4.5L12 16l3-3 6 6"/></svg><span>已上传</span><span class="del">删除</span></div>
+          <div class="up-box"><svg class="ico" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg><span>上传凭证</span></div>
+        </div>
+        <span class="hint">jpeg / png / webp，单张 ≤10MB；凭证仅你与售后审核人员可见</span>
+      </div>
+      <div class="field">
+        <span class="field-label">补充说明（选填）</span>
+        <textarea class="input" maxlength="200" placeholder="请补充说明问题，最多 200 字"></textarea>
+        <span class="hint">0 / 200</span>
+      </div>
+      <div class="alert alert-info">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>
+        同一订单同时只允许一个进行中的售后单；本版本退款为模拟退款。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close data-modal-open="dlg-aftersale-progress">提交申请</button>
+    </div>
+  </div>
+</div>
+
+<!-- R-05 售后进度 -->
+<div class="modal" id="dlg-aftersale-progress" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md">
+    <div class="modal-head">
+      <span class="modal-title">售后进度</span>
+      <span class="badge badge-coral">待审核</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="kv-list">
+        <div class="kv"><span class="k">售后单号</span><span class="v num">AS202609140001</span></div>
+        <div class="kv"><span class="k">关联订单</span><span class="v num">202609010012</span></div>
+        <div class="kv"><span class="k">售后类型</span><span class="v">仅退款</span></div>
+        <div class="kv"><span class="k">售后原因</span><span class="v">商品与描述不符</span></div>
+        <div class="kv"><span class="k">退款金额</span><span class="v num" style="color:var(--coral)">¥1,999</span></div>
+      </div>
+      <hr class="divider">
+      <ul class="timeline">
+        <li class="now">
+          <div class="t">待审核</div>
+          <div class="d">2026-09-14 16:02</div>
+          <div class="x">售后申请已提交，等待后台审核</div>
+        </li>
+        <li>
+          <div class="t">退款中</div>
+          <div class="d">—</div>
+          <div class="x">审核通过后进入模拟退款</div>
+        </li>
+        <li>
+          <div class="t">已完成</div>
+          <div class="d">—</div>
+          <div class="x">退款成功，售后单关闭</div>
+        </li>
+      </ul>
+      <div class="alert alert-warn">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        审核被拒绝时可修改申诉后重新提交，回到待审核。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>关闭</button>
+      <button type="button" class="btn btn-primary" data-modal-close data-modal-open="dlg-aftersale">修改申诉</button>
+    </div>
+  </div>
+</div>
+
+<!-- R-06 评价（1~5 星 / ≤500 字 / ≤3 图） -->
+<div class="modal" id="dlg-review" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-lg">
+    <div class="modal-head">
+      <span class="modal-title">发表评价</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="dlg-goods">
+        <div class="ph ph-acc"><span>AP</span></div>
+        <div class="meta">
+          <div class="t">AirPods Pro 2</div>
+          <div class="s">官方标配 × 1</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="field">
+        <span class="field-label">商品评分<span class="req">*</span></span>
+        <div class="star-row">
+          <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <button type="button" class="star on"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8L3.5 9.1l5.9-.8L12 3z"/></svg></button>
+          <span class="score">5 分</span>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">评价内容（选填）</span>
+        <textarea class="input" maxlength="500" placeholder="说说使用感受，最多 500 字">降噪很到位，通勤路上几乎听不到地铁噪音。</textarea>
+        <span class="hint">17 / 500</span>
+      </div>
+      <div class="field">
+        <span class="field-label">晒图（选填，最多 3 张）</span>
+        <div class="upload-row">
+          <div class="up-box is-done"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l4.5-4.5L12 16l3-3 6 6"/></svg><span>已上传</span><span class="del">删除</span></div>
+          <div class="up-box"><svg class="ico" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg><span>上传图片</span></div>
+        </div>
+        <span class="hint">jpeg / png，单张 ≤10MB</span>
+      </div>
+      <div class="alert alert-info">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>
+        仅已完成订单可评价，每个订单项一次，提交后不可修改；评价默认直接展示。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <button type="button" class="btn btn-primary" data-modal-close>提交评价</button>
+    </div>
+  </div>
+</div>
+
+<!-- R-07 再次购买 -->
+<div class="modal" id="dlg-rebuy" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm">
+    <div class="modal-head">
+      <span class="modal-title">再次购买</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p class="muted">按原订单商品重新加入购物车，失效商品不可加入。</p>
+      <div class="dlg-goods mt-12">
+        <div class="ph ph-storage"><span>收纳</span></div>
+        <div class="meta">
+          <div class="t">抽屉式收纳盒</div>
+          <div class="s">单规格 × 1 · ¥69</div>
+        </div>
+      </div>
+      <div class="alert alert-warn mt-16">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        该订单中的「双人帐篷 防雨款」已下架，将不会加入购物车。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-secondary" data-modal-close>取消</button>
+      <a class="btn btn-primary" href="cart.html">加入购物车</a>
+    </div>
+  </div>
+</div>
+
+<!-- R-08 待付款支付层（支付中 → 成功 / 失败） -->
+<div class="modal" id="dlg-pay" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-pay">
+    <div class="modal-head">
+      <span class="modal-title">收银台</span>
+      <button type="button" class="modal-x" data-modal-close aria-label="关闭"><svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-body" data-pay-stage="loading">
+      <div class="pay-spin"></div>
+      <div style="font-weight:600;margin-bottom:6px">支付中…</div>
+      <div class="pay-amount">¥2,688</div>
+      <p class="hint mt-12">订单号 202609140001 · 剩余支付时间 12:48</p>
+    </div>
+    <div class="modal-body" data-pay-stage="ok" hidden>
+      <div class="pay-state ok"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">支付成功</div>
+      <div class="muted">订单已进入待发货</div>
+    </div>
+    <div class="modal-body" data-pay-stage="fail" hidden>
+      <div class="pay-state err"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg></div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">支付失败</div>
+      <div class="muted">订单保持待付款，可重试</div>
+    </div>
+    <div class="modal-foot">
+      <div class="foot-left" data-pay-stage="loading">
+        <button type="button" class="btn btn-secondary" data-modal-close>取消支付</button>
+        <button type="button" class="btn btn-secondary" data-pay-to="fail">模拟失败</button>
+        <button type="button" class="btn btn-primary" data-pay-to="ok">模拟成功</button>
+      </div>
+      <div class="foot-left" data-pay-stage="ok" hidden>
+        <button type="button" class="btn btn-secondary" data-modal-close>关闭</button>
+        <a class="btn btn-primary" href="orders.html">查看订单</a>
+      </div>
+      <div class="foot-left" data-pay-stage="fail" hidden>
+        <button type="button" class="btn btn-secondary" data-modal-close>稍后支付</button>
+        <button type="button" class="btn btn-primary" data-pay-to="loading">重试支付</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../modal.js"></script>
+</body>
+</html>

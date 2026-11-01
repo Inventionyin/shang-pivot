@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>字典管理 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='dicts'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">系统管理 / <b>字典管理</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content">
+      <div class="page-head">
+        <div>
+          <div class="page-title">字典管理</div>
+          <div class="page-sub">配置业务码与显示文案 · 供筛选、下拉、状态标签复用</div>
+        </div>
+        <button class="btn btn-primary" data-modal-open="dlg-dict-type-form">+ 新增字典</button>
+      </div>
+
+      <div class="card card-pad" style="margin-bottom:14px;background:var(--sand)">
+        <b>怎么用：</b>左侧选字典类型，右侧维护选项。
+        <span class="code">value</span> 是存储值（如 <span class="code">PENDING_PAY</span>），
+        <span class="code">label</span> 是显示文案（如「待付款」）。
+      </div>
+
+      <div class="split">
+        <div class="card card-pad">
+          <div class="nav-group-title">字典类型</div>
+          <input class="input" placeholder="搜索编码 / 名称" style="margin-bottom:10px" />
+          <table class="table">
+            <tbody>
+              <tr style="background:var(--sand)">
+                <td>
+                  <b>订单状态</b>
+                  <div class="hint code" style="font-size:11px">order_status</div>
+                </td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-type-form">编辑</button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  售后类型
+                  <div class="hint code" style="font-size:11px">aftersale_type</div>
+                </td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-type-form">编辑</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card card-pad">
+          <div class="page-head" style="margin-bottom:12px">
+            <div>
+              <div class="page-title" style="font-size:16px;margin:0">字典选项 · 订单状态</div>
+              <div class="hint" style="margin-top:4px">编码 <span class="code">order_status</span> · 共 5 项</div>
+            </div>
+            <button class="btn btn-primary btn-sm" data-modal-open="dlg-dict-item-form">+ 新增选项</button>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>显示文案 (label)</th>
+                <th class="code">存储值 (value)</th>
+                <th class="num center">排序</th>
+                <th>状态</th>
+                <th class="col-op">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>待付款</td><td class="code">PENDING_PAY</td><td class="num center">1</td>
+                <td><span class="badge badge-forest">启用</span></td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-del">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td>待发货</td><td class="code">PENDING_SHIP</td><td class="num center">2</td>
+                <td><span class="badge badge-forest">启用</span></td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-del">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td>待收货</td><td class="code">PENDING_RECEIVE</td><td class="num center">3</td>
+                <td><span class="badge badge-forest">启用</span></td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-del">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td>已完成</td><td class="code">COMPLETED</td><td class="num center">4</td>
+                <td><span class="badge badge-forest">启用</span></td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-del">删除</button>
+                </td>
+              </tr>
+              <tr>
+                <td>已关闭</td><td class="code">CLOSED</td><td class="num center">5</td>
+                <td><span class="badge badge-forest">启用</span></td>
+                <td class="col-op">
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-form">编辑</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-dict-item-del">删除</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 新增 / 编辑字典类型 ============ -->
+<div class="modal" id="dlg-dict-type-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-dict-type-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-dict-type-form-t">新增 / 编辑字典类型</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">类型编码<span class="req">*</span></label>
+        <input class="input" value="order_status" autofocus>
+        <span class="hint">2～50 位，全局唯一（如 <span class="code">order_status</span>）；代码按编码读取，改名会导致取不到值</span>
+      </div>
+      <div class="field">
+        <label class="label">类型名称<span class="req">*</span></label>
+        <input class="input" value="订单状态">
+        <span class="hint">1～30 字符，仅用于后台展示</span>
+      </div>
+      <div class="field">
+        <label class="label">备注</label>
+        <input class="input" value="订单状态枚举">
+      </div>
+      <div class="alert alert-info">编码重复时提交会被拒绝并提示「类型编码已存在」；删除字典类型需先清空其选项。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 新增 / 编辑字典项 ============ -->
+<div class="modal" id="dlg-dict-item-form" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-dict-item-form-t">
+    <div class="modal-head">
+      <span class="modal-ico info">✎</span>
+      <div class="modal-title" id="dlg-dict-item-form-t">新增 / 编辑字典项</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">所属字典</label>
+        <input class="input" value="订单状态（order_status）" readonly>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">显示文案<span class="req">*</span></label>
+          <input class="input" value="待付款" autofocus>
+          <span class="hint">1～50 字符，列表与筛选展示用</span>
+        </div>
+        <div class="field">
+          <label class="label">存储值<span class="req">*</span></label>
+          <input class="input" value="PENDING_PAY">
+          <span class="hint">1～50 字符，同一字典内唯一</span>
+        </div>
+        <div class="field">
+          <label class="label">排序</label>
+          <input class="input" value="1">
+          <span class="hint">同级从小到大</span>
+        </div>
+        <div class="field">
+          <label class="label">状态</label>
+          <select class="select">
+            <option selected>启用</option>
+            <option>禁用</option>
+          </select>
+        </div>
+      </div>
+      <div class="alert alert-info">存储值一旦被业务数据引用请勿修改（订单、库存等按值存储）；确需变更时建议新增选项并把旧项置为<b>禁用</b>。</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-close>保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 删除字典项（危险确认）============ -->
+<div class="modal" id="dlg-dict-item-del" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-dict-item-del-t">
+    <div class="modal-head">
+      <span class="modal-ico danger">×</span>
+      <div class="modal-title" id="dlg-dict-item-del-t">删除字典项</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>确认删除字典项「已关闭（CLOSED）」？</p>
+      <p class="hint">删除后所有按该值渲染的状态标签会<b>显示为原始存储值</b>，且不可恢复；仍被业务数据引用时删除会被拒绝。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-danger" data-modal-close>确认删除</button>
+    </div>
+  </div>
+</div>
+
+<script src="modal.js"></script>
+</body>
+</html>

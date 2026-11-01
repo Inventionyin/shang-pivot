@@ -1,0 +1,158 @@
+{
+  "updatedAt": "2026-10-30",
+  "summary": {
+    "optimizations": 8,
+    "enhancements": 9,
+    "enhancementsDone": 7,
+    "enhancementsPartial": 2,
+    "limitations": 6
+  },
+  "optimizations": [
+    {
+      "id": "PERF-LOG",
+      "title": "失败日志读取性能",
+      "before": "每个失败用例全文扫描百 MB 后端日志，完整 API 一轮超过 10 分钟",
+      "after": "diagnose.py 只读日志尾部 8MB；复用型 client 的 traceId 截断到最近 10 个；单个失败最多取 5 个 traceId",
+      "evidence": "完整 API 一轮约 4 分钟；93 条失败证据完整",
+      "status": "done"
+    },
+    {
+      "id": "COUNT-DEDUP",
+      "title": "重跑结果计数",
+      "before": "pytest-rerunfailures 为同一 nodeid 追加多次 call 记录，计数虚高（806 条）",
+      "after": "sessionfinish 与 finalize_run.py 按 nodeid 保留最后一次尝试",
+      "evidence": "本轮 722 条 API + 94 条 UI，汇总 816 条：720 通过 / 93 失败 / 3 跳过",
+      "status": "done"
+    },
+    {
+      "id": "DEFECT-LOCATE",
+      "title": "缺陷代码定位",
+      "before": "只取第一个 com.shangpivot 堆栈帧，常命中 JwtAuthFilter，92 条中仅 6 条定位",
+      "after": "跳过过滤器/异常处理器帧；无应用堆栈时按端点映射到 Controller#方法并标注来源",
+      "evidence": "92/92 定位成功（堆栈 6、端点映射 86）",
+      "status": "done"
+    },
+    {
+      "id": "MQ-CLOSE-LOOP",
+      "title": "MQ 事件闭环",
+      "before": "后端无 MQ，订单支付后没有异步事件链路可测",
+      "after": "RabbitMQ + ORDER_PAID 事件 + Flyway V21；消费者按 (order_id,event_type) 幂等落库，失败重试 3 次进 DLQ",
+      "evidence": "MQ 用例 3 条全绿：落库 / 重复投递 / 死信",
+      "status": "done"
+    },
+    {
+      "id": "JACOCO",
+      "title": "运行时行覆盖",
+      "before": "只有静态链路覆盖，无法回答“真正执行了哪些代码”",
+      "after": "JaCoCo agent（tcpserver 6300）+ dump/reset + 报告注入；覆盖率页新增按包明细",
+      "evidence": "70.12% 行覆盖（2326/3317 行，86 个类）",
+      "status": "done"
+    },
+    {
+      "id": "CI-NIGHTLY",
+      "title": "CI 夜间与选测",
+      "before": "无定时回归、无变更选测，靠手工全量",
+      "after": "nightly-pytest.yml + scripts/ci/nightly.sh；git diff → 端点 → 用例选测；质量/评审门禁前置",
+      "evidence": "全量/affected 两种模式；报告、归档、缺陷、知识库自动产出",
+      "status": "done"
+    },
+    {
+      "id": "REPORT-VIEWS",
+      "title": "报告扩展视图",
+      "before": "只有接口列表与统计，缺陷/覆盖率/历史/UI 分散",
+      "after": "接口/UI 两组子 tab：覆盖率、缺陷、用例历史、浏览器矩阵、并行对比",
+      "evidence": "6 个扩展视图与 Allure 深链打通",
+      "status": "done"
+    },
+    {
+      "id": "DB-BASELINE",
+      "title": "数据库可重复性",
+      "before": "连续重跑导致售后/发货类用例被历史数据污染，新增 5 条假失败",
+      "after": "恢复基线后重跑，确认 93 条失败稳定；后端重启自动应用 V21",
+      "evidence": "恢复前 98 失败 → 恢复后 93 失败，失败集合与基线一致",
+      "status": "done"
+    }
+  ],
+  "enhancements": [
+    {
+      "no": 1,
+      "title": "用例评审机制",
+      "result": "不可变注册表 771 条；评审台账/评审单/--check 门禁；21 条新增用例已登记，65 条存量 P0 为 legacy(auto) 债务",
+      "status": "done"
+    },
+    {
+      "no": 2,
+      "title": "生成约束与设计规范",
+      "result": "测试用例设计agent.md + case_quality_gate.py（元数据、稳定 ID、端点方法、DB 断言、硬编码、评审）",
+      "status": "done"
+    },
+    {
+      "no": 3,
+      "title": "接口完备性（DB / 方法）",
+      "result": "23 个写接口契约、12 条落库用例、方法校验 135/135；DB 断言覆盖 22/78",
+      "status": "partial"
+    },
+    {
+      "no": 4,
+      "title": "复用/历史/知识库/CI",
+      "result": "运行清单（run_id/git/hash）、跨轮 diff、SQLite FTS5 知识库 1416 条、memory、夜间流水线",
+      "status": "done"
+    },
+    {
+      "no": 5,
+      "title": "缺陷单与代码定位",
+      "result": "92 条缺陷单含请求/响应/traceId 日志/代码片段；禅道 dry-run；500 日志在抽屉可见",
+      "status": "done"
+    },
+    {
+      "no": 6,
+      "title": "覆盖率（静态 + JaCoCo）",
+      "result": "接口 135/135、链路 475/475、写接口 DB 22/78、JaCoCo 行覆盖 70.12%",
+      "status": "done"
+    },
+    {
+      "no": 7,
+      "title": "MQ / Redis",
+      "result": "RabbitMQ 订单事件（V21、幂等、DLQ）；Redis 验证码 TTL/冷却、登录锁定、JWT 黑名单",
+      "status": "done"
+    },
+    {
+      "no": 8,
+      "title": "UI 多浏览器",
+      "result": "Chromium 47/47、Firefox 47/47；报告按用例 × 浏览器展示。WebKit 与 xdist 组合会 hang，暂未纳入",
+      "status": "partial"
+    },
+    {
+      "no": 9,
+      "title": "500 失败日志展示",
+      "result": "日志尾部读取 + traceId 去重；失败附件、接口抽屉、缺陷单三处可见",
+      "status": "done"
+    }
+  ],
+  "limitations": [
+    {
+      "title": "写接口 DB 断言 22/78",
+      "detail": "契约已列全 78 个写端点，剩余 56 个待补专项用例（P1）"
+    },
+    {
+      "title": "65 条 P0 评审债务",
+      "detail": "存量用例标记 legacy(auto)，默认告警；--strict-p0 可阻断，需人工评审转 approved"
+    },
+    {
+      "title": "JaCoCo 为整轮口径",
+      "detail": "一次运行的总行覆盖，未做逐接口 dump/reset；脚本已支持，成本较高"
+    },
+    {
+      "title": "WebKit 未纳入默认",
+      "detail": "本机 WebKit 与 xdist 组合卡在 context 关闭；CI 可尝试单 worker"
+    },
+    {
+      "title": "RabbitMQ 镜像来源",
+      "detail": "Docker Hub 直连超时，本机使用 daocloud 镜像并 tag 为 rabbitmq:3-management；换机器需镜像加速"
+    },
+    {
+      "title": "93 条失败为缺陷护栏",
+      "detail": "对应 D-06～D-23 已知缺陷，用于修复后自动转绿，不是本轮回归"
+    }
+  ]
+}

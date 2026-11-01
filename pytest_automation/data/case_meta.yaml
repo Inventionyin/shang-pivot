@@ -1,0 +1,874 @@
+# 用例元数据：标题、验证点、模块与编号前缀。
+# 键格式：<测试文件>::<测试函数>；参数化用例只写函数级元数据，参数在导出时展开。
+modules:
+  tests/api/test_auth.py: {name: 认证, prefix: AUTH}
+  tests/api/test_catalog.py: {name: 商品与搜索, prefix: CAT}
+  tests/api/test_cart.py: {name: 购物车, prefix: CART}
+  tests/api/test_address.py: {name: 收货地址, prefix: ADDR}
+  tests/api/test_order.py: {name: 订单, prefix: ORDER}
+  tests/api/test_favorites_history.py: {name: 收藏与足迹, prefix: FAV}
+  tests/api/test_after_sales_reviews.py: {name: 售后与评价, prefix: ASR}
+  tests/api/test_admin.py: {name: 管理端, prefix: ADMIN}
+  tests/api/test_security.py: {name: 安全, prefix: SEC}
+  tests/api/test_security_idor.py: {name: 水平越权, prefix: IDOR}
+  tests/api/test_invariants.py: {name: 业务不变量, prefix: INV}
+  tests/api/test_idempotency.py: {name: 幂等, prefix: IDEM}
+  tests/api/test_bulk_data.py: {name: 大数据量, prefix: BULK}
+  tests/api/test_validation.py: {name: 校验边界, prefix: VAL}
+  tests/api/test_validation_interactions.py: {name: 参数联动, prefix: LINK}
+  tests/api/test_endpoint_matrix_orders.py: {name: POST /api/orders 接口矩阵, prefix: OMX}
+  tests/api/test_endpoint_sweep.py: {name: 全接口巡检, prefix: SWEEP}
+  tests/api/test_admin_crud_roundtrip.py: {name: 管理端CRUD往返, prefix: CRUD}
+  tests/api/test_failure_evidence_demo.py: {name: 失败留痕演示, prefix: DEMO}
+  tests/api/test_data_driven.py: {name: 数据驱动校验, prefix: DATA}
+  tests/api/test_smoke.py: {name: 冒烟, prefix: SMOKE}
+  tests/api/test_write_persistence.py: {name: 写接口落库, prefix: WDB}
+  tests/api/test_mq_order_events.py: {name: 中间件-MQ, prefix: MQ}
+  tests/api/test_redis_state.py: {name: 中间件-Redis, prefix: CACHE}
+  tests/ui/test_mall_browse.py: {name: 商城浏览, prefix: BROWSE}
+  tests/ui/test_mall_product.py: {name: 商城商品详情, prefix: PRODUCT}
+  tests/ui/test_mall_account.py: {name: 商城个人中心, prefix: ACCOUNT}
+  tests/ui/test_mall_login.py: {name: 商城登录, prefix: LOGIN}
+  tests/ui/test_mall_cart_checkout.py: {name: 商城购物车与结算, prefix: CART}
+  tests/ui/test_mall_orders.py: {name: 商城订单, prefix: ORDER}
+  tests/ui/test_admin_console.py: {name: 后台控制台, prefix: ADMIN}
+  tests/e2e/test_purchase_flow.py: {name: 端到端购买, prefix: E2E}
+
+cases:
+  # ---------- API: 认证 ----------
+  "tests/api/test_auth.py::test_send_sms":
+    title: 发送短信验证码
+    verify: 返回 cooldownSec 且大于 0；演示环境验证码固定 123456
+  "tests/api/test_auth.py::test_send_sms_rejects_bad_phone":
+    title: 发送验证码时手机号格式错误
+    verify: HTTP 400，业务码 40000，提示手机号格式不正确
+  "tests/api/test_auth.py::test_login_contract":
+    title: 商城验证码登录响应契约
+    verify: 返回 accessToken、refreshToken、expiresIn（字符串）与 customer 资料
+  "tests/api/test_auth.py::test_login_wrong_code":
+    title: 验证码错误时登录失败
+    verify: 业务码 40101，提示验证码错误或已过期
+  "tests/api/test_auth.py::test_me_returns_current_customer":
+    title: 查询当前会员资料
+    verify: 返回会员 id 与登录账号一致，status=NORMAL
+  "tests/api/test_auth.py::test_me_requires_token":
+    title: 未登录访问会员资料
+    verify: HTTP 401，业务码 40100/40103
+  "tests/api/test_auth.py::test_refresh_token":
+    title: 刷新访问令牌
+    verify: 返回新的 accessToken 与 expiresIn
+  "tests/api/test_auth.py::test_logout_revokes_token":
+    title: 登出后访问令牌立即失效
+    verify: 登出成功后再访问 /api/me 返回 401
+  "tests/api/test_auth.py::test_update_profile":
+    title: 修改会员昵称
+    verify: 返回新昵称并与资料接口一致
+  "tests/api/test_auth.py::test_admin_login_and_me":
+    title: 管理员登录并查询当前用户
+    verify: username 匹配，返回 roles/permissions/menus
+  "tests/api/test_auth.py::test_admin_login_rejects_member_account":
+    title: 非管理员账号登录管理端被拒
+    verify: 会员手机号 + 短信验证码登录管理端 → 40101
+  "tests/api/test_auth.py::test_admin_wrong_password":
+    title: 管理员密码错误
+    verify: 业务码 40101
+  "tests/api/test_auth.py::test_admin_requires_token":
+    title: 管理端接口未认证
+    verify: HTTP 401，业务码 40100/40103
+  "tests/api/test_auth.py::test_response_has_trace_id":
+    title: 响应 traceId 契约
+    verify: body.traceId 为 32 位十六进制且与响应头 X-Trace-Id 一致
+
+  # ---------- API: 商品与搜索 ----------
+  "tests/api/test_catalog.py::test_home_feed_and_slots":
+    title: 首页 feed 与运营位
+    verify: feed/slots 非空，商品含 spuId/name/price
+  "tests/api/test_catalog.py::test_site_brand":
+    title: 站点品牌信息
+    verify: 返回品牌 name 与 slogan
+  "tests/api/test_catalog.py::test_categories":
+    title: 商品分类列表
+    verify: 返回非空列表且含分类 id/name
+  "tests/api/test_catalog.py::test_products_pagination":
+    title: 商品分页查询
+    verify: 分页结构正确，total>0，本页条数不超过 size
+  "tests/api/test_catalog.py::test_price_sort":
+    title: 商品价格排序
+    verify: price_asc 价格升序，price_desc 价格降序
+  "tests/api/test_catalog.py::test_product_detail":
+    title: 商品详情契约
+    verify: 返回 spu/skus/favorited；skuId 为字符串，库存为非负整数
+  "tests/api/test_catalog.py::test_product_not_found":
+    title: 查询不存在的商品
+    verify: 业务码 40410，提示商品不存在或未上架
+  "tests/api/test_catalog.py::test_out_of_range_page_is_stable":
+    title: 负数页码稳定性
+    verify: 不返回 5xx，分页结构仍然合法
+  "tests/api/test_catalog.py::test_huge_size_is_stable":
+    title: 超大 size 参数稳定性
+    verify: HTTP 200，不返回 5xx
+  "tests/api/test_catalog.py::test_search_hit":
+    title: 关键字搜索命中商品
+    verify: total>0，结果名称包含关键字
+  "tests/api/test_catalog.py::test_search_no_result":
+    title: 搜索无结果
+    verify: total=0，records 为空列表
+  "tests/api/test_catalog.py::test_search_empty_keyword":
+    title: 空关键字搜索
+    verify: 返回合法分页结构
+  "tests/api/test_catalog.py::test_search_sql_injection_is_safe":
+    title: 搜索参数 SQL 注入安全
+    verify: 注入串返回空结果，无 5xx，traceId 正常
+
+  # ---------- API: 购物车 ----------
+  "tests/api/test_cart.py::test_add_and_read_cart":
+    title: 加购并读取购物车
+    verify: 数量与选中金额正确，条目 selected=true
+  "tests/api/test_cart.py::test_update_quantity":
+    title: 修改购物车商品数量
+    verify: 数量更新为 3，购物车回显一致
+  "tests/api/test_cart.py::test_unselect_item":
+    title: 取消勾选购物车商品
+    verify: 条目 selected=false，selectedAmount=0
+  "tests/api/test_cart.py::test_remove_item":
+    title: 删除购物车商品
+    verify: 购物车列表不再包含该条目
+  "tests/api/test_cart.py::test_clear_invalid":
+    title: 清理失效商品
+    verify: 操作成功，有效商品保留
+  "tests/api/test_cart.py::test_cart_requires_auth":
+    title: 未登录加购
+    verify: HTTP 401，业务码 40100/40103
+  "tests/api/test_cart.py::test_add_unknown_sku":
+    title: 加购不存在的 SKU
+    verify: 业务码 40410
+  "tests/api/test_cart.py::test_add_invalid_quantity":
+    title: 加购数量非法
+    verify: 业务码 40000，提示数量须 ≥ 1
+  "tests/api/test_cart.py::test_add_over_stock":
+    title: 加购数量超过库存
+    verify: 业务码 40901，提示库存不足
+  "tests/api/test_cart.py::test_update_missing_cart_item":
+    title: 修改不存在的购物车项
+    verify: 业务码 40400
+
+  # ---------- API: 收货地址 ----------
+  "tests/api/test_address.py::test_create_and_list":
+    title: 新增地址并查询列表
+    verify: 创建成功，列表回显姓名/详细地址，默认地址为 true
+  "tests/api/test_address.py::test_update_address":
+    title: 修改收货地址
+    verify: 更新详细地址后列表回显新值
+  "tests/api/test_address.py::test_set_default_address":
+    title: 设置默认地址
+    verify: 新地址成为唯一默认，原默认地址被取消
+  "tests/api/test_address.py::test_incomplete_address_rejected":
+    title: 地址必填项缺失
+    verify: 业务码 40000，提示收货信息不完整
+  "tests/api/test_address.py::test_delete_missing_address":
+    title: 删除不存在的地址
+    verify: 业务码 40400
+  "tests/api/test_address.py::test_cannot_update_other_users_address":
+    title: 越权修改他人地址
+    verify: 业务码 40400，不能修改非本人地址
+  "tests/api/test_address.py::test_cannot_delete_other_users_address":
+    title: 越权删除他人地址
+    verify: 业务码 40400，不能删除非本人地址
+
+  # ---------- API: 订单 ----------
+  "tests/api/test_order.py::test_submit_from_cart":
+    title: 购物车提交订单
+    verify: 状态 PENDING_PAY，订单号/商品金额/运费/明细正确
+  "tests/api/test_order.py::test_submit_is_idempotent":
+    title: 下单幂等
+    verify: 相同 idempotentKey 两次提交返回同一订单
+  "tests/api/test_order.py::test_buy_now_without_cart":
+    title: 立即购买下单
+    verify: 不经过购物车直接创建待支付订单
+  "tests/api/test_order.py::test_missing_idempotent_key":
+    title: 下单缺少幂等键
+    verify: 业务码 40000，提示 idempotentKey 必填
+  "tests/api/test_order.py::test_invalid_address":
+    title: 下单地址不存在
+    verify: 业务码 40000，提示收货地址无效
+  "tests/api/test_order.py::test_cannot_use_other_users_address":
+    title: 使用他人地址下单
+    verify: 业务码 40000，地址归属校验生效
+  "tests/api/test_order.py::test_order_list":
+    title: 我的订单列表
+    verify: 按状态过滤，列表包含新订单
+  "tests/api/test_order.py::test_order_detail_has_items_and_snapshot":
+    title: 订单详情与地址快照
+    verify: 返回订单明细与地址快照，shipments 为空
+  "tests/api/test_order.py::test_order_not_found":
+    title: 查询不存在的订单
+    verify: 业务码 40400
+  "tests/api/test_order.py::test_cannot_read_other_users_order":
+    title: 越权读取他人订单
+    verify: 业务码 40400
+  "tests/api/test_order.py::test_cancel_pending_order":
+    title: 取消待支付订单
+    verify: 状态变为 CLOSED，关闭原因为“用户取消”
+  "tests/api/test_order.py::test_cancel_is_idempotent":
+    title: 重复取消订单幂等
+    verify: 两次取消均成功，不报错
+  "tests/api/test_order.py::test_confirm_receive_requires_shipped":
+    title: 未发货订单确认收货
+    verify: 业务码 40902
+  "tests/api/test_order.py::test_sandbox_payment":
+    title: 沙箱支付
+    verify: 订单变为 PENDING_SHIP，支付单 PAID，tradeNo 正确
+  "tests/api/test_order.py::test_pay_twice_and_cancel_paid":
+    title: 重复支付与取消已支付订单
+    verify: 两次操作均返回 40902
+  "tests/api/test_order.py::test_customer_token_cannot_access_admin":
+    title: 商城令牌访问管理端
+    verify: HTTP 401，业务码 40100/40103
+
+  # ---------- API: 收藏与足迹 ----------
+  "tests/api/test_favorites_history.py::test_add_list_remove_favorite":
+    title: 收藏、查询并取消收藏
+    verify: 收藏列表包含 spuId，商品详情 favorited 随收藏状态变化
+  "tests/api/test_favorites_history.py::test_remove_missing_favorite_is_safe":
+    title: 重复取消收藏幂等
+    verify: 不返回 5xx
+  "tests/api/test_favorites_history.py::test_view_product_records_history":
+    title: 浏览商品写入足迹
+    verify: 足迹列表包含刚浏览的 spuId
+  "tests/api/test_favorites_history.py::test_clear_history":
+    title: 清空浏览足迹
+    verify: 清空后足迹列表为空
+
+  # ---------- API: 售后与评价 ----------
+  "tests/api/test_after_sales_reviews.py::test_apply_rejected_for_pending_pay":
+    title: 待支付订单申请售后
+    verify: 业务码 40902，当前状态不可申请
+  "tests/api/test_after_sales_reviews.py::test_apply_rejects_invalid_type":
+    title: 售后类型非法
+    verify: 业务码 40000，提示 type 无效
+  "tests/api/test_after_sales_reviews.py::test_apply_requires_fields":
+    title: 售后必填字段缺失
+    verify: 业务码 40000，提示订单/类型/原因必填
+  "tests/api/test_after_sales_reviews.py::test_my_after_sales_page":
+    title: 我的售后分页
+    verify: 返回合法分页结构
+  "tests/api/test_after_sales_reviews.py::test_review_rejected_before_completed":
+    title: 未完成订单发表评价
+    verify: 业务码 40902，仅已完成订单可评价
+  "tests/api/test_after_sales_reviews.py::test_product_reviews_public":
+    title: 商品评价列表公开可读
+    verify: 未登录可访问，返回合法分页
+
+  # ---------- API: 管理端 ----------
+  "tests/api/test_admin.py::test_dashboard_stats":
+    title: 管理端工作台指标
+    verify: 返回在售商品/SKU/低库存/待发货/订单总数，均为数字字符串
+  "tests/api/test_admin.py::test_product_list":
+    title: 管理端商品分页
+    verify: 分页结构正确，首行含 id/name/status/stock
+  "tests/api/test_admin.py::test_product_detail":
+    title: 管理端商品详情
+    verify: 按列表首条 id 查询成功
+  "tests/api/test_admin.py::test_category_tree":
+    title: 管理端类目树
+    verify: 返回非空树结构
+  "tests/api/test_admin.py::test_brands_page":
+    title: 管理端品牌分页
+    verify: 返回合法分页结构
+  "tests/api/test_admin.py::test_dicts_page":
+    title: 管理端字典分页
+    verify: 返回合法分页结构
+  "tests/api/test_admin.py::test_order_list":
+    title: 管理端订单分页
+    verify: 返回合法分页结构
+  "tests/api/test_admin.py::test_order_detail":
+    title: 管理端订单详情
+    verify: 按列表首条 id 查询成功；列表为空时先用隔离会员造单再查询
+  "tests/api/test_admin.py::test_customers_page":
+    title: 管理端会员分页
+    verify: 返回合法分页结构
+  "tests/api/test_admin.py::test_operation_logs":
+    title: 管理端操作日志分页
+    verify: 返回合法分页结构
+  "tests/api/test_admin.py::test_missing_product_is_business_error":
+    title: 管理端查询不存在商品
+    verify: 返回 40400/40410，不返回 5xx
+
+  # ---------- API: 安全 ----------
+  "tests/api/test_security.py::test_tampered_token_rejected":
+    title: 篡改访问令牌
+    verify: HTTP 401，业务码 40100/40103
+  "tests/api/test_security.py::test_customer_token_rejected_by_admin":
+    title: 商城令牌访问管理端
+    verify: HTTP 401，业务码 40100/40103
+  "tests/api/test_security.py::test_login_phone_sql_injection":
+    title: 登录手机号 SQL 注入
+    verify: HTTP 400，业务码 40000，参数校验拦截
+  "tests/api/test_security.py::test_search_xss_payload_is_inert":
+    title: 搜索 XSS 载荷
+    verify: 返回空结果，响应不包含原始脚本标签
+  "tests/api/test_security.py::test_oversized_page_does_not_500":
+    title: 超大分页参数
+    verify: HTTP 200，不返回 5xx
+  "tests/api/test_security.py::test_error_response_keeps_trace_id":
+    title: 错误响应 traceId
+    verify: traceId 为 32 位十六进制且与响应头一致
+
+  # ---------- API: 数据驱动 ----------
+  "tests/api/test_data_driven.py::test_login_input_validation":
+    title: 登录输入参数校验
+    verify: HTTP 400，业务码 40000，提示对应字段错误
+
+  # ---------- API: 冒烟 ----------
+  "tests/api/test_smoke.py::test_storefront_is_reachable":
+    title: 商城商品接口可达
+    verify: 商品列表返回非空数据
+  "tests/api/test_smoke.py::test_customer_can_login":
+    title: 会员登录态可用
+    verify: /api/me 返回 NORMAL 状态
+  "tests/api/test_smoke.py::test_admin_can_login":
+    title: 管理员登录态可用
+    verify: /admin/auth/me 返回用户名
+
+  # ---------- UI: 商城浏览 ----------
+  "tests/ui/test_mall_browse.py::test_home_loads_products":
+    title: 商城首页加载商品
+    verify: 商品链接与“热门精选”可见
+  "tests/ui/test_mall_browse.py::test_search_shows_matching_products":
+    title: 商城搜索商品
+    verify: 搜索结果包含 iPhone
+  "tests/ui/test_mall_browse.py::test_category_page_loads":
+    title: 商城分类页加载
+    verify: 分类页标题、商品链接与综合/销量排序可见
+  "tests/ui/test_mall_browse.py::test_search_no_result_shows_empty_state":
+    title: 搜索无结果显示空态
+    verify: 展示“没有找到相关商品”与“为你推荐”
+
+  # ---------- UI: 商城商品详情 ----------
+  "tests/ui/test_mall_product.py::test_product_detail_shows_skus":
+    title: 商品详情展示规格
+    verify: 商品名称、规格选项与收藏入口可见
+  "tests/ui/test_mall_product.py::test_favorite_toggle":
+    title: 商品收藏与取消收藏
+    verify: 收藏后显示“已收藏”，再次点击恢复“收藏”
+
+  # ---------- UI: 商城个人中心 ----------
+  "tests/ui/test_mall_account.py::test_profile_page_loads":
+    title: 个人中心页面加载
+    verify: 显示退出登录、收货地址、我的收藏入口
+  "tests/ui/test_mall_account.py::test_settings_page_loads":
+    title: 设置页加载
+    verify: 显示登录手机号与 Web/H5 登录态说明
+  "tests/ui/test_mall_account.py::test_after_sales_page_loads":
+    title: 我的售后页加载
+    verify: 页面标题与空态/列表可见
+  "tests/ui/test_mall_account.py::test_address_page_shows_api_address":
+    title: 地址页展示已有地址
+    verify: 显示收货人、详细地址与默认标记
+  "tests/ui/test_mall_account.py::test_add_and_delete_address_via_ui":
+    title: 页面新增并删除地址
+    verify: 表单保存后列表出现，删除后回到暂无地址
+  "tests/ui/test_mall_account.py::test_favorites_page_and_remove":
+    title: 收藏页取消收藏
+    verify: 收藏列表显示商品，确认后回到空态
+  "tests/ui/test_mall_account.py::test_history_page_and_clear":
+    title: 足迹页清空
+    verify: 浏览记录显示，确认清空后回到空态
+  "tests/ui/test_mall_account.py::test_promo_page_loads":
+    title: 活动位页面加载
+    verify: 显示活动标题与商品列表
+
+  # ---------- UI: 商城登录 ----------
+  "tests/ui/test_mall_login.py::test_login_success":
+    title: 商城验证码登录成功
+    verify: 登录后顶栏显示“Hi，昵称”
+  "tests/ui/test_mall_login.py::test_login_wrong_code_shows_inline_error":
+    title: 错误验证码内联提示
+    verify: 表单下方显示“验证码错误，请重新获取”
+  "tests/ui/test_mall_login.py::test_login_invalid_phone_shows_inline_error":
+    title: 手机号格式内联提示
+    verify: 表单下方显示“请输入正确的手机号”
+
+  # ---------- UI: 商城购物车与结算 ----------
+  "tests/ui/test_mall_cart_checkout.py::test_add_to_cart_from_product_detail":
+    title: 商品详情页加入购物车
+    verify: 购物车出现 iPhone 商品
+  "tests/ui/test_mall_cart_checkout.py::test_checkout_requires_selected_item":
+    title: 未勾选商品去结算
+    verify: 提示“请先勾选商品”，停留在购物车页
+  "tests/ui/test_mall_cart_checkout.py::test_update_cart_quantity":
+    title: 修改购物车商品数量
+    verify: 点击数量加号后数量 +1，接口与页面同步
+  "tests/ui/test_mall_cart_checkout.py::test_remove_cart_item":
+    title: 删除购物车商品
+    verify: 二次确认后购物车清空
+  "tests/ui/test_mall_cart_checkout.py::test_submit_order_from_cart":
+    title: 购物车结算并提交订单
+    verify: 确认订单页有地址与应付金额，提交后生成待支付或已支付订单
+
+  # ---------- UI: 商城订单 ----------
+  "tests/ui/test_mall_orders.py::test_order_list_shows_pending_order":
+    title: 订单列表展示待付款订单
+    verify: 显示订单号与“待付款”状态
+  "tests/ui/test_mall_orders.py::test_order_detail_page":
+    title: 订单详情页
+    verify: 详情页显示订单号
+  "tests/ui/test_mall_orders.py::test_cancel_pending_order_from_ui":
+    title: 页面取消待付款订单
+    verify: 确认弹窗后订单状态变为 CLOSED
+  "tests/ui/test_mall_orders.py::test_pay_page_auto_pays":
+    title: 收银台沙箱支付
+    verify: 打开待支付订单后显示支付成功，订单变为 PENDING_SHIP
+
+  # ---------- UI: 后台控制台 ----------
+  "tests/ui/test_admin_console.py::test_admin_login_lands_on_dashboard":
+    title: 管理员登录进入工作台
+    verify: 登录后跳转 /dashboard 并显示工作台
+  "tests/ui/test_admin_console.py::test_dashboard_loads":
+    title: 后台工作台指标
+    verify: 页面显示在售商品等指标
+  "tests/ui/test_admin_console.py::test_product_list_and_search":
+    title: 后台商品列表与搜索
+    verify: 列表有数据，搜索 iPhone 结果命中
+  "tests/ui/test_admin_console.py::test_order_list_loads":
+    title: 后台订单列表
+    verify: 表格有数据且标题为订单列表
+  "tests/ui/test_admin_console.py::test_customers_page_loads":
+    title: 后台会员列表
+    verify: 会员管理页表格有数据
+  "tests/ui/test_admin_console.py::test_admin_pages_load":
+    title: 后台页面加载
+    verify: 页面标题正确，无加载失败/系统异常
+    param_titles:
+      /categories: 类目与品牌页
+      /inventory: 库存管理页
+      /in-out: 出入库单页
+      /aftersales: 售后管理页
+      /reviews: 评价管理页
+      /site-brand: 站点品牌页
+      /home-slots: 首页运营位页
+      /users: 用户管理页
+      /roles: 角色管理页
+      /menus: 菜单与权限页
+      /depts: 部门管理页
+      /dicts: 字典管理页
+      /logs: 操作日志页
+      /settings: 系统设置页
+  "tests/ui/test_admin_console.py::test_product_create_form_loads":
+    title: 新增商品表单加载
+    verify: 显示新增商品页与“存为草稿”按钮
+
+  # ---------- API: 水平越权（IDOR） ----------
+  "tests/api/test_security_idor.py::test_other_customer_cannot_cancel_order":
+    title: 越权取消他人订单被拒绝
+    verify: B 用他人订单号取消 → 40400；原订单仍为 PENDING_PAY
+  "tests/api/test_security_idor.py::test_other_customer_cannot_pay_order":
+    title: 越权支付他人订单被拒绝
+    verify: B 替他人订单发起沙箱支付 → 40400；订单仍未支付
+  "tests/api/test_security_idor.py::test_other_customer_cannot_update_address":
+    title: 越权修改他人收货地址被拒绝
+    verify: B 改 A 的地址 → 40400；地址内容未被篡改
+  "tests/api/test_security_idor.py::test_other_customer_cannot_delete_address":
+    title: 越权删除他人收货地址被拒绝
+    verify: B 删 A 的地址 → 40400；地址仍存在
+  "tests/api/test_security_idor.py::test_other_customer_cannot_set_default_address":
+    title: 越权设置他人默认地址被拒绝
+    verify: B 把 A 的地址设为默认 → 40400
+  "tests/api/test_security_idor.py::test_other_customer_cannot_modify_cart_item":
+    title: 越权修改他人购物车项被拒绝
+    verify: B 改 A 的购物车数量 → 40400；数量仍为 1
+  "tests/api/test_security_idor.py::test_other_customer_cannot_delete_cart_item":
+    title: 越权删除他人购物车项被拒绝
+    verify: B 删 A 的购物车项 → 40400；项仍存在
+
+  # ---------- API: 业务不变量 ----------
+  "tests/api/test_invariants.py::test_stock_conservation_on_order_and_cancel":
+    title: 下单与取消的库存守恒
+    verify: 下单 locked+N 且 physical 不变；取消后 locked 复原；available=physical-locked
+  "tests/api/test_invariants.py::test_order_amount_conservation":
+    title: 订单金额守恒
+    verify: 应付=商品总额+运费；明细小计之和=商品总额；小计=单价×数量
+  "tests/api/test_invariants.py::test_confirm_rejected_before_shipment":
+    title: 待支付订单不可确认收货
+    verify: PENDING_PAY 调确认收货 → 40902，状态不变
+  "tests/api/test_invariants.py::test_cancel_rejected_after_payment":
+    title: 已支付订单不可取消
+    verify: PENDING_SHIP 取消 → 40902，状态不变
+  "tests/api/test_invariants.py::test_double_cancel_is_idempotent":
+    title: 重复取消订单保持幂等
+    verify: 连续取消两次均成功，订单为 CLOSED，库存不二次释放
+  "tests/api/test_invariants.py::test_idempotent_key_replay_returns_same_order":
+    title: 幂等键重放返回同一订单
+    verify: 同 idempotentKey 重复提交 → 同一 orderId，库中仅一张单
+  "tests/api/test_invariants.py::test_stock_table_invariant_sweep":
+    title: 全库库存守恒巡检
+    verify: 不存在负库存或超卖（locked > physical）的 SKU
+  "tests/api/test_invariants.py::test_every_on_sale_sku_has_stock_row":
+    title: 在售 SKU 必须存在库存行
+    verify: 每个在售 SKU 都有对应的 commerce.stock 记录
+
+  # ---------- API: 幂等 ----------
+  "tests/api/test_idempotency.py::test_order_replay_does_not_double_lock_stock":
+    title: 幂等重放不重复锁定库存
+    verify: 同一 idempotentKey 重复提交返回同一订单，库存只锁定一次
+  "tests/api/test_idempotency.py::test_replay_with_different_payload_returns_first_order":
+    title: 幂等键不同请求体仍返回原单
+    verify: 换地址/换购物车项重放 → 原订单不变，明细仍为 1 行 1 件
+  "tests/api/test_idempotency.py::test_order_without_idempotent_key_rejected":
+    title: 缺少幂等键下单被拒绝
+    verify: 业务码 40000，不允许无幂等键提交订单
+  "tests/api/test_idempotency.py::test_double_payment_rejected_and_single_payment_row":
+    title: 重复支付被拒且只入账一次
+    verify: 第二次支付 40902，payment 表仅 1 条记录
+  "tests/api/test_idempotency.py::test_cart_add_same_sku_merges_into_one_item":
+    title: 重复加购同 SKU 合并行
+    verify: 购物车仅 1 行且数量为 2，库中无重复行
+  "tests/api/test_idempotency.py::test_admin_ship_twice_blocked_and_single_shipment":
+    title: 重复发货被拒且只有一条运单
+    verify: 第二次发货 40902，shipment 表仅 1 条记录
+  "tests/api/test_idempotency.py::test_delete_address_twice_returns_not_found":
+    title: 重复删除地址返回不存在
+    verify: 第二次删除返回 40400，不出现 5xx
+
+  # ---------- API: 大数据量 ----------
+  "tests/api/test_bulk_data.py::test_product_list_large_page_size":
+    title: 商品列表一次取 100 条
+    verify: 返回 ≤100 条、分页字段自洽、耗时 < 3s
+  "tests/api/test_bulk_data.py::test_product_list_page_beyond_last":
+    title: 商品列表深翻页返回空集
+    verify: page=9999 返回空 records，HTTP 200 无 5xx
+  "tests/api/test_bulk_data.py::test_search_large_page":
+    title: 搜索大分页响应有界
+    verify: size=50 返回 ≤50 条且耗时 < 3s
+  "tests/api/test_bulk_data.py::test_order_list_pagination_consistency":
+    title: 批量下单后翻页一致
+    verify: 建 6 单后前两页无重复、无丢行、total 覆盖
+  "tests/api/test_bulk_data.py::test_cart_bulk_add_skus":
+    title: 批量加购 15 个 SKU 金额正确
+    verify: 购物车 15 行，选中金额 = 逐行求和，耗时 < 8s
+  "tests/api/test_bulk_data.py::test_admin_order_list_large_page":
+    title: 管理端订单大分页稳定
+    verify: size=100 返回 ≤100 条且耗时 < 3s
+
+  # ---------- API: 校验边界（等价类 / 边界值） ----------
+  "tests/api/test_validation.py::test_login_phone_10_digits_rejected":
+    title: 手机号 10 位（长度不足）被拒
+    verify: 等价类-非法：HTTP 400 + 40000
+  "tests/api/test_validation.py::test_login_phone_12_digits_rejected":
+    title: 手机号 12 位（超长）被拒
+    verify: 边界值 11+1：HTTP 400 + 40000
+  "tests/api/test_validation.py::test_login_code_length_boundary_handled":
+    title: 验证码 5/7 位按凭证错误处理
+    verify: 边界值：返回 40101，不得 5xx
+  "tests/api/test_validation.py::test_admin_password_200_chars_not_5xx":
+    title: 管理端密码 200 字符不触发 5xx
+    verify: 边界值：返回 40101 凭证错误
+  "tests/api/test_validation.py::test_address_name_64_chars_accepted":
+    title: 收货人姓名 64 字符（列宽上限）可保存
+    verify: 边界值-合法：保存成功且长度保持 64
+  "tests/api/test_validation.py::test_address_name_65_chars_rejected":
+    title: 收货人姓名 65 字符（超列宽）应被拒
+    verify: 边界值-非法：预期 400（缺陷 D-06：实际 500）
+  "tests/api/test_validation.py::test_address_detail_255_chars_accepted":
+    title: 详细地址 255 字符（列宽上限）可保存
+    verify: 边界值-合法：保存成功
+  "tests/api/test_validation.py::test_address_detail_256_chars_rejected":
+    title: 详细地址 256 字符（超列宽）应被拒
+    verify: 边界值-非法：预期 400（缺陷 D-07：实际 500）
+  "tests/api/test_validation.py::test_address_phone_invalid_format_rejected":
+    title: 收货人手机号非数字应被拒
+    verify: 等价类-非法格式：预期 400（缺陷 D-08：当前被接受）
+  "tests/api/test_validation.py::test_address_whitespace_only_name_rejected":
+    title: 收货人姓名全空白应被拒
+    verify: 等价类-非空：400「收货信息不完整」
+  "tests/api/test_validation.py::test_pagination_zero_and_negative_tolerated":
+    title: 分页零值/负值不报 5xx
+    verify: 边界值：page=0/-1、size=0 均返回列表结构
+  "tests/api/test_validation.py::test_pagination_oversize_tolerated":
+    title: 分页超大 size 不报 5xx
+    verify: 边界值：size=1000 返回不超过总记录数
+  "tests/api/test_validation.py::test_order_empty_cart_items_rejected":
+    title: 空购物车项下单被拒
+    verify: 等价类-非法：400
+  "tests/api/test_validation.py::test_order_buy_now_quantity_zero_rejected":
+    title: 立即购买数量 0 被拒
+    verify: 边界值：400「数量须 ≥ 1」
+  "tests/api/test_validation.py::test_order_buy_now_over_stock_rejected":
+    title: 立即购买超库存被拒
+    verify: 边界值：40901 库存不足
+  "tests/api/test_validation.py::test_after_sale_missing_fields_rejected":
+    title: 售后必填项缺失被拒
+    verify: 必填性：orderId/type/reason 缺一 → 400
+  "tests/api/test_validation.py::test_after_sale_type_enum_rejected":
+    title: 售后类型枚举外取值被拒
+    verify: 等价类-非法：400「type 无效」
+  "tests/api/test_validation.py::test_after_sale_reason_512_accepted":
+    title: 售后原因 512 字符（列宽上限）可提交
+    verify: 边界值-合法：提交成功
+  "tests/api/test_validation.py::test_after_sale_reason_513_rejected":
+    title: 售后原因 513 字符（超列宽）应被拒
+    verify: 边界值-非法：预期 400（缺陷 D-10：实际 500）
+  "tests/api/test_validation.py::test_review_missing_fields_rejected":
+    title: 评价必填项缺失应被拒
+    verify: 必填性：预期 400（缺陷 D-09：当前 500/空指针）
+  "tests/api/test_validation.py::test_review_rating_out_of_range_rejected":
+    title: 评价评分 6（超出 1–5）应被拒
+    verify: 边界值-非法：预期 400（缺陷 D-11：当前落库成功）
+  "tests/api/test_validation.py::test_review_rating_non_numeric_rejected":
+    title: 评价评分非数字应被拒
+    verify: 等价类-非法类型：预期 400（缺陷 D-12：当前 500）
+
+  # ---------- API: 参数联动（字段组合/匹配性/判定顺序） ----------
+  "tests/api/test_validation_interactions.py::test_login_parameter_interactions":
+    title: 登录字段联动校验
+    verify: 手机号×验证码×clientType 组合：必填缺失 400、验证码不匹配/超长 40101、枚举非法 400
+  "tests/api/test_validation_interactions.py::test_login_matching_fields_succeed":
+    title: 登录字段匹配时成功签发令牌
+    verify: 已注册手机号 + 正确验证码 + 合法 clientType → 200 + accessToken
+  "tests/api/test_validation_interactions.py::test_admin_login_parameter_interactions":
+    title: 管理端登录字段联动
+    verify: 用户名/密码逐项缺失 400（精确提示），凭证不匹配 40101
+  "tests/api/test_validation_interactions.py::test_address_missing_one_field_while_others_valid":
+    title: 地址仅缺一个字段其余合规
+    verify: name/phone/province/city/district/detail 逐个缺失 → 400「收货信息不完整」
+  "tests/api/test_validation_interactions.py::test_address_all_fields_missing":
+    title: 地址全字段缺失
+    verify: 空对象 → 400，不得 500
+  "tests/api/test_validation_interactions.py::test_cart_missing_sku_while_quantity_valid":
+    title: 加购缺 SKU 但数量合规
+    verify: 预期 400（缺陷 D-13：当前 500）
+  "tests/api/test_validation_interactions.py::test_cart_missing_quantity_while_sku_valid":
+    title: 加购缺数量但 SKU 合规
+    verify: 预期 400（缺陷 D-15：当前 500）
+  "tests/api/test_validation_interactions.py::test_cart_both_invalid_quantity_reported_first":
+    title: 加购双非法时先报数量
+    verify: skuId 不存在 + quantity=0 → 400「数量须 ≥ 1」
+  "tests/api/test_validation_interactions.py::test_cart_invalid_sku_with_valid_quantity":
+    title: 加购 SKU 不存在数量合规
+    verify: 40410 商品不可用
+  "tests/api/test_validation_interactions.py::test_cart_valid_combination_succeeds":
+    title: 加购全字段合规成功
+    verify: skuId + quantity 合法 → 返回 cartItemId
+  "tests/api/test_validation_interactions.py::test_order_missing_key_reported_before_invalid_address":
+    title: 下单缺幂等键且地址非法时先报幂等键
+    verify: 判定顺序：400「idempotentKey 必填」
+  "tests/api/test_validation_interactions.py::test_order_invalid_address_with_valid_sku":
+    title: 下单地址非法但商品合规
+    verify: 判定顺序：先报 400「收货地址无效」
+  "tests/api/test_validation_interactions.py::test_order_no_items_and_no_sku_rejected":
+    title: 下单既无购物车项也无 SKU
+    verify: 400「请选择购物车项或立即购买 SKU」
+  "tests/api/test_validation_interactions.py::test_order_valid_sku_but_quantity_zero":
+    title: 下单商品合规但数量为 0
+    verify: 400「数量须 ≥ 1」
+  "tests/api/test_validation_interactions.py::test_order_valid_quantity_but_unknown_sku":
+    title: 下单数量合规但 SKU 不存在
+    verify: 40410 商品不可用
+  "tests/api/test_validation_interactions.py::test_order_valid_combination_succeeds":
+    title: 下单全字段合规成功
+    verify: 地址 + SKU + 数量 + 幂等键 → PENDING_PAY
+  "tests/api/test_validation_interactions.py::test_after_sale_required_fields_reported_before_type":
+    title: 售后双非法时先报必填
+    verify: type 非法 + reason 缺失 → 400「订单、类型、原因必填」
+  "tests/api/test_validation_interactions.py::test_after_sale_valid_order_but_invalid_type":
+    title: 售后订单合规但类型非法
+    verify: 400「type 无效」
+  "tests/api/test_validation_interactions.py::test_after_sale_valid_type_but_blank_reason":
+    title: 售后类型合规但原因为空白
+    verify: 400「订单、类型、原因必填」
+  "tests/api/test_validation_interactions.py::test_after_sale_unknown_order_with_valid_fields":
+    title: 售后字段合规但订单不存在
+    verify: 40400 订单不存在
+  "tests/api/test_validation_interactions.py::test_review_valid_item_but_missing_rating":
+    title: 评价订单项合规但缺评分
+    verify: 预期 400（缺陷 D-14：当前 500）
+  "tests/api/test_validation_interactions.py::test_review_unknown_item_with_valid_rating":
+    title: 评价评分合规但订单项不存在
+    verify: 40400 订单项不存在
+  "tests/api/test_validation_interactions.py::test_review_valid_combination_without_content":
+    title: 评价订单项与评分合规且内容可省略
+    verify: 评价成功（content 可选）
+
+  # ---------- API: 单接口全维度矩阵（POST /api/orders） ----------
+  "tests/api/test_endpoint_matrix_orders.py::test_boundary_quantity_lower_than_one":
+    title: 【边界值】quantity=0 被拒
+    verify: 400「数量须 ≥ 1」
+  "tests/api/test_endpoint_matrix_orders.py::test_boundary_negative_quantity":
+    title: 【边界值】quantity=-1 被拒
+    verify: 400「数量须 ≥ 1」
+  "tests/api/test_endpoint_matrix_orders.py::test_boundary_quantity_one_accepted":
+    title: 【边界值】quantity=1 合法下界
+    verify: 创建 PENDING_PAY 订单
+  "tests/api/test_endpoint_matrix_orders.py::test_boundary_quantity_exceeds_available_stock":
+    title: 【边界值】quantity=可售库存+1
+    verify: 40901 库存不足
+  "tests/api/test_endpoint_matrix_orders.py::test_boundary_blank_idempotent_key":
+    title: 【边界值】幂等键为空白串
+    verify: 400 必填（空白不等于已提供）
+  "tests/api/test_endpoint_matrix_orders.py::test_combination_cart_items_take_precedence_over_sku":
+    title: 【参数组合】cartItemIds 与 skuId 并存
+    verify: 以购物车项为准，金额按购物车商品计算
+  "tests/api/test_endpoint_matrix_orders.py::test_combination_missing_key_reported_before_invalid_address":
+    title: 【参数组合】缺幂等键+地址非法
+    verify: 判定顺序：先报 idempotentKey
+  "tests/api/test_endpoint_matrix_orders.py::test_combination_no_items_and_no_sku":
+    title: 【参数组合】无购物车项且无 skuId
+    verify: 400「请选择购物车项或立即购买 SKU」
+  "tests/api/test_endpoint_matrix_orders.py::test_combination_valid_sku_with_zero_quantity":
+    title: 【参数组合】SKU 合规+数量 0
+    verify: 400 数量
+  "tests/api/test_endpoint_matrix_orders.py::test_idempotency_replay_same_payload":
+    title: 【幂等】同键同参重放
+    verify: 同一订单，库存只锁定一次
+  "tests/api/test_endpoint_matrix_orders.py::test_idempotency_replay_with_changed_payload":
+    title: 【幂等】同键换参重放
+    verify: 返回原单，原明细不被篡改
+  "tests/api/test_endpoint_matrix_orders.py::test_bulk_order_with_twenty_cart_items":
+    title: 【大数据量】20 个购物车项合并下单
+    verify: 明细 20 行、金额逐项求和、耗时 < 8s
+  "tests/api/test_endpoint_matrix_orders.py::test_bulk_order_list_large_page":
+    title: 【大数据量】订单列表 size=100
+    verify: 结构稳定、含当前订单、耗时 < 3s
+  "tests/api/test_endpoint_matrix_orders.py::test_exception_malformed_json":
+    title: 【异常】畸形 JSON 请求体
+    verify: 应 400（缺陷 D-16：当前 500）
+  "tests/api/test_endpoint_matrix_orders.py::test_exception_non_numeric_sku_id":
+    title: 【异常】skuId 非数字
+    verify: 应 400（缺陷 D-17：当前 500）
+  "tests/api/test_endpoint_matrix_orders.py::test_exception_huge_cart_item_ids":
+    title: 【异常】500 个伪造购物车项
+    verify: 400，不得 5xx
+  "tests/api/test_endpoint_matrix_orders.py::test_exception_unauthenticated":
+    title: 【异常】未认证下单
+    verify: 401 未认证
+
+  # ---------- API: 全接口巡检（参数化，标题在用例内动态生成） ----------
+  "tests/api/test_endpoint_sweep.py::test_endpoint_sweep":
+    title: 全接口巡检
+    verify: 对 135 个端点执行安全/逆向/边界/异常检查；单条用例标题由参数中的 check 与路径动态生成
+  "tests/api/test_validation.py::test_unsupported_method_returns_405":
+    title: 不支持的 HTTP 方法应返回 405
+    verify: DELETE /admin/warehouses/{id}（未定义）应 405，不得 500
+
+  # ---------- API: 管理端 CRUD 正向往返 ----------
+  "tests/api/test_admin_crud_roundtrip.py::test_brand_crud_roundtrip":
+    title: 品牌创建到删除往返
+    verify: 创建 → 列表可见 → 更新生效 → 删除后不可见
+  "tests/api/test_admin_crud_roundtrip.py::test_category_crud_roundtrip":
+    title: 类目创建到删除往返
+    verify: 创建 → 列表可见 → 更新生效 → 删除成功
+  "tests/api/test_admin_crud_roundtrip.py::test_dict_crud_roundtrip":
+    title: 字典创建到删除往返
+    verify: 创建 → 列表可见 → 更新生效 → 删除成功
+  "tests/api/test_admin_crud_roundtrip.py::test_dept_crud_roundtrip":
+    title: 部门创建到删除往返
+    verify: 创建 → 列表可见 → 更新生效 → 删除成功
+  "tests/api/test_admin_crud_roundtrip.py::test_warehouse_crud_roundtrip":
+    title: 仓库创建到删除往返
+    verify: 创建 → 列表可见 → 更新生效 → 删除成功
+
+  # ---------- API: 失败留痕演示（默认跳过，DEMO_FAILURE=1 时运行） ----------
+  "tests/api/test_failure_evidence_demo.py::test_demo_business_assertion_failure":
+    title: 演示-业务断言失败留痕
+    verify: 失败时附带最后请求/响应、失败依据与 traceId 后端日志
+  "tests/api/test_failure_evidence_demo.py::test_demo_broken_exception":
+    title: 演示-执行异常阻断留痕
+    verify: KeyError 阻断时附带堆栈、失败依据与后端日志
+
+  # ---------- API: 写接口落库（请求 → DB） ----------
+  "tests/api/test_write_persistence.py::test_address_create_and_update_persisted":
+    title: 地址创建与更新落库
+    verify: 响应 ID 定位行，字段与请求一致；更新后 DB 生效
+  "tests/api/test_write_persistence.py::test_cart_item_persisted":
+    title: 加购落库
+    verify: cart_item 行存在，sku/数量/会员一致
+  "tests/api/test_write_persistence.py::test_order_submit_persisted":
+    title: 下单落库
+    verify: order/order_item/库存扣减与响应一致
+  "tests/api/test_write_persistence.py::test_payment_persisted":
+    title: 沙箱支付落库
+    verify: payment 行 PAID，订单转待发货
+  "tests/api/test_write_persistence.py::test_shipment_persisted":
+    title: 发货落库
+    verify: shipment 行与订单状态一致
+  "tests/api/test_write_persistence.py::test_review_persisted":
+    title: 评价落库
+    verify: review 行评分/内容与请求一致
+  "tests/api/test_write_persistence.py::test_after_sale_persisted":
+    title: 售后申请落库
+    verify: after_sale 行类型/原因与请求一致
+  "tests/api/test_write_persistence.py::test_admin_brand_persisted":
+    title: 品牌创建落库
+    verify: brand 行名称/状态与请求一致
+  "tests/api/test_write_persistence.py::test_admin_category_persisted":
+    title: 分类创建落库
+    verify: category 行层级/名称与请求一致
+  "tests/api/test_write_persistence.py::test_admin_dict_persisted":
+    title: 字典创建落库
+    verify: dict 行编码/名称与请求一致
+  "tests/api/test_write_persistence.py::test_admin_dept_persisted":
+    title: 部门创建落库
+    verify: dept 行名称/父级与请求一致
+  "tests/api/test_write_persistence.py::test_admin_warehouse_persisted":
+    title: 仓库创建落库
+    verify: warehouse 行名称/地址与请求一致
+
+  # ---------- API: 组件校验补充 ----------
+  "tests/api/test_redis_state.py::test_customer_refresh_blacklists_old_refresh":
+    title: 会员刷新令牌旧值入黑名单
+    verify: 刷新后旧 refresh jti 写入 jwt:blacklist
+  "tests/api/test_redis_state.py::test_admin_logout_blacklists_token":
+    title: 管理端退出令牌入黑名单
+    verify: 退出后旧 access token 立即 401，黑名单键存在
+  "tests/api/test_redis_state.py::test_admin_refresh_blacklists_old_refresh":
+    title: 管理端刷新吊销旧 refresh
+    verify: 刷新后旧 refresh 进入黑名单
+  "tests/api/test_redis_state.py::test_phone_alias_consumes_sms_code":
+    title: 手机号别名登录消费验证码
+    verify: /api/auth/phone 登录成功后 sms:phone 键删除
+  "tests/api/test_write_persistence.py::test_customer_status_persisted":
+    title: 会员冻结状态落库
+    verify: PUT /admin/customers/{id}/status 后 customer.status 与请求一致
+  "tests/api/test_write_persistence.py::test_admin_permission_crud_persisted":
+    title: 权限创建/更新/删除落库
+    verify: permission 行字段与请求一致，删除后 deleted=true
+  "tests/api/test_write_persistence.py::test_order_confirm_persisted":
+    title: 订单确认收货落库
+    verify: 订单状态 COMPLETED 且 received_at 非空
+
+  # ---------- API: 中间件（MQ / Redis） ----------
+  "tests/api/test_redis_state.py::test_code_and_cooldown_ttl":
+    title: 验证码缓存与冷却 TTL
+    verify: code 5 分钟、cooldown 60 秒；登录成功后验证码立即失效
+  "tests/api/test_redis_state.py::test_cooldown_rejects_second_send":
+    title: 60 秒内重复发送被拒
+    verify: 返回 400「发送过于频繁」，不刷新验证码
+  "tests/api/test_redis_state.py::test_five_failures_lock_account":
+    title: 连续 5 次登录失败锁定
+    verify: 第 6 次返回 40104，锁定键 TTL ≤15 分钟
+  "tests/api/test_redis_state.py::test_success_clears_fail_counter":
+    title: 登录成功清零失败计数
+    verify: 失败 1 次后成功登录，login:fail 键被删除
+  "tests/api/test_redis_state.py::test_logout_blacklists_access_token":
+    title: 退出登录令牌进入黑名单
+    verify: 原 access token 立即 401，jwt:blacklist:* 带 TTL
+  "tests/api/test_redis_state.py::test_blacklist_expires":
+    title: 黑名单键带过期时间
+    verify: 不做永久封禁，TTL >0
+  "tests/api/test_mq_order_events.py::test_payment_publishes_and_consumes":
+    title: 支付成功事件落库
+    verify: 事务提交后投递 ORDER_PAID，消费者写入 order_event_log，payload 与订单一致
+  "tests/api/test_mq_order_events.py::test_duplicate_delivery_is_idempotent":
+    title: 重复事件幂等
+    verify: 同订单同事件重复投递只保留一行
+  "tests/api/test_mq_order_events.py::test_invalid_event_goes_to_dlq":
+    title: 非法事件进入死信队列
+    verify: 重试 3 次后进入 DLQ，主队列不阻塞
+
+  # ---------- E2E ----------
+  "tests/e2e/test_purchase_flow.py::test_api_purchase_flow":
+    title: API 全链路购买
+    verify: 登录 → 地址 → 加购 → 下单 → 沙箱支付，订单待发货
+  "tests/e2e/test_purchase_flow.py::test_ui_purchase_flow":
+    title: UI 全链路购买
+    verify: 加购 → 购物车 → 确认订单 → 提交 → 支付成功

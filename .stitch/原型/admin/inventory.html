@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>库存管理 · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" id="app-sidebar"></aside>
+  <script>window.__NAV_ACTIVE__='inventory'; window.__NAV_VERSION__='v1'</script>
+  <script src="sidebar.js"></script>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">商品中心 / <b>库存管理</b></div>
+      <div class="topbar-right"><div class="avatar">管</div></div>
+    </header>
+    <div class="content list-page">
+      <div class="page-head">
+        <div>
+          <div class="page-title">库存管理</div>
+          <div class="page-sub">
+            总库存 = 仓库实有件数 · 锁定占用 = 已下单未出库 · 可售 = 总库存 − 锁定；
+            预警口径：低库存 = 可售 ≤ 阈值，关注 = 阈值 &lt; 可售 ≤ 阈值 × 1.5
+          </div>
+        </div>
+        <button class="btn btn-primary" data-modal-open="dlg-inv-adjust">+ 库存调整</button>
+      </div>
+
+      <div class="card card-pad list-card">
+        <div class="tabs">
+          <div class="tab active" data-tab="all">全部 <span class="c">47</span></div>
+          <div class="tab" data-tab="low" style="color:var(--brick)">低库存 / 关注 <span class="c">5</span></div>
+        </div>
+
+        <!-- 全部：35 条 SKU，每页 10 条 -->
+        <div class="table-wrap" id="panel-all">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="code">SKU</th>
+              <th style="min-width:220px">商品</th>
+              <th>仓库</th>
+              <th class="num" title="仓库实有件数">总库存</th>
+              <th class="num" title="已下单占用、暂不可再卖">锁定占用</th>
+              <th class="num" title="总库存 − 锁定">可售</th>
+              <th class="num">阈值</th>
+              <th>状态</th>
+              <th class="col-op">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code">10001</td>
+              <td>iPhone 15 Pro 128G · 128GB / 原色钛金属</td>
+              <td>默认仓</td>
+              <td class="num">100</td>
+              <td class="num">2</td>
+              <td class="num">98</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10002</td>
+              <td>iPhone 15 Pro 128G · 256GB / 原色钛金属</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10003</td>
+              <td>iPhone 15 Pro 128G · 512GB / 白色钛金属</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10004</td>
+              <td>iPhone 15 128G · 128GB / 蓝色</td>
+              <td>默认仓</td>
+              <td class="num">120</td>
+              <td class="num">0</td>
+              <td class="num">120</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10005</td>
+              <td>iPhone 15 128G · 256GB / 粉色</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10006</td>
+              <td>Xiaomi 14 Pro 12+256G · 12GB / 256GB / 黑色</td>
+              <td>默认仓</td>
+              <td class="num">200</td>
+              <td class="num">0</td>
+              <td class="num">200</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10007</td>
+              <td>Xiaomi 14 Pro 12+256G · 16GB / 512GB / 黑色</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10008</td>
+              <td>Redmi K70 12+256G · 单规格</td>
+              <td>默认仓</td>
+              <td class="num">300</td>
+              <td class="num">0</td>
+              <td class="num">300</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td class="code">10009</td>
+              <td>HUAWEI Mate X5 · 单规格</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">100</td>
+              <td><span class="badge badge-brick">低库存</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10010</td>
+              <td>OPPO Find N3 · 单规格</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">10</td>
+              <td><span class="badge badge-forest">正常</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <!-- 低库存 / 关注：3 行低库存 + 2 行关注 -->
+        <div class="table-wrap" id="panel-low" hidden>
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="code">SKU</th>
+              <th style="min-width:220px">商品</th>
+              <th>仓库</th>
+              <th class="num" title="仓库实有件数">总库存</th>
+              <th class="num" title="已下单占用、暂不可再卖">锁定占用</th>
+              <th class="num" title="总库存 − 锁定">可售</th>
+              <th class="num">阈值</th>
+              <th>状态</th>
+              <th class="col-op">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:var(--cream)">
+              <td class="code">10009</td>
+              <td>HUAWEI Mate X5 · 单规格</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">100</td>
+              <td><span class="badge badge-brick">低库存</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td class="code">10015</td>
+              <td>ThinkPad X1 Carbon · 单规格</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">100</td>
+              <td><span class="badge badge-brick">低库存</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr style="background:var(--cream)">
+              <td class="code">10016</td>
+              <td>ROG 枪神 笔记本 · 单规格</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">100</td>
+              <td><span class="badge badge-brick">低库存</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10013</td>
+              <td>MacBook Air 13 M3 16G · 16GB / 午夜色</td>
+              <td>默认仓</td>
+              <td class="num">80</td>
+              <td class="num">0</td>
+              <td class="num">80</td>
+              <td class="num">60</td>
+              <td><span class="badge badge-amber">关注</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+            <tr>
+              <td class="code">10012</td>
+              <td>vivo X100 · 单规格</td>
+              <td>默认仓</td>
+              <td class="num">140</td>
+              <td class="num">0</td>
+              <td class="num">140</td>
+              <td class="num">100</td>
+              <td><span class="badge badge-amber">关注</span></td>
+              <td class="col-op"><button class="btn btn-ghost btn-sm" type="button" data-modal-open="dlg-inv-adjust">调整</button></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="pager pager-fixed">
+          <span id="pager-text">共 47 条 · 每页 10 条</span>
+          <button class="btn btn-secondary btn-sm" disabled>‹</button>
+          <span class="badge badge-amber" id="pager-page">1 / 5</span>
+          <button class="btn btn-secondary btn-sm">›</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ 库存调整 ============ -->
+<div class="modal" id="dlg-inv-adjust" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-md" role="dialog" aria-modal="true" aria-labelledby="dlg-inv-adjust-t">
+    <div class="modal-head">
+      <span class="modal-ico info">±</span>
+      <div class="modal-title" id="dlg-inv-adjust-t">库存调整</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="label">SKU</label>
+        <input class="input" value="10001 · iPhone 15 Pro 128G · 128GB / 原色钛金属" readonly>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">仓库</label>
+          <select class="select">
+            <option selected>默认仓</option>
+          </select>
+          <span class="hint">V1 仅一个仓库，默认「默认仓」</span>
+        </div>
+        <div class="field">
+          <label class="label">调整数量<span class="req">*</span></label>
+          <input class="input" value="-101" autofocus>
+          <span class="hint">正数入库、负数出库，不能为 0</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">调整原因</label>
+        <input class="input" value="后台手工调整" readonly>
+        <span class="hint">V1 后台调整固定写入该原因，随流水一并记录</span>
+      </div>
+      <div class="alert alert-warn">
+        调整后：总库存 <b>-1</b> · 锁定占用 <b>2</b> · 可售 <b>-3</b>。
+        本次调整会使可售库存为负，确认后将被拒绝。
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-modal-close>取消</button>
+      <button class="btn btn-primary" data-modal-open="dlg-inv-negative">确认调整</button>
+    </div>
+  </div>
+</div>
+
+<!-- 调整后可售为负：拒绝 -->
+<div class="modal" id="dlg-inv-negative" hidden>
+  <div class="modal-mask"></div>
+  <div class="modal-panel is-sm" role="alertdialog" aria-modal="true" aria-labelledby="dlg-inv-negative-t">
+    <div class="modal-head">
+      <span class="modal-ico warn">!</span>
+      <div class="modal-title" id="dlg-inv-negative-t">无法调整</div>
+      <button class="modal-x" data-modal-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body">
+      <p>SKU <b class="code">10001</b> 出库 <b>101</b> 件后总库存为 <b>-1</b>，小于锁定占用 <b>2</b>，可售库存为 <b class="code">-3</b>。</p>
+      <p class="hint">
+        库存不变式：总库存 ≥ 锁定占用 ≥ 0，即 可售 = 总库存 − 锁定 ≥ 0。
+        请减少出库数量，或先补货 / 等订单出库释放锁定后再调整。
+      </p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-modal-close>知道了</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Tab 切换：全部 / 低库存·关注（静态原型，仅切换表格与分页文案） */
+(function () {
+  var tabs = document.querySelectorAll('.tabs .tab');
+  var panels = { all: document.getElementById('panel-all'), low: document.getElementById('panel-low') };
+  var pagerText = document.getElementById('pager-text');
+  var pagerPage = document.getElementById('pager-page');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+      var key = t.getAttribute('data-tab');
+      panels.all.hidden = key !== 'all';
+      panels.low.hidden = key !== 'low';
+      pagerText.textContent = key === 'all' ? '共 47 条 · 每页 10 条' : '共 5 条 · 每页 10 条';
+      pagerPage.textContent = key === 'all' ? '1 / 5' : '1 / 1';
+    });
+  });
+})();
+</script>
+<script src="modal.js"></script>
+</body>
+</html>

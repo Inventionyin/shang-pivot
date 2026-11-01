@@ -1,0 +1,4667 @@
+{
+  "generated_at": "2026-10-10 16:26:12",
+  "generator": "api_testcases/scripts/build_db_dict.py",
+  "fingerprint": "810986c (main, 2026-10-09)",
+  "migration_sha256": "ca40a00517169e90911dbf4ca0438d0002b0d136dd8eed7da937b53252328edc",
+  "migration_range": "V20",
+  "migrations": [
+    "V1__init.sql",
+    "V2__menu_sidebar_align.sql",
+    "V3__permission_buttons_complete.sql",
+    "V4__seed_catalog_orders_from_projectku.sql",
+    "V5__product_list_brand_menu_stock.sql",
+    "V6__multi_sku_locked_stock_attrs.sql",
+    "V7__brand_category_link.sql",
+    "V8__v2_customer_cart_address.sql",
+    "V9__v2_spu_order_alter.sql",
+    "V10__v2_review_site_home.sql",
+    "V11__v2_inout_trade_menu.sql",
+    "V12__sandbox_payment_config.sql",
+    "V13__menu_align_prototype.sql",
+    "V14__seed_v2_demo_data.sql",
+    "V15__fix_site_brand_logo.sql",
+    "V16__fix_demo_product_pics.sql",
+    "V17__low_stock_threshold_demo.sql",
+    "V18__home_slot_de_marketing.sql",
+    "V19__drop_legacy_demo_catalog.sql",
+    "V20__fix_address_trace_id.sql"
+  ],
+  "schemas": {
+    "identity": {
+      "name": "identity",
+      "comment": "认证权限限界上下文：后台用户、RBAC、字典、配置、文件元数据",
+      "created_in": "V1"
+    },
+    "commerce": {
+      "name": "commerce",
+      "comment": "电商交易限界上下文：商品、库存、订单、支付、物流、售后",
+      "created_in": "V1"
+    }
+  },
+  "tables": {
+    "identity.admin_user": {
+      "schema": "identity",
+      "table": "admin_user",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "登录用户名（唯一）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "password",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "密码（bcrypt）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "real_name",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "真实姓名",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "phone",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "手机号",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(128)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "邮箱",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "dept_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "所属部门 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED启用 / DISABLED禁用",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "last_login_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "最近登录时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "触发创建/变更的请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_admin_user_username",
+          "table": "identity.admin_user",
+          "unique": true,
+          "columns": "username",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "后台管理员账号"
+    },
+    "identity.role": {
+      "schema": "identity",
+      "table": "role",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "code",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "角色编码（唯一，如 SUPER_ADMIN）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "角色名称",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "data_scope",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ALL'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "数据范围：ALL全部 / DEPT本部门 / CUSTOM自定义",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED / DISABLED",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "remark",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "备注",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_role_code",
+          "table": "identity.role",
+          "unique": true,
+          "columns": "code",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "角色"
+    },
+    "identity.permission": {
+      "schema": "identity",
+      "table": "permission",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "parent_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "父节点 ID，根为 0",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "code",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "权限码（唯一，如 product:add，用于鉴权）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "显示名称",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "类型：DIR / MENU / BUTTON / API",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "path",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "前端路由 path（MENU）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "component",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "前端组件路径（MENU）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "icon",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "图标标识",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "sort",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "同级排序，越小越靠前",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "visible",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "TRUE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "是否在侧栏可见",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED / DISABLED",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_permission_code",
+          "table": "identity.permission",
+          "unique": true,
+          "columns": "code",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "权限/菜单单表（DIR目录 / MENU菜单 / BUTTON按钮 / API接口）"
+    },
+    "identity.role_permission": {
+      "schema": "identity",
+      "table": "role_permission",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "role_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "角色 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "permission_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "权限 ID",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": null,
+          "definition": "PRIMARY KEY (role_id, permission_id)",
+          "kind": "PRIMARY KEY"
+        }
+      ],
+      "indexes": [],
+      "comment": "角色-权限关联"
+    },
+    "identity.admin_role": {
+      "schema": "identity",
+      "table": "admin_role",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "admin_user_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "管理员用户 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "role_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "角色 ID",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": null,
+          "definition": "PRIMARY KEY (admin_user_id, role_id)",
+          "kind": "PRIMARY KEY"
+        }
+      ],
+      "indexes": [],
+      "comment": "管理员-角色关联"
+    },
+    "identity.dept": {
+      "schema": "identity",
+      "table": "dept",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "parent_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "父部门 ID，根为 0",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "部门名称",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "sort",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "排序",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED / DISABLED",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "组织部门树"
+    },
+    "identity.operation_log": {
+      "schema": "identity",
+      "table": "operation_log",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "操作人用户 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "操作人用户名快照",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "module",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "业务模块",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "action",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "动作（如 login、update）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "params",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求参数（脱敏后）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "ip",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "客户端 IP",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "ua",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "User-Agent",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "result",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "结果：SUCCESS / FAIL 等",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "操作审计日志"
+    },
+    "identity.dict": {
+      "schema": "identity",
+      "table": "dict",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "code",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "字典编码（唯一，如 order_status）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "字典名称",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "remark",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "备注",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_dict_code",
+          "table": "identity.dict",
+          "unique": true,
+          "columns": "code",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "数据字典类型"
+    },
+    "identity.dict_item": {
+      "schema": "identity",
+      "table": "dict_item",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "dict_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "所属字典 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "label",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "显示文案",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "value",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "存储值",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "sort",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "排序",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED / DISABLED",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "数据字典项"
+    },
+    "identity.system_config": {
+      "schema": "identity",
+      "table": "system_config",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "config_key",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "配置键（唯一）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "config_value",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "配置值（敏感项加密存储）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "category",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": "'SYS'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "分类：SYS / PAYMENT / LLM / MINIAPP / OSS 等",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "is_secret",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "是否敏感（界面脱敏）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "remark",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "备注",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_system_config_key",
+          "table": "identity.system_config",
+          "unique": true,
+          "columns": "config_key",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "系统配置项"
+    },
+    "identity.file_object": {
+      "schema": "identity",
+      "table": "file_object",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "bucket",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "桶名",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "object_key",
+          "type": "VARCHAR(512)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "对象键（唯一）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "content_type",
+          "type": "VARCHAR(128)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "MIME 类型",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "size_bytes",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "文件大小（字节）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "biz_type",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": "'OTHER'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "业务类型：PRODUCT / BRAND / AFTER_SALE / AVATAR / OTHER",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "uploader_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "上传人用户 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "visibility",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'PUBLIC'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "可见性：PUBLIC公开 / PRIVATE私有",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_file_object_key",
+          "table": "identity.file_object",
+          "unique": true,
+          "columns": "object_key",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "对象存储文件元数据（MinIO objectKey）"
+    },
+    "commerce.category": {
+      "schema": "commerce",
+      "table": "category",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "parent_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "父类目 ID，根为 0",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "类目名称",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "level",
+          "type": "INT",
+          "nullable": false,
+          "default": "1",
+          "primary_key": false,
+          "checks": [],
+          "comment": "层级（从 1 起）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "sort",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "排序",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED / DISABLED",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "商品类目树"
+    },
+    "commerce.brand": {
+      "schema": "commerce",
+      "table": "brand",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "品牌名称",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "logo",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "Logo 的 MinIO objectKey",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "sort",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "排序",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED / DISABLED",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "category_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "所属类目 ID（可空；后台按类目筛选品牌）",
+          "source": "V7",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "品牌"
+    },
+    "commerce.attribute": {
+      "schema": "commerce",
+      "table": "attribute",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "category_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "所属类目 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "属性名（如颜色）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'SPEC'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "类型：SPEC规格（影响SKU） / PARAM参数（仅展示）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "options",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "可选值 JSON 数组",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "sort",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "排序",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "类目属性（规格/参数）"
+    },
+    "commerce.spu": {
+      "schema": "commerce",
+      "table": "spu",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "category_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "类目 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "brand_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "品牌 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "商品名称",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "subtitle",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "副标题",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "pics",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "主图 objectKey 列表 JSONB",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "videos",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "视频 objectKey 列表 JSONB",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "detail_html",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "富文本详情",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'DRAFT'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：DRAFT草稿 / ON上架 / OFF下架",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "sold_count",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "支付成功累加销量；列表「N 人付款」",
+          "source": "V9",
+          "altered_by": []
+        },
+        {
+          "name": "schedule_on_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "定时上架时间；Job 扫描后清空",
+          "source": "V9",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "idx_spu_schedule_on",
+          "table": "commerce.spu",
+          "unique": false,
+          "columns": "schedule_on_at",
+          "where": "schedule_on_at IS NOT NULL AND deleted = FALSE",
+          "created_in": "V9"
+        }
+      ],
+      "comment": "标准产品单元（SPU）"
+    },
+    "commerce.sku": {
+      "schema": "commerce",
+      "table": "sku",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "spu_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "所属 SPU ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "SKU 标题",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "price",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "售价",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "cost_price",
+          "type": "NUMERIC(12,2)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "成本价",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "bar_code",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "条码（唯一，可空）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "specs",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "规格快照 JSON（如 {\"颜色\":\"黑色\"}）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "pic",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "SKU 图 objectKey",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED / DISABLED",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_sku_bar_code",
+          "table": "commerce.sku",
+          "unique": true,
+          "columns": "bar_code",
+          "where": "bar_code IS NOT NULL AND deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "库存量单位（SKU）；库存不在此表，见 stock"
+    },
+    "commerce.warehouse": {
+      "schema": "commerce",
+      "table": "warehouse",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "仓库名称",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ENABLED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：ENABLED / DISABLED",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "仓库"
+    },
+    "commerce.stock": {
+      "schema": "commerce",
+      "table": "stock",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "sku_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "SKU ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "warehouse_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "仓库 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "physical_stock",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "实物总库存",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "locked_stock",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "锁定库存（下单占用）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "low_threshold",
+          "type": "INT",
+          "nullable": false,
+          "default": "10",
+          "primary_key": false,
+          "checks": [],
+          "comment": "低库存预警阈值",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "version",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "乐观锁版本号",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "ck_stock_invariant",
+          "definition": "CHECK (physical_stock >= locked_stock AND locked_stock >= 0)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_stock_sku_wh",
+          "table": "commerce.stock",
+          "unique": true,
+          "columns": "sku_id, warehouse_id",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "SKU×仓库库存；可售=physical_stock-locked_stock（不落库）"
+    },
+    "commerce.stock_log": {
+      "schema": "commerce",
+      "table": "stock_log",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "sku_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "SKU ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "warehouse_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "仓库 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "change_qty",
+          "type": "INT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "变动数量（可正可负）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "类型：INIT/ADJUST/IN/OUT/ORDER_LOCK/ORDER_UNLOCK/SHIP 等",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "reason",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "原因说明",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "operator_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "操作人 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "库存流水"
+    },
+    "commerce.order": {
+      "schema": "commerce",
+      "table": "order",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "order_no",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "订单号（唯一）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "顾客 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "customer_name",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "顾客姓名快照",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：PENDING_PAY/PENDING_SHIP/PENDING_RECEIVE/COMPLETED/CLOSED 等",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "total_amount",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "商品合计金额",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "pay_amount",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "实付金额",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "freight",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "运费",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "address_snapshot",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "收货地址快照 JSONB",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "remark",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "后台备注",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "paid_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "支付时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "ship_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "发货时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "received_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "确认收货时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "close_reason",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "关单原因",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记（订单一般不软删，预留）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "client_type",
+          "type": "VARCHAR(16)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "下单端：web / h5 / mp",
+          "source": "V9",
+          "altered_by": []
+        },
+        {
+          "name": "customer_phone_mask",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "下单时脱敏手机，便于后台尾号筛选",
+          "source": "V9",
+          "altered_by": []
+        },
+        {
+          "name": "idempotent_key",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "客户维度幂等键，防重复下单",
+          "source": "V9",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_order_no",
+          "table": "commerce.order",
+          "unique": true,
+          "columns": "order_no",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        },
+        {
+          "name": "idx_order_client_type",
+          "table": "commerce.order",
+          "unique": false,
+          "columns": "client_type",
+          "where": "deleted = FALSE",
+          "created_in": "V9"
+        },
+        {
+          "name": "idx_order_customer_created",
+          "table": "commerce.order",
+          "unique": false,
+          "columns": "customer_id, created_at DESC",
+          "where": "deleted = FALSE",
+          "created_in": "V9"
+        },
+        {
+          "name": "uk_order_customer_idempotent",
+          "table": "commerce.order",
+          "unique": true,
+          "columns": "customer_id, idempotent_key",
+          "where": "idempotent_key IS NOT NULL AND deleted = FALSE",
+          "created_in": "V9"
+        }
+      ],
+      "comment": "订单主表"
+    },
+    "commerce.order_item": {
+      "schema": "commerce",
+      "table": "order_item",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "order_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "订单 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "sku_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "SKU ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "spu_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "SPU ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "商品标题快照",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "pic",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "商品图 objectKey 快照",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "price",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "成交单价",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "quantity",
+          "type": "INT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "数量",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "specs",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "规格快照 JSONB",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "subtotal",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "小计",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "订单明细"
+    },
+    "commerce.payment": {
+      "schema": "commerce",
+      "table": "payment",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "order_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "订单 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "channel",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": "'SANDBOX'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "渠道：SANDBOX 等",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC(12,2)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "支付金额",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：如 PAID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trade_no",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "渠道交易号",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "paid_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "支付成功时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "mock_param",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "沙箱模拟参数",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "支付单"
+    },
+    "commerce.shipment": {
+      "schema": "commerce",
+      "table": "shipment",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "order_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "订单 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "carrier",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "承运商（可模拟）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "tracking_no",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "运单号",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": "'SHIPPED'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "物流状态",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "traces",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "轨迹 JSONB",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "物流发货单"
+    },
+    "commerce.after_sale": {
+      "schema": "commerce",
+      "table": "after_sale",
+      "created_in": "V1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": "主键",
+          "source": "V1",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "after_sale_no",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "售后单号（唯一）",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "order_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "关联订单 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "顾客 ID",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "类型：REFUND仅退款 / REFUND_RETURN退货退款",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "reason",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "申请原因",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "evidence_pics",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "凭证图 objectKey 列表 JSONB",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "状态：PENDING_AUDIT/REFUNDING/COMPLETED/REJECTED 等",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "refund_amount",
+          "type": "NUMERIC(12,2)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "退款金额",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "audit_remark",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "审核备注",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "创建时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": "更新时间",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": "软删标记",
+          "source": "V1",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "请求 traceId",
+          "source": "V1",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_after_sale_no",
+          "table": "commerce.after_sale",
+          "unique": true,
+          "columns": "after_sale_no",
+          "where": "deleted = FALSE",
+          "created_in": "V1"
+        }
+      ],
+      "comment": "售后单"
+    },
+    "identity.customer": {
+      "schema": "identity",
+      "table": "customer",
+      "created_in": "V8",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "openid",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "union_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "phone",
+          "type": "VARCHAR(20)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "手机号，登录主键之一",
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "nickname",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "avatar",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "gender",
+          "type": "SMALLINT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": "0未知 / 1男 / 2女",
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'NORMAL'",
+          "primary_key": false,
+          "checks": [],
+          "comment": "NORMAL 正常 / FROZEN 冻结",
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "last_login_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_customer_phone",
+          "table": "identity.customer",
+          "unique": true,
+          "columns": "phone",
+          "where": "phone IS NOT NULL AND deleted = FALSE",
+          "created_in": "V8"
+        },
+        {
+          "name": "uk_customer_openid",
+          "table": "identity.customer",
+          "unique": true,
+          "columns": "openid",
+          "where": "openid IS NOT NULL AND deleted = FALSE",
+          "created_in": "V8"
+        }
+      ],
+      "comment": "C 端顾客账号（手机号登录；可扩展微信）"
+    },
+    "commerce.cart": {
+      "schema": "commerce",
+      "table": "cart",
+      "created_in": "V8",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_cart_customer",
+          "table": "commerce.cart",
+          "unique": true,
+          "columns": "customer_id",
+          "where": null,
+          "created_in": "V8"
+        }
+      ],
+      "comment": "购物车（一顾客一车）"
+    },
+    "commerce.cart_item": {
+      "schema": "commerce",
+      "table": "cart_item",
+      "created_in": "V8",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "cart_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "sku_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "quantity",
+          "type": "INT",
+          "nullable": false,
+          "default": "1",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "selected",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "TRUE",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "ck_cart_item_qty",
+          "definition": "CHECK (quantity >= 1)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_cart_item_sku",
+          "table": "commerce.cart_item",
+          "unique": true,
+          "columns": "cart_id, sku_id",
+          "where": null,
+          "created_in": "V8"
+        }
+      ],
+      "comment": "购物车明细"
+    },
+    "commerce.address": {
+      "schema": "commerce",
+      "table": "address",
+      "created_in": "V8",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "phone",
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "province",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "district",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "detail",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "is_default",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V20",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "idx_address_customer",
+          "table": "commerce.address",
+          "unique": false,
+          "columns": "customer_id",
+          "where": "deleted = FALSE",
+          "created_in": "V8"
+        }
+      ],
+      "comment": "收货地址"
+    },
+    "commerce.favorite": {
+      "schema": "commerce",
+      "table": "favorite",
+      "created_in": "V8",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "spu_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_favorite_customer_spu",
+          "table": "commerce.favorite",
+          "unique": true,
+          "columns": "customer_id, spu_id",
+          "where": null,
+          "created_in": "V8"
+        }
+      ],
+      "comment": "商品收藏"
+    },
+    "commerce.browse_history": {
+      "schema": "commerce",
+      "table": "browse_history",
+      "created_in": "V8",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "spu_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        },
+        {
+          "name": "last_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V8",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_browse_customer_spu",
+          "table": "commerce.browse_history",
+          "unique": true,
+          "columns": "customer_id, spu_id",
+          "where": null,
+          "created_in": "V8"
+        },
+        {
+          "name": "idx_browse_customer_last",
+          "table": "commerce.browse_history",
+          "unique": false,
+          "columns": "customer_id, last_at DESC",
+          "where": null,
+          "created_in": "V8"
+        }
+      ],
+      "comment": "浏览足迹"
+    },
+    "commerce.review": {
+      "schema": "commerce",
+      "table": "review",
+      "created_in": "V10",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "order_item_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "spu_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "rating",
+          "type": "SMALLINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "content",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "pics",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'VISIBLE'",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "deleted",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": "FALSE",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "ck_review_rating",
+          "definition": "CHECK (rating BETWEEN 1 AND 5)"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "uk_review_order_item",
+          "table": "commerce.review",
+          "unique": true,
+          "columns": "order_item_id",
+          "where": "deleted = FALSE",
+          "created_in": "V10"
+        },
+        {
+          "name": "idx_review_spu_status",
+          "table": "commerce.review",
+          "unique": false,
+          "columns": "spu_id, status",
+          "where": "deleted = FALSE",
+          "created_in": "V10"
+        }
+      ],
+      "comment": "订单项评价；发表即 VISIBLE，后台可 HIDDEN"
+    },
+    "commerce.site_brand": {
+      "schema": "commerce",
+      "table": "site_brand",
+      "created_in": "V10",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "logo_key",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": "'尚品汇'",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "slogan",
+          "type": "VARCHAR(128)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "favicon_key",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "updated_by",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [],
+      "comment": "站点品牌（Logo/名称/Slogan）；推荐单行 id=1"
+    },
+    "commerce.home_slot": {
+      "schema": "commerce",
+      "table": "home_slot",
+      "created_in": "V10",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "code",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ON'",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "sort",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "valid_from",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "valid_to",
+          "type": "TIMESTAMPTZ",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "updated_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_home_slot_code",
+          "table": "commerce.home_slot",
+          "unique": true,
+          "columns": "code",
+          "where": null,
+          "created_in": "V10"
+        }
+      ],
+      "comment": "首页运营位槽位"
+    },
+    "commerce.home_slot_item": {
+      "schema": "commerce",
+      "table": "home_slot_item",
+      "created_in": "V10",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "slot_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "sort",
+          "type": "INT",
+          "nullable": false,
+          "default": "0",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "spu_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "image_key",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "link_type",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'NONE'",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "link_value",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(128)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "extra",
+          "type": "JSONB",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'ON'",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V10",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "idx_home_slot_item_slot",
+          "table": "commerce.home_slot_item",
+          "unique": false,
+          "columns": "slot_id, sort",
+          "where": null,
+          "created_in": "V10"
+        }
+      ],
+      "comment": "运营位内容项（Banner/选品/热搜词）"
+    },
+    "commerce.in_out_order": {
+      "schema": "commerce",
+      "table": "in_out_order",
+      "created_in": "V11",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "bill_no",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "type",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "PURCHASE_IN 采购入 / STOCKTAKE 盘点 / SALE_OUT 销售出（发货自动）",
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "warehouse_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "operator_id",
+          "type": "BIGINT",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "remark",
+          "type": "VARCHAR(512)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "related_order_no",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMPTZ",
+          "nullable": false,
+          "default": "NOW()",
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "trace_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "uk_in_out_bill_no",
+          "table": "commerce.in_out_order",
+          "unique": true,
+          "columns": "bill_no",
+          "where": null,
+          "created_in": "V11"
+        },
+        {
+          "name": "idx_in_out_type_created",
+          "table": "commerce.in_out_order",
+          "unique": false,
+          "columns": "type, created_at DESC",
+          "where": null,
+          "created_in": "V11"
+        }
+      ],
+      "comment": "出入库单据：PURCHASE_IN / STOCKTAKE / SALE_OUT"
+    },
+    "commerce.in_out_item": {
+      "schema": "commerce",
+      "table": "in_out_item",
+      "created_in": "V11",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": true,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": [],
+          "nullable_implied_by": "PRIMARY KEY（PostgreSQL 隐式 NOT NULL）"
+        },
+        {
+          "name": "bill_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "sku_id",
+          "type": "BIGINT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "qty",
+          "type": "INT",
+          "nullable": false,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": "有符号数量：入正出负",
+          "source": "V11",
+          "altered_by": []
+        },
+        {
+          "name": "remark",
+          "type": "VARCHAR(255)",
+          "nullable": true,
+          "default": null,
+          "primary_key": false,
+          "checks": [],
+          "comment": null,
+          "source": "V11",
+          "altered_by": []
+        }
+      ],
+      "constraints": [],
+      "indexes": [
+        {
+          "name": "idx_in_out_item_bill",
+          "table": "commerce.in_out_item",
+          "unique": false,
+          "columns": "bill_id",
+          "where": null,
+          "created_in": "V11"
+        }
+      ],
+      "comment": null
+    }
+  }
+}

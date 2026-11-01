@@ -1,0 +1,50 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### 环境配置（含敏感信息勿提交；.env.example 保留模板） ###
+.env
+.env.*
+!.env.example
+
+### 运行日志 ###
+logs/
+*.log
+*.pid
+
+### 本地覆盖配置（常被写入真实数据库口令，勿提交） ###
+application-local.*
+application-*-local.*
+
+### Maven / Spring Cloud ###
+.flattened-pom.xml

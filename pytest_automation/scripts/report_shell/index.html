@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>测试报告 · 视图</title>
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <strong>尚品汇 · 测试报告</strong>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="测试大类"></nav>
+    <div class="top-actions">
+      <a class="ghost-btn" href="../index.html" target="_self">返回 Allure 总览</a>
+    </div>
+  </header>
+
+  <nav class="subtabs" id="subtabs" aria-label="视图"></nav>
+
+  <main class="page">
+    <section class="page-head">
+      <div>
+        <h1 id="view-title">接口视图</h1>
+        <p class="muted" id="view-desc">按接口聚合参数示例、返回值示例与全部测试点；鼠标悬浮示例可查看格式化 JSON 并复制。</p>
+      </div>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <section class="stats-view" id="stats-view" hidden></section>
+
+    <section class="toolbar" id="toolbar">
+      <input id="search" class="search" type="search" placeholder="搜索接口名称 / 路径 / 方式，例如 orders">
+      <select id="method-filter" class="select">
+        <option value="">全部方法</option>
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+      </select>
+      <label class="check"><input type="checkbox" id="only-failed"> 仅看有失败</label>
+      <span class="muted grow" id="filter-summary"></span>
+      <button id="export-all" class="detail-btn" type="button">导出全部测试点 CSV</button>
+    </section>
+
+    <section class="reconcile" id="reconcile-box">
+      <div class="reconcile-line" id="reconcile-line"></div>
+      <details class="unattributed" id="unattributed">
+        <summary id="unattributed-summary">未归属接口的用例</summary>
+        <div class="unattributed-list" id="unattributed-list"></div>
+      </details>
+    </section>
+
+    <section class="table-wrap" id="table-box">
+      <table class="matrix" id="matrix">
+        <thead>
+          <tr>
+            <th style="width:18%">接口名称</th>
+            <th style="width:24%">接口 URL</th>
+            <th style="width:7%">请求方式</th>
+            <th style="width:6%">风险</th>
+            <th style="width:18%">示例（参数 / 返回值）</th>
+            <th style="width:27%">接口测试点</th>
+          </tr>
+        </thead>
+        <tbody id="matrix-body"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>没有匹配的接口</div>
+    </section>
+  </main>
+
+  <div class="tooltip" id="tooltip" hidden>
+    <div class="tooltip-head">
+      <span id="tooltip-title">参数示例</span>
+      <button class="copy-btn" id="tooltip-copy" type="button">复制</button>
+    </div>
+    <pre id="tooltip-body" class="json"></pre>
+  </div>
+
+  <div class="drawer-mask" id="drawer-mask" hidden></div>
+  <aside class="drawer" id="drawer" hidden aria-label="接口测试点详情">
+    <div class="drawer-head">
+      <div>
+        <div class="drawer-kicker" id="drawer-method"></div>
+        <h2 id="drawer-title"></h2>
+        <div class="muted" id="drawer-sub"></div>
+      </div>
+      <button class="close-btn" id="drawer-close" type="button" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+
+  <div class="drawer-mask" id="chain-mask" hidden></div>
+  <aside class="drawer chain-drawer" id="chain-drawer" hidden aria-label="接口调用链路">
+    <div class="drawer-head">
+      <div>
+        <div class="drawer-kicker">接口调用链路</div>
+        <h2 id="chain-drawer-title"></h2>
+        <div class="muted" id="chain-drawer-sub"></div>
+      </div>
+      <button class="close-btn" id="chain-drawer-close" type="button" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer-body" id="chain-body"></div>
+  </aside>
+
+  <div class="drawer-mask" id="log-mask" hidden></div>
+  <aside class="drawer log-drawer" id="log-drawer" hidden aria-label="500 错误日志">
+    <div class="drawer-head">
+      <div>
+        <div class="drawer-kicker">500 错误日志</div>
+        <h2 id="log-drawer-title"></h2>
+        <div class="muted" id="log-drawer-sub"></div>
+      </div>
+      <button class="close-btn" id="log-drawer-close" type="button" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer-body">
+      <div class="log-toolbar">
+        <span class="muted">数据源：Allure 报告中的后端日志附件</span>
+        <span class="grow"></span>
+        <button class="detail-btn" id="log-copy" type="button">复制日志</button>
+      </div>
+      <pre id="log-body" class="log-pre"></pre>
+    </div>
+  </aside>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

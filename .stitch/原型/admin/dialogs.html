@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>弹窗与交互图鉴（V1.0） · Shang 后台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="modal.css">
+<style>
+  /* 本页为「光页框」：只有内容区，不带 sidebar / topbar 应用外壳 */
+  .spec-group { margin-bottom: 34px; }
+  .group-head {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 0 0 10px; margin-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+  }
+  .group-head .page-title { font-size: 17px; }
+  .group-note { font-size: 12px; color: var(--slate); margin: -4px 0 14px; }
+  /* 内联抽屉的遮罩不参与文档流（modal.css 只处理了 .modal.is-inline 的遮罩） */
+  .drawer.is-inline .modal-mask { display: none; }
+</style>
+</head>
+<body>
+<div class="content" style="max-width:1440px;margin:0 auto;padding:40px 32px 56px">
+  <div class="auth-logo" style="justify-content:flex-start;margin-bottom:10px">
+    <img class="brand-logo" src="logo.png" alt="Shang"><div class="brand-name">Shang · 后台原型</div>
+  </div>
+  <div class="page-title">Shang 后台 · 弹窗与交互图鉴（V1.0）</div>
+  <p class="page-sub" style="margin-bottom:8px">
+    V1.0 弹窗清单 · 共 <b>53</b> 条（弹窗 50 + 抽屉 3）· 按模块分组，每条标注「怎么触发」。
+  </p>
+  <p class="hint" style="margin-bottom:28px">
+    本页是全站弹窗 / 抽屉的<b>唯一截图来源</b>：所有弹窗以 <span class="code">.is-inline</span> 静态内联方式展示，与页面上的真实弹窗为同一份 markup；
+    交付 Vue 时对应 Element Plus 的 <span class="code">ElMessageBox / ElDialog / ElDrawer / ElMessage</span>。
+  </p>
+
+  <!-- ==================== 1 · 登录 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">1 · 登录 · login.html</span>
+      <span class="hint">3 条</span>
+    </div>
+    <p class="group-note">
+      说明：登录失败一律返回同一条提示，<b>不区分</b>用户名不存在还是密码错误；「记住我」不弹窗，仅在表单下方用一行 hint 说明「只记住用户名，不保存密码」。
+    </p>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D1-01</span> 登录失败统一提示</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-login-fail">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">账号或密码错误</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>用户名或密码不正确，请重新输入。</p>
+                <p class="hint">为防撞库，登录失败<b>不区分</b>是用户名不存在还是密码错误，统一返回本条提示；失败的登录尝试会写入操作日志。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">重新输入</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>login.html · 点「登 录」校验失败，或页面底部「演示触发 · 登录失败」。纯提示，只有「重新输入」一个按钮。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D1-02</span> 连续失败锁定（必须显示解锁时间）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-login-locked">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">🔒</span>
+                <div class="modal-title">账号已锁定</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>连续第 <b>6</b> 次登录失败，该账号已锁定 <b>15</b> 分钟。</p>
+                <p class="alert alert-warn" style="justify-content:center">请在 <b class="code">14:32</b> 后重试</p>
+                <p class="hint" style="margin-top:10px">锁定规则：连续失败 5 次将锁定 15 分钟；锁定期间即使密码正确也无法登录。可联系超级管理员在「用户管理」中解锁（或直接重置密码）。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>login.html · 同一账号连续失败第 6 次（页面底部「演示触发 · 账号锁定」）。文案必须给出具体解锁时间与「连续失败 5 次将锁定 15 分钟」的规则。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D1-03</span> 账号已禁用</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-login-disabled">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">账号已禁用</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>该账号已被禁用，无法登录后台。</p>
+                <p class="hint">请联系超级管理员在「用户管理」中<b>启用</b>该账号后重试。禁用账号的在线会话会立即失效。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>login.html · 使用被禁用的账号登录（页面底部「演示触发 · 账号已禁用」）。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2 · 商品列表 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">2 · 商品列表 · products.html</span>
+      <span class="hint">4 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2-01</span> 上架校验失败（逐条列原因）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-p-on-fail">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法上架</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>商品「索尼 WH-1000XM5」不满足上架条件，请修正后重试：</p>
+                <ul class="impact">
+                  <li>至少需要 <b>1</b> 张主图（当前 0 张）</li>
+                  <li>至少需要 <b>1</b> 个已填售价的 SKU（当前 1 个 SKU 未填售价）</li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">
+                  校验规则：主图非空、至少 1 个启用 SKU、售价 &gt; 0。库存为 0 不阻止上架；
+                  校验不通过时商品停留在<b>草稿</b>状态，已填内容不丢失。
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">去补充</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>products.html · 草稿行「索尼 WH-1000XM5」点「上架」。校验失败逐条列出原因，不通过时不改变商品状态。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2-02</span> 批量下架（危险确认，含勾选数量）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-p-off-batch">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">!</span>
+                <div class="modal-title">批量下架</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认下架已勾选的 <b>3</b> 个商品？</p>
+                <ul class="impact">
+                  <li><b>iPhone 15 Pro 128G</b> 手机 · 3 个 SKU</li>
+                  <li><b>Xiaomi 14 Pro 12+256G</b> 手机 · 2 个 SKU</li>
+                  <li><b>Redmi K70 12+256G</b> 手机 · 1 个 SKU</li>
+                </ul>
+                <div class="alert alert-warn" style="margin-top:12px">
+                  下架后顾客端<b>立即不可见、不可下单</b>；已生成订单不受影响，库存与 SKU 数据保留，可随时重新上架。
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认下架（3）</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>products.html · 勾选 3 个上架商品 → 工具栏「批量下架」（或行内「下架」）。文案必须含勾选数量与商品清单。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2-03</span> 删除草稿（危险确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-p-del-draft">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除商品</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除草稿「索尼 WH-1000XM5」？</p>
+                <p class="hint">将一并删除该 SPU 下的 <b>1</b> 个 SKU 及其库存记录，删除后不可恢复。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>products.html · 草稿行「索尼 WH-1000XM5」点「删除」（仅草稿行显示删除按钮）。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D2-04</span> 仅草稿可删（拒绝）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-p-del-reject">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">仅草稿可删除</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>商品 <b>iPhone 15 Pro 128G</b> 当前为 <span class="badge badge-forest">上架</span> 状态，不能删除。</p>
+                <p class="hint">删除按钮只在「草稿」行显示；对非草稿调用删除接口时，后端同样以 409 拒绝，提示「仅草稿可删」。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>products.html · 对非草稿商品调用删除（列表删除按钮仅草稿行显示；接口层返回 409「仅草稿可删」）。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 3 · 商品编辑 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">3 · 商品编辑 · product-edit.html</span>
+      <span class="hint">5 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D3-01</span> 保存并上架校验失败</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-onshelf-fail">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法上架</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>商品「iPhone 15 Pro 128G」不满足上架条件，请修正后重试：</p>
+                <ul class="impact">
+                  <li>上架需要至少一张主图</li>
+                  <li>上架需要至少一个已填售价的 SKU</li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">上架校验：主图非空、至少 1 个启用 SKU、售价 &gt; 0。库存为 0 不阻止上架。校验不通过时<b>停留本页</b>，已填内容不丢失。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">去补充</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>product-edit.html · 右上「保存并上架」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D3-02</span> 存为草稿</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-draft">
+            <div class="modal-panel is-sm" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✓</span>
+                <div class="modal-title">存为草稿</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>保存为草稿后商品状态为 <span class="badge badge-amber">草稿</span>，顾客端不可见，可随时回到本页继续编辑或上架。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>product-edit.html · 右上「存草稿」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D3-03</span> 生成 SKU 预览</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-gen-sku">
+            <div class="modal-panel is-lg" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">⚙</span>
+                <div class="modal-title">生成 SKU</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p class="hint" style="margin-bottom:12px">按「容量 × 颜色」全组合生成，将新增 <b>6</b> 行；已存在的组合会被跳过，不覆盖已填价格。</p>
+                <table class="table">
+                  <thead><tr><th>容量</th><th>颜色</th><th class="num">售价</th><th class="num">库存</th></tr></thead>
+                  <tbody>
+                    <tr><td>128GB</td><td>原色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+                    <tr><td>128GB</td><td>白色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+                    <tr><td>256GB</td><td>原色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+                    <tr><td>256GB</td><td>白色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+                    <tr><td>512GB</td><td>原色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+                    <tr><td>512GB</td><td>白色钛金属</td><td class="num hint">待填</td><td class="num hint">待填</td></tr>
+                  </tbody>
+                </table>
+                <div class="alert alert-info" style="margin-top:12px">规格值重复或为空时不生成；两个规格维度都留空则按单规格 SKU 处理。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认生成</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>product-edit.html ·「规格与 SKU」卡片右上「生成 SKU」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D3-04</span> 删除 SKU 行</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-del-sku">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除 SKU</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除规格组合「128GB / 原色钛金属」？</p>
+                <p class="hint">保存后该 SKU 及其库存记录一并删除，不可恢复。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>product-edit.html · SKU 表格行内「删」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D3-05</span> 主图格式不支持</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-upload-bad">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">图片不符合要求</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>仅支持 jpeg / png / webp，单张不超过 10MB。</p>
+                <p class="hint">上传失败可重试，不影响已填写的表单内容。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">重新选择</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>product-edit.html · 基本信息「主图」点「+」上传不符合要求的文件。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 4 · 库存管理 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">4 · 库存管理 · inventory.html</span>
+      <span class="hint">2 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D4-01</span> 库存调整（增减录入）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-inv-adjust">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">±</span>
+                <div class="modal-title">库存调整</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">SKU</label>
+                  <input class="input" value="10001 · iPhone 15 Pro 128G · 128GB / 原色钛金属" readonly>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">仓库</label>
+                    <select class="select"><option selected>默认仓</option></select>
+                    <span class="hint">V1 仅一个仓库，默认「默认仓」</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">调整数量<span class="req">*</span></label>
+                    <input class="input" value="-101">
+                    <span class="hint">正数入库、负数出库，不能为 0</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">调整原因</label>
+                  <input class="input" value="后台手工调整" readonly>
+                  <span class="hint">V1 后台调整固定写入该原因，随流水一并记录</span>
+                </div>
+                <div class="alert alert-warn">
+                  调整后：总库存 <b>-1</b> · 锁定占用 <b>2</b> · 可售 <b>-3</b>。
+                  本次调整会使可售库存为负，确认后将被拒绝。
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认调整</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>inventory.html · 右上「+ 库存调整」或行内「调整」。仓库默认「默认仓」、原因固定「后台手工调整」（图示为 -101 的越界录入）。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D4-02</span> 调整后可售为负（拒绝）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-inv-negative">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法调整</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>SKU <b class="code">10001</b> 出库 <b>101</b> 件后总库存为 <b>-1</b>，小于锁定占用 <b>2</b>，可售库存为 <b class="code">-3</b>。</p>
+                <p class="hint">
+                  库存不变式：总库存 ≥ 锁定占用 ≥ 0，即 可售 = 总库存 − 锁定 ≥ 0。
+                  请减少出库数量，或先补货 / 等订单出库释放锁定后再调整。
+                </p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>inventory.html · 库存调整里填出库数量使「总库存 &lt; 锁定占用」→ 确认调整。拒绝时给出具体数字与不变式说明。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 5 · 订单列表 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">5 · 订单列表 · orders.html</span>
+      <span class="hint">3 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D5-01</span> 订单发货</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-ship">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">↗</span>
+                <div class="modal-title">订单发货</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p class="hint" style="margin-bottom:14px">订单 <b class="code">SO20260911014</b> · iPhone 15 Pro 128G · 128GB 原色钛金属 ×1 · ¥7,999.00</p>
+                <div class="field">
+                  <label class="label">承运商</label>
+                  <select class="select">
+                    <option selected>模拟快递</option>
+                    <option>顺丰速运</option>
+                    <option>中通快递</option>
+                  </select>
+                  <span class="hint">不选则默认「模拟快递」</span>
+                </div>
+                <div class="field">
+                  <label class="label">运单号<span class="req">*</span></label>
+                  <input class="input" placeholder="请录入运单号">
+                  <span class="error-text">请录入运单号</span>
+                </div>
+                <div class="alert alert-info">发货后订单进入<b>待收货</b>，并按订单明细<b>扣减库存</b>（总库存与锁定占用同时减少）。此操作不可撤销。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认发货</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>orders.html · 待发货订单行「发货」（订单详情抽屉底部同入口）。运单号必填，错误内联展示。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D5-02</span> 当前状态不可发货（拒绝）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-noop">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">当前状态不可发货</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>订单 <b class="code">SO20260911012</b> 当前为 <span class="badge badge-amber">待付款</span>。</p>
+                <p class="hint">仅「待发货」订单可发货。待付款订单需顾客完成支付，超时 15 分钟会自动关闭并释放库存。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>orders.html · 对非「待发货」订单点「发货」（图示为待付款订单）。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D5-03</span> 订单详情抽屉</div>
+        <div class="spec-stage">
+          <div class="drawer is-inline" id="drw-order">
+            <div class="drawer-panel" role="dialog">
+              <div class="modal-head">
+                <div class="modal-title">订单详情</div>
+                <span class="badge badge-coral">待发货</span>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <dl class="kv" style="grid-template-columns:96px 1fr;margin-bottom:18px">
+                  <dt>订单号</dt><dd class="code">SO20260911014</dd>
+                  <dt>下单时间</dt><dd class="code">2026-09-11 09:21:18</dd>
+                  <dt>收货人</dt><dd>林晓涵 · 138****8830</dd>
+                  <dt>收货地址</dt><dd>上海市徐汇区××路 12 号 3-201</dd>
+                  <dt>备注</dt><dd class="hint">—</dd>
+                </dl>
+                <div class="page-title" style="font-size:13px;margin-bottom:10px">商品项</div>
+                <table class="table" style="margin-bottom:18px">
+                  <thead><tr><th>商品</th><th>规格</th><th class="num">单价</th><th class="num">数量</th><th class="num">小计</th></tr></thead>
+                  <tbody>
+                    <tr><td>iPhone 15 Pro 128G</td><td>128GB / 原色钛金属</td><td class="num">¥7,999</td><td class="num">1</td><td class="num">¥7,999</td></tr>
+                  </tbody>
+                </table>
+                <div class="page-title" style="font-size:13px;margin-bottom:10px">金额</div>
+                <dl class="kv" style="grid-template-columns:96px 1fr;margin-bottom:18px">
+                  <dt>商品金额</dt><dd class="num">¥7,999.00</dd>
+                  <dt>运费</dt><dd class="num">¥0.00</dd>
+                  <dt>实付</dt><dd class="num" style="font-weight:700">¥7,999.00</dd>
+                </dl>
+                <div class="page-title" style="font-size:13px;margin-bottom:10px">状态时间线</div>
+                <div class="timeline">
+                  <div class="tl-item done"><div class="tl-time">09-11 09:21</div><div class="tl-label">提交订单 · 锁定库存</div></div>
+                  <div class="tl-item done"><div class="tl-time">09-11 09:21</div><div class="tl-label">模拟支付成功</div></div>
+                  <div class="tl-item pending"><div class="tl-time">待操作</div><div class="tl-label">发货 → 待收货</div></div>
+                  <div class="tl-item pending"><div class="tl-time">—</div><div class="tl-label">顾客确认收货 → 已完成</div></div>
+                </div>
+                <details style="margin-top:18px">
+                  <summary class="hint" style="cursor:pointer">原始数据（JSON 调试视图）</summary>
+                  <pre class="code" style="background:var(--sand);padding:12px;border-radius:var(--r-md);font-size:12px;overflow:auto;margin-top:8px">{
+  "orderNo": "SO20260911014",
+  "status": "PENDING_SHIP",
+  "items": [{ "skuId": 10001, "qty": 1, "price": 7999.00 }],
+  "goodsAmount": 7999.00,
+  "freightAmount": 0.00,
+  "payAmount": 7999.00
+}</pre>
+                </details>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">关闭</button>
+                <button class="btn btn-primary">发货</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>orders.html · 订单行「详情」。抽屉右侧滑出，含 JSON 可折叠调试视图。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 6 · 售后管理 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">6 · 售后管理 · aftersales.html</span>
+      <span class="hint">3 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D6-01</span> 售后详情抽屉（含进度时间线）</div>
+        <div class="spec-stage">
+          <div class="drawer is-inline" id="drw-as">
+            <div class="drawer-panel" role="dialog">
+              <div class="modal-head">
+                <div class="modal-title">售后详情</div>
+                <span class="badge badge-amber">待审核</span>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <dl class="kv" style="grid-template-columns:96px 1fr;margin-bottom:18px">
+                  <dt>售后单号</dt><dd class="code">AS202609140101</dd>
+                  <dt>售后类型</dt><dd><span class="badge badge-forest">仅退款</span></dd>
+                  <dt>关联订单</dt><dd class="code">SO202609140104</dd>
+                  <dt>顾客</dt><dd>张三 · 138****0000</dd>
+                  <dt>退款金额</dt><dd class="num" style="font-weight:700">¥1,999.00</dd>
+                  <dt>申请原因</dt><dd>七天无理由（演示）</dd>
+                  <dt>凭证</dt><dd><div class="thumb" style="background:linear-gradient(135deg,#F4EEE0,#9A8E7C)"></div></dd>
+                  <dt>处理意见</dt><dd class="hint">—（审核后回写，顾客可见）</dd>
+                </dl>
+                <div class="page-title" style="font-size:13px;margin-bottom:10px">关联商品</div>
+                <table class="table" style="margin-bottom:18px">
+                  <thead><tr><th>商品</th><th>规格</th><th class="num">单价</th><th class="num">数量</th><th class="num">小计</th></tr></thead>
+                  <tbody>
+                    <tr><td>AirPods Pro 2</td><td>—</td><td class="num">¥1,999</td><td class="num">1</td><td class="num">¥1,999</td></tr>
+                  </tbody>
+                </table>
+                <div class="page-title" style="font-size:13px;margin-bottom:10px">进度时间线</div>
+                <div class="timeline">
+                  <div class="tl-item done"><div class="tl-time">09-14 10:00</div><div class="tl-label">顾客提交售后申请 · 仅退款</div></div>
+                  <div class="tl-item pending"><div class="tl-time">待操作</div><div class="tl-label">后台审核 → 同意 / 拒绝</div></div>
+                  <div class="tl-item pending"><div class="tl-time">—</div><div class="tl-label">同意后进入退款流程（沙箱退款）</div></div>
+                  <div class="tl-item pending"><div class="tl-time">—</div><div class="tl-label">退款成功 → 已完成（回写顾客端）</div></div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">关闭</button>
+                <button class="btn btn-danger">拒绝</button>
+                <button class="btn btn-primary">同意</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>aftersales.html · 待审核售后单「审核」/ 其他状态「详情」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D6-02</span> 同意售后（进入退款流程）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-as-approve">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico ok">✓</span>
+                <div class="modal-title">同意售后申请</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>售后单 <b class="code">AS202609140101</b>（仅退款 · ¥1,999.00）将进入<b>退款流程</b>。</p>
+                <ul class="impact">
+                  <li>调用沙箱支付发起退款 <b>¥1,999.00</b>，原路退回</li>
+                  <li>售后状态 待审核 → <b>退款中</b> → 退款成功自动置为 <b>已完成</b></li>
+                  <li>仅退款不回补库存；订单与商品数据保留</li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">同意后不可撤销；如退款失败可重新发起或改为线下处理。处理结果会回写顾客端售后进度。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认同意</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>aftersales.html · 售后详情抽屉底部「同意」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D6-03</span> 拒绝售后（处理意见必填，内联错误）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-as-reject">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">拒绝售后申请</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p class="hint" style="margin-bottom:14px">售后单 <b class="code">AS202609140101</b> · 仅退款 · ¥1,999.00 · 顾客 张三</p>
+                <div class="field">
+                  <label class="label">处理意见<span class="req">*</span></label>
+                  <textarea class="input" rows="3" placeholder="请填写拒绝原因，例如：商品已超过七天无理由期限 / 凭证不足…"></textarea>
+                  <span class="error-text">请填写拒绝原因</span>
+                  <span class="hint">1～200 字，必填；该文案会展示给顾客，请勿包含内部信息。</span>
+                </div>
+                <div class="alert alert-warn">拒绝后售后状态置为<b>已拒绝</b>并通知顾客，顾客可补充凭证后重新申诉。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认拒绝</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>aftersales.html · 售后详情抽屉底部「拒绝」。处理意见留空时错误内联显示在字段下方（不弹窗）。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 7 · 用户管理 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">7 · 用户管理 · users.html</span>
+      <span class="hint">7 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D7-01</span> 新增 / 编辑用户（角色至少 1 个）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-user-form">
+            <div class="modal-panel is-lg" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑用户</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">用户名<span class="req">*</span></label>
+                    <input class="input" value="lin.xiaohan">
+                    <span class="hint">4～30 位，字母开头，仅字母 / 数字 / 下划线</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">姓名<span class="req">*</span></label>
+                    <input class="input" value="林晓涵">
+                    <span class="hint">1～30 字符</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">密码</label>
+                    <input class="input" type="password" placeholder="留空则不修改">
+                    <span class="hint">8～20 位，须同时包含字母与数字；新增时必填</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">手机号<span class="req">*</span></label>
+                    <input class="input" value="13900008830">
+                    <span class="hint">11 位手机号</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">邮箱</label>
+                    <input class="input" value="lin.xiaohan@shangpivot.com">
+                    <span class="hint">标准邮箱格式</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">部门</label>
+                    <select class="select">
+                      <option>总部</option>
+                      <option selected>运营中心</option>
+                      <option>仓储中心</option>
+                      <option>客服组</option>
+                    </select>
+                  </div>
+                  <div class="field full">
+                    <label class="label">角色<span class="req">*</span>（可多选，至少 1 个）</label>
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;padding:9px 12px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--cream)">
+                      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 超级管理员</label>
+                      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 运营</label>
+                      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 仓库</label>
+                      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 客服</label>
+                      <label style="display:flex;align-items:center;gap:6px"><input type="checkbox"> 财务</label>
+                    </div>
+                    <span class="error-text">请至少选择一个角色</span>
+                  </div>
+                  <div class="field full">
+                    <label class="label">状态</label>
+                    <select class="select" style="max-width:180px">
+                      <option selected>启用</option>
+                      <option>禁用</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="alert alert-info">用户名在系统内唯一，重复时提交会返回「用户名已存在」；新增用户默认状态为<b>启用</b>。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>users.html · 右上「+ 新增用户」或行内「编辑」。未选角色时错误内联显示在角色字段下（不弹窗）。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D7-02</span> 重置密码（标题含对象用户名）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-user-reset">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">🔑</span>
+                <div class="modal-title">重置密码 · lin.xiaohan</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p class="hint" style="margin-bottom:14px">用户 <b>林晓涵（lin.xiaohan）</b> · 运营中心 · 运营</p>
+                <div class="field">
+                  <label class="label">新密码<span class="req">*</span></label>
+                  <input class="input" type="password" placeholder="请输入新密码">
+                  <span class="hint">8～20 位，须同时包含字母与数字</span>
+                </div>
+                <div class="field">
+                  <label class="label">确认新密码<span class="req">*</span></label>
+                  <input class="input" type="password" placeholder="再次输入新密码">
+                </div>
+                <div class="alert alert-warn">提交后该用户的<b>所有在线会话立即失效</b>，需使用新密码重新登录。管理员无法查看原密码。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认重置</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>users.html · 行内「重置」。标题必须写明被重置的用户名。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D7-03</span> 禁用用户（确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-user-disable">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">禁用用户</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认禁用用户「林晓涵（lin.xiaohan）」？</p>
+                <p class="hint">禁用后该用户立即无法登录，在线会话失效；角色绑定与历史操作日志保留，可随时重新启用。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认禁用</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>users.html · 启用状态用户行内「禁用」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D7-04</span> 启用用户（确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-user-enable">
+            <div class="modal-panel is-sm" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico ok">✓</span>
+                <div class="modal-title">启用用户</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认启用用户「王美丽（wang.meili）」？</p>
+                <p class="hint">启用后可立即登录后台，权限沿用已分配的「客服」角色；上次登录时间 2026-08-30 11:15。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认启用</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>users.html · 禁用状态用户行内「启用」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D7-05</span> 删除用户（危险确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-user-del">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除用户</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除用户「林晓涵（lin.xiaohan）」？</p>
+                <p class="hint">删除后其角色绑定一并解除，被删除的账号<b>不可恢复</b>；历史操作日志按审计要求保留。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>users.html · 普通用户行内「删除」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D7-06</span> 超管不可删除（拒绝）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-user-admin">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法删除用户</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>「admin · 陈思远」是内置<b>超级管理员</b>账号，不允许删除。</p>
+                <p class="hint">超管账号受保护：既不能删除也不能禁用。如需停用请先新建一个超级管理员账号并转移职责。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>users.html · 超级管理员（admin）行内「删除」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D7-07</span> 不能禁用自己（拒绝）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-user-self">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法禁用当前账号</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>「admin」是当前登录账号，不能禁用自己。</p>
+                <p class="hint">禁用后你会立即失去后台访问权限且无法自行恢复。请改用其他管理员账号操作，或使用「重置密码」轮换本账号密码。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>users.html · 当前登录账号（admin）行内「禁用」。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 8 · 角色管理 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">8 · 角色管理 · roles.html</span>
+      <span class="hint">4 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D8-01</span> 新增 / 编辑角色</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-role-form">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑角色</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">角色编码<span class="req">*</span></label>
+                  <input class="input" value="OPERATOR">
+                  <span class="hint">2～30 位，仅字母 / 数字 / 下划线；<b>创建后不可修改</b>（权限与用户绑定按编码记录）</span>
+                </div>
+                <div class="field">
+                  <label class="label">角色名称<span class="req">*</span></label>
+                  <input class="input" value="运营">
+                  <span class="hint">1～30 字符，不能与已有角色重名</span>
+                </div>
+                <div class="field">
+                  <label class="label">数据范围<span class="req">*</span></label>
+                  <select class="select">
+                    <option selected>ALL · 全部数据</option>
+                    <option>DEPT · 本部门及下级部门</option>
+                    <option>SELF · 仅本人</option>
+                  </select>
+                  <span class="hint">决定该角色在列表页可见的数据范围（ALL / DEPT / SELF）</span>
+                </div>
+                <div class="alert alert-info">角色创建后可在右侧权限树继续分配功能权限；「超级管理员」为内置角色，不可删除。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>roles.html · 右上「+ 新增角色」或角色行「编辑」。编码创建后不可改，表单里以 hint 说明。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D8-02</span> 删除角色（危险确认，含角色名）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-role-del">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除角色</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除角色「财务（FINANCE）」？</p>
+                <p class="hint">该角色当前<b>没有用户</b>，删除后其权限绑定一并解除，不可恢复。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>roles.html · 0 用户引用的角色（财务）行内「删除」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D8-03</span> 角色被用户引用（拒绝删除）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-role-inuse">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法删除角色</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>角色「运营（OPERATOR）」仍被 <b>2</b> 个用户引用（林晓涵、胡健），不能删除。</p>
+                <p class="hint">请先在「用户管理」中为这些用户更换角色，待引用数归零后再删除。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>roles.html · 仍有用户引用的角色（运营 / 仓库 / 客服）行内「删除」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D8-04</span> 内置角色不可删除（拒绝）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-role-builtin">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法删除角色</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>「超级管理员（SUPER_ADMIN）」是系统<b>内置角色</b>，不允许删除。</p>
+                <p class="hint">内置角色承载全部权限，删除会导致系统无法管理；其名称与编码也不可修改。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>roles.html · 「超级管理员」行内「删除」。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 9 · 菜单与权限 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">9 · 菜单与权限 · menus.html</span>
+      <span class="hint">3 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D9-01</span> 新增 / 编辑节点</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-node-form">
+            <div class="modal-panel is-lg" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑节点</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">节点类型<span class="req">*</span></label>
+                    <select class="select">
+                      <option>目录</option>
+                      <option selected>菜单</option>
+                      <option>按钮</option>
+                      <option>接口</option>
+                    </select>
+                    <span class="hint">目录 / 菜单 显示在侧栏；按钮 / 接口 仅作为权限点</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">名称<span class="req">*</span></label>
+                    <input class="input" value="商品列表">
+                    <span class="hint">1～30 字符</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">权限码<span class="req">*</span></label>
+                    <input class="input" value="products">
+                    <span class="hint">2～50 位，仅字母 / 数字 / 冒号 / 下划线，如 <span class="code">product:edit</span></span>
+                  </div>
+                  <div class="field">
+                    <label class="label">上级节点<span class="req">*</span></label>
+                    <select class="select">
+                      <option>顶级节点</option>
+                      <option>概览</option>
+                      <option selected>商品中心</option>
+                      <option>　└ 商品列表</option>
+                      <option>　└ 类目与品牌</option>
+                      <option>库存管理</option>
+                      <option>订单中心</option>
+                      <option>系统管理</option>
+                    </select>
+                    <span class="hint">不能选自己或自己的子孙节点（防止菜单树成环）</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">路由 path</label>
+                    <input class="input" value="/products">
+                    <span class="hint">菜单类型必填，目录 / 按钮 / 接口留空</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">图标</label>
+                    <input class="input" value="List">
+                    <span class="hint">侧栏图标标识，目录 / 菜单使用</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">排序<span class="req">*</span></label>
+                    <input class="input" value="1">
+                    <span class="hint">0～999，同级越小越靠前</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">侧栏可见</label>
+                    <label class="switch" style="margin-top:4px"><input type="checkbox" checked><span class="track"></span></label>
+                    <span class="hint">关闭后节点仍生效，但不在侧栏展示</span>
+                  </div>
+                </div>
+                <div class="alert alert-info">权限码是角色授权的唯一依据，改动会影响已授权角色；<b>按钮 / 接口</b>类型的权限码建议用 <span class="code">模块:动作</span> 形式。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>menus.html · 右上「+ 新增节点」、行内「编辑」或「下级」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D9-02</span> 删除节点（危险确认，先移子节点与角色引用）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-node-del">
+            <div class="modal-panel is-md" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除节点</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除节点「商品中心（product）」？</p>
+                <ul class="impact">
+                  <li>先移除 / 迁移其<b>下级节点</b>：商品列表、类目与品牌、新增商品、编辑商品 …</li>
+                  <li>先解除<b>角色引用</b>：运营、仓库等角色当前勾选了该节点</li>
+                </ul>
+                <div class="alert alert-warn" style="margin-top:12px">节点仍存在子节点或角色引用时，删除会被拒绝；删除后该权限码立即失效，菜单树不可恢复。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>menus.html · 树表行内「删除」（图示为有子节点的「商品中心」）。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D9-03</span> 上级节点不能选自己或子孙（拒绝）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-node-parent">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">上级节点不能选自己或子孙</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>「商品中心」的上级不能是它自己，也不能是其子孙节点（商品列表、类目与品牌、新增商品 …）。</p>
+                <p class="hint">该限制用于防止菜单树成环。请改选其他上级节点，或先把下级节点迁移到别处。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>menus.html · 「商品中心」行内「改上级」，把上级选成自己或子孙节点 → 提交被拒。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 10 · 部门管理 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">10 · 部门管理 · depts.html</span>
+      <span class="hint">4 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D10-01</span> 新增 / 编辑部门</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-dept-form">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑部门</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">部门名称<span class="req">*</span></label>
+                  <input class="input" value="客服组">
+                  <span class="hint">1～30 字符，同一上级下不能重名</span>
+                </div>
+                <div class="field">
+                  <label class="label">上级部门<span class="req">*</span></label>
+                  <select class="select">
+                    <option selected>总部</option>
+                    <option>　└ 运营中心</option>
+                    <option>　└ 仓储中心</option>
+                  </select>
+                  <span class="hint">顶级部门选「—（顶级）」，同样不能选自己或自己的下级</span>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">排序<span class="req">*</span></label>
+                    <input class="input" value="3">
+                    <span class="hint">0～999，同级越小越靠前</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">状态<span class="req">*</span></label>
+                    <select class="select">
+                      <option selected>启用</option>
+                      <option>禁用</option>
+                    </select>
+                    <span class="hint">禁用后不再出现在用户归属下拉中</span>
+                  </div>
+                </div>
+                <div class="alert alert-info">部门被用户引用或有下级部门时<b>不能删除</b>；如需下线请先迁移用户与下级部门。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>depts.html · 右上「+ 新增部门」、行内「编辑」或「下级」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D10-02</span> 删除部门（危险确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-dept-del">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除部门</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除部门「客服组」？</p>
+                <p class="hint">该部门<b>无下级部门、无用户引用</b>，可以删除；删除后不可恢复。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>depts.html · 无下级、无用户引用的部门（客服组）行内「删除」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D10-03</span> 部门被用户引用（拒绝删除）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-dept-inuse">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法删除部门</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>部门「运营中心」仍被 <b>3</b> 个用户引用（林晓涵、胡健、王美丽），不能删除。</p>
+                <p class="hint">请先在「用户管理」中把这些用户改到其他部门，待引用归零后再删除；仓储中心同样被 1 个用户（周凯）引用。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>depts.html · 仍被用户引用的部门（运营中心 / 仓储中心）行内「删除」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D10-04</span> 部门有下级（拒绝删除）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-dept-haschild">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法删除部门</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>部门「总部」仍有 <b>3</b> 个下级部门（运营中心、仓储中心、客服组），不能删除。</p>
+                <p class="hint">请先删除或迁移全部下级部门，再删除该部门。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>depts.html · 有下级部门的「总部」行内「删除」。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 11 · 字典管理 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">11 · 字典管理 · dicts.html</span>
+      <span class="hint">3 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D11-01</span> 新增 / 编辑字典类型</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-dict-type-form">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑字典类型</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">类型编码<span class="req">*</span></label>
+                  <input class="input" value="order_status">
+                  <span class="hint">2～50 位，全局唯一（如 <span class="code">order_status</span>）；代码按编码读取，改名会导致取不到值</span>
+                </div>
+                <div class="field">
+                  <label class="label">类型名称<span class="req">*</span></label>
+                  <input class="input" value="订单状态">
+                  <span class="hint">1～30 字符，仅用于后台展示</span>
+                </div>
+                <div class="field">
+                  <label class="label">备注</label>
+                  <input class="input" value="订单状态枚举">
+                </div>
+                <div class="alert alert-info">编码重复时提交会被拒绝并提示「类型编码已存在」；删除字典类型需先清空其选项。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>dicts.html · 右上「+ 新增字典」或左侧字典类型行「编辑」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D11-02</span> 新增 / 编辑字典项</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-dict-item-form">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑字典项</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">所属字典</label>
+                  <input class="input" value="订单状态（order_status）" readonly>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">显示文案<span class="req">*</span></label>
+                    <input class="input" value="待付款">
+                    <span class="hint">1～50 字符，列表与筛选展示用</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">存储值<span class="req">*</span></label>
+                    <input class="input" value="PENDING_PAY">
+                    <span class="hint">1～50 字符，同一字典内唯一</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">排序</label>
+                    <input class="input" value="1">
+                    <span class="hint">同级从小到大</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">状态</label>
+                    <select class="select">
+                      <option selected>启用</option>
+                      <option>禁用</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="alert alert-info">存储值一旦被业务数据引用请勿修改（订单、库存等按值存储）；确需变更时建议新增选项并把旧项置为<b>禁用</b>。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>dicts.html · 右侧「+ 新增选项」或选项行「编辑」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D11-03</span> 删除字典项（危险确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-dict-item-del">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除字典项</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除字典项「已关闭（CLOSED）」？</p>
+                <p class="hint">删除后所有按该值渲染的状态标签会<b>显示为原始存储值</b>，且不可恢复；仍被业务数据引用时删除会被拒绝。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>dicts.html · 字典选项行「删除」。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 12 · 操作日志 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">12 · 操作日志 · logs.html</span>
+      <span class="hint">2 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D12-01</span> 日志详情抽屉（含可折叠 JSON）</div>
+        <div class="spec-stage">
+          <div class="drawer is-inline" id="drw-log">
+            <div class="drawer-panel" role="dialog">
+              <div class="modal-head">
+                <div class="modal-title">操作日志详情</div>
+                <span class="badge badge-forest">成功</span>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <dl class="kv" style="grid-template-columns:96px 1fr;margin-bottom:18px">
+                  <dt>操作人</dt><dd>陈思远 <span class="hint">（admin）</span></dd>
+                  <dt>时间</dt><dd class="code">2026-09-11 14:02:11</dd>
+                  <dt>模块</dt><dd>权限（identity）</dd>
+                  <dt>动作</dt><dd>禁用用户（user:status）</dd>
+                  <dt>对象</dt><dd class="code">wang.meili</dd>
+                  <dt>结果</dt><dd><span class="badge badge-forest">成功</span></dd>
+                  <dt>来源 IP</dt><dd class="code">10.0.4.21</dd>
+                  <dt>TraceId</dt><dd class="code">8f2c1d0e9a7b4c3d</dd>
+                </dl>
+                <div class="page-title" style="font-size:13px;margin-bottom:10px">参数摘要</div>
+                <div class="card card-pad" style="background:var(--cream);margin-bottom:18px">
+                  <dl class="kv" style="grid-template-columns:96px 1fr">
+                    <dt>userId</dt><dd class="code">5</dd>
+                    <dt>username</dt><dd class="code">wang.meili</dd>
+                    <dt>status</dt><dd><span class="badge badge-brick">DISABLED</span></dd>
+                    <dt>reason</dt><dd class="hint">—</dd>
+                  </dl>
+                  <p class="hint" style="margin-top:10px">敏感字段（密码、密钥等）落库前已脱敏，仅保留字段名。</p>
+                </div>
+                <details>
+                  <summary class="hint" style="cursor:pointer">原始参数（JSON，点击展开）</summary>
+                  <pre class="code" style="background:var(--sand);padding:12px;border-radius:var(--r-md);font-size:12px;overflow:auto;margin-top:8px">{
+  "userId": 5,
+  "username": "wang.meili",
+  "realName": "王美丽",
+  "status": "DISABLED",
+  "operatorId": 1,
+  "traceId": "8f2c1d0e9a7b4c3d"
+}</pre>
+                </details>
+                <div class="alert alert-info" style="margin-top:18px">
+                  日志为<b>异步落库</b>的审计快照，写入失败不影响业务操作；日志仅可查询与导出，<b>不提供编辑 / 删除</b>。
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">关闭</button>
+                <button class="btn btn-primary">导出当前筛选</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>logs.html · 任意日志行「详情」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D12-02</span> 导出 CSV 确认（当前筛选结果）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-log-export">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">↓</span>
+                <div class="modal-title">导出操作日志</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>将按<b>当前筛选条件</b>导出日志：</p>
+                <ul class="impact">
+                  <li>时间范围 <b>2026-09-01 ~ 2026-09-11</b></li>
+                  <li>模块 <b>全部模块</b> · 关键字 <b>空</b></li>
+                  <li>预计条数 <b>284</b> 条（翻页不影响导出范围）</li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">
+                  CSV 为 UTF-8（带 BOM），可直接用 Excel 打开；导出内容包含参数摘要，敏感字段已脱敏。导出动作本身也会写入一条操作日志。
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认导出</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>logs.html · 右上「导出 CSV」（日志详情抽屉底部同入口）。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 13 · 类目与品牌 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">13 · 类目与品牌 · categories.html</span>
+      <span class="hint">7 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D13-01</span> 新增 / 编辑类目</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-cat-form">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑类目</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">类目名称<span class="req">*</span></label>
+                  <input class="input" value="运动户外">
+                  <span class="hint">1～30 字符，同一上级类目下不能重名</span>
+                </div>
+                <div class="field">
+                  <label class="label">上级类目<span class="req">*</span></label>
+                  <select class="select">
+                    <option selected>—（顶级类目）</option>
+                    <option>手机</option>
+                    <option>电脑/办公</option>
+                    <option>家电</option>
+                    <option>数码配件</option>
+                    <option>家居收纳</option>
+                    <option>美妆个护</option>
+                    <option>食品生鲜</option>
+                  </select>
+                  <span class="hint">顶级类目共 8 个；同样不能选自己或自己的下级类目</span>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">排序<span class="req">*</span></label>
+                    <input class="input" value="17">
+                    <span class="hint">0～999，同级越小越靠前</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">状态<span class="req">*</span></label>
+                    <select class="select">
+                      <option selected>启用</option>
+                      <option>禁用</option>
+                    </select>
+                    <span class="hint">禁用后不出现在商品编辑的类目下拉中</span>
+                  </div>
+                </div>
+                <div class="alert alert-info">类目被商品或属性引用时<b>不能删除</b>；如需合并请先迁移商品、删除或迁移属性。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>categories.html · 左上「+ 顶级」或类目行「编辑」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D13-02</span> 删除类目（危险确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-cat-del">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除类目</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除类目「家居收纳」？</p>
+                <ul class="impact">
+                  <li>该类目下商品 <b>2</b> 个</li>
+                  <li>该类目下属性 <b>0</b> 个 · 下级类目 <b>0</b> 个</li>
+                </ul>
+                <div class="alert alert-warn" style="margin-top:12px">
+                  仅当类目下<b>无商品且无属性引用</b>时才能删除；存在引用会被系统拒绝，需先转移商品或删除属性。
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>categories.html · 类目行「删除」（图示为「家居收纳」）。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D13-03</span> 类目被商品 / 属性引用（拒绝删除）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-cat-reject">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法删除类目</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>类目「手机」仍被 <b>8</b> 个商品、<b>2</b> 个属性（颜色、容量）引用，不能删除。</p>
+                <p class="hint">请先把这些商品改到其他类目，并删除 / 迁移该类目下的属性，待引用归零后再删除。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>categories.html · 仍被商品 / 属性引用的类目行「删除」（图示为「手机」）。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D13-04</span> 新增 / 编辑品牌</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-brand-form">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑品牌</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">品牌名称<span class="req">*</span></label>
+                  <input class="input" value="Apple">
+                  <span class="hint">1～30 字符，同一类目下不能重名</span>
+                </div>
+                <div class="field">
+                  <label class="label">归属类目<span class="req">*</span></label>
+                  <select class="select">
+                    <option selected>手机</option>
+                    <option>电脑/办公</option>
+                    <option>家电</option>
+                    <option>数码配件</option>
+                    <option>家居收纳</option>
+                    <option>美妆个护</option>
+                    <option>食品生鲜</option>
+                    <option>运动户外</option>
+                  </select>
+                  <span class="hint">默认取当前选中类目；品牌在类目页按「归属类目树 ∪ 商品已引用」筛选</span>
+                </div>
+                <div class="field">
+                  <label class="label">品牌 Logo</label>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <div class="thumb" style="width:56px;height:56px;background:#111"></div>
+                    <button class="thumb" type="button" style="width:56px;height:56px;background:var(--sand);display:grid;place-items:center;color:var(--slate);border:1px dashed var(--border);border-radius:8px;cursor:pointer">+</button>
+                  </div>
+                  <p class="hint" style="margin-top:6px">1 张，jpeg / png / webp，≤10MB，建议 256×256；展示走 <span class="code">/admin/files/view</span> 代理。</p>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">排序</label>
+                    <input class="input" value="10">
+                  </div>
+                  <div class="field">
+                    <label class="label">状态</label>
+                    <select class="select">
+                      <option selected>启用</option>
+                      <option>禁用</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>categories.html · 品牌卡片「+ 品牌」或品牌行「编辑」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D13-05</span> 新增 / 编辑属性</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-attr-form">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✎</span>
+                <div class="modal-title">新增 / 编辑属性</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="field">
+                  <label class="label">所属类目<span class="req">*</span></label>
+                  <select class="select">
+                    <option selected>手机</option>
+                    <option>电脑/办公</option>
+                    <option>家电</option>
+                    <option>数码配件</option>
+                    <option>家居收纳</option>
+                    <option>美妆个护</option>
+                    <option>食品生鲜</option>
+                    <option>运动户外</option>
+                  </select>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="label">属性名称<span class="req">*</span></label>
+                    <input class="input" value="颜色">
+                    <span class="hint">1～30 字符，同一类目下不能重名</span>
+                  </div>
+                  <div class="field">
+                    <label class="label">属性类型<span class="req">*</span></label>
+                    <select class="select">
+                      <option selected>规格（参与 SKU 组合）</option>
+                      <option>参数（仅详情展示）</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">可选值<span class="req">*</span></label>
+                  <input class="input" value="黑色 / 白色 / 蓝色 / 原色钛">
+                  <span class="hint">以「/」分隔，每项 1～20 字符，同一属性内不可重复；最多 2 个规格属性参与 SKU 组合</span>
+                </div>
+                <div class="field">
+                  <label class="label">排序</label>
+                  <input class="input" value="1">
+                </div>
+                <div class="alert alert-info">规格属性的可选值会作为商品编辑页「生成 SKU」的规格维度；已成 SKU 的值被删除时不会被覆盖。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>categories.html · 属性卡片「+ 属性」或属性行「编辑」。</span></div>
+      </div>
+    </div>
+  </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D13-06</span> 删除品牌（危险确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-brand-del">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除品牌</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除品牌「Apple」？</p>
+                <ul class="impact">
+                  <li>该品牌关联商品 <b>8</b> 个</li>
+                </ul>
+                <div class="alert alert-warn" style="margin-top:12px">
+                  仅当品牌下<b>无商品引用</b>时才能删除；存在引用会被系统拒绝，请先把商品改到其他品牌或清空品牌。
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>categories.html · 品牌行「删除」。品牌被商品引用时后端拒绝，前端改用「无法删除品牌」提示。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D13-07</span> 删除属性（危险确认）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-attr-del">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico danger">×</span>
+                <div class="modal-title">删除属性</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>确认删除属性「颜色」？</p>
+                <p class="hint">该属性为<b>规格</b>类型，删除后商品编辑页不再提供该规格维度；已生成的 SKU 不受影响，但后续无法再按此维度组合。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-danger">确认删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>categories.html · 属性行「删除」。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 14 · 系统设置 ==================== -->
+  <div class="spec-group">
+    <div class="group-head">
+      <span class="page-title">14 · 系统设置 · settings.html</span>
+      <span class="hint">3 条</span>
+    </div>
+    <div class="spec-grid cols-2">
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D14-01</span> 批量保存确认</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-save-all">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico info">✓</span>
+                <div class="modal-title">保存修改</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>将保存 <b>2</b> 条有改动的配置项：</p>
+                <ul class="impact">
+                  <li><b>site.name</b> 站点名称</li>
+                  <li><b>payment.sandbox.enabled</b> 沙箱支付开关</li>
+                </ul>
+                <div class="alert alert-info" style="margin-top:12px">配置保存后立即生效；本次修改会写入操作日志（操作人、时间、键名、新值）。</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">确认保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>settings.html · 右上「保存修改」（有脏数据时）。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D14-02</span> 修改敏感配置</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-secret">
+            <div class="modal-panel is-md" role="dialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">🔒</span>
+                <div class="modal-title">修改敏感配置</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p class="hint" style="margin-bottom:14px">键 <b class="code">payment.sandbox.secret</b> · 已存值以掩码显示，不回显原文。</p>
+                <div class="field">
+                  <label class="label">新值<span class="req">*</span></label>
+                  <input class="input" type="password" placeholder="请输入新的密钥值">
+                  <span class="hint">保存后列表仍显示 <span class="code">******</span>，原文不落日志</span>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary">取消</button>
+                <button class="btn btn-primary">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>settings.html · 敏感配置行「改值」。</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-cap"><span class="id">D14-03</span> 敏感值未填新值（拒绝保存）</div>
+        <div class="spec-stage">
+          <div class="modal is-inline" id="dlg-secret-empty">
+            <div class="modal-panel is-sm" role="alertdialog">
+              <div class="modal-head">
+                <span class="modal-ico warn">!</span>
+                <div class="modal-title">无法保存</div>
+                <button class="modal-x">×</button>
+              </div>
+              <div class="modal-body">
+                <p>敏感配置请输入新值后再保存。</p>
+                <p class="hint">列表里的 <span class="code">******</span> 只是掩码，不是真实值，直接提交会把密钥覆盖成掩码。</p>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-primary">知道了</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spec-trigger"><span class="k">怎么触发</span><span>settings.html · 敏感配置行直接点「保存」（未重新输入新值）。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="hint" style="margin-top:8px">
+    口径说明：弹窗与抽屉均取自各页面真实 markup（本页追加 <span class="code">.is-inline</span> 转为静态内联，并去掉 <span class="code">data-modal-open / data-modal-close</span> 触发属性，避免在静态页里互相弹出）；
+    遮罩、ESC 关闭、点遮罩关闭等行为见 <span class="code">modal.js</span>。V2.0 增量弹窗图鉴另行单列。
+  </p>
+</div>
+<script src="modal.js"></script>
+</body>
+</html>

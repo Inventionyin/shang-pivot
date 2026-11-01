@@ -1,0 +1,46 @@
+{
+  "label": "810986c",
+  "note": "当前交付版本（初始提交）",
+  "created_at": "2026-10-10 15:53:18",
+  "git_commit": "810986cc54d127f696e530fc67a81b2a40811d91",
+  "git_commit_short": "810986c",
+  "git_branch": "main",
+  "git_tags": [],
+  "git_commit_count": 1,
+  "schema": {
+    "table_count": 36,
+    "column_count": 359,
+    "index_count": 29,
+    "generated_at": "2026-10-10 16:26:12",
+    "migration_count": 20,
+    "migration_first": "V1__init.sql",
+    "migration_last": "V20__fix_address_trace_id.sql",
+    "migration_range": "V1–V20",
+    "migration_sha256": "ca40a00517169e90911dbf4ca0438d0002b0d136dd8eed7da937b53252328edc"
+  },
+  "api": {
+    "endpoint_count": 135,
+    "write_endpoint_count": 78
+  },
+  "fingerprints": {
+    "backend/pom.xml": "70903a027192f752",
+    "backend/shang-server/pom.xml": "641695c4195d7251",
+    "backend/shang-identity/pom.xml": "ba9740a13b0019d9",
+    "backend/shang-commerce/pom.xml": "83c313ecbb8c7004",
+    "backend/shang-common/pom.xml": "f73f1a42332f0007",
+    "backend/shang-server/src/main/resources/application.yaml": "829b6a10b47d389d",
+    "backend/docker-compose.yml": "db3c7ae8bad3faad",
+    "shang-admin-web/package.json": "6c6963619f03af92",
+    "shang-mall/package.json": "fa0a105cc771e2d0",
+    "ui_testcases/pom.xml": "39d488c8a451dc06",
+    "api_testcases/requirements.txt": "c2554af33132e0fd",
+    "docs/openapi-v3-api-docs.json": "57d5d5b4a4c06f2a",
+    "docs/测试资料/接口文档.md": "513cbafd8f25351e",
+    "artifacts/schema-model.json": "78226d11b242fdfc",
+    "artifacts/endpoint-model.json": "5ff0509089d26f53",
+    "artifacts/field-map.json": "eaa7314694bc37eb",
+    "artifacts/call-graph.json": "acbd23268bd045b2"
+  },
+  "java_file_count": 166,
+  "java_sha256": "deead8755b091baa127a2106a141395dd21d100a8169861aea855589e880fb66"
+}
