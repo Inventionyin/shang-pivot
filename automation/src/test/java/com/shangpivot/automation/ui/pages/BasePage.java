@@ -7,6 +7,7 @@ import com.shangpivot.automation.core.ui.BrowserSession;
 
 import java.util.regex.Pattern;
 
+import com.microsoft.playwright.assertions.PageAssertions;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 /** 页面对象基类：导航、等待、通用弹层与 Toast；不做业务断言编排。 */
@@ -32,7 +33,9 @@ public abstract class BasePage {
     public void expectPath(String fragment) {
         // Playwright 把 Pattern 序列化成 JS 正则，JS 不支持 \Q...\E，因此这里只做普通匹配。
         // 传入的都是路径片段（如 /product/、/dashboard），不含正则元字符。
-        assertThat(page()).hasURL(Pattern.compile(".*" + fragment + ".*"));
+        // CI 冷启动下 SPA 首屏导航可能超过默认 5s，统一放宽到 15s
+        assertThat(page()).hasURL(Pattern.compile(".*" + fragment + ".*"),
+                new PageAssertions.HasURLOptions().setTimeout(15_000));
     }
 
     protected Locator popup(String title) {
