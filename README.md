@@ -3,6 +3,8 @@
 > 一个**分版本演进的电商全栈演示项目**：后台供给（V1）→ C 端交易（V2）→ 智能客服（V3，已交付）。
 > 工程 / 后台名 **Shang Pivot**，C 端品牌 **尚品汇**（Slogan：选好物，享生活）。
 
+[![CI](https://github.com/Inventionyin/shang-pivot/actions/workflows/ci.yml/badge.svg)](https://github.com/Inventionyin/shang-pivot/actions/workflows/ci.yml)
+
 **English**: A versioned full-stack e-commerce demo — admin console (V1), storefront (V2), and an AI customer-service assistant (V3) with streaming chat, RAG retrieval (pgvector), in-chat add-to-cart tools, human handoff, guardrails, and a golden-dataset evaluation harness. Java 21 / Spring Boot 4 / Vue 3 / PostgreSQL + pgvector.
 
 `Java 21` · `Spring Boot 4.1.1` · `PostgreSQL 16 + pgvector` · `Redis 7` · `MinIO` · `Vue 3` · `Vite` · `TypeScript`
