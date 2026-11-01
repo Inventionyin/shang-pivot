@@ -45,7 +45,7 @@ def main() -> int:
     user, pwd = os.getenv("ZENTAO_USER"), os.getenv("ZENTAO_PASSWORD")
     if not user or not pwd:
         raise SystemExit("Set ZENTAO_USER/ZENTAO_PASSWORD")
-    client = ZenTaoClient(os.getenv("ZENTAO_BASE_URL", "http://111.170.33.2:60082"), user, pwd)
+    client = ZenTaoClient(os.getenv("ZENTAO_BASE_URL", "http://YOUR_SERVER_IP:60082"), user, pwd)
     rows = _case_rows()
     for t in TARGETS:
         _, body = compose_bug_content(t["stable_id"], t["nodeid"], longrepr_of(t["nodeid"]), rows, BASE_URL)

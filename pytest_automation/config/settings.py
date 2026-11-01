@@ -70,7 +70,7 @@ class Settings:
         return (
             os.getenv("MALL_BASE_URL")
             or (self._data.get("api") or {}).get("mall_base")
-            or "http://111.170.33.2:60084"
+            or "http://YOUR_SERVER_IP:60084"
         ).rstrip("/")
 
     @property
@@ -78,7 +78,7 @@ class Settings:
         return (
             os.getenv("ADMIN_BASE_URL")
             or (self._data.get("api") or {}).get("admin_base")
-            or "http://111.170.33.2:60085"
+            or "http://YOUR_SERVER_IP:60085"
         ).rstrip("/")
 
     # ---------- UI 地址 ----------

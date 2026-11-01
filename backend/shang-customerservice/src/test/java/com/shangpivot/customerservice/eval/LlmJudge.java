@@ -25,7 +25,7 @@ public class LlmJudge {
     public record Verdict(double score, String reason, boolean judgeRan) {
     }
 
-    private static final String BASE = System.getenv().getOrDefault("EVAL_LLM_BASE_URL", "https://wb2api.yingyue.cloud/v1");
+    private static final String BASE = System.getenv().getOrDefault("EVAL_LLM_BASE_URL", "https://your-openai-compatible-gateway.example/v1");
     private static final String MODEL = System.getenv().getOrDefault("EVAL_LLM_MODEL", "cn:deepseek-v4.1-flash");
     private static final String API_KEY = System.getenv("EVAL_LLM_API_KEY");
 

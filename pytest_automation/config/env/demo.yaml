@@ -1,12 +1,12 @@
 # 部署演示环境（默认）：商城 60084 / 后台 60085
 # 写用例默认打这里；每次运行使用随机会员，避免污染固定演示账号。
 api:
-  mall_base: http://111.170.33.2:60084
-  admin_base: http://111.170.33.2:60085
+  mall_base: http://YOUR_SERVER_IP:60084
+  admin_base: http://YOUR_SERVER_IP:60085
 
 ui:
-  mall_url: http://111.170.33.2:60084
-  admin_url: http://111.170.33.2:60085
+  mall_url: http://YOUR_SERVER_IP:60084
+  admin_url: http://YOUR_SERVER_IP:60085
 
 timeout: 30
 ui_timeout_ms: 15000

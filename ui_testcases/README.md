@@ -39,8 +39,8 @@ mvn test -Dcucumber.filter.tags="@UI-MALL-ORDER-001"
 
 | 变量 | 默认值 | 说明 |
 |---|---|---|
-| `SHANG_MALL_URL` | `http://111.170.33.2:60084` | 商城地址（也认 `MALL_BASE_URL`） |
-| `SHANG_ADMIN_URL` | `http://111.170.33.2:60085` | 管理端地址（也认 `ADMIN_BASE_URL`） |
+| `SHANG_MALL_URL` | `http://YOUR_SERVER_IP:60084` | 商城地址（也认 `MALL_BASE_URL`） |
+| `SHANG_ADMIN_URL` | `http://YOUR_SERVER_IP:60085` | 管理端地址（也认 `ADMIN_BASE_URL`） |
 | `APP_TEST_ACCOUNT` | `13800000001` | 演示会员手机号 |
 | `APP_TEST_SMS_CODE` | `123456` | 演示环境固定验证码 |
 | `ADMIN_TEST_ACCOUNT` / `ADMIN_TEST_PASSWORD` | `admin` / `Admin@123` | 管理端账号 |

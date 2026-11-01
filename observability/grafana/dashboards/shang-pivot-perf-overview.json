@@ -1218,7 +1218,7 @@
       },
       "options": {
         "mode": "markdown",
-        "content": "### 两套阈值口径\n\n| 口径 | P95 | P99 | 失败率 | 适用 |\n| --- | --- | --- | --- | --- |\n| 项目原有 | 800ms | 1500ms | <1% | 服务端容量判定 |\n| 跨公网实测 | 2000ms | 3300ms | — | 本机加压时的端到端观测 |\n\n跨公网压测时延迟由链路主导，不能直接用于服务端容量判定。压测机放到服务器本机后，应使用「项目原有」口径。\n\n### 数据来源\n\n- **客户端指标**（`k6_*`）：k6 通过 remote write 上报，需带 `-o experimental-prometheus-rw` 运行。\n- **服务端指标**：Prometheus 每 5 秒采集 `111.170.33.2:60080/api/actuator/prometheus`。\n\n### 单位\n\n本次核对：k6 的 `k6_http_req_*` 与服务端的 `http_server_requests_seconds_*` **均为秒**，可直接同轴对比。"
+        "content": "### 两套阈值口径\n\n| 口径 | P95 | P99 | 失败率 | 适用 |\n| --- | --- | --- | --- | --- |\n| 项目原有 | 800ms | 1500ms | <1% | 服务端容量判定 |\n| 跨公网实测 | 2000ms | 3300ms | — | 本机加压时的端到端观测 |\n\n跨公网压测时延迟由链路主导，不能直接用于服务端容量判定。压测机放到服务器本机后，应使用「项目原有」口径。\n\n### 数据来源\n\n- **客户端指标**（`k6_*`）：k6 通过 remote write 上报，需带 `-o experimental-prometheus-rw` 运行。\n- **服务端指标**：Prometheus 每 5 秒采集 `YOUR_SERVER_IP:60080/api/actuator/prometheus`。\n\n### 单位\n\n本次核对：k6 的 `k6_http_req_*` 与服务端的 `http_server_requests_seconds_*` **均为秒**，可直接同轴对比。"
       }
     },
     {

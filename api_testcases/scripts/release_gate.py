@@ -128,7 +128,7 @@ def main() -> int:
     open_bugs = None
     try:
         import requests
-        base = os.getenv("ZENTAO_BASE_URL", "http://111.170.33.2:60082")
+        base = os.getenv("ZENTAO_BASE_URL", "http://YOUR_SERVER_IP:60082")
         pw_file = Path("/Users/imac/Desktop/电商自动化测试/禅道密码")
         pwd = re.search(r'"password":"([^"]+)"', pw_file.read_text(encoding="utf-8")).group(1)
         s = requests.Session(); s.trust_env = False

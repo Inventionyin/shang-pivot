@@ -39,7 +39,7 @@ bash ./scripts/platform.sh k6 checkout-smoke.js \
 也可以在服务器上手工跑：
 
 ```bash
-ssh -i ~/.ssh/projectku_psyidc -p 28536 root@111.170.33.2
+ssh -i ~/.ssh/projectku_psyidc -p 28536 root@YOUR_SERVER_IP
 cd /root/k6/shang
 K6_PROMETHEUS_RW_SERVER_URL=http://127.0.0.1:9090/api/v1/write \
 K6_PROMETHEUS_RW_TREND_STATS='p(95),p(99),avg,min,max' \
@@ -47,7 +47,7 @@ k6 run -o experimental-prometheus-rw --tag app=shang-pivot browse-load.js \
   -e BASE_URL=http://127.0.0.1:8090/api -e PHONE=13800000001 -e VUS=5 -e DURATION=1m
 ```
 
-> 从本机直接压公网入口（`http://111.170.33.2:60084/api`）也可以，但会掺进公网波动，
+> 从本机直接压公网入口（`http://YOUR_SERVER_IP:60084/api`）也可以，但会掺进公网波动，
 > 且指标不会带上 `app` 标签；定位服务端容量时优先用服务器内网入口。
 
 ## 与元气购脚本的差异（照抄会全错）

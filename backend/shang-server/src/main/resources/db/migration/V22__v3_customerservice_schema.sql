@@ -240,7 +240,7 @@ WHERE NOT EXISTS (SELECT 1 FROM customerservice.knowledge_doc WHERE id = 1 OR ti
 -- ============================================================
 INSERT INTO identity.system_config (id, config_key, config_value, category, is_secret, remark)
 SELECT * FROM (VALUES
-    (30::bigint, 'llm.base-url',            'https://wb2api.yingyue.cloud/v1', 'LLM', false, 'OpenAI 兼容网关地址'),
+    (30::bigint, 'llm.base-url',            'https://your-openai-compatible-gateway.example/v1', 'LLM', false, 'OpenAI 兼容网关地址'),
     (31::bigint, 'llm.api-key',             '',                                'LLM', true,  '网关 API Key（密文；空=降级模式）'),
     (32::bigint, 'llm.model',               'cn:deepseek-v4.1-flash',          'LLM', false, '对话模型'),
     (33::bigint, 'llm.temperature',         '0.5',                             'LLM', false, '采样温度 0~1'),

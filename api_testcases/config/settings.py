@@ -32,14 +32,14 @@ class Settings:
         """管理端根地址（/admin/** 打这里）。"""
         return (os.getenv("ADMIN_BASE_URL")
                 or self._config.get("admin_base")
-                or "http://111.170.33.2:60085").rstrip("/")
+                or "http://YOUR_SERVER_IP:60085").rstrip("/")
 
     @property
     def mall_base(self) -> str:
         """C 端根地址（/api/** 打这里）。"""
         return (os.getenv("MALL_BASE_URL")
                 or self._config.get("mall_base")
-                or "http://111.170.33.2:60084").rstrip("/")
+                or "http://YOUR_SERVER_IP:60084").rstrip("/")
 
     @property
     def timeout(self) -> int:

@@ -81,3 +81,7 @@ observability/records/
 # ---------- 测试运行产物（保留 README 与人工整理的 defects 报告） ----------
 api_testcases/artifacts/**
 !api_testcases/artifacts/README.md
+# ---------- 内部运维记录（含服务器信息，不入公开仓库） ----------
+.planning/
+.scratch/v3-smart-service/deploy.md
+ui_testcases/artifacts/

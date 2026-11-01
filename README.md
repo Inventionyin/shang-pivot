@@ -1,7 +1,9 @@
 # Shang Pivot
 
-> 一个**分版本演进的电商全栈演示项目**：后台供给（V1）→ C 端交易（V2）→ 智能客服（V3，设计就绪）。
+> 一个**分版本演进的电商全栈演示项目**：后台供给（V1）→ C 端交易（V2）→ 智能客服（V3，已交付）。
 > 工程 / 后台名 **Shang Pivot**，C 端品牌 **尚品汇**（Slogan：选好物，享生活）。
+
+**English**: A versioned full-stack e-commerce demo — admin console (V1), storefront (V2), and an AI customer-service assistant (V3) with streaming chat, RAG retrieval (pgvector), in-chat add-to-cart tools, human handoff, guardrails, and a golden-dataset evaluation harness. Java 21 / Spring Boot 4 / Vue 3 / PostgreSQL + pgvector.
 
 `Java 21` · `Spring Boot 4.1.1` · `PostgreSQL 16 + pgvector` · `Redis 7` · `MinIO` · `Vue 3` · `Vite` · `TypeScript`
 
@@ -60,9 +62,14 @@
 
 > V2.0 对 V1.0 的改动仅三处：订单列表（筛选与导出增强）、商品编辑（上架方式）、系统设置（新增交易分组），其余 V1 页面零改动。
 
-### V3.0 智能客服（设计就绪，未实现）
+### V3.0 智能客服（已交付）
 
-应答 / 查单 / 转人工 / 工单 + 护栏设计。设计主源见 [`docs/03-ai/customer-service-智能客服.md`](docs/03-ai/customer-service-智能客服.md)，代码侧 `backend/shang-customerservice` 目前仅为骨架模块。
+- **AI 导购对话**：SSE 流式（思考流/正文分轨）、多轮上下文与指代解析、防幻觉约束（推荐只来自真实检索结果）
+- **工具集**：商品检索（bge-m3 向量 + 词法自动降级）、SKU 规格与库存、订单/物流查询、**对话内加购**
+- **转人工与运营**：坐席工作台（接入/回复/转接/结束）、客服工单、知识库（切片+向量化重建）、快捷回复、服务看板
+- **安全护栏**：用户级对话限流、会话生成互斥、邮箱验证码防爆破、PII 掩码、注入检测、AI 生成标识、全量审计
+- **评估层**：10 条 Golden 业务用例 + 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 触发（通过率 10/10）
+- 设计主源见 [`docs/03-ai/customer-service-智能客服.md`](docs/03-ai/customer-service-智能客服.md)
 
 ---
 
@@ -310,4 +317,4 @@ V1.0 ──► V2.0 ──► V3.0 ──► V4.0
 
 ## 许可证
 
-本项目**尚未指定开源许可证**。如需对外开源，请补充 `LICENSE` 文件（如 MIT / Apache-2.0）后移除此说明。
+本项目以 [MIT License](LICENSE) 开源。镜像仓库：[Gitee](https://gitee.com/inventionyin/shang-pivot)。

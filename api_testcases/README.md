@@ -50,12 +50,12 @@ python3 scripts/case_lint.py --inventory test_cases_inventory.md \
   --mdout artifacts/lint/lint-report.md --jsonout artifacts/lint/lint-report.json
 
 # 4) 上传禅道（product_id=2 尚品汇；密码只在运行时环境变量中提供）
-ZENTAO_BASE_URL=http://111.170.33.2:60082 ZENTAO_PRODUCT_ID=2 \
+ZENTAO_BASE_URL=http://YOUR_SERVER_IP:60082 ZENTAO_PRODUCT_ID=2 \
 ZENTAO_USER=test ZENTAO_PASSWORD='运行时输入，不要写进文件' \
 python3 scripts/zentao_sync.py upload-cases --inventory test_cases_inventory.md
 
 # 5) 在线复核（keyword + 标题一致性）
-ZENTAO_BASE_URL=http://111.170.33.2:60082 ZENTAO_PRODUCT_ID=2 \
+ZENTAO_BASE_URL=http://YOUR_SERVER_IP:60082 ZENTAO_PRODUCT_ID=2 \
 ZENTAO_USER=test ZENTAO_PASSWORD='运行时输入' \
 python3 scripts/case_lint.py --inventory test_cases_inventory.md --online
 ```

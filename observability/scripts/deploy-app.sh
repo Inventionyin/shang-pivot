@@ -19,7 +19,7 @@ BACKEND_DIR="$(cd "$ROOT/../backend" && pwd)"
 readonly ROOT BACKEND_DIR
 readonly JAR="$BACKEND_DIR/shang-server/target/shang-server-0.0.1-SNAPSHOT.jar"
 
-readonly SSH_HOST="${SHANG_SSH_HOST:-111.170.33.2}"
+readonly SSH_HOST="${SHANG_SSH_HOST:-YOUR_SERVER_IP}"
 readonly SSH_PORT="${SHANG_SSH_PORT:-28536}"
 readonly SSH_KEY="${SHANG_SSH_KEY:-$HOME/.ssh/${SHANG_SSH_KEY_NAME:-projectku_psyidc}}"
 readonly REMOTE_TMP="/tmp/shang-server-new.jar"

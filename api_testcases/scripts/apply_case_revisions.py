@@ -84,7 +84,7 @@ def main() -> None:
     parser.add_argument("--manifest", type=Path, default=Path("artifacts/case-pilot-manifest.json"))
     args = parser.parse_args()
     import os
-    client = ZenTaoClient(os.environ.get("ZENTAO_BASE_URL", "http://111.170.33.2:60082"), os.environ["ZENTAO_USER"], os.environ["ZENTAO_PASSWORD"], int(os.environ.get("ZENTAO_PRODUCT_ID", "1")))
+    client = ZenTaoClient(os.environ.get("ZENTAO_BASE_URL", "http://YOUR_SERVER_IP:60082"), os.environ["ZENTAO_USER"], os.environ["ZENTAO_PASSWORD"], int(os.environ.get("ZENTAO_PRODUCT_ID", "1")))
     plan = json.loads(args.plan.read_text(encoding="utf-8"))
     ids = args.ids or [case["case_id"] for case in plan["cases"] if case["case_id"] not in set(args.exclude)]
     manifest = apply(client, plan, ids, args.manifest)

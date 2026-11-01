@@ -1,7 +1,7 @@
 # 部署演示环境（公网入口：商城 60084 / 后台 60085，见 observability/scripts/deploy-app.sh）
-admin_base: http://111.170.33.2:60085
-mall_base: http://111.170.33.2:60084
-base_url: http://111.170.33.2:60084
+admin_base: http://YOUR_SERVER_IP:60085
+mall_base: http://YOUR_SERVER_IP:60084
+base_url: http://YOUR_SERVER_IP:60084
 timeout: 30
 
 auth:

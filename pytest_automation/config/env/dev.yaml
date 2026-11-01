@@ -6,8 +6,8 @@ api:
   admin_base: http://localhost:8086
 
 ui:
-  mall_url: http://111.170.33.2:60084
-  admin_url: http://111.170.33.2:60085
+  mall_url: http://YOUR_SERVER_IP:60084
+  admin_url: http://YOUR_SERVER_IP:60085
 
 timeout: 30
 ui_timeout_ms: 15000

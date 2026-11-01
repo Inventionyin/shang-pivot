@@ -114,7 +114,7 @@ shang:
     # Nginx 反代未透传原始 Host 时，浏览器同源 POST 也会带 Origin，
     # 后端据此判定为跨源并按本列表放行；缺一条即 403 "Invalid CORS request"（登录/注册全被拦）。
     # 部署域名变化只改环境变量 SHANG_CORS_ALLOWED_ORIGINS，无需改代码重新构建。
-    allowed-origins: ${SHANG_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:3000,http://localhost:8086,http://127.0.0.1:8086,http://111.170.33.2:60084,http://111.170.33.2:60085}
+    allowed-origins: ${SHANG_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:5174,http://127.0.0.1:3000,http://localhost:8086,http://127.0.0.1:8086,http://YOUR_SERVER_IP:60084,http://YOUR_SERVER_IP:60085}
   oss:
     endpoint: ${MINIO_ENDPOINT:localhost:9000}
     access-key: ${MINIO_ACCESS_KEY:}

@@ -1,11 +1,11 @@
 # 尚品汇可观测平台（部署在服务器上）
 
-指标 / 日志 / 追踪 / 告警四件套，**平台本体跑在被测服务器（111.170.33.2）上**，
+指标 / 日志 / 追踪 / 告警四件套，**平台本体跑在被测服务器（YOUR_SERVER_IP）上**，
 以原生二进制 + systemd 方式装在 `/opt/monitoring/`（服务器连不上 Docker Hub，容器镜像拉不下来）。
 本机只做两件事：**开 SSH 隧道看 UI**、**接告警弹桌面通知**。
 
 ```
-┌─ 服务器 111.170.33.2（systemd，只监听回环）────────────────────────────────┐
+┌─ 服务器 YOUR_SERVER_IP（systemd，只监听回环）────────────────────────────────┐
 │                                                                          │
 │  shang-pivot 应用（8086 应用 / 8087 actuator）  projectku 应用（8080）      │
 │      │  │                                       │                        │
@@ -85,13 +85,13 @@ bash ./scripts/deploy-app.sh                          # 应用侧（actuator 指
 
 | 入口 | 地址 | 认证 |
 | --- | --- | --- |
-| Grafana（两个项目仪表板） | http://111.170.33.2:60080/monitor/grafana/ | 只需 nginx basic：`monitor` / `<本地运维配置>`（Grafana 侧已配 `[auth.proxy]`，用 nginx 传的 `X-WEBAUTH-USER` 自动登录，不再二次登录） |
-| Kibana（日志） | http://111.170.33.2:60080/monitor/kibana/ | 同上（Kibana 本身无认证） |
-| Prometheus | http://111.170.33.2:60080/monitor/prometheus/ | 同上 |
-| Alertmanager | http://111.170.33.2:60080/monitor/alertmanager/ | 同上 |
+| Grafana（两个项目仪表板） | http://YOUR_SERVER_IP:60080/monitor/grafana/ | 只需 nginx basic：`monitor` / `<本地运维配置>`（Grafana 侧已配 `[auth.proxy]`，用 nginx 传的 `X-WEBAUTH-USER` 自动登录，不再二次登录） |
+| Kibana（日志） | http://YOUR_SERVER_IP:60080/monitor/kibana/ | 同上（Kibana 本身无认证） |
+| Prometheus | http://YOUR_SERVER_IP:60080/monitor/prometheus/ | 同上 |
+| Alertmanager | http://YOUR_SERVER_IP:60080/monitor/alertmanager/ | 同上 |
 
-- 尚品汇仪表板：http://111.170.33.2:60080/monitor/grafana/d/shang-pivot-perf-overview
-- 元气购仪表板：http://111.170.33.2:60080/monitor/grafana/d/projectku-perf-overview
+- 尚品汇仪表板：http://YOUR_SERVER_IP:60080/monitor/grafana/d/shang-pivot-perf-overview
+- 元气购仪表板：http://YOUR_SERVER_IP:60080/monitor/grafana/d/projectku-perf-overview
 - trace 没有独立公网入口：走 Grafana → Explore → Tempo（TraceQL `{resource.service.name="shang-pivot"}`）
 
 ### 从「哪个请求慢」看到「哪条 SQL / 哪个函数慢」

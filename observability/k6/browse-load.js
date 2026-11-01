@@ -9,7 +9,7 @@
  * 登录可用时叠加：类目、我的、购物车、订单、收藏、浏览历史读取。
  *
  * 用法：
- *   k6 run -e BASE_URL=http://111.170.33.2:60084/api \
+ *   k6 run -e BASE_URL=http://YOUR_SERVER_IP:60084/api \
  *          -e PHONE=13800000001 \
  *          -e STAGES=30s:10,2m:50,3m:100 k6/browse-load.js
  */

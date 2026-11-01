@@ -11,9 +11,9 @@ public final class Env {
 
     /** 商城 C 端：锁 1280×720 走 Web 形态（<768px 会切到 H5，整套 DOM 不同）。 */
     public static final String MALL_URL = stripTrailingSlash(
-            get("SHANG_MALL_URL", get("MALL_BASE_URL", "http://111.170.33.2:60084")));
+            get("SHANG_MALL_URL", get("MALL_BASE_URL", "http://YOUR_SERVER_IP:60084")));
     public static final String ADMIN_URL = stripTrailingSlash(
-            get("SHANG_ADMIN_URL", get("ADMIN_BASE_URL", "http://111.170.33.2:60085")));
+            get("SHANG_ADMIN_URL", get("ADMIN_BASE_URL", "http://YOUR_SERVER_IP:60085")));
 
     public static final String APP_ACCOUNT = get("APP_TEST_ACCOUNT", "13800000001");
     public static final String APP_SMS_CODE = get("APP_TEST_SMS_CODE", "123456");

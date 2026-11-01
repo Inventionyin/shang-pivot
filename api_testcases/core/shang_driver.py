@@ -31,7 +31,7 @@ def _bases() -> tuple[str, str]:
         from config.settings import settings
         return settings.admin_base, settings.mall_base
     except Exception:
-        return ("http://111.170.33.2:60085", "http://111.170.33.2:60084")
+        return ("http://YOUR_SERVER_IP:60085", "http://YOUR_SERVER_IP:60084")
 
 
 ADMIN_BASE, MALL_BASE = _bases()

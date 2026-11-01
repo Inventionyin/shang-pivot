@@ -14,7 +14,7 @@ public class LlmSettingsResolver {
 
     private final SystemConfigApi systemConfigApi;
 
-    @Value("${LLM_BASE_URL:https://wb2api.yingyue.cloud/v1}")
+    @Value("${LLM_BASE_URL:https://your-openai-compatible-gateway.example/v1}")
     private String envBaseUrl;
     @Value("${LLM_API_KEY:}")
     private String envApiKey;

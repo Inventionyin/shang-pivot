@@ -27,7 +27,7 @@ public class AgentHarness {
                              boolean degraded, long promptTokens, long completionTokens, String sessionStatus) {
     }
 
-    private static final String BASE = env("EVAL_TARGET_BASE_URL", "https://shang.bettery.cn");
+    private static final String BASE = env("EVAL_TARGET_BASE_URL", "http://127.0.0.1:5174");
     private static final String PHONE = env("EVAL_CUSTOMER_PHONE", "13900009999");
 
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build();

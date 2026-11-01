@@ -2,8 +2,8 @@
  * 压测前预检：探明目标环境"哪些接口真的能压"。
  *
  * 用法（C 端 + 管理端）：
- *   k6 run -e BASE_URL=http://111.170.33.2:60084/api \
- *          -e ADMIN_BASE_URL=http://111.170.33.2:60085/admin \
+ *   k6 run -e BASE_URL=http://YOUR_SERVER_IP:60084/api \
+ *          -e ADMIN_BASE_URL=http://YOUR_SERVER_IP:60085/admin \
  *          -e PHONE=13800000001 -e ACCOUNT=admin -e PASSWORD=Admin@123 k6/preflight.js
  *
  * 如需在写链路不可用时返回非零退出码，追加 -e REQUIRE_WRITE_PATH=true

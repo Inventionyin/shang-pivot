@@ -45,7 +45,7 @@ def main() -> None:
 
     inventory = parse_inventory(args.inventory)
     client = ZenTaoClient(
-        base_url=os.environ.get("ZENTAO_BASE_URL", "http://111.170.33.2:60082"),
+        base_url=os.environ.get("ZENTAO_BASE_URL", "http://YOUR_SERVER_IP:60082"),
         username=os.environ["ZENTAO_USER"],
         password=os.environ["ZENTAO_PASSWORD"],
         product_id=int(os.environ.get("ZENTAO_PRODUCT_ID", "1")),

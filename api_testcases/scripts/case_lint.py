@@ -504,7 +504,7 @@ def main() -> int:
     ap.add_argument("--inventory", type=Path, default=DEFAULT_INV)
     ap.add_argument("--doc", type=Path, default=DEFAULT_DOC)
     ap.add_argument("--online", action="store_true")
-    ap.add_argument("--base", default=os.getenv("ZENTAO_BASE_URL", "http://111.170.33.2:60082"))
+    ap.add_argument("--base", default=os.getenv("ZENTAO_BASE_URL", "http://YOUR_SERVER_IP:60082"))
     ap.add_argument("--strict", action="store_true")
     ap.add_argument("--mdout", type=Path, default=None)
     ap.add_argument("--jsonout", type=Path, default=None)

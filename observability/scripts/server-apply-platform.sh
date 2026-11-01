@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 在服务器（111.170.33.2）上把尚品汇接入已有的监控平台。以 root 执行，幂等。
+# 在服务器（YOUR_SERVER_IP）上把尚品汇接入已有的监控平台。以 root 执行，幂等。
 #
 # 服务器上已有一套原生（非 Docker）+ systemd 的平台，在 /opt/monitoring/：
 #   prometheus / alertmanager / grafana / tempo / elasticsearch / kibana / filebeat / node_exporter / alert-notifier

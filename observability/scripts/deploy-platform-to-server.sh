@@ -13,7 +13,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-readonly SSH_HOST="${SHANG_SSH_HOST:-111.170.33.2}"
+readonly SSH_HOST="${SHANG_SSH_HOST:-YOUR_SERVER_IP}"
 readonly SSH_PORT="${SHANG_SSH_PORT:-28536}"
 readonly SSH_KEY="${SHANG_SSH_KEY:-$HOME/.ssh/${SHANG_SSH_KEY_NAME:-projectku_psyidc}}"
 readonly REMOTE_STAGE="/root/deploy-shang"

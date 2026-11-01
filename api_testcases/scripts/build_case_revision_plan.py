@@ -226,7 +226,7 @@ def build_case(case: dict[str, str]) -> tuple[dict[str, str], dict[str, str] | N
     if auth:
         pre += "；" + auth
     if case["case_id"].startswith("BUS-"):
-        original_pre = case["precondition"].replace("111.170.33.2", "baseUrl 环境变量").replace("103.236.91.136", "baseUrl 环境变量")
+        original_pre = case["precondition"].replace("YOUR_SERVER_IP", "baseUrl 环境变量").replace("103.236.91.136", "baseUrl 环境变量")
         prep = []
         if "账号未注册" in original_pre:
             prep.append("生成唯一 TEST_ACCOUNT_SUFFIX 并确认账号不存在")

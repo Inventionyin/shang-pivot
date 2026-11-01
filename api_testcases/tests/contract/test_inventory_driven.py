@@ -2,7 +2,7 @@
 """清单驱动的契约执行（参数化自 test_cases_inventory.md）。
 
 运行：
-  ADMIN_BASE_URL=http://111.170.33.2:60085 MALL_BASE_URL=http://111.170.33.2:60084 \
+  ADMIN_BASE_URL=http://YOUR_SERVER_IP:60085 MALL_BASE_URL=http://YOUR_SERVER_IP:60084 \
   APP_TEST_ACCOUNT=13800000001 APP_TEST_SMS_CODE=123456 \
   ADMIN_TEST_ACCOUNT=admin ADMIN_TEST_PASSWORD='<运行时输入>' \
   python3 -m pytest tests/contract/test_inventory_driven.py -q --alluredir artifacts/allure

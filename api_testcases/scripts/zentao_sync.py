@@ -703,7 +703,7 @@ def main() -> None:
         rc = subprocess.run([sys.executable, str(lint), "--inventory", str(args.inventory)]).returncode
         if rc != 0:
             raise SystemExit(f"lint 门禁未通过（退出码 {rc}），已中止 {args.command}；修复后重试，或 --skip-lint 强制跳过")
-    base = os.getenv("ZENTAO_BASE_URL", "http://111.170.33.2:60082")
+    base = os.getenv("ZENTAO_BASE_URL", "http://YOUR_SERVER_IP:60082")
     user = os.getenv("ZENTAO_USER")
     password = os.getenv("ZENTAO_PASSWORD")
     if not user or not password:

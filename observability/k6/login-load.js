@@ -6,7 +6,7 @@
  *   admin             POST /admin/auth/login   用户名+密码，走 BCrypt（纯 CPU），单次更贵
  *
  * 到达速率模式（推荐，模仿固定 QPS 的登录风暴）：
- *   k6 run -e LOGIN_TARGET=customer -e BASE_URL=http://111.170.33.2:60084/api \
+ *   k6 run -e LOGIN_TARGET=customer -e BASE_URL=http://YOUR_SERVER_IP:60084/api \
  *          -e PHONES=13800000001,13800000002,13800000003 -e RATE=20 -e DURATION=2m k6/login-load.js
  *
  * 固定并发模式（不传 RATE）：
