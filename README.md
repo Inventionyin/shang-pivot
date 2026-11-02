@@ -4,6 +4,11 @@
 > 工程 / 后台名 **Shang Pivot**，C 端品牌 **尚品汇**（Slogan：选好物，享生活）。
 
 [![CI](https://github.com/Inventionyin/shang-pivot/actions/workflows/ci.yml/badge.svg)](https://github.com/Inventionyin/shang-pivot/actions/workflows/ci.yml)
+[![e2e](https://github.com/Inventionyin/shang-pivot/actions/workflows/e2e.yml/badge.svg)](https://github.com/Inventionyin/shang-pivot/actions/workflows/e2e.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+**在线体验**：商城 <https://shang.bettery.cn>（手机号 `13900009999`，验证码 `123456`）· 管理端 <https://admin.bettery.cn>（`admin` / `Admin@123`）
+**仓库**：[GitHub](https://github.com/Inventionyin/shang-pivot) · [Gitee 镜像](https://gitee.com/inventionyin/shang-pivot)
 
 **English**: A versioned full-stack e-commerce demo — admin console (V1), storefront (V2), and an AI customer-service assistant (V3) with streaming chat, RAG retrieval (pgvector), in-chat add-to-cart tools, human handoff, guardrails, and a golden-dataset evaluation harness. Java 21 / Spring Boot 4 / Vue 3 / PostgreSQL + pgvector.
 
@@ -11,8 +16,25 @@
 
 ---
 
+## 界面预览
+
+| 商城首页（Web） | AI 导购对话（真实商品卡片） |
+|---|---|
+| ![商城首页](docs/05-assets/screenshots/mall-home.png) | ![AI 导购](docs/05-assets/screenshots/mall-ai-chat.png) |
+
+| 商城首页（H5，左下角 AI 球） | 商品详情 |
+|---|---|
+| ![H5 首页](docs/05-assets/screenshots/mall-h5-home.png) | ![商品详情](docs/05-assets/screenshots/mall-product.png) |
+
+| 管理端工作台 | 智能客服 · 服务看板 |
+|---|---|
+| ![管理端工作台](docs/05-assets/screenshots/admin-dashboard.png) | ![服务看板](docs/05-assets/screenshots/admin-cs-stats.png) |
+
+---
+
 ## 目录
 
+- [界面预览](#界面预览)
 - [项目定位](#项目定位)
 - [功能特性](#功能特性)
 - [技术栈](#技术栈)
@@ -70,7 +92,7 @@
 - **工具集**：商品检索（bge-m3 向量 + 词法自动降级）、SKU 规格与库存、订单/物流查询、**对话内加购**
 - **转人工与运营**：坐席工作台（接入/回复/转接/结束）、客服工单、知识库（切片+向量化重建）、快捷回复、服务看板
 - **安全护栏**：用户级对话限流、会话生成互斥、邮箱验证码防爆破、PII 掩码、注入检测、AI 生成标识、全量审计
-- **评估层**：10 条 Golden 业务用例 + 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 触发（通过率 10/10）
+- **评估层**：20 条 Golden 业务用例 + 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 触发（通过率 20/20）；另有 823 条夜间全量回归（API + UI 双浏览器，0 失败）与 74 条 e2e 浏览器用例
 - 设计主源见 [`docs/03-ai/customer-service-智能客服.md`](docs/03-ai/customer-service-智能客服.md)
 
 ---
@@ -101,7 +123,7 @@ shang-pivot/
 │   ├── shang-identity/           # 身份上下文实现：RBAC、配置、文件、操作日志
 │   ├── shang-commerce-api/       # 交易上下文对外契约
 │   ├── shang-commerce/           # 交易上下文实现：商品、库存、订单、售后
-│   ├── shang-customerservice/    # 智能客服模块（V3 骨架，未实现）
+│   ├── shang-customerservice/    # 智能客服：SSE 对话 / RAG / 工具 / 转人工 / 评估
 │   ├── shang-server/             # 启动模块 + Flyway 迁移脚本（db/migration）
 │   ├── docker-compose.yml        # 一键起 PostgreSQL / Redis / MinIO
 │   └── .env.example              # 环境变量模板（复制为 .env 使用）
@@ -119,7 +141,8 @@ shang-pivot/
 ### 1. 获取代码
 
 ```bash
-git clone https://gitee.com/beijing-chuan-sui/shang-pivot.git
+git clone https://github.com/Inventionyin/shang-pivot.git
+# 国内网络可用 Gitee 镜像：git clone https://gitee.com/inventionyin/shang-pivot.git
 cd shang-pivot
 ```
 
@@ -132,11 +155,12 @@ cd shang-pivot
 ```bash
 cd backend
 cp .env.example .env
-# ⚠️ 建议把 .env 里的 SERVER_PORT 改为 8086：两个前端 dev server 的代理都指向 8086
 docker compose up -d
 ```
 
-会启动 PostgreSQL（含 pgvector）、Redis、MinIO 及其初始化容器。
+会启动 PostgreSQL（含 pgvector）、Redis、RabbitMQ、MinIO，并把 `docs/05-assets/product/` 下的演示商品图自动灌入 MinIO 桶（`shang-pivot`）。
+
+> MinIO 官方 Docker 镜像已下架，compose 使用社区维护的同源镜像 `pgsty/minio` / `pgsty/mc`。
 
 ### 4. 启动后端
 
@@ -146,7 +170,7 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 21)   # macOS；Linux 自行指定 
 ./mvnw -pl shang-server -am spring-boot:run
 ```
 
-首次启动 Flyway 会自动建表并灌入演示数据。
+首次启动 Flyway 会自动建表并灌入演示数据。后端会读取 `backend/.env`（`spring.config.import`）。
 
 ### 5. 启动管理端
 
@@ -177,6 +201,9 @@ npm run dev
 | 账号 | 值 |
 |---|---|
 | 超级管理员 | `admin` / `Admin@123` |
+| 商城会员（沙箱验证码） | `13900009999` / `123456` |
+
+> **AI 导购**需要 LLM：在 `backend/.env` 填写 `LLM_BASE_URL` / `LLM_API_KEY` / `LLM_MODEL`（任意 OpenAI 兼容网关），或启动后在管理端「服务看板 → AI 配置」填写并点「连通性测试」。未配置时对话自动降级为 FAQ + 词法推荐，不影响其他功能。
 
 **验活**：登录管理端看到工作台，并成功上传一张图片。更多排障见 [`backend/HELP.md`](backend/HELP.md) 与 [`docs/开发与运维.md`](docs/开发与运维.md)。
 
@@ -184,7 +211,7 @@ npm run dev
 
 ## 数据库与演示数据
 
-- **迁移工具**：Flyway，脚本位于 `backend/shang-server/src/main/resources/db/migration/`，共 19 个版本。
+- **迁移工具**：Flyway，脚本位于 `backend/shang-server/src/main/resources/db/migration/`，共 23 个版本（V3.0 为 V22–V23）。
 - **版本冻结规则**：`V1`～`V7` 为 V1.0 基线，已冻结不可修改；`V8` 起为 V2.0 增量；已应用的脚本**禁止改动内容**，修数据一律用新版本脚本前向修复。
 - **空库启动即可看到完整演示数据**：32 个商品（含 1 草稿 1 下架）、47 个 SKU、3 行低库存预警、6 笔演示订单、1 张待审核售后单、7 个会员。
 - **恢复现场**：删库重建即可（仅限本地演示库）。
@@ -206,7 +233,7 @@ docker compose down -v && docker compose up -d
 | `shang-common` | 统一响应体 `{ code, msg, data, traceId }`、工具类、安全、OSS 客户端、审计切面 |
 | `shang-identity` | 身份上下文：RBAC、系统配置、文件管理、操作日志 |
 | `shang-commerce` | 交易上下文：类目 / 品牌 / 商品 / SKU / 库存 / 订单 / 售后 |
-| `shang-customerservice` | 智能客服（V3，占位） |
+| `shang-customerservice` | 智能客服：对话编排、检索、工具、转人工、工单、看板、评估 |
 | `shang-server` | 应用启动、Flyway 迁移、跨模块装配 |
 
 **依赖规则（红线）**：模块实现之间**禁止互相依赖**；跨上下文调用只能通过 `*-api` 模块暴露的接口。这条规则是保持模块边界可演进的关键。

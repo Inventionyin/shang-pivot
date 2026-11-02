@@ -40,7 +40,8 @@ services:
       retries: 12
 
   minio:
-    image: minio/minio:latest
+    # 说明：minio/minio 已从 Docker Hub 下架（pull access denied），改用社区维护的同源镜像
+    image: pgsty/minio:latest
     container_name: shang-minio
     command: server /data --console-address ":9001"
     environment:
@@ -53,9 +54,9 @@ services:
       - miniodata:/data
     # 官方镜像无 curl；就绪由 minio-init 重试保证
 
-  # 创建公开/私有桶；重试等待 MinIO 就绪
+  # 创建公开桶 + 灌入演示商品图；重试等待 MinIO 就绪
   minio-init:
-    image: minio/mc:latest
+    image: pgsty/mc:latest
     container_name: shang-minio-init
     depends_on:
       - minio
@@ -65,13 +66,17 @@ services:
         mc alias set local http://minio:9000 \"$$MINIO_ROOT_USER\" \"$$MINIO_ROOT_PASSWORD\" && break;
         echo waiting for minio...; sleep 2;
       done;
-      mc mb -p local/luoshu-rag || true;
-      mc anonymous set download local/luoshu-rag;
-      echo 'MinIO buckets ready';
+      mc mb -p local/$$MINIO_BUCKET_NAME || true;
+      mc anonymous set download local/$$MINIO_BUCKET_NAME;
+      mc cp --recursive /seed/ local/$$MINIO_BUCKET_NAME/PRODUCT/seed/ || true;
+      echo 'MinIO bucket + seed images ready';
       "
     environment:
       MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME:-shang-pivot}
+    volumes:
+      - ../docs/05-assets/product:/seed:ro
     restart: "no"
 
   # TODO: 后端应用打包后启用（当前为脚手架，尚无 Dockerfile）。
@@ -92,7 +97,7 @@ services:
       MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
-      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME:-luoshu-rag}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME:-shang-pivot}
     depends_on:
       postgres:
         condition: service_healthy

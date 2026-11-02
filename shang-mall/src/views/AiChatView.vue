@@ -72,7 +72,7 @@ const statusText = computed(() => {
 })
 
 onMounted(() => {
-  void bootstrap()
+  void ensureSession()
 })
 
 onBeforeUnmount(() => {
@@ -99,11 +99,28 @@ async function bootstrap() {
   }
 }
 
+/**
+ * 页面打开时 bootstrap 可能尚未完成；用户抢先发送会打到 /sessions//messages（400）。
+ * 用同一个 Promise 复用初始化，保证发送前一定拿到 sessionId。
+ */
+let bootTask: Promise<void> | null = null
+
+function ensureSession(): Promise<void> {
+  if (sessionId.value) return Promise.resolve()
+  if (!bootTask) {
+    bootTask = bootstrap().finally(() => {
+      bootTask = null
+    })
+  }
+  return bootTask
+}
+
 function startNewSession() {
   abort?.abort()
   bubbles.value = []
   sessionStatus.value = 'AI_ONGOING'
-  void bootstrap()
+  sessionId.value = ''
+  void ensureSession()
 }
 
 async function openHistory() {
@@ -155,6 +172,10 @@ async function loadSession(item: ChatSessionBrief) {
 async function send(text?: string) {
   const content = (text ?? input.value).trim()
   if (!content || sending.value) return
+  if (!sessionId.value) {
+    await ensureSession()
+    if (!sessionId.value) return // 初始化失败，errorMsg 已提示
+  }
   input.value = ''
   errorMsg.value = ''
   bubbles.value.push({ key: nextKey(), role: 'USER', content })
