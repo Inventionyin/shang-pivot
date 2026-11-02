@@ -173,6 +173,9 @@ public class ProductService {
     /** 新建 SPU+SKU；默认 DRAFT，可按 initStock 初始化库存与 INIT 流水。 */
     @Transactional
     public Long create(ProductSaveReq req) {
+        if (req == null || !StringUtils.hasText(req.getName())) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "商品名称必填");
+        }
         Spu spu = req.toSpu();
         if (!StringUtils.hasText(spu.getStatus())) {
             spu.setStatus("DRAFT");

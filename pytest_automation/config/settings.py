@@ -69,16 +69,18 @@ class Settings:
     def api_mall_base(self) -> str:
         return (
             os.getenv("MALL_BASE_URL")
+            or os.getenv("SHANG_MALL_BASE_URL")
             or (self._data.get("api") or {}).get("mall_base")
-            or "http://YOUR_SERVER_IP:60084"
+            or "http://127.0.0.1:8086"
         ).rstrip("/")
 
     @property
     def api_admin_base(self) -> str:
         return (
             os.getenv("ADMIN_BASE_URL")
+            or os.getenv("SHANG_ADMIN_BASE_URL")
             or (self._data.get("api") or {}).get("admin_base")
-            or "http://YOUR_SERVER_IP:60085"
+            or "http://127.0.0.1:8086"
         ).rstrip("/")
 
     # ---------- UI 地址 ----------

@@ -1,13 +1,12 @@
-# 本地开发环境：后端 8086。
+# 本地开发环境：后端 8086，前端 dev server 5174（商城）/ 5173（管理端）。
 # 注意：本机实测本地下单返回 50000，写操作用例请改用 TEST_ENV=demo。
-# 本地前端未起 dev server，UI 地址仍指向部署演示站。
 api:
   mall_base: http://localhost:8086
   admin_base: http://localhost:8086
 
 ui:
-  mall_url: http://YOUR_SERVER_IP:60084
-  admin_url: http://YOUR_SERVER_IP:60085
+  mall_url: http://127.0.0.1:5174
+  admin_url: http://127.0.0.1:5173
 
 timeout: 30
 ui_timeout_ms: 15000
