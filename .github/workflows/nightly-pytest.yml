@@ -51,19 +51,9 @@ jobs:
           --health-interval 5s
           --health-timeout 3s
           --health-retries 10
-      minio:
-        image: minio/minio:latest
-        env:
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
-        ports:
-          - 9000:9000
-        options: >-
-          --health-cmd "curl -f http://127.0.0.1:9000/minio/health/live"
-          --health-interval 5s
-          --health-timeout 3s
-          --health-retries 20
-        command: server /data
+      # 说明：MinIO 上游已停止在 Docker Hub/Quay 分发社区镜像（pull access denied），
+      # 且本回归无文件上传用例、后端 ObjectStorage 客户端懒初始化，故不启动该服务。
+      # 将来若要补上传回归，请换用可用的 S3 兼容镜像并在此恢复。
 
     env:
       DB_URL: jdbc:postgresql://127.0.0.1:5432/shang?sslmode=disable&stringtype=unspecified&connectTimeout=5&socketTimeout=30&tcpKeepAlive=true
