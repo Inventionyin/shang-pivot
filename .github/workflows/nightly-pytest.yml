@@ -152,8 +152,10 @@ jobs:
       - name: 安装 Allure CLI
         run: |
           curl -fsSLo /tmp/allure.zip https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.35.1/allure-commandline-2.35.1.zip
+          rm -rf .tools/allure-2.35.1
           mkdir -p .tools
           unzip -q /tmp/allure.zip -d .tools
+          chmod +x .tools/allure-2.35.1/bin/allure
           test -x .tools/allure-2.35.1/bin/allure
 
       - name: 夜间回归
