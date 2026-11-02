@@ -6,6 +6,7 @@ allure-pytest>=2.13
 playwright>=1.40
 pytest-playwright>=0.4
 pytest-xdist>=3.6
+pytest-rerunfailures>=14.0
 
 redis>=5.0
 pika>=1.3

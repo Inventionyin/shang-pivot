@@ -84,9 +84,14 @@ fi
 step "生成报告"
 $PYTHON scripts/finalize_run.py || STATUS=1
 bash scripts/allure_report.sh || STATUS=1
-$PYTHON scripts/check_report_contract.py \
-  --baseline artifacts/api-matrix.baseline.json \
-  --current artifacts/allure-report/ext/data/api-matrix.json || STATUS=1
+# 报告契约检查需要基线文件（由发布前归档产生）；首次运行/新克隆时没有基线，跳过而非判失败
+if [ -f artifacts/api-matrix.baseline.json ]; then
+  $PYTHON scripts/check_report_contract.py \
+    --baseline artifacts/api-matrix.baseline.json \
+    --current artifacts/allure-report/ext/data/api-matrix.json || STATUS=1
+else
+  echo "[report] 无基线 artifacts/api-matrix.baseline.json，跳过接口契约对比（首次运行）"
+fi
 
 # 6) CI 摘要
 $PYTHON - "$STATUS" "$STARTED_AT" <<'PY'

@@ -33,9 +33,9 @@ public abstract class BasePage {
     public void expectPath(String fragment) {
         // Playwright 把 Pattern 序列化成 JS 正则，JS 不支持 \Q...\E，因此这里只做普通匹配。
         // 传入的都是路径片段（如 /product/、/dashboard），不含正则元字符。
-        // CI 冷启动下 SPA 首屏导航可能超过默认 5s，统一放宽到 15s
+        // CI 冷启动下 SPA 首屏/结算页导航可能超过 15s（Vite dev 首次编译），统一放宽到 30s
         assertThat(page()).hasURL(Pattern.compile(".*" + fragment + ".*"),
-                new PageAssertions.HasURLOptions().setTimeout(15_000));
+                new PageAssertions.HasURLOptions().setTimeout(30_000));
     }
 
     protected Locator popup(String title) {
