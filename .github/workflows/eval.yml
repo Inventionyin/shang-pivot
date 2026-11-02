@@ -67,6 +67,11 @@ jobs:
       LLM_BASE_URL: https://wb2api.yingyue.cloud/v1
       LLM_MODEL: cn:deepseek-v4.1-flash
       LLM_API_KEY: ${{ secrets.EVAL_LLM_API_KEY }}
+      # 向量检索：与生产一致（SiliconFlow bge-m3, 1024 维）
+      LLM_EMBEDDING_BASE_URL: https://api.siliconflow.cn/v1
+      LLM_EMBEDDING_MODEL: BAAI/bge-m3
+      LLM_EMBEDDING_DIM: "1024"
+      LLM_EMBEDDING_API_KEY: ${{ secrets.EVAL_EMBEDDING_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -93,6 +98,21 @@ jobs:
             sleep 1
           done
           echo "backend failed"; tail -100 /tmp/backend.log; exit 1
+
+      - name: 重建商品与知识索引
+        run: |
+          TOKEN=$(curl -fsS -X POST http://127.0.0.1:8086/admin/auth/login \
+            -H 'Content-Type: application/json' \
+            -d '{"username":"admin","password":"Admin@123"}' \
+            | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["accessToken"])')
+          echo "admin token ok"
+          echo "-- product index --"
+          curl -fsS -X POST http://127.0.0.1:8086/admin/customer-service/product-index/rebuild \
+            -H "Authorization: Bearer $TOKEN"; echo
+          echo "-- knowledge index --"
+          curl -fsS -X POST http://127.0.0.1:8086/admin/customer-service/knowledge-docs/rebuild \
+            -H "Authorization: Bearer $TOKEN" \
+            -H 'Content-Type: application/json' -d '{"full":true}'; echo
 
       - name: Golden 评估（20 用例 + 裁判）
         working-directory: backend
