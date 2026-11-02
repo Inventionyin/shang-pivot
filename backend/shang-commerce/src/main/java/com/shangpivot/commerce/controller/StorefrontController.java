@@ -98,8 +98,22 @@ public class StorefrontController {
 
     @PostMapping("/api/cart/items")
     public Result<Map<String, Object>> addCart(@RequestBody Map<String, Object> body) {
-        Long skuId = Long.valueOf(body.get("skuId").toString());
-        int qty = Integer.parseInt(body.get("quantity").toString());
+        Object skuRaw = body.get("skuId");
+        Object qtyRaw = body.get("quantity");
+        if (skuRaw == null) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "请选择商品规格");
+        }
+        if (qtyRaw == null) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "请填写购买数量");
+        }
+        Long skuId;
+        int qty;
+        try {
+            skuId = Long.valueOf(skuRaw.toString());
+            qty = Integer.parseInt(qtyRaw.toString());
+        } catch (NumberFormatException e) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "skuId/quantity 格式不正确");
+        }
         return Result.ok(cartService.addItem(skuId, qty));
     }
 
@@ -274,7 +288,25 @@ public class StorefrontController {
         if (!customerQueryApi.isActive(customerId)) {
             throw new BizException(ErrorCode.CUSTOMER_FROZEN);
         }
-        Long orderItemId = Long.valueOf(body.get("orderItemId").toString());
+        Object itemRaw = body.get("orderItemId");
+        Object ratingRaw = body.get("rating");
+        if (itemRaw == null) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "请选择评价的订单项");
+        }
+        if (ratingRaw == null) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "请填写评分");
+        }
+        Long orderItemId;
+        int rating;
+        try {
+            orderItemId = Long.valueOf(itemRaw.toString());
+            rating = Integer.parseInt(ratingRaw.toString());
+        } catch (NumberFormatException e) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "orderItemId/rating 格式不正确");
+        }
+        if (rating < 1 || rating > 5) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "评分须为 1~5");
+        }
         OrderItem item = orderItemMapper.selectById(orderItemId);
         if (item == null) {
             throw new BizException(ErrorCode.NOT_FOUND, "订单项不存在");
@@ -291,7 +323,7 @@ public class StorefrontController {
         review.setOrderItemId(orderItemId);
         review.setCustomerId(customerId);
         review.setSpuId(item.getSpuId());
-        review.setRating(Integer.parseInt(body.get("rating").toString()));
+        review.setRating(rating);
         review.setContent(body.get("content") == null ? null : body.get("content").toString());
         if (body.get("picKeys") instanceof List<?> pics) {
             review.setPics(pics.stream().map(Object::toString).toList());

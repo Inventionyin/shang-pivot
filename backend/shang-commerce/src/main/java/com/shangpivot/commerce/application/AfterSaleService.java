@@ -89,6 +89,9 @@ public class AfterSaleService {
         if (!Set.of("REFUND", "RETURN_REFUND", "EXCHANGE").contains(req.getType())) {
             throw new BizException(ErrorCode.BAD_REQUEST, "type 无效");
         }
+        if (req.getReason().trim().length() > 512) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "售后原因不能超过 512 个字符");
+        }
         Order order = orderMapper.selectById(req.getOrderId());
         if (order == null || !customerId.equals(order.getCustomerId())) {
             throw new BizException(ErrorCode.NOT_FOUND, "订单不存在");

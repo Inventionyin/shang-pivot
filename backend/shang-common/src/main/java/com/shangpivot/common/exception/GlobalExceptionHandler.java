@@ -8,12 +8,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
@@ -52,6 +56,40 @@ public class GlobalExceptionHandler {
     public Result<Void> handleDenied(AccessDeniedException e) {
         log.warn("Access denied: {} user={}/{}", e.getMessage(), TraceIdUtil.userId(), TraceIdUtil.username());
         return Result.fail(ErrorCode.FORBIDDEN);
+    }
+
+    /** 请求体不是合法 JSON / 字段类型无法反序列化：属于客户端错误，不应记 5xx。 */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result<Void> handleUnreadable(HttpMessageNotReadableException e) {
+        log.warn("Malformed request body user={}/{}: {}",
+                TraceIdUtil.userId(), TraceIdUtil.username(), e.getMostSpecificCause().getMessage());
+        return Result.fail(ErrorCode.BAD_REQUEST.getCode(), "请求体格式错误");
+    }
+
+    /** 路径/查询参数类型不匹配（如 /api/products/abc）：400 而非 500。 */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result<Void> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        log.warn("Parameter type mismatch: {}={} user={}/{}",
+                e.getName(), e.getValue(), TraceIdUtil.userId(), TraceIdUtil.username());
+        return Result.fail(ErrorCode.BAD_REQUEST.getCode(), "参数类型不正确: " + e.getName());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result<Void> handleMissingParam(MissingServletRequestParameterException e) {
+        log.warn("Missing request parameter: {} user={}/{}",
+                e.getParameterName(), TraceIdUtil.userId(), TraceIdUtil.username());
+        return Result.fail(ErrorCode.BAD_REQUEST.getCode(), "缺少参数: " + e.getParameterName());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public Result<Void> handleMethodNotSupported(HttpRequestMethodNotSupportedException e) {
+        log.warn("Method not supported: {} user={}/{}",
+                e.getMethod(), TraceIdUtil.userId(), TraceIdUtil.username());
+        return Result.fail(ErrorCode.BAD_REQUEST.getCode(), "不支持的请求方法: " + e.getMethod());
     }
 
     /** 浏览器自动请求 favicon 等静态资源缺失，不应打 ERROR */

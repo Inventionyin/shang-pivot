@@ -51,6 +51,16 @@ jobs:
           --health-interval 5s
           --health-timeout 3s
           --health-retries 10
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+          - 15672:15672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
       # 说明：MinIO 上游已停止在 Docker Hub/Quay 分发社区镜像（pull access denied），
       # 且本回归无文件上传用例、后端 ObjectStorage 客户端懒初始化，故不启动该服务。
       # 将来若要补上传回归，请换用可用的 S3 兼容镜像并在此恢复。

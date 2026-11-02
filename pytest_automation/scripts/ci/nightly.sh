@@ -28,10 +28,23 @@ STARTED_AT="$(date '+%Y-%m-%d %H:%M:%S')"
 
 step() { printf '\n=== %s ===\n' "$1"; }
 
+# 0) 基线数据回填：artifacts/ 被 gitignore，全新 checkout 时从已入库的基线取
+ENDPOINT_MODEL="../api_testcases/artifacts/endpoint-model.json"
+if [ ! -f "$ENDPOINT_MODEL" ]; then
+  LATEST_BASELINE=$(ls -1d ../api_testcases/baselines/*/ 2>/dev/null | sort | tail -1)
+  if [ -n "$LATEST_BASELINE" ] && [ -f "${LATEST_BASELINE}endpoint-model.json" ]; then
+    mkdir -p "$(dirname "$ENDPOINT_MODEL")"
+    cp "${LATEST_BASELINE}endpoint-model.json" "$ENDPOINT_MODEL"
+    echo "[prep] endpoint-model.json <- $LATEST_BASELINE"
+  fi
+fi
+
 # 1) 用例注册表 / 质量门禁 / 评审
 if [ "${SKIP_GATES:-0}" != "1" ]; then
   step "用例导出与质量门禁"
   $PYTHON scripts/export_cases.py || STATUS=1
+  # db_contract 读取 artifacts/write-contracts.json（由 data/write_contracts.yaml 生成）
+  $PYTHON scripts/build_write_contracts.py || STATUS=1
   $PYTHON scripts/case_quality_gate.py || STATUS=1
   REVIEW_ARGS=(--check)
   [ "${STRICT_REVIEW:-0}" = "1" ] && REVIEW_ARGS=(--check --strict-p0)

@@ -112,12 +112,31 @@ public class AddressService {
                 || !StringUtils.hasText(req.getDistrict()) || !StringUtils.hasText(req.getDetail())) {
             throw new BizException(ErrorCode.BAD_REQUEST, "收货信息不完整");
         }
-        a.setName(req.getName().trim());
-        a.setPhone(req.getPhone().trim());
-        a.setProvince(req.getProvince().trim());
-        a.setCity(req.getCity().trim());
-        a.setDistrict(req.getDistrict().trim());
-        a.setDetail(req.getDetail().trim());
+        String name = req.getName().trim();
+        String phone = req.getPhone().trim();
+        String province = req.getProvince().trim();
+        String city = req.getCity().trim();
+        String district = req.getDistrict().trim();
+        String detail = req.getDetail().trim();
+        // 与 DB 列宽/格式对齐：先校验再落库，避免 DataIntegrityViolation 变成 500
+        if (name.length() > 64) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "收货人姓名不能超过 64 个字符");
+        }
+        if (!phone.matches("^1\\d{10}$")) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "手机号格式不正确");
+        }
+        if (province.length() > 64 || city.length() > 64 || district.length() > 64) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "省市区不能超过 64 个字符");
+        }
+        if (detail.length() > 255) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "详细地址不能超过 255 个字符");
+        }
+        a.setName(name);
+        a.setPhone(phone);
+        a.setProvince(province);
+        a.setCity(city);
+        a.setDistrict(district);
+        a.setDetail(detail);
     }
 
     @Data
