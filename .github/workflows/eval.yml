@@ -58,6 +58,11 @@ jobs:
       SERVER_PORT: 8086
       MANAGEMENT_PORT: 8087
       JWT_SECRET: shang-pivot-eval-jwt-secret-32bytes-min!!
+      # 评估不涉及文件上传，但 MinioClient 初始化要求凭据非空；与 nightly 保持一致
+      MINIO_ENDPOINT: 127.0.0.1:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET_NAME: shang-pivot
       # 执行模型（被测 Agent）：V24 已清空 DB 里的占位符，环境变量才会生效
       LLM_BASE_URL: https://wb2api.yingyue.cloud/v1
       LLM_MODEL: cn:deepseek-v4.1-flash
