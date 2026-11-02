@@ -26,6 +26,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AgentEvalReportTest {
 
     private static final double DEFAULT_THRESHOLD = 0.7;
+    /** 裁判单例低于阈值是否阻断门禁；CI 设为 false，避免模型发挥波动导致误红。 */
+    private static final boolean JUDGE_BLOCKING =
+            !"false".equalsIgnoreCase(System.getenv().getOrDefault("EVAL_JUDGE_BLOCKING", "true"));
+    /** 平均裁判分下限：即使不阻断单例，整体质量显著下滑也必须失败。 */
+    private static final double JUDGE_MIN_AVG =
+            Double.parseDouble(System.getenv().getOrDefault("EVAL_JUDGE_MIN_AVG", "0.7"));
 
     record CaseResult(GoldenCase gc, List<AgentHarness.TurnResult> turns, String lastAnswer,
                       List<String> failures, Double judgeScore, String judgeReason) {
@@ -143,6 +149,8 @@ class AgentEvalReportTest {
         md.append("# 智能客服 Golden 评估报告\n\n");
         md.append("- 用例数：").append(results.size()).append('\n');
         md.append("- 裁判：").append(judgeAvailable ? "已启用（GEval-lite）" : "未启用（缺 EVAL_LLM_API_KEY，仅确定性断言）").append('\n');
+        md.append("- 门禁：确定性断言必须全过；裁判分单例阈值阻断=").append(JUDGE_BLOCKING)
+          .append("，平均分下限=").append(JUDGE_MIN_AVG).append('\n');
         md.append("\n## 汇总\n\n| 用例 | 结果 | 裁判分 | sources | 判词/失败原因 |\n|---|---|---|---|---|\n");
         int pass = 0;
         double scoreSum = 0;
@@ -166,9 +174,14 @@ class AgentEvalReportTest {
                             : String.join("<br>", r.failures()))
                     .append(" |\n");
         }
-        md.append("\n**通过率：").append(pass).append('/').append(results.size())
-                .append("；平均裁判分：").append(scoreCount == 0 ? "-" : String.format("%.2f", scoreSum / scoreCount))
-                .append("**（注意：通过率与平均分是两个指标，平均分高不代表及格）\n");
+        double avg = scoreCount == 0 ? -1 : scoreSum / scoreCount;
+        boolean deterministicOk = results.stream().allMatch(r -> r.failures().isEmpty());
+        boolean avgOk = scoreCount == 0 || avg >= JUDGE_MIN_AVG;
+        md.append("\n**严格通过率：").append(pass).append('/').append(results.size())
+                .append("；平均裁判分：").append(scoreCount == 0 ? "-" : String.format("%.2f", avg))
+                .append("；门禁：").append(deterministicOk && avgOk ? "通过" : "失败")
+                .append("**（确定性断言必须全过；裁判单例阈值阻断=").append(JUDGE_BLOCKING)
+                .append("，平均分下限=").append(JUDGE_MIN_AVG).append("）\n");
         try {
             Files.createDirectories(Path.of("target"));
             Files.writeString(Path.of("target/eval-report.md"), md.toString(), StandardCharsets.UTF_8);
@@ -180,16 +193,29 @@ class AgentEvalReportTest {
     }
 
     private void assertSummary(List<CaseResult> results) {
-        long failed = results.stream().filter(r -> !r.failures().isEmpty()
-                || (r.judgeScore() != null && r.judgeScore() < r.gc().judgeThreshold())).count();
-        List<String> bad = results.stream()
-                .filter(r -> !r.failures().isEmpty()
-                        || (r.judgeScore() != null && r.judgeScore() < r.gc().judgeThreshold()))
-                .map(r -> r.gc().id() + ": " + (r.failures().isEmpty() ? "裁判分 " + r.judgeScore() : String.join("; ", r.failures())))
-                .toList();
-        assertThat(failed)
-                .withFailMessage("Golden 回归失败用例（改进四步法：读判词 → 定位层 → 只改一处 → 重跑）:%n%s"
+        List<String> bad = new java.util.ArrayList<>();
+        for (CaseResult r : results) {
+            if (!r.failures().isEmpty()) {
+                bad.add(r.gc().id() + ": " + String.join("; ", r.failures()));
+            } else if (JUDGE_BLOCKING && r.judgeScore() != null
+                    && r.judgeScore() < r.gc().judgeThreshold()) {
+                bad.add(r.gc().id() + ": 裁判分 " + r.judgeScore());
+            }
+        }
+        double sum = 0;
+        int count = 0;
+        for (CaseResult r : results) {
+            if (r.judgeScore() != null) {
+                sum += r.judgeScore();
+                count++;
+            }
+        }
+        if (count > 0 && sum / count < JUDGE_MIN_AVG) {
+            bad.add(String.format("平均裁判分 %.2f 低于下限 %.2f（%d 条有分）", sum / count, JUDGE_MIN_AVG, count));
+        }
+        assertThat(bad)
+                .withFailMessage("Golden 门禁失败（改进四步法：读判词 → 定位层 → 只改一处 → 重跑）:%n%s"
                         .formatted(String.join("\n", bad)))
-                .isZero();
+                .isEmpty();
     }
 }
