@@ -22,15 +22,56 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class LlmJudge {
 
+    static {
+        // 隧道直连（EVAL_LLM_INSECURE）时关闭 HttpClient 的强制主机名校验
+        if ("true".equalsIgnoreCase(System.getenv("EVAL_LLM_INSECURE"))) {
+            System.setProperty("jdk.internal.httpclient.disableHostnameVerification", "true");
+        }
+    }
+
     public record Verdict(double score, String reason, boolean judgeRan) {
     }
 
     private static final String BASE = System.getenv().getOrDefault("EVAL_LLM_BASE_URL", "https://your-openai-compatible-gateway.example/v1");
     private static final String MODEL = System.getenv().getOrDefault("EVAL_LLM_MODEL", "cn:deepseek-v4.1-flash");
     private static final String API_KEY = System.getenv("EVAL_LLM_API_KEY");
+    /** 经 SSH 隧道直连网关时（127.0.0.1 无公网证书），设置 EVAL_LLM_INSECURE=true 跳过证书校验（仅测试用）。 */
+    private static final boolean INSECURE = "true".equalsIgnoreCase(System.getenv("EVAL_LLM_INSECURE"));
 
-    private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build();
+    private final HttpClient http = buildClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static HttpClient buildClient() {
+        HttpClient.Builder b = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15));
+        if (INSECURE) {
+            try {
+                javax.net.ssl.SSLContext ctx = javax.net.ssl.SSLContext.getInstance("TLS");
+                ctx.init(null, new javax.net.ssl.TrustManager[]{new X509TrustAll()}, new java.security.SecureRandom());
+                b.sslContext(ctx);
+                javax.net.ssl.SSLParameters params = new javax.net.ssl.SSLParameters();
+                params.setEndpointIdentificationAlgorithm(null);
+                b.sslParameters(params);
+            } catch (Exception ignored) {
+                // 退化：按默认 TLS 处理
+            }
+        }
+        return b.build();
+    }
+
+    private static final class X509TrustAll implements javax.net.ssl.X509TrustManager {
+        @Override
+        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+        }
+
+        @Override
+        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+        }
+
+        @Override
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return new java.security.cert.X509Certificate[0];
+        }
+    }
 
     public boolean available() {
         return API_KEY != null && !API_KEY.isBlank();
@@ -66,7 +107,23 @@ public class LlmJudge {
                 .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))
                 .timeout(Duration.ofSeconds(60))
                 .build();
-        HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+        // 裁判基础设施故障（DNS/超时/断连）不得中断评估：重试 2 次后降级为「裁判跳过」
+        HttpResponse<String> resp = null;
+        Exception last = null;
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            try {
+                resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+                break;
+            } catch (Exception e) {
+                last = e;
+                if (attempt < 3) {
+                    Thread.sleep(3_000L * attempt);
+                }
+            }
+        }
+        if (resp == null) {
+            return new Verdict(0, "裁判网络不可用: " + (last == null ? "unknown" : last.getClass().getSimpleName()), false);
+        }
         if (resp.statusCode() / 100 != 2) {
             return new Verdict(0, "裁判调用失败 HTTP " + resp.statusCode(), false);
         }

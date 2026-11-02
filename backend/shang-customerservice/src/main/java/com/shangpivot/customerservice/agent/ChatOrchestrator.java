@@ -325,7 +325,7 @@ public class ChatOrchestrator {
                     + "」，单价 " + chosen.price() + " 元，本次加入 " + qty + " 台，购物车现有 " + added.quantity()
                     + " 台。告知用户已加购（引用本次数量），可到购物车结算；如还需其它商品可继续说）";
             auditService.record("tool_add_cart", CsAuditLog.RISK_LOW, session.getId(), session.getCustomerId(),
-                    Map.of("spuId", target.spuId(), "skuId", chosen.skuId(), "qty", added.quantity()));
+                    Map.of("spuId", target.spuId(), "skuId", chosen.skuId(), "qty", qty, "cartTotal", added.quantity()));
             List<Map<String, Object>> cards = List.of(cardMap(target, 1));
             return new Facts(text, cards, Map.of("sources", List.of("cart:" + chosen.skuId())));
         } catch (BizException e) {
@@ -354,6 +354,18 @@ public class ChatOrchestrator {
             String head = c.name().length() > 4 ? c.name().substring(0, 4) : c.name();
             if (text.contains(head) || (ref.length() >= 2 && c.name().contains(ref))) {
                 return c;
+            }
+        }
+        // 2.5) 用户点名了目录中的商品（如「那 iPhone 呢」）：按名字在目录里定位，优先于代词兜底
+        if (!text.isBlank()) {
+            List<RetrievalService.ProductHit> named = retrievalService.searchProducts(
+                    IntentRouter.extractKeyword(text), 2);
+            for (RetrievalService.ProductHit hit : named) {
+                String name = hit.card().name();
+                String head = name.length() > 4 ? name.substring(0, 4) : name;
+                if (text.contains(head) || (ref.length() >= 2 && name.contains(ref))) {
+                    return hit.card();
+                }
             }
         }
         // 3) 指代词或空：上文唯一则取唯一；多个上文 + 模糊指代 → null（反问用户，绝不拿垃圾检索凑数）
@@ -422,7 +434,7 @@ public class ChatOrchestrator {
         if (orderNo != null && !orderNo.isBlank()) {
             OrderTraceDTO t = orderQueryApi.getTrace(session.getCustomerId(), orderNo);
             if (t == null) {
-                return new Facts("（未找到订单 " + orderNo + "：如实告知，并提醒核对订单号）", List.of(), Map.of("sources", List.of()));
+                return new Facts("（未找到订单 " + orderNo + "：如实告知，并提醒核对订单号）", List.of(), Map.of("sources", List.of("order:" + orderNo)));
             }
             sb.append("订单 ").append(t.orderNo()).append("，状态 ").append(statusText(t.status()))
                     .append("，实付 ").append(t.payAmount() == null ? "-" : t.payAmount()).append(" 元");

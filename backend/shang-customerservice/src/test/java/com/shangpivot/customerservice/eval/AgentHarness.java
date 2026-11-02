@@ -23,29 +23,69 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class AgentHarness {
 
+    static {
+        // 评测机 DNS 可能抖动：解析结果缓存整场运行（1h），避免中途 UnresolvedAddressException
+        java.security.Security.setProperty("networkaddress.cache.ttl", "3600");
+        java.security.Security.setProperty("networkaddress.cache.negative.ttl", "0");
+    }
+
     public record TurnResult(String answer, List<Map<String, Object>> cards, List<String> sources,
                              boolean degraded, long promptTokens, long completionTokens, String sessionStatus) {
     }
 
     private static final String BASE = env("EVAL_TARGET_BASE_URL", "http://127.0.0.1:5174");
-    private static final String PHONE = env("EVAL_CUSTOMER_PHONE", "13900009999");
+    /** 评估专用顾客（可多账号轮换，规避 20 条/5 分钟对话限流；逗号分隔）。 */
+    private static final String[] PHONES = env("EVAL_CUSTOMER_PHONES",
+            env("EVAL_CUSTOMER_PHONE", "13900009999,13900009998")).split(",");
+    /** 可选代理（如 http://127.0.0.1:7890）；直连不稳定时设置。 */
+    private static final String PROXY = env("EVAL_HTTP_PROXY", "");
 
-    private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build();
+    private final HttpClient http = buildClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private String token;
     private Long sessionId;
 
-    /** 登录评估专用顾客（沙箱验证码固定 123456）并创建会话。 */
+    private static HttpClient buildClient() {
+        HttpClient.Builder b = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(20));
+        if (!PROXY.isBlank()) {
+            URI u = URI.create(PROXY);
+            b.proxy(java.net.ProxySelector.of(new java.net.InetSocketAddress(u.getHost(),
+                    u.getPort() == -1 ? 80 : u.getPort())));
+        }
+        return b.build();
+    }
+
+    /** 带重试的请求执行（网络超时/瞬断重试 2 次，间隔 5s；POST 重试仅在未建立流之前）。 */
+    private HttpResponse<String> sendPlain(HttpRequest req) throws IOException, InterruptedException {
+        IOException last = null;
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            try {
+                return http.send(req, HttpResponse.BodyHandlers.ofString());
+            } catch (java.net.http.HttpTimeoutException e) {
+                last = e;
+                Thread.sleep(5_000L * attempt);
+            } catch (IOException e) {
+                last = e;
+                Thread.sleep(3_000L * attempt);
+            }
+        }
+        throw last;
+    }
+
+    private static int phoneCursor = 0;
+
+    /** 登录评估专用顾客（沙箱验证码固定 123456，多账号轮换）并创建会话。 */
     public void start() throws IOException, InterruptedException {
+        String phone = PHONES[Math.floorMod(phoneCursor++, PHONES.length)].trim();
         String body = objectMapper.writeValueAsString(Map.of(
-                "phone", PHONE, "code", "123456", "clientType", "h5"));
+                "phone", phone, "code", "123456", "clientType", "h5"));
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create(BASE + "/api/auth/login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))
-                .timeout(Duration.ofSeconds(20))
+                .timeout(Duration.ofSeconds(60))
                 .build();
-        HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> resp = sendPlain(req);
         JsonNode node = objectMapper.readTree(resp.body());
         if (node.path("code").asInt(-1) != 0) {
             throw new IllegalStateException("评估顾客登录失败: " + resp.body());
@@ -57,9 +97,9 @@ public class AgentHarness {
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
                 .POST(HttpRequest.BodyPublishers.ofString("{}", StandardCharsets.UTF_8))
-                .timeout(Duration.ofSeconds(20))
+                .timeout(Duration.ofSeconds(60))
                 .build();
-        HttpResponse<String> resp2 = http.send(create, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> resp2 = sendPlain(create);
         JsonNode node2 = objectMapper.readTree(resp2.body());
         if (node2.path("code").asInt(-1) != 0) {
             throw new IllegalStateException("创建会话失败: " + resp2.body());
@@ -68,25 +108,38 @@ public class AgentHarness {
         clearCart();
     }
 
-    /** 评估前置清理：清空评估顾客购物车，保证用例可重复（加购叠加会污染数量断言）。 */
+    /** 评估前置清理：清空评估顾客购物车并验证为空（加购叠加会污染数量断言）。 */
     private void clearCart() throws IOException, InterruptedException {
-        HttpRequest get = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/api/cart"))
-                .header("Authorization", "Bearer " + token)
-                .GET().timeout(Duration.ofSeconds(20)).build();
-        HttpResponse<String> resp = http.send(get, HttpResponse.BodyHandlers.ofString());
-        JsonNode items = objectMapper.readTree(resp.body()).path("data").path("items");
-        for (JsonNode item : items) {
-            HttpRequest del = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE + "/api/cart/items/" + item.path("cartItemId").asText()))
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            HttpRequest get = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE + "/api/cart"))
                     .header("Authorization", "Bearer " + token)
-                    .DELETE().timeout(Duration.ofSeconds(20)).build();
-            http.send(del, HttpResponse.BodyHandlers.ofString());
+                    .GET().timeout(Duration.ofSeconds(60)).build();
+            HttpResponse<String> resp = sendPlain(get);
+            JsonNode items = objectMapper.readTree(resp.body()).path("data").path("items");
+            if (items.isEmpty()) {
+                return;
+            }
+            for (JsonNode item : items) {
+                HttpRequest del = HttpRequest.newBuilder()
+                        .uri(URI.create(BASE + "/api/cart/items/" + item.path("cartItemId").asText()))
+                        .header("Authorization", "Bearer " + token)
+                        .DELETE().timeout(Duration.ofSeconds(20)).build();
+                http.send(del, HttpResponse.BodyHandlers.ofString());
+            }
+            Thread.sleep(500);
         }
     }
 
-    /** 发送一轮消息并收集 SSE 结果（阶段一：只执行，不评判）。 */
+    /** 发送一轮消息并收集 SSE 结果（阶段一：只执行，不评判）。命中对话限流时自动等待一个窗口后重试一次。 */
     public TurnResult send(String content) throws IOException, InterruptedException {
+        return send(content, 0);
+    }
+
+    private TurnResult send(String content, int retries) throws IOException, InterruptedException {
+        if (retries > 2) {
+            throw new IllegalStateException("对话限流重试次数超限: " + content);
+        }
         String body = objectMapper.writeValueAsString(Map.of("content", content));
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create(BASE + "/api/chat/sessions/" + sessionId + "/messages"))
@@ -95,10 +148,33 @@ public class AgentHarness {
                 .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))
                 .timeout(Duration.ofSeconds(150))
                 .build();
-        HttpResponse<java.io.InputStream> resp = http.send(req, HttpResponse.BodyHandlers.ofInputStream());
+        // 连接阶段同样容忍评测机网络抖动（DNS 瞬断抛 UnresolvedAddressException，属运行时异常）
+        HttpResponse<java.io.InputStream> resp = null;
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            try {
+                resp = http.send(req, HttpResponse.BodyHandlers.ofInputStream());
+                break;
+            } catch (Exception e) {
+                if (attempt >= 3) {
+                    throw e instanceof IOException io ? io : new IOException(e);
+                }
+                Thread.sleep(4_000L * attempt);
+            }
+        }
         if (resp.statusCode() != 200) {
             String err = new String(resp.body().readAllBytes(), StandardCharsets.UTF_8);
             throw new IllegalStateException("发送失败 " + resp.statusCode() + ": " + abbreviate(err));
+        }
+        // 全局异常处理器返回 HTTP 200 + JSON（如 40000 限流）：不是 SSE 事件流
+        String contentType = resp.headers().firstValue("content-type").orElse("");
+        if (contentType.contains("application/json")) {
+            String err = new String(resp.body().readAllBytes(), StandardCharsets.UTF_8);
+            if (err.contains("发送太频繁")) {
+                // 固定窗口 5 分钟：等待窗口滑过后重试（最多 2 次）
+                Thread.sleep(120_000);
+                return send(content, retries + 1);
+            }
+            throw new IllegalStateException("发送失败（业务错误）: " + abbreviate(err));
         }
         StringBuilder answer = new StringBuilder();
         List<Map<String, Object>> cards = new ArrayList<>();
@@ -142,6 +218,21 @@ public class AgentHarness {
 
     private static String abbreviate(String s) {
         return s.length() > 200 ? s.substring(0, 200) + "..." : s;
+    }
+
+    /** 读取购物车终态（参数正确性断言用）：title -> quantity。 */
+    public Map<String, Integer> cartState() throws IOException, InterruptedException {
+        HttpRequest get = HttpRequest.newBuilder()
+                .uri(URI.create(BASE + "/api/cart"))
+                .header("Authorization", "Bearer " + token)
+                .GET().timeout(Duration.ofSeconds(60)).build();
+        HttpResponse<String> resp = sendPlain(get);
+        JsonNode items = objectMapper.readTree(resp.body()).path("data").path("items");
+        Map<String, Integer> state = new java.util.LinkedHashMap<>();
+        for (JsonNode item : items) {
+            state.merge(item.path("title").asText(), item.path("quantity").asInt(0), Integer::sum);
+        }
+        return state;
     }
 
     static String env(String key, String def) {

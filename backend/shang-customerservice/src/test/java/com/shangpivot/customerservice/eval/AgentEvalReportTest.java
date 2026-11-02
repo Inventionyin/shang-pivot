@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +36,6 @@ class AgentEvalReportTest {
         List<GoldenCase> cases = GoldenDataset.all();
         AgentHarness harness = new AgentHarness();
         LlmJudge judge = new LlmJudge();
-        harness.start();
 
         List<CaseResult> results = new ArrayList<>();
         for (GoldenCase gc : cases) {
@@ -62,6 +62,8 @@ class AgentEvalReportTest {
     }
 
     private CaseResult runCase(AgentHarness harness, GoldenCase gc) throws IOException, InterruptedException {
+        // 用例隔离（教程：每个用例独立、可重复）：独立会话 + 账号轮换 + 清空购物车
+        harness.start();
         List<AgentHarness.TurnResult> turns = new ArrayList<>();
         List<String> failures = new ArrayList<>();
         AgentHarness.TurnResult last = null;
@@ -106,6 +108,29 @@ class AgentEvalReportTest {
                 failures.add("禁止模式: 出现 '" + p + "'");
             }
         }
+        // 步骤效率：sources 数量上限（防冗余工具/检索调用）
+        if (gc.maxSourceCount() != null && last.sources().size() > gc.maxSourceCount()) {
+            failures.add("步骤效率: sources " + last.sources().size() + " 超过上限 " + gc.maxSourceCount());
+        }
+        // 参数正确性：加购类用例校验购物车终态（title 片段 + 精确数量 + 无多余商品）
+        if (!gc.expectedCart().isEmpty()) {
+            Map<String, Integer> cart = harness.cartState();
+            for (GoldenCase.CartExpect expect : gc.expectedCart()) {
+                Integer qty = cart.entrySet().stream()
+                        .filter(e -> e.getKey().contains(expect.titleFragment()))
+                        .mapToInt(java.util.Map.Entry::getValue).sum();
+                if (qty != expect.quantity()) {
+                    failures.add("参数正确性: 购物车 '" + expect.titleFragment() + "' 期望 " + expect.quantity()
+                            + " 实际 " + qty + "（终态 " + cart + "）");
+                }
+            }
+            long unexpected = cart.keySet().stream()
+                    .filter(title -> gc.expectedCart().stream().noneMatch(e -> title.contains(e.titleFragment())))
+                    .count();
+            if (unexpected > 0) {
+                failures.add("参数正确性: 购物车出现 " + unexpected + " 项非预期商品（" + cart.keySet() + "）");
+            }
+        }
         // 降级应答视为失败（除非用例本身验证降级）
         if (last.degraded()) {
             failures.add("本次为降级应答（LLM 不可用或超时），评估无效");
@@ -118,7 +143,7 @@ class AgentEvalReportTest {
         md.append("# 智能客服 Golden 评估报告\n\n");
         md.append("- 用例数：").append(results.size()).append('\n');
         md.append("- 裁判：").append(judgeAvailable ? "已启用（GEval-lite）" : "未启用（缺 EVAL_LLM_API_KEY，仅确定性断言）").append('\n');
-        md.append("\n## 汇总\n\n| 用例 | 结果 | 裁判分 | 判词/失败原因 |\n|---|---|---|---|\n");
+        md.append("\n## 汇总\n\n| 用例 | 结果 | 裁判分 | sources | 判词/失败原因 |\n|---|---|---|---|---|\n");
         int pass = 0;
         double scoreSum = 0;
         int scoreCount = 0;
@@ -132,9 +157,11 @@ class AgentEvalReportTest {
                 scoreSum += r.judgeScore();
                 scoreCount++;
             }
+            String sources = r.turns().isEmpty() ? "-" : String.valueOf(r.turns().get(r.turns().size() - 1).sources().size());
             md.append("| ").append(r.gc().id())
                     .append(" | ").append(ok ? "✅" : "❌")
                     .append(" | ").append(r.judgeScore() == null ? "-" : String.format("%.2f", r.judgeScore()))
+                    .append(" | ").append(sources)
                     .append(" | ").append(r.failures().isEmpty() ? r.judgeReason() == null ? "-" : r.judgeReason()
                             : String.join("<br>", r.failures()))
                     .append(" |\n");
