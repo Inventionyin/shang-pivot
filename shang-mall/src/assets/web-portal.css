@@ -48,7 +48,9 @@
 .mall.is-web .mall-main {
   max-width: var(--portal-max);
   margin: 0 auto;
-  padding: 0 24px 48px;
+  /* 右侧固定快捷入口（52px 宽 + 16px 边距 + 间隙）会遮挡页面右侧按钮（如地址页“新增”），
+     预留 88px 安全区，避免真实用户点击被拦截。 */
+  padding: 0 88px 48px 24px;
 }
 
 .mall.is-web .page {
