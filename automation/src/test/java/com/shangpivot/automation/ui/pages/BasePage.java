@@ -38,6 +38,17 @@ public abstract class BasePage {
                 new PageAssertions.HasURLOptions().setTimeout(30_000));
     }
 
+    /** 非断言式等待 URL 片段（用于需要容错重试的场景，如 Vite 依赖预构建触发整页刷新）。 */
+    public boolean waitForPath(String fragment, double timeoutMs) {
+        try {
+            page().waitForURL(Pattern.compile(".*" + fragment + ".*"),
+                    new com.microsoft.playwright.Page.WaitForURLOptions().setTimeout(timeoutMs));
+            return true;
+        } catch (com.microsoft.playwright.TimeoutError e) {
+            return false;
+        }
+    }
+
     protected Locator popup(String title) {
         return page().locator(".pop-panel")
                 .filter(new Locator.FilterOptions().setHasText(title)).last();

@@ -99,6 +99,13 @@ public class MallCheckoutUiSteps {
         MallCartPage cartPage = new MallCartPage(session());
         cartPage.openCart();
         cartPage.clickCheckout();
+        // Vite dev 首次加载懒路由 /checkout 时会预构建新依赖并整页刷新，刷新会中断
+        // 正在进行的路由跳转（URL 仍停在 /cart）。刷新后重新进入购物车再点一次即可；
+        // 生产构建无依赖预构建，不存在该行为。
+        if (!cartPage.waitForPath("/checkout", 5_000)) {
+            cartPage.openCart();
+            cartPage.clickCheckout();
+        }
         new MallCheckoutPage(session()).expectOnCheckout();
     }
 
