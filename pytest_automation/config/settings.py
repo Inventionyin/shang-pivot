@@ -65,11 +65,12 @@ class Settings:
             self._data = yaml.safe_load(f) or {}
 
     # ---------- 接口地址 ----------
+    # 注意：SHANG_MALL_BASE_URL / SHANG_ADMIN_BASE_URL 是前端地址，后端 API 是 SHANG_API_BASE_URL
     @property
     def api_mall_base(self) -> str:
         return (
             os.getenv("MALL_BASE_URL")
-            or os.getenv("SHANG_MALL_BASE_URL")
+            or os.getenv("SHANG_API_BASE_URL")
             or (self._data.get("api") or {}).get("mall_base")
             or "http://127.0.0.1:8086"
         ).rstrip("/")
@@ -78,7 +79,7 @@ class Settings:
     def api_admin_base(self) -> str:
         return (
             os.getenv("ADMIN_BASE_URL")
-            or os.getenv("SHANG_ADMIN_BASE_URL")
+            or os.getenv("SHANG_API_BASE_URL")
             or (self._data.get("api") or {}).get("admin_base")
             or "http://127.0.0.1:8086"
         ).rstrip("/")
@@ -88,6 +89,7 @@ class Settings:
     def ui_mall_url(self) -> str:
         return (
             os.getenv("UI_MALL_URL")
+            or os.getenv("SHANG_MALL_BASE_URL")
             or (self._data.get("ui") or {}).get("mall_url")
             or self.api_mall_base
         ).rstrip("/")
@@ -96,6 +98,7 @@ class Settings:
     def ui_admin_url(self) -> str:
         return (
             os.getenv("UI_ADMIN_URL")
+            or os.getenv("SHANG_ADMIN_BASE_URL")
             or (self._data.get("ui") or {}).get("admin_url")
             or self.api_admin_base
         ).rstrip("/")
