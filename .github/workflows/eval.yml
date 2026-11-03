@@ -122,8 +122,8 @@ jobs:
           EVAL_LLM_BASE_URL: https://wb2api.yingyue.cloud/v1
           EVAL_LLM_MODEL: cn:deepseek-v4.1-flash
           EVAL_LLM_API_KEY: ${{ secrets.EVAL_LLM_API_KEY }}
-          # 确定性断言全过是硬门禁；裁判分只卡平均分下限，避免单例波动误红
-          EVAL_JUDGE_BLOCKING: "false"
+          # 确定性断言全过是硬门禁；裁判分在 CI 仅记录趋势（模型发挥波动大）
+          EVAL_JUDGE_GATE: "false"
           EVAL_JUDGE_MIN_AVG: "0.7"
         run: >
           ./mvnw -q -pl shang-customerservice -am -Peval

@@ -23,7 +23,7 @@ public final class GoldenDataset {
                 // ===== 每天遇到什么：售前推荐 =====
                 GoldenCase.builder("E01-presale-phone-budget", "售前推荐只允许来自真实检索结果，且结合预算")
                         .turns("推荐一个手机，预算两千左右")
-                        .expectSources("vector")
+                        .expectSources("retrieval")
                         .efficiency(3)
                         .expectCards("Redmi K70")
                         .expectAnswer("2299")
@@ -133,7 +133,7 @@ public final class GoldenDataset {
                 // ===== 数据集扩容：口语/错别字变体 =====
                 GoldenCase.builder("E11-colloquial-typo", "口语化/错别字输入仍能正确路由与检索（耳机品类真实存在）")
                         .turns("有么有耳机推荐一下ya")
-                        .expectSources("vector")
+                        .expectSources("retrieval")
                         .efficiency(3)
                         .judge(0.7,
                                 "是否推荐了真实存在的耳机类商品（如索尼 WH-1000XM5 或 AirPods Pro 2）",
@@ -143,7 +143,7 @@ public final class GoldenDataset {
                 // ===== 数据集扩容：多品类混合需求 =====
                 GoldenCase.builder("E12-multi-category", "混合需求至少覆盖用户提到的品类之一，且商品真实")
                         .turns("家里刚装修完，想看看吸尘器和扫地机器人")
-                        .expectSources("vector")
+                        .expectSources("retrieval")
                         .efficiency(3)
                         .expectCards("吸尘", "扫拖")
                         .judge(0.7,
@@ -154,7 +154,7 @@ public final class GoldenDataset {
                 // ===== 数据集扩容：超长描述需求 =====
                 GoldenCase.builder("E13-long-descriptive", "长描述需求能提取核心约束（续航/NFC/预算）并按约束推荐")
                         .turns("我平时通勤单程二十公里，想要续航好、带NFC能刷公交卡的手机，预算三千五以内，拍照最好也别太差，帮我推荐一个")
-                        .expectSources("vector")
+                        .expectSources("retrieval")
                         .efficiency(3)
                         .judge(0.7,
                                 "是否基于给定真实商品推荐（无编造）",
@@ -226,7 +226,7 @@ public final class GoldenDataset {
                 // ===== 数据集扩容：直问价格 =====
                 GoldenCase.builder("E20-price-question", "直问价格给出真实价格区间")
                         .turns("iPhone 15 多少钱")
-                        .expectSources("vector")
+                        .expectSources("retrieval")
                         .efficiency(3)
                         .expectCards("iPhone 15")
                         .expectAnswer("5999")

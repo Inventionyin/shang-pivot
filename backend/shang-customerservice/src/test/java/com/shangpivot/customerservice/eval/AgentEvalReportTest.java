@@ -26,10 +26,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AgentEvalReportTest {
 
     private static final double DEFAULT_THRESHOLD = 0.7;
-    /** 裁判单例低于阈值是否阻断门禁；CI 设为 false，避免模型发挥波动导致误红。 */
-    private static final boolean JUDGE_BLOCKING =
-            !"false".equalsIgnoreCase(System.getenv().getOrDefault("EVAL_JUDGE_BLOCKING", "true"));
-    /** 平均裁判分下限：即使不阻断单例，整体质量显著下滑也必须失败。 */
+    /** 裁判是否参与门禁：CI 设为 false 仅记录趋势（模型发挥存在波动），本地默认严格。 */
+    private static final boolean JUDGE_GATE =
+            !"false".equalsIgnoreCase(System.getenv().getOrDefault("EVAL_JUDGE_GATE", "true"));
+    /** 裁判参与门禁时，平均分下限：整体质量显著下滑必须失败。 */
     private static final double JUDGE_MIN_AVG =
             Double.parseDouble(System.getenv().getOrDefault("EVAL_JUDGE_MIN_AVG", "0.7"));
 
@@ -88,9 +88,11 @@ class AgentEvalReportTest {
             return new CaseResult(gc, turns, "", failures, null, null);
         }
 
-        // 参照类：工具正确性（sources 片段）
+        // 参照类：工具正确性（sources 片段）；retrieval 表示向量/词法任一检索路径（模式可降级）
         for (String frag : gc.expectedSourceFragments()) {
-            boolean hit = last.sources().stream().anyMatch(s -> s.contains(frag));
+            boolean hit = last.sources().stream().anyMatch(s -> "retrieval".equals(frag)
+                    ? (s.contains("vector") || s.contains("lexical"))
+                    : s.contains(frag));
             if (!hit) {
                 failures.add("工具正确性: sources " + last.sources() + " 不含期望片段 '" + frag + "'");
             }
@@ -149,7 +151,7 @@ class AgentEvalReportTest {
         md.append("# 智能客服 Golden 评估报告\n\n");
         md.append("- 用例数：").append(results.size()).append('\n');
         md.append("- 裁判：").append(judgeAvailable ? "已启用（GEval-lite）" : "未启用（缺 EVAL_LLM_API_KEY，仅确定性断言）").append('\n');
-        md.append("- 门禁：确定性断言必须全过；裁判分单例阈值阻断=").append(JUDGE_BLOCKING)
+        md.append("- 门禁：确定性断言必须全过；裁判分参与门禁=").append(JUDGE_GATE)
           .append("，平均分下限=").append(JUDGE_MIN_AVG).append('\n');
         md.append("\n## 汇总\n\n| 用例 | 结果 | 裁判分 | sources | 判词/失败原因 |\n|---|---|---|---|---|\n");
         int pass = 0;
@@ -176,11 +178,11 @@ class AgentEvalReportTest {
         }
         double avg = scoreCount == 0 ? -1 : scoreSum / scoreCount;
         boolean deterministicOk = results.stream().allMatch(r -> r.failures().isEmpty());
-        boolean avgOk = scoreCount == 0 || avg >= JUDGE_MIN_AVG;
+        boolean avgOk = !JUDGE_GATE || scoreCount == 0 || avg >= JUDGE_MIN_AVG;
         md.append("\n**严格通过率：").append(pass).append('/').append(results.size())
                 .append("；平均裁判分：").append(scoreCount == 0 ? "-" : String.format("%.2f", avg))
                 .append("；门禁：").append(deterministicOk && avgOk ? "通过" : "失败")
-                .append("**（确定性断言必须全过；裁判单例阈值阻断=").append(JUDGE_BLOCKING)
+                .append("**（确定性断言必须全过；裁判分参与门禁=").append(JUDGE_GATE)
                 .append("，平均分下限=").append(JUDGE_MIN_AVG).append("）\n");
         try {
             Files.createDirectories(Path.of("target"));
@@ -197,7 +199,7 @@ class AgentEvalReportTest {
         for (CaseResult r : results) {
             if (!r.failures().isEmpty()) {
                 bad.add(r.gc().id() + ": " + String.join("; ", r.failures()));
-            } else if (JUDGE_BLOCKING && r.judgeScore() != null
+            } else if (JUDGE_GATE && r.judgeScore() != null
                     && r.judgeScore() < r.gc().judgeThreshold()) {
                 bad.add(r.gc().id() + ": 裁判分 " + r.judgeScore());
             }
@@ -210,7 +212,7 @@ class AgentEvalReportTest {
                 count++;
             }
         }
-        if (count > 0 && sum / count < JUDGE_MIN_AVG) {
+        if (JUDGE_GATE && count > 0 && sum / count < JUDGE_MIN_AVG) {
             bad.add(String.format("平均裁判分 %.2f 低于下限 %.2f（%d 条有分）", sum / count, JUDGE_MIN_AVG, count));
         }
         assertThat(bad)

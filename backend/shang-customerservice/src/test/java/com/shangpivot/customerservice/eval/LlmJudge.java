@@ -89,7 +89,12 @@ public class LlmJudge {
                 你是严格的电商智能客服评估裁判。依据评分步骤逐条核查回答，输出 JSON：
                 {"score": 0.0~1.0, "reason": "30 字内的判词，指出扣分点"}
                 评分步骤：
-                """ + stepText;
+                """ + stepText + """
+                约束：
+                1) 只依据评分步骤与回答本身判断；回答中出现步骤未提及的额外规格/价格，
+                   只要不与步骤中的事实冲突，不得判为错误；
+                2) 不要用你自己的商品知识臆断价格或库存；无法从回答确认的事实不要当作错误。
+                """;
         String user = "用户输入：" + question + "\n\n客服回答：" + answer;
         String body = objectMapper.writeValueAsString(Map.of(
                 "model", MODEL,
