@@ -92,7 +92,11 @@ public class IntentRouter {
             return make(Type.ORDER, message, no, 1);
         }
         // SPECS / ADDCART 强特征词（它们可能不带商品名，依赖会话上下文）
-        if (message.matches(".*(加购|加入购物车|来一[单份个]|直接拍|就?要?(这个|那个|它|这款)[了嘛吧]|给我来|下单买).*")) {
+        // 数量表达（来两台/再加一件/拿三个）也是加购强特征；句首数量短句单独匹配，避免误伤“来一台手机推荐”
+        boolean addcart = message.matches(".*(加购|加入购物车|来一[单份个]|直接拍|就?要?(这个|那个|它|这款)[了嘛吧]|给我(来|拿|加)|下单买|再来|再加|加[一二两三四五六七八九十\\d]+[台个件份套部]).*")
+                || (message.matches("^\\s*(来|要|加|拿)[一二两三四五六七八九十\\d]+[台个件份套部].*")
+                    && !message.matches(".*(推荐|介绍|看看|哪款|什么|怎么选).*"));
+        if (addcart) {
             return make(Type.ADDCART, message, no, extractQty(message));
         }
         if (message.matches(".*(规格|参数|配置|颜色|配色|尺寸|型号|版本|几个版本|有货|有没有货|库存|多大|多重).*")) {
@@ -114,10 +118,11 @@ public class IntentRouter {
             }
         }
         String[] cn = {"一", "两", "二", "三", "四", "五"};
+        int[] qty = {1, 2, 2, 3, 4, 5};
         for (int i = 0; i < cn.length; i++) {
             if (message.contains("来" + cn[i]) || message.contains("买" + cn[i]) || message.contains(cn[i] + "个")
                     || message.contains(cn[i] + "台") || message.contains(cn[i] + "件")) {
-                return i == 2 ? 2 : Math.min(i + 1, 5);
+                return qty[i];
             }
         }
         return 1;

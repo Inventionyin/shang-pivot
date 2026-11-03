@@ -62,4 +62,25 @@ class IntentRouterTest {
         assertThat(intent.type()).isEqualTo(IntentRouter.Type.PRESALE);
         assertThat(intent.keyword()).doesNotContain("我想买");
     }
+
+    @Test
+    void 数量短句走加购意图并解析中文数量() {
+        var intent = router.route("来两台");
+        assertThat(intent.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(intent.quantity()).isEqualTo(2);
+        assertThat(intent.byRule()).isTrue();
+    }
+
+    @Test
+    void 再来与拿三个同样识别为加购() {
+        assertThat(router.route("再来一件").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        var intent = router.route("拿三个");
+        assertThat(intent.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(intent.quantity()).isEqualTo(3);
+    }
+
+    @Test
+    void 句首数量但带推荐语义时不误判加购() {
+        assertThat(router.route("来一台手机推荐").type()).isEqualTo(IntentRouter.Type.PRESALE);
+    }
 }
