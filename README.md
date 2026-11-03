@@ -5,6 +5,7 @@
 
 [![CI](https://github.com/Inventionyin/shang-pivot/actions/workflows/ci.yml/badge.svg)](https://github.com/Inventionyin/shang-pivot/actions/workflows/ci.yml)
 [![e2e](https://github.com/Inventionyin/shang-pivot/actions/workflows/e2e.yml/badge.svg)](https://github.com/Inventionyin/shang-pivot/actions/workflows/e2e.yml)
+[![eval](https://github.com/Inventionyin/shang-pivot/actions/workflows/eval.yml/badge.svg)](https://github.com/Inventionyin/shang-pivot/actions/workflows/eval.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **在线体验**：商城 <https://shang.bettery.cn>（手机号 `13900009999`，验证码 `123456`）· 管理端 <https://admin.bettery.cn>（`admin` / `Admin@123`）
@@ -92,7 +93,7 @@
 - **工具集**：商品检索（bge-m3 向量 + 词法自动降级）、SKU 规格与库存、订单/物流查询、**对话内加购**
 - **转人工与运营**：坐席工作台（接入/回复/转接/结束）、客服工单、知识库（切片+向量化重建）、快捷回复、服务看板
 - **安全护栏**：用户级对话限流、会话生成互斥、邮箱验证码防爆破、PII 掩码、注入检测、AI 生成标识、全量审计
-- **评估层**：20 条 Golden 业务用例 + 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 触发（通过率 20/20）；另有 823 条夜间全量回归（API + UI 双浏览器，0 失败）与 74 条 e2e 浏览器用例
+- **评估层**：20 条 Golden 业务用例 + 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 或每周 CI 自动运行（确定性断言硬门禁 20/20，裁判均分 ~0.9 作为趋势信号）；另有 823 条夜间全量回归（API + UI 双浏览器，0 失败）与 74 条 e2e 浏览器用例
 - 设计主源见 [`docs/03-ai/customer-service-智能客服.md`](docs/03-ai/customer-service-智能客服.md)
 
 ---
