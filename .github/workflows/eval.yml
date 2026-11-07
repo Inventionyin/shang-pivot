@@ -63,6 +63,9 @@ jobs:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
       MINIO_BUCKET_NAME: shang-pivot
+      # V3.1 图编排（与生产一致）；回退时改 legacy
+      AGENT_ENGINE: graph
+      AGENT_LLM_CLIENT: legacy
       # 执行模型（被测 Agent）：V24 已清空 DB 里的占位符，环境变量才会生效
       LLM_BASE_URL: https://wb2api.yingyue.cloud/v1
       LLM_MODEL: cn:deepseek-v4.1-flash
@@ -114,11 +117,13 @@ jobs:
             -H "Authorization: Bearer $TOKEN" \
             -H 'Content-Type: application/json' -d '{"full":true}'; echo
 
-      - name: Golden 评估（20 用例 + 裁判）
+      - name: Golden 评估（50 用例 + graph 路径 + 裁判趋势）
         working-directory: backend
         env:
           EVAL_TARGET_BASE_URL: http://127.0.0.1:8086
-          EVAL_CUSTOMER_PHONES: "13900009999,13900009998"
+          # 3 个评估账号轮换，避免 20 条/5 分钟的用户级限流
+          EVAL_CUSTOMER_PHONES: "13900009999,13900009998,13900009997"
+          EVAL_DATASET_VERSION: "v31-50"
           EVAL_LLM_BASE_URL: https://wb2api.yingyue.cloud/v1
           EVAL_LLM_MODEL: cn:deepseek-v4.1-flash
           EVAL_LLM_API_KEY: ${{ secrets.EVAL_LLM_API_KEY }}

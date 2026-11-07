@@ -6,8 +6,11 @@ import { formatPrice } from '@/utils/format'
 import { resolveMediaUrl } from '@/utils/media'
 import {
   type ChatMessage,
+  type ChatPendingAction,
   type ChatProductCard,
   type ChatSessionBrief,
+  cancelChatAction,
+  confirmChatAction,
   createSession,
   escalate,
   listMessages,
@@ -16,6 +19,13 @@ import {
 } from '@/api/chat'
 
 const { isH5, isWeb } = useClientType()
+
+type ActionStatus = 'PENDING' | 'SUBMITTING' | 'CONFIRMED' | 'CANCELLED' | 'FAILED'
+
+interface BubbleAction extends ChatPendingAction {
+  status?: ActionStatus
+  resultText?: string
+}
 
 interface Bubble {
   key: string
@@ -27,6 +37,8 @@ interface Bubble {
   degraded?: boolean
   streaming?: boolean
   seatName?: string
+  stateLabel?: string
+  action?: BubbleAction
 }
 
 const sessionId = ref<string | number>('')
@@ -205,8 +217,18 @@ async function send(text?: string) {
         pending.cards = items
         void scrollBottom()
       },
+      onState: (payload) => {
+        const label = payload.label || STATE_FALLBACK_LABELS[payload.state || ''] || ''
+        if (label) pending.stateLabel = label
+        void scrollBottom()
+      },
+      onAction: (payload) => {
+        pending.action = { ...payload, status: 'PENDING' }
+        void scrollBottom()
+      },
       onDone: (payload) => {
         pending.streaming = false
+        pending.stateLabel = undefined
         if (!received && !pending.content) {
           pending.content = payload.degraded ? '智能助手暂时繁忙，请稍后再试~' : '（本次没有生成回答，请重试）'
         }
@@ -216,11 +238,13 @@ async function send(text?: string) {
       },
       onError: (payload) => {
         pending.streaming = false
+        pending.stateLabel = undefined
         pending.content = pending.content || payload.msg || '服务开小差了，请重试'
         void scrollBottom()
       },
       onNetworkError: (msg) => {
         pending.streaming = false
+        pending.stateLabel = undefined
         pending.content = pending.content || msg
         errorMsg.value = msg
         void scrollBottom()
@@ -229,8 +253,119 @@ async function send(text?: string) {
     abort.signal,
   )
   pending.streaming = false
+  pending.stateLabel = undefined
   sending.value = false
   abort = null
+}
+
+const STATE_FALLBACK_LABELS: Record<string, string> = {
+  ROUTING: '正在理解您的问题…',
+  TOOL_CALLING: '正在处理，请稍候…',
+  ANSWERING: '正在生成回答…',
+}
+
+const TOOL_LABELS: Record<string, string> = {
+  cancelOrder: '取消订单',
+  createOrder: '提交订单',
+  confirmOrder: '确认收货',
+  payOrder: '支付订单',
+  applyAfterSale: '申请售后',
+  addToCart: '加入购物车',
+  updateAddress: '修改地址',
+}
+
+function toolLabel(tool: string): string {
+  return TOOL_LABELS[tool] || tool
+}
+
+function formatExpiry(value?: string): string {
+  if (!value) return ''
+  const ts = Date.parse(value)
+  if (Number.isNaN(ts)) return value
+  const d = new Date(ts)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+/** 记录当前卡片正在提交哪类操作，用于按钮文案展示 */
+const actionBusy = ref<Record<string, 'confirm' | 'cancel'>>({})
+
+function isActionLocked(b: Bubble): boolean {
+  const st = b.action?.status
+  return st === 'SUBMITTING' || st === 'CONFIRMED' || st === 'CANCELLED'
+}
+
+function actionStatusText(b: Bubble): string {
+  switch (b.action?.status) {
+    case 'CONFIRMED':
+      return '已确认'
+    case 'CANCELLED':
+      return '已取消'
+    case 'FAILED':
+      return '执行失败'
+    default:
+      return ''
+  }
+}
+
+function errorText(err: unknown, fallback: string): string {
+  if (err && typeof err === 'object') {
+    const e = err as { msg?: unknown; message?: unknown }
+    if (typeof e.msg === 'string' && e.msg) return e.msg
+    if (typeof e.message === 'string' && e.message) return e.message
+  }
+  return fallback
+}
+
+async function confirmAction(b: Bubble) {
+  const action = b.action
+  if (!action || isActionLocked(b)) return
+  actionBusy.value[b.key] = 'confirm'
+  action.status = 'SUBMITTING'
+  errorMsg.value = ''
+  try {
+    const res = await confirmChatAction(sessionId.value, action.actionId)
+    const message = res.data?.message
+    action.status = 'CONFIRMED'
+    action.resultText = message || '已执行'
+    if (!message) {
+      bubbles.value.push({
+        key: nextKey(),
+        role: 'ASSISTANT',
+        content: `已为您执行：${action.summary}`,
+      })
+    }
+    await scrollBottom()
+  } catch (err) {
+    action.status = 'FAILED'
+    action.resultText = '执行失败'
+    errorMsg.value = errorText(err, '操作执行失败，请稍后重试')
+    void scrollBottom()
+  } finally {
+    delete actionBusy.value[b.key]
+  }
+}
+
+async function cancelAction(b: Bubble) {
+  const action = b.action
+  if (!action || isActionLocked(b)) return
+  actionBusy.value[b.key] = 'cancel'
+  action.status = 'SUBMITTING'
+  errorMsg.value = ''
+  try {
+    await cancelChatAction(sessionId.value, action.actionId)
+    action.status = 'CANCELLED'
+    action.resultText = '已取消'
+    bubbles.value.push({ key: nextKey(), role: 'ASSISTANT', content: '已取消该操作' })
+    await scrollBottom()
+  } catch (err) {
+    action.status = 'FAILED'
+    action.resultText = '取消失败'
+    errorMsg.value = errorText(err, '取消操作失败，请稍后重试')
+    void scrollBottom()
+  } finally {
+    delete actionBusy.value[b.key]
+  }
 }
 
 async function toggleEscalate() {
@@ -292,32 +427,76 @@ function statusLabel(item: ChatSessionBrief): string {
           <Sparkles v-if="b.role === 'ASSISTANT'" :size="17" :stroke-width="2.2" />
           <Headset v-else :size="17" :stroke-width="2.2" />
         </span>
-        <div class="bubble" :class="{ 'bubble--degraded': b.degraded }">
-          <div v-if="b.degraded" class="degraded-tip">智能助手暂时繁忙，以下为兜底建议</div>
-          <details v-if="b.reasoning" class="reasoning">
-            <summary>思考中…（点击展开思考过程）</summary>
-            <pre>{{ b.reasoning }}</pre>
-          </details>
-          <div v-if="b.content || !b.streaming" class="content">{{ b.content }}</div>
-          <div v-else-if="!b.reasoning" class="content typing"><span />思考中…</div>
-          <div v-if="b.cards?.length" class="cards">
-            <RouterLink v-for="c in b.cards" :key="c.spuId" class="card" :to="`/product/${c.spuId}`">
-              <div class="card__pic">
-                <img v-if="c.pic" :src="resolveMediaUrl(c.pic)" :alt="c.name" />
-                <span v-else class="card__placeholder">暂无图片</span>
-              </div>
-              <div class="card__body">
-                <div class="card__name">{{ c.name }}</div>
-                <div v-if="c.subtitle" class="card__sub">{{ c.subtitle }}</div>
-                <div class="card__meta">
-                  <span class="price">¥{{ formatPrice(c.price) }}<template v-if="c.priceMax"> 起</template></span>
-                  <span v-if="c.soldCount != null" class="sold">{{ c.soldCount }} 人付款</span>
+        <div class="bubble-wrap">
+          <div class="bubble" :class="{ 'bubble--degraded': b.degraded }">
+            <div v-if="b.degraded" class="degraded-tip">智能助手暂时繁忙，以下为兜底建议</div>
+            <details v-if="b.reasoning" class="reasoning">
+              <summary>思考中…（点击展开思考过程）</summary>
+              <pre>{{ b.reasoning }}</pre>
+            </details>
+            <div v-if="b.content || !b.streaming" class="content">{{ b.content }}</div>
+            <div v-else-if="!b.reasoning" class="content typing"><span />思考中…</div>
+            <div v-if="b.cards?.length" class="cards">
+              <RouterLink v-for="c in b.cards" :key="c.spuId" class="card" :to="`/product/${c.spuId}`">
+                <div class="card__pic">
+                  <img v-if="c.pic" :src="resolveMediaUrl(c.pic)" :alt="c.name" />
+                  <span v-else class="card__placeholder">暂无图片</span>
                 </div>
-              </div>
-            </RouterLink>
+                <div class="card__body">
+                  <div class="card__name">{{ c.name }}</div>
+                  <div v-if="c.subtitle" class="card__sub">{{ c.subtitle }}</div>
+                  <div class="card__meta">
+                    <span class="price">¥{{ formatPrice(c.price) }}<template v-if="c.priceMax"> 起</template></span>
+                    <span v-if="c.soldCount != null" class="sold">{{ c.soldCount }} 人付款</span>
+                  </div>
+                </div>
+              </RouterLink>
+            </div>
+            <div v-if="b.role === 'AGENT'" class="agent-tag">人工客服{{ b.seatName ? ` · ${b.seatName}` : '' }}</div>
+            <div v-else-if="b.role === 'ASSISTANT' && b.content" class="ai-gen-tag">AI 生成</div>
           </div>
-          <div v-if="b.role === 'AGENT'" class="agent-tag">人工客服{{ b.seatName ? ` · ${b.seatName}` : '' }}</div>
-          <div v-else-if="b.role === 'ASSISTANT' && b.content" class="ai-gen-tag">AI 生成</div>
+
+          <div v-if="b.stateLabel" class="state-label">{{ b.stateLabel }}</div>
+
+          <div
+            v-if="b.action"
+            class="action-card"
+            :class="`action-card--${(b.action.status || 'PENDING').toLowerCase()}`"
+          >
+            <div class="action-card__head">
+              <span class="action-card__tool">{{ toolLabel(b.action.tool) }}</span>
+              <span
+                v-if="actionStatusText(b)"
+                class="action-card__status"
+                :class="{ 'action-card__status--failed': b.action.status === 'FAILED' }"
+              >
+                {{ actionStatusText(b) }}
+              </span>
+            </div>
+            <div class="action-card__summary">{{ b.action.summary }}</div>
+            <div v-if="b.action.expiresAt" class="action-card__expiry">
+              操作有效期至 {{ formatExpiry(b.action.expiresAt) }}，请及时处理
+            </div>
+            <div class="action-card__actions">
+              <button
+                type="button"
+                class="action-btn action-btn--ghost"
+                :disabled="isActionLocked(b)"
+                @click="cancelAction(b)"
+              >
+                {{ actionBusy[b.key] === 'cancel' ? '执行中…' : '取消' }}
+              </button>
+              <button
+                type="button"
+                class="action-btn action-btn--primary"
+                :disabled="isActionLocked(b)"
+                @click="confirmAction(b)"
+              >
+                {{ actionBusy[b.key] === 'confirm' ? '执行中…' : '确认执行' }}
+              </button>
+            </div>
+            <div v-if="b.action.resultText" class="action-card__result">{{ b.action.resultText }}</div>
+          </div>
         </div>
       </div>
 
@@ -473,8 +652,21 @@ function statusLabel(item: ChatSessionBrief): string {
   height: 30px;
 }
 
-.bubble {
+.bubble-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
   max-width: 78%;
+}
+
+.row--user .bubble-wrap {
+  align-items: flex-end;
+}
+
+.bubble {
+  max-width: 100%;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -483,6 +675,7 @@ function statusLabel(item: ChatSessionBrief): string {
   line-height: 1.55;
   color: var(--ink);
   overflow-wrap: anywhere;
+  box-sizing: border-box;
 }
 
 .row--user .bubble {
@@ -499,6 +692,123 @@ function statusLabel(item: ChatSessionBrief): string {
 .bubble--degraded {
   border-color: #f0d8a8;
   background: #fffaf0;
+}
+
+.state-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.state-label::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: blink 1s infinite;
+}
+
+/* 写操作确认卡片 */
+.action-card {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.action-card--confirmed {
+  border-color: #cfe6c8;
+  background: #f6fbf4;
+}
+
+.action-card--cancelled {
+  opacity: 0.72;
+}
+
+.action-card--failed {
+  border-color: #f0c7c3;
+  background: #fff7f6;
+}
+
+.action-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.action-card__tool {
+  font-size: 12px;
+  font-weight: 600;
+  color: #c8453c;
+}
+
+.action-card__status {
+  flex: none;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.action-card__status--failed {
+  color: #c8453c;
+}
+
+.action-card__summary {
+  margin-top: 6px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.action-card__expiry {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.action-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.action-btn {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  line-height: 1.3;
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.action-btn--primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #ff8a5b, #c8453c);
+  color: #fff;
+}
+
+.action-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.action-card__result {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.action-card--failed .action-card__result {
+  color: #c8453c;
 }
 
 .degraded-tip {

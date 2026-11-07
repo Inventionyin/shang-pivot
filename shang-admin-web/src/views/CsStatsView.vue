@@ -63,6 +63,22 @@ async function loadStats() {
   }
 }
 
+/** V3.1 指标为可选字段：接口未返回时统一显示 -。 */
+function statOrDash(key: string): string {
+  const value = stats.value[key]
+  return value === undefined || value === null || value === '' ? '-' : String(value)
+}
+
+function statPercent(key: string): string {
+  const value = stats.value[key]
+  return value === undefined || value === null || value === '' ? '-' : `${value}%`
+}
+
+function statMs(key: string): string {
+  const value = stats.value[key]
+  return value === undefined || value === null || value === '' ? '-' : `${value} ms`
+}
+
 async function loadConfig() {
   configLoading.value = true
   try {
@@ -164,6 +180,39 @@ onMounted(() => {
       </div>
     </div>
 
+    <div class="agent-section">
+      <div class="agent-head">
+        <div class="agent-title">Agent 运行</div>
+        <div class="agent-sub">V3.1 运行质量指标（接口未返回时显示 -）</div>
+      </div>
+      <div class="agent-cards">
+        <div class="card agent-card">
+          <div class="num">{{ statOrDash('agentRuns') }}</div>
+          <div class="label">运行次数</div>
+        </div>
+        <div class="card agent-card">
+          <div class="num">{{ statPercent('agentSuccessRate') }}</div>
+          <div class="label">运行成功率</div>
+        </div>
+        <div class="card agent-card">
+          <div class="num">{{ statMs('p95LatencyMs') }}</div>
+          <div class="label">P95 耗时</div>
+        </div>
+        <div class="card agent-card">
+          <div class="num">{{ statPercent('toolErrorRate') }}</div>
+          <div class="label">工具错误率</div>
+        </div>
+        <div class="card agent-card">
+          <div class="num">{{ statPercent('handoffRate') }}</div>
+          <div class="label">转人工率</div>
+        </div>
+        <div class="card agent-card">
+          <div class="num">{{ statPercent('retrievalMissRate') }}</div>
+          <div class="label">检索未命中率</div>
+        </div>
+      </div>
+    </div>
+
     <div class="config">
       <div class="config-head">
         <div>
@@ -260,6 +309,39 @@ onMounted(() => {
   margin-top: 4px;
   font-size: 12px;
   color: var(--el-text-color-secondary);
+}
+
+.agent-section {
+  margin-bottom: 20px;
+}
+
+.agent-head {
+  margin-bottom: 10px;
+}
+
+.agent-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.agent-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+.agent-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.agent-card {
+  padding: 12px 16px;
+}
+
+.agent-card .num {
+  font-size: 20px;
 }
 
 .config {

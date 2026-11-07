@@ -8,7 +8,7 @@
 #   bash scripts/deploy-release.sh --rollback         # 回滚到上一个 release
 #
 # 约束（实测踩过的坑，脚本已固化）：
-#   - 服务器 JVM 是 Java 17：JAR 必须按 17 编译（构建侧用 -Djava.version=17 clean package）
+#   - 服务器 JVM 是 Temurin 21.0.13（/opt/jdk21，见 deploy 记录）：按项目默认 Java 21 构建即可
 #   - logs/ 目录必须属 shang-pivot，否则应用启动即 Permission denied（systemd 有兜底，脚本也会 chown）
 set -euo pipefail
 

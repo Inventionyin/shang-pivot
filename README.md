@@ -93,8 +93,18 @@
 - **工具集**：商品检索（bge-m3 向量 + 词法自动降级）、SKU 规格与库存、订单/物流查询、**对话内加购**
 - **转人工与运营**：坐席工作台（接入/回复/转接/结束）、客服工单、知识库（切片+向量化重建）、快捷回复、服务看板
 - **安全护栏**：用户级对话限流、会话生成互斥、邮箱验证码防爆破、PII 掩码、注入检测、AI 生成标识、全量审计
-- **评估层**：20 条 Golden 业务用例 + 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 或每周 CI 自动运行（确定性断言硬门禁 20/20，裁判均分 ~0.9 作为趋势信号）；另有 823 条夜间全量回归（API + UI 双浏览器，0 失败）与 74 条 e2e 浏览器用例
+- **评估层**：50 条 Golden 业务用例（20 核心 + 30 扩容）+ 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 或每周 CI 自动运行（graph 路径生产实测 50/50，裁判均分 ~0.9 作为趋势信号）；另有 823 条夜间全量回归（API + UI 双浏览器，0 失败）与 74 条 e2e 浏览器用例
 - 设计主源见 [`docs/03-ai/customer-service-智能客服.md`](docs/03-ai/customer-service-智能客服.md)
+
+### V3.1 Agent 运行时（已上线：2026-11-07 起生产 `AGENT_ENGINE=graph`）
+
+- **Supervisor + 4 个 LLM 子 Agent + Handoff 策略**：导购 / 订单 / 售后 / 知识四个角色，转人工是规则节点，不额外调一次模型
+- **Tool Gateway**：工具契约、子 Agent 白名单、必填参数、读 1s/写 3s 超时、幂等键、`tool_call` 留痕；模型不能拼 SQL / 任意发 HTTP
+- **写操作风险分级**：加购低风险直执行；取消订单 / 确认收货 / 售后走 `pending_action` + 用户确认 + CAS + 幂等，确认前不写
+- **Trace**：`agent_run / agent_step / llm_call / tool_call / retrieval / guardrail_event` 落 PostgreSQL；管理端「Agent 轨迹」可查步骤、模型、工具、检索与 token
+- **评测**：50 条 Golden（graph 生产实测 50/50）+ 10/10 写操作安全矩阵（`AgentWriteSafetyIntegrationTest`）+ 8 条图编排集成测试（真实 PG + mock commerce/LLM）；周度 CI 已切 `AGENT_ENGINE=graph`
+- **开关**：`AGENT_ENGINE=legacy|graph`（代码默认 `legacy`，生产已设 `graph`）；回滚只需改回 `legacy`
+- 设计与取舍见 [ADR-0007](docs/04-architecture/adr/0007-agent-runtime.md)、[ADR-0008](docs/04-architecture/adr/0008-write-confirmation-idempotency.md)、[方案对比备忘](docs/03-ai/agent/README.md)
 
 ---
 
@@ -103,6 +113,7 @@
 | 层 | 技术 |
 |---|---|
 | 后端 | Java 21 · Spring Boot 4.1.1 · MyBatis-Plus 3.5.17 · Flyway · Lombok · Hutool |
+| Agent 运行时 | Spring AI 2.0.2（模型抽象/观测）· LangGraph4j 1.9.8（状态图/检查点）· 自研 Tool Gateway |
 | 数据库 | PostgreSQL 16（`pgvector/pgvector:pg16`）· Redis 7 |
 | 对象存储 | MinIO（S3 兼容） |
 | 鉴权 | JWT 双令牌（access + refresh），`clientType` 区分管理端 / C 端登录态 |
@@ -234,7 +245,7 @@ docker compose down -v && docker compose up -d
 | `shang-common` | 统一响应体 `{ code, msg, data, traceId }`、工具类、安全、OSS 客户端、审计切面 |
 | `shang-identity` | 身份上下文：RBAC、系统配置、文件管理、操作日志 |
 | `shang-commerce` | 交易上下文：类目 / 品牌 / 商品 / SKU / 库存 / 订单 / 售后 |
-| `shang-customerservice` | 智能客服：对话编排、检索、工具、转人工、工单、看板、评估 |
+| `shang-customerservice` | 智能客服：对话编排、LangGraph4j 图运行时、Tool Gateway、检索、转人工、工单、Trace、看板、评估 |
 | `shang-server` | 应用启动、Flyway 迁移、跨模块装配 |
 
 **依赖规则（红线）**：模块实现之间**禁止互相依赖**；跨上下文调用只能通过 `*-api` 模块暴露的接口。这条规则是保持模块边界可演进的关键。
@@ -245,6 +256,10 @@ docker compose down -v && docker compose up -d
 - [ADR-0002 技术栈选型](docs/04-architecture/adr/0002-技术栈选型.md)
 - [ADR-0003 RBAC 单表与鉴权职责](docs/04-architecture/adr/0003-RBAC单表与鉴权职责.md)
 - [ADR-0004 Maven 多模块模块化单体](docs/04-architecture/adr/0004-Maven多模块模块化单体.md)
+- [ADR-0005 LLM 网关与两阶段编排](docs/04-architecture/adr/0005-LLM网关与两阶段编排.md)
+- [ADR-0006 检索降级策略](docs/04-architecture/adr/0006-检索降级策略.md)
+- [ADR-0007 Agent 运行时（Spring AI + LangGraph4j）](docs/04-architecture/adr/0007-agent-runtime.md)
+- [ADR-0008 写操作确认与幂等](docs/04-architecture/adr/0008-write-confirmation-idempotency.md)
 
 **接口分层**：管理端接口统一在 `/admin/**` 命名空间，C 端接口在 `/api/**`。
 

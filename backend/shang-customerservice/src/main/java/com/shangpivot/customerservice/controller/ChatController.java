@@ -1,10 +1,17 @@
 package com.shangpivot.customerservice.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.shangpivot.common.exception.BizException;
+import com.shangpivot.common.result.ErrorCode;
 import com.shangpivot.common.result.Result;
 import com.shangpivot.common.security.LoginUser;
 import com.shangpivot.common.security.SecurityContexts;
 import com.shangpivot.customerservice.agent.ChatOrchestrator;
+import com.shangpivot.customerservice.agent.ChatResponder;
+import com.shangpivot.customerservice.agent.graph.AgentGraphOrchestrator;
+import com.shangpivot.customerservice.agent.graph.SupervisorAgent;
+import com.shangpivot.customerservice.agent.service.PendingActionService;
+import com.shangpivot.customerservice.agent.trace.entity.PendingAction;
 import com.shangpivot.customerservice.entity.ChatSession;
 import com.shangpivot.customerservice.entity.CsAuditLog;
 import com.shangpivot.customerservice.entity.CsMessage;
@@ -18,6 +25,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,10 +54,16 @@ public class ChatController {
 
     private final ChatSessionService chatSessionService;
     private final ChatOrchestrator chatOrchestrator;
+    private final AgentGraphOrchestrator graphOrchestrator;
+    private final PendingActionService pendingActionService;
     private final CsAuditService auditService;
     private final QuickReplyMapper quickReplyMapper;
     private final com.shangpivot.customerservice.service.CsGuardRailService guardRailService;
     private final com.shangpivot.customerservice.agent.GuardPipeline guardPipeline;
+
+    /** legacy=V3.0 两阶段编排；graph=V3.1 LangGraph4j 编排。 */
+    @Value("${agent.engine:legacy}")
+    private String agentEngine;
 
     /** 独立命名注入：容器内存在多个 Executor bean（含 Boot 的 applicationTaskExecutor）。 */
     @Resource(name = "csAgentExecutor")
@@ -118,7 +132,8 @@ public class ChatController {
                 emitter.complete();
                 return;
             }
-            chatOrchestrator.respond(emitter, fresh, userMsg);
+            ChatResponder responder = "graph".equalsIgnoreCase(agentEngine) ? graphOrchestrator : chatOrchestrator;
+            responder.respond(emitter, fresh, userMsg);
         });
         return emitter;
     }
@@ -131,6 +146,53 @@ public class ChatController {
         ChatSession s = chatSessionService.escalate(id, customerId, cancel);
         auditService.record(cancel ? "escalate_cancel" : "escalate", CsAuditLog.RISK_LOW, id, customerId, null);
         return Result.ok(Map.of("sessionId", s.getId(), "status", s.getStatus()));
+    }
+
+    @Operation(summary = "确认执行写操作（V3.1）")
+    @PostMapping("/sessions/{id}/actions/{actionId}/confirm")
+    public Result<Map<String, Object>> confirmAction(@PathVariable Long id, @PathVariable Long actionId) {
+        Long customerId = SecurityContexts.requireUserId();
+        chatSessionService.requireOwned(id, customerId);
+        PendingAction action = pendingActionService.requireOwned(actionId, customerId);
+        if (!id.equals(action.getSessionId())) {
+            throw new BizException(ErrorCode.NOT_FOUND);
+        }
+        String agent = SupervisorAgent.agentForTool(action.getToolName()).name();
+        PendingActionService.ConfirmOutcome outcome = pendingActionService.confirm(actionId, customerId,
+                SupervisorAgent.agentForTool(action.getToolName()));
+        String message = outcome.idempotent()
+                ? "该操作已执行过，无需重复确认。"
+                : "已执行：" + pendingActionService.summary(action.getToolName(), action.getArgsJson());
+        chatSessionService.saveAssistantMessage(id, CsMessage.ROLE_ASSISTANT, message, null, null,
+                Map.of("actionId", actionId, "tool", action.getToolName(), "agent", agent), false);
+        auditService.record("action_confirmed", CsAuditLog.RISK_MID, id, customerId,
+                Map.of("actionId", actionId, "tool", action.getToolName(), "idempotent", outcome.idempotent()));
+        Map<String, Object> data = new HashMap<>();
+        data.put("actionId", actionId);
+        data.put("tool", action.getToolName());
+        data.put("message", message);
+        data.put("result", outcome.result());
+        data.put("idempotent", outcome.idempotent());
+        return Result.ok(data);
+    }
+
+    @Operation(summary = "取消写操作（V3.1）")
+    @PostMapping("/sessions/{id}/actions/{actionId}/cancel")
+    public Result<Map<String, Object>> cancelAction(@PathVariable Long id, @PathVariable Long actionId) {
+        Long customerId = SecurityContexts.requireUserId();
+        chatSessionService.requireOwned(id, customerId);
+        PendingAction action = pendingActionService.requireOwned(actionId, customerId);
+        if (!id.equals(action.getSessionId())) {
+            throw new BizException(ErrorCode.NOT_FOUND);
+        }
+        PendingAction cancelled = pendingActionService.cancel(actionId, customerId);
+        String message = "已取消该操作。";
+        chatSessionService.saveAssistantMessage(id, CsMessage.ROLE_ASSISTANT, message, null, null,
+                Map.of("actionId", actionId, "tool", action.getToolName()), false);
+        auditService.record("action_cancelled", CsAuditLog.RISK_LOW, id, customerId,
+                Map.of("actionId", actionId, "tool", action.getToolName()));
+        return Result.ok(Map.of("actionId", actionId, "tool", cancelled.getToolName(),
+                "status", cancelled.getStatus(), "message", message));
     }
 
     @Operation(summary = "推荐问（快捷问题）")

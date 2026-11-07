@@ -161,6 +161,12 @@ public class AgentHarness {
                 Thread.sleep(4_000L * attempt);
             }
         }
+        if (resp.statusCode() >= 500 && retries < 2) {
+            // 网关/上游瞬断（502/503/504）不应当判定为业务失败；退避后重试同一轮
+            resp.body().close();
+            Thread.sleep(5_000L * (retries + 1));
+            return send(content, retries + 1);
+        }
         if (resp.statusCode() != 200) {
             String err = new String(resp.body().readAllBytes(), StandardCharsets.UTF_8);
             throw new IllegalStateException("发送失败 " + resp.statusCode() + ": " + abbreviate(err));

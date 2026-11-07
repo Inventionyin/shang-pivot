@@ -43,7 +43,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ChatOrchestrator {
+public class ChatOrchestrator implements ChatResponder {
 
     private static final int MAX_HISTORY = 8;
     private static final int MAX_PRODUCTS = 3;

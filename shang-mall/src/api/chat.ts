@@ -40,6 +40,15 @@ export interface CreateSessionResult {
   quickQuestions: string[]
 }
 
+/** 写操作待确认卡片（SSE action 事件） */
+export interface ChatPendingAction {
+  actionId: string | number
+  tool: string
+  summary: string
+  args?: Record<string, unknown>
+  expiresAt?: string
+}
+
 export function createSession() {
   return http<CreateSessionResult>({ url: '/api/chat/sessions', method: 'POST' })
 }
@@ -72,10 +81,32 @@ export function quickQuestions() {
   return http<string[]>({ url: '/api/chat/quick-questions', method: 'GET' })
 }
 
+export interface ChatActionConfirmResult {
+  message?: string
+}
+
+/** 用户确认执行写操作（如取消订单） */
+export function confirmChatAction(sessionId: string | number, actionId: string | number) {
+  return http<ChatActionConfirmResult | null>({
+    url: `/api/chat/sessions/${sessionId}/actions/${actionId}/confirm`,
+    method: 'POST',
+  })
+}
+
+/** 用户取消写操作 */
+export function cancelChatAction(sessionId: string | number, actionId: string | number) {
+  return http<ChatActionConfirmResult | null>({
+    url: `/api/chat/sessions/${sessionId}/actions/${actionId}/cancel`,
+    method: 'POST',
+  })
+}
+
 export interface StreamEvents {
   onReasoning?: (full: string, delta: string) => void
   onDelta?: (full: string, delta: string) => void
   onCards?: (items: ChatProductCard[]) => void
+  onState?: (payload: { state?: string; label?: string }) => void
+  onAction?: (payload: ChatPendingAction) => void
   onDone?: (payload: { messageId: number; sessionStatus: string; degraded: boolean }) => void
   onError?: (payload: { code?: number; msg?: string }) => void
   onNetworkError?: (msg: string) => void
@@ -126,6 +157,12 @@ export async function sendMessageStream(
             events.onCards?.(items)
             break
           }
+          case 'state':
+            events.onState?.(payload as { state?: string; label?: string })
+            break
+          case 'action':
+            events.onAction?.(payload as unknown as ChatPendingAction)
+            break
           case 'done':
             events.onDone?.(payload as { messageId: number; sessionStatus: string; degraded: boolean })
             break

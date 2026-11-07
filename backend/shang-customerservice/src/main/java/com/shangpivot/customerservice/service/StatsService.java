@@ -1,6 +1,12 @@
 package com.shangpivot.customerservice.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.shangpivot.customerservice.agent.trace.entity.AgentRun;
+import com.shangpivot.customerservice.agent.trace.entity.RetrievalTrace;
+import com.shangpivot.customerservice.agent.trace.entity.ToolCall;
+import com.shangpivot.customerservice.agent.trace.mapper.AgentRunMapper;
+import com.shangpivot.customerservice.agent.trace.mapper.RetrievalTraceMapper;
+import com.shangpivot.customerservice.agent.trace.mapper.ToolCallMapper;
 import com.shangpivot.customerservice.entity.ChatSession;
 import com.shangpivot.customerservice.entity.CsTicket;
 import com.shangpivot.customerservice.mapper.ChatSessionMapper;
@@ -23,6 +29,9 @@ public class StatsService {
     private final ChatSessionMapper sessionMapper;
     private final CsTicketMapper ticketMapper;
     private final com.shangpivot.customerservice.mapper.CsAuditLogMapper auditLogMapper;
+    private final AgentRunMapper agentRunMapper;
+    private final ToolCallMapper toolCallMapper;
+    private final RetrievalTraceMapper retrievalTraceMapper;
 
     public Map<String, Object> dashboard(String range) {
         OffsetDateTime from = "week".equals(range)
@@ -73,6 +82,35 @@ public class StatsService {
             }
         }
 
+        // V3.1 Agent 运行指标：成功率 / P95 / 工具错误率 / 转人工率 / 检索无命中率
+        List<AgentRun> runs = agentRunMapper.selectList(new LambdaQueryWrapper<AgentRun>()
+                .ge(AgentRun::getStartedAt, from));
+        long agentRuns = runs.size();
+        long okRuns = runs.stream().filter(r -> "OK".equals(r.getStatus())).count();
+        long handoffRuns = runs.stream().filter(r -> "HANDOFF".equals(r.getStatus())).count();
+        List<Long> latencies = runs.stream()
+                .filter(r -> r.getFinishedAt() != null && r.getStartedAt() != null)
+                .map(r -> java.time.Duration.between(r.getStartedAt(), r.getFinishedAt()).toMillis())
+                .sorted()
+                .toList();
+        long p95LatencyMs = 0;
+        if (!latencies.isEmpty()) {
+            int index = (int) Math.ceil(latencies.size() * 0.95) - 1;
+            p95LatencyMs = latencies.get(Math.max(0, Math.min(index, latencies.size() - 1)));
+        }
+        Long toolTotalValue = toolCallMapper.selectCount(new LambdaQueryWrapper<ToolCall>()
+                .ge(ToolCall::getCreatedAt, from));
+        Long toolFailValue = toolCallMapper.selectCount(new LambdaQueryWrapper<ToolCall>()
+                .ge(ToolCall::getCreatedAt, from).ne(ToolCall::getStatus, "SUCCESS"));
+        long toolTotal = toolTotalValue == null ? 0 : toolTotalValue;
+        long toolFail = toolFailValue == null ? 0 : toolFailValue;
+        Long retrievalTotalValue = retrievalTraceMapper.selectCount(new LambdaQueryWrapper<RetrievalTrace>()
+                .ge(RetrievalTrace::getCreatedAt, from));
+        Long retrievalMissValue = retrievalTraceMapper.selectCount(new LambdaQueryWrapper<RetrievalTrace>()
+                .ge(RetrievalTrace::getCreatedAt, from).eq(RetrievalTrace::getHit, false));
+        long retrievalTotal = retrievalTotalValue == null ? 0 : retrievalTotalValue;
+        long retrievalMiss = retrievalMissValue == null ? 0 : retrievalMissValue;
+
         Map<String, Object> m = new HashMap<>();
         m.put("range", "week".equals(range) ? "week" : "today");
         m.put("sessionTotal", total);
@@ -88,6 +126,16 @@ public class StatsService {
         m.put("degradedRate", aiReplies + degraded == 0 ? 0
                 : Math.round(degraded * 1000.0 / (aiReplies + degraded)) / 10.0);
         m.put("totalTokens", totalTokens);
+        m.put("agentRuns", agentRuns);
+        m.put("agentSuccessRate", agentRuns == 0 ? 0
+                : Math.round(okRuns * 1000.0 / agentRuns) / 10.0);
+        m.put("p95LatencyMs", p95LatencyMs);
+        m.put("toolErrorRate", toolTotal == 0 ? 0
+                : Math.round(toolFail * 1000.0 / toolTotal) / 10.0);
+        m.put("handoffRate", agentRuns == 0 ? 0
+                : Math.round(handoffRuns * 1000.0 / agentRuns) / 10.0);
+        m.put("retrievalMissRate", retrievalTotal == 0 ? 0
+                : Math.round(retrievalMiss * 1000.0 / retrievalTotal) / 10.0);
         return m;
     }
 }
