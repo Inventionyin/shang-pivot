@@ -102,22 +102,38 @@ class GraphGoldenIntegrationTest {
         }
     }
 
+    /** 与生产种子目录（commerce.spu 中 status=ON 的 30 个 SPU）对齐，价格取当前 SKU 最低价。 */
     private static final List<Product> CATALOG = List.of(
-            new Product(1L, "Redmi K70", "12+256G", "手机", new BigDecimal("2299")),
-            new Product(2L, "iPhone 15", "128G", "手机", new BigDecimal("5999")),
+            new Product(1L, "Redmi K70 12+256G", "12+256G", "手机", new BigDecimal("2299")),
+            new Product(2L, "iPhone 15 128G", "128G", "手机", new BigDecimal("5999")),
             new Product(3L, "vivo X100", "12+256G", "手机", new BigDecimal("5299")),
             new Product(4L, "索尼 WH-1000XM5", "头戴降噪耳机", "耳机", new BigDecimal("2599")),
             new Product(5L, "AirPods Pro 2", "入耳降噪耳机", "耳机", new BigDecimal("1999")),
             new Product(6L, "戴森 V12 吸尘器", "无线吸尘器", "吸尘器", new BigDecimal("3999")),
-            new Product(7L, "石头扫拖机器人", "扫拖一体", "扫地机器人", new BigDecimal("2999")),
+            new Product(7L, "石头 扫拖机器人", "激光导航", "扫地机器人", new BigDecimal("2599")),
             new Product(8L, "双人帐篷 防雨款", "户外露营", "帐篷", new BigDecimal("599")),
-            new Product(9L, "海尔洗衣机", "10kg", "洗衣机", new BigDecimal("1999")),
+            new Product(9L, "海尔 纤诺 洗衣机", "大容量变频", "洗衣机", new BigDecimal("3299")),
             new Product(10L, "iPhone 15 Pro", "128G", "手机", new BigDecimal("7999")),
             new Product(11L, "MacBook Air 13 M3 16G", "轻薄本", "电脑", new BigDecimal("9999")),
             new Product(12L, "Apple Watch SE", "智能手表", "手表", new BigDecimal("2199")),
             new Product(13L, "罗技 MX Master 3s", "人体工学鼠标", "外设", new BigDecimal("599")),
             new Product(14L, "Xiaomi 14 Pro", "12+256G", "手机", new BigDecimal("4999")),
-            new Product(15L, "Anker 65W 充电器", "氮化镓快充", "配件", new BigDecimal("199"))
+            new Product(15L, "Anker 65W 充电器", "氮化镓快充", "配件", new BigDecimal("199")),
+            new Product(16L, "HUAWEI Mate X5", "折叠旗舰，大屏体验", "手机", new BigDecimal("12999")),
+            new Product(17L, "OPPO Find N3", "折叠轻薄，旗舰体验", "手机", new BigDecimal("9999")),
+            new Product(18L, "荣耀 Magic6 Pro", "骁龙8 Gen3 旗舰", "手机", new BigDecimal("6499")),
+            new Product(19L, "ThinkPad X1 Carbon", "高可靠商务轻薄", "电脑", new BigDecimal("12999")),
+            new Product(20L, "ROG 枪神 笔记本", "高刷电竞游戏本", "电脑", new BigDecimal("14999")),
+            new Product(21L, "联想 拯救者 Y7000", "高性价比游戏本", "电脑", new BigDecimal("6999")),
+            new Product(22L, "Dell U2723QE 27寸 4K", "Type-C 一线通", "电脑", new BigDecimal("3999")),
+            new Product(23L, "美的 风冷 冰箱", "多门风冷", "家电", new BigDecimal("4599")),
+            new Product(24L, "抽屉式收纳盒", "桌面收纳", "家居收纳", new BigDecimal("69")),
+            new Product(25L, "落地台灯", "氛围灯", "家居收纳", new BigDecimal("199")),
+            new Product(26L, "温和保湿洁面乳", "氨基酸配方", "美妆个护", new BigDecimal("79")),
+            new Product(27L, "丝绒雾面口红", "显白不拔干", "美妆个护", new BigDecimal("139")),
+            new Product(28L, "每日坚果 750g", "混合坚果", "食品生鲜", new BigDecimal("89")),
+            new Product(29L, "挂耳咖啡 20袋", "中度烘焙", "食品生鲜", new BigDecimal("69")),
+            new Product(30L, "减震跑步鞋 男款", "日常慢跑训练", "运动户外", new BigDecimal("399"))
     );
 
     @BeforeEach
@@ -304,10 +320,11 @@ class GraphGoldenIntegrationTest {
 
     private static String scriptedAnswer(String system, List<Map<String, String>> history) {
         String user = lastUser(history);
-        if (user.contains("忽略之前所有的指令") || user.toLowerCase().contains("ignore all previous instructions")) {
+        if (user.contains("忽略之前所有的指令") || user.contains("忽略以上规则")
+                || user.toLowerCase().contains("ignore all previous instructions")) {
             return "抱歉，我不能提供系统提示词或内部配置。您可以继续问我商品、订单或售后问题。";
         }
-        if (user.contains("你是谁") || user.contains("你叫什么")) {
+        if (user.contains("你是谁") || user.contains("你叫什么") || user.contains("真人")) {
             return "我是尚品汇智能客服小尚，可以帮您找商品、查订单、处理售后。";
         }
         if (user.contains("天气")) {

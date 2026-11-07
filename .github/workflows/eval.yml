@@ -117,13 +117,13 @@ jobs:
             -H "Authorization: Bearer $TOKEN" \
             -H 'Content-Type: application/json' -d '{"full":true}'; echo
 
-      - name: Golden 评估（50 用例 + graph 路径 + 裁判趋势）
+      - name: Golden 评估（100 用例 + graph 路径 + 裁判趋势）
         working-directory: backend
         env:
           EVAL_TARGET_BASE_URL: http://127.0.0.1:8086
           # 3 个评估账号轮换，避免 20 条/5 分钟的用户级限流
           EVAL_CUSTOMER_PHONES: "13900009999,13900009998,13900009997"
-          EVAL_DATASET_VERSION: "v31-50"
+          EVAL_DATASET_VERSION: "v31-100"
           EVAL_LLM_BASE_URL: https://wb2api.yingyue.cloud/v1
           EVAL_LLM_MODEL: cn:deepseek-v4.1-flash
           EVAL_LLM_API_KEY: ${{ secrets.EVAL_LLM_API_KEY }}

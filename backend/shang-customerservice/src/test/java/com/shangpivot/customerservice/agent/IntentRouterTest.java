@@ -83,4 +83,20 @@ class IntentRouterTest {
     void 句首数量但带推荐语义时不误判加购() {
         assertThat(router.route("来一台手机推荐").type()).isEqualTo(IntentRouter.Type.PRESALE);
     }
+
+    @Test
+    void 商品名里的数字不被当作购买数量() {
+        var intent = router.route("来一台 HUAWEI Mate X5");
+        assertThat(intent.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(intent.quantity()).isEqualTo(1);
+
+        assertThat(router.route("来一台 iPhone 15").quantity()).isEqualTo(1);
+        assertThat(router.route("来2台 iPhone 15").quantity()).isEqualTo(2);
+    }
+
+    @Test
+    void 加购数量前缀不进入检索关键词() {
+        assertThat(router.route("来三个收纳盒").keyword()).isEqualTo("收纳盒");
+        assertThat(router.route("来一台 HUAWEI Mate X5").keyword()).doesNotContain("来一台");
+    }
 }

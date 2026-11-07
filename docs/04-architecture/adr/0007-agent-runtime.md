@@ -321,7 +321,7 @@ spike 边界（不夸大为生产验收）：
 
 - 使用本地 mock HTTP Server，不访问真实网关；
 - 未验证真实网关的长连接、限流、错误码与 `reasoning_content` 边界情况；
-- 使用 `MemorySaver`，未验证 Postgres saver 与重启恢复；
+- 使用 `MemorySaver`，未验证 Postgres saver 与重启恢复（spike 局限；生产已接入 `PostgresSaver`，见实现状态）；
 - 未启动 Spring 上下文，未验证自动配置、MCP starter、pgvector 方言与 Flyway 交互；
 - 未覆盖 4 个子 Agent、Tool Gateway 全链路、写操作确认与 trace 落库。
 
@@ -349,17 +349,26 @@ spike 边界（不夸大为生产验收）：
 | 兼容性 spike | 已通过（3/3，含条件边） | `AgentRuntimeSpikeTest` |
 | V25 trace / pending_action 迁移 | 已在本地 PostgreSQL 17 执行并验证；8 张表 + JSONB 往返通过 | `V25__v31_agent_runtime.sql`、`AgentTracePersistenceTest` |
 | LangGraph4j 图编排 | 已实现 `route → execute → answer` + 条件边 + Handoff；默认入口仍为 legacy，可用 `AGENT_ENGINE=graph` 切换 | `agent/graph/AgentGraphOrchestrator.java` |
-| 检查点 | 当前使用 `MemorySaver`（每 run）；Postgres saver 未接入 | `AgentGraphOrchestrator` |
+| 检查点 | 已接入 `PostgresSaver`：每个 run 独立 thread（`run-<runId>-<uuid>`）落 `LG4JThread`/`LG4JCheckpoint`，每轮 4 个 checkpoint（START/route/execute/answer）；DB 异常由 `ResilientCheckpointSaver` 降级为“只丢 checkpoint”；`agent.checkpoint=memory` 可回退 | `AgentCheckpointConfig`、`ResilientCheckpointSaver`、`AgentGraphOrchestrator` |
 | Spring AI 生产适配器 / 配置接线 | 已实现 `SpringAiLlmClient`（`AGENT_LLM_CLIENT=spring-ai` 切换；默认 `legacy`），流式 reasoning diff 单测通过 | `llm/SpringAiLlmClient.java`、`SpringAiLlmClientTest` |
 | trace 写入服务 | `AgentTraceService` + `CsAgentTraceController` 已接线 | `agent/trace/AgentTraceService.java` |
 | 4 个角色提示词 | 已实现（`AgentPromptFactory`）；Handoff 策略节点已实现（`HandoffPolicy`） | `agent/graph/AgentPromptFactory.java`、`HandoffPolicy.java` |
 | 写操作待确认服务 | 已实现（创建/复用、CAS 确认、取消、TTL、失败保持 CONFIRMED 可重试）；确认/取消 HTTP 接口已接线 | 见 `ADR-0008` |
 | 管理端 UI | Trace 列表/详情 + Agent 指标卡已实现并通过前端构建 | `CsAgentRunsView.vue`、`CsStatsView.vue` |
 | 图编排集成测试 | 已通过（8/8，真实 PG + mock commerce/LLM） | `AgentGraphIntegrationTest` |
-| Graph Golden 对等 | 50/50 确定性断言通过（20 核心 + 30 扩容；sources/cards/answer/forbid/效率/购物车；未跑裁判） | `GraphGoldenIntegrationTest` + `GoldenDataset` |
+| Graph Golden 对等 | 100/100 确定性断言通过（20 核心 + 80 扩容；sources/cards/answer/forbid/效率/购物车；未跑裁判） | `GraphGoldenIntegrationTest` + `GoldenDataset` |
 | 写操作安全矩阵 | 10/10（未确认不写、确认一次、重复确认幂等、取消/过期不写、越权拒绝、缺参/越权工具拒绝） | `AgentWriteSafetyIntegrationTest` |
 | V3.0 两阶段编排 | 仍是当前 Controller 注入的默认路径 | `ChatController` 注入 `ChatOrchestrator` |
 
 > 本 ADR 的“Accepted”表示架构决策已拍板，不表示上述未实现项已经上线。V3.1 的切换必须以验证门禁为准。
+
+## 增量状态（2026-11-07 21:55）
+
+- **Postgres checkpoint 已上线**：生产启动日志 `agent checkpoint: postgres (LG4JThread/LG4JCheckpoint)`；真实消息验证 1 个 thread / 4 个 checkpoint；`public.lg4jthread`、`public.lg4jcheckpoint`（LangGraph4j 1.9.8 v1.1 schema）。
+- **线程隔离**：每条用户消息使用独立 `run-<runId>-<uuid>`，避免 LangGraph4j 按 threadId 续跑上一轮；`runId` 前缀便于从 `agent_run` 反查。
+- **失败降级**：`ResilientCheckpointSaver` 包装 `PostgresSaver`，put/get/release 异常只记 warn 并继续对话；启动时建表失败回退 `MemorySaver`。
+- **配置**：`AGENT_CHECKPOINT=postgres|memory`（默认 postgres），已写入 `.env.example`。
+- **数据集**：Graph Golden 扩到 100 条（`EVAL_DATASET_VERSION=v31-100`），生产 100/100；发现并修复“商品名数字被当购买数量”的路由 bug。
+- **保留策略**：LG4J checkpoint 当前不自动清理；按每轮 4 行估算，后续可按 `saved_at` 增加月度归档/清理任务（未实现）。
 
 > **生产状态（2026-11-07 21:10）**：生产 `.env` 已设 `AGENT_ENGINE=graph`（`AGENT_LLM_CLIENT=legacy`）；legacy 20/20、graph 50/50 确定性通过；高风险写演练（取消/确认收货/售后/取消动作）已用真实测试订单验证；管理端 Agent 轨迹持续出数。代码默认仍为 `legacy`，回滚只需改环境变量并重启。

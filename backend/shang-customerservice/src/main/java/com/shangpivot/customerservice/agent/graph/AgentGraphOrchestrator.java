@@ -34,10 +34,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bsc.langgraph4j.CompileConfig;
 import org.bsc.langgraph4j.CompiledGraph;
+import org.bsc.langgraph4j.RunnableConfig;
 import org.bsc.langgraph4j.StateGraph;
 import org.bsc.langgraph4j.action.AsyncEdgeAction;
 import org.bsc.langgraph4j.action.AsyncNodeAction;
-import org.bsc.langgraph4j.checkpoint.MemorySaver;
+import org.bsc.langgraph4j.checkpoint.BaseCheckpointSaver;
+import org.bsc.langgraph4j.serializer.StateSerializer;
+import org.bsc.langgraph4j.serializer.std.ObjectStreamStateSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -46,6 +49,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,13 +82,15 @@ public class AgentGraphOrchestrator implements ChatResponder {
     private final RetrievalService retrievalService;
     private final GuardPipeline guardPipeline;
     private final ObjectMapper objectMapper;
+    private final BaseCheckpointSaver checkpointSaver;
 
     private CompiledGraph<AgentGraphState> graph;
 
     @PostConstruct
     void init() {
         try {
-            StateGraph<AgentGraphState> g = new StateGraph<>(AgentGraphState::new);
+            StateSerializer<AgentGraphState> serializer = new ObjectStreamStateSerializer<>(AgentGraphState::new);
+            StateGraph<AgentGraphState> g = new StateGraph<>(serializer);
             g.addNode("route", AsyncNodeAction.node_async(this::routeNode));
             g.addNode("execute", AsyncNodeAction.node_async(this::executeNode));
             g.addNode("answer", AsyncNodeAction.node_async(this::answerNode));
@@ -97,8 +103,9 @@ public class AgentGraphOrchestrator implements ChatResponder {
                     AsyncEdgeAction.edge_async(state -> "NEED_CONFIRMATION".equals(state.status()) ? "end" : "answer"),
                     Map.of("end", StateGraph.END, "answer", "answer"));
             g.addEdge("answer", StateGraph.END);
-            this.graph = g.compile(CompileConfig.builder().checkpointSaver(new MemorySaver()).build());
-            log.info("[cs] agent graph compiled: route -> execute -> answer");
+            this.graph = g.compile(CompileConfig.builder().checkpointSaver(checkpointSaver).build());
+            log.info("[cs] agent graph compiled: route -> execute -> answer, checkpoint={}",
+                    checkpointSaver.getClass().getSimpleName());
         } catch (Exception e) {
             throw new IllegalStateException("agent graph compile failed", e);
         }
@@ -121,7 +128,12 @@ public class AgentGraphOrchestrator implements ChatResponder {
             input.put("customerId", session.getCustomerId());
             input.put("userText", userText);
             input.put("channel", session.getClientType());
-            state = graph.invoke(input).orElseThrow(() -> new IllegalStateException("empty graph result"));
+            // 每条消息独立 thread：避免 LangGraph4j 按 threadId 续跑上一轮 checkpoint；
+            // runId 前缀便于按 agent_run 反查，UUID 兜底 trace 表未落库（runId=0）或测试复用 id 的情况。
+            RunnableConfig config = RunnableConfig.builder()
+                    .threadId("run-" + runId + "-" + UUID.randomUUID())
+                    .build();
+            state = graph.invoke(input, config).orElseThrow(() -> new IllegalStateException("empty graph result"));
             persistAndSend(emitter, session, userMsg, run, state, started);
         } catch (Exception e) {
             log.error("[cs] graph orchestration failed", e);

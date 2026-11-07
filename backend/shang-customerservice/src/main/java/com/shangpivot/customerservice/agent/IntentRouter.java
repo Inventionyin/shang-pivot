@@ -115,7 +115,8 @@ public class IntentRouter {
 
     /** 消息中的购买数量：中文数字/阿拉伯数字，默认 1。 */
     static int extractQty(String message) {
-        Matcher arabic = Pattern.compile("(\\d+)\\s*(个|台|件|部|双|只|盒)?").matcher(message);
+        // 数字必须跟在购买动词后（“来2台”），否则商品名里的数字（Mate X5 / iPhone 15）会被误当数量
+        Matcher arabic = Pattern.compile("(?:来|要|加|拿|买|拍)\\s*(\\d+)\\s*(个|台|件|部|双|只|盒)?").matcher(message);
         if (arabic.find()) {
             int n = Integer.parseInt(arabic.group(1));
             if (n >= 1 && n <= 99) {
@@ -157,6 +158,8 @@ public class IntentRouter {
             return String.join(" ", categories);
         }
         String cleaned = message
+                // 加购数量前缀（“来三个收纳盒”“来一台 HUAWEI Mate X5”）不是商品名的一部分
+                .replaceFirst("^\\s*(来|要|加|拿)\\s*[一二两三四五六七八九十\\d]+\\s*[台个件份套双顶盒瓶支]?", " ")
                 .replace("我想买", " ").replace("我想购买", " ").replace("帮我推荐", " ")
                 .replace("请帮我", " ").replace("推荐一下", " ").replace("有什么", " ")
                 .replace("多少钱", " ").replace("想买", " ").replace("推荐", " ")

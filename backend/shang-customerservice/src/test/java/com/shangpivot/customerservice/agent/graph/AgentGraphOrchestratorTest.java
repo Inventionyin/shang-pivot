@@ -69,7 +69,8 @@ class AgentGraphOrchestratorTest {
         orchestrator = new AgentGraphOrchestrator(llmClient, settingsResolver, promptFactory, supervisor,
                 new HandoffPolicy(), toolRegistry, pendingActionService, traceService, runContexts,
                 chatSessionService, guardRailService, messageMapper, productQueryApi, productSkuApi,
-                retrievalService, guardPipeline, new ObjectMapper());
+                retrievalService, guardPipeline, new ObjectMapper(),
+                new org.bsc.langgraph4j.checkpoint.MemorySaver());
         orchestrator.init();
 
         AgentRun run = new AgentRun();

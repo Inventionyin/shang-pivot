@@ -93,7 +93,7 @@
 - **工具集**：商品检索（bge-m3 向量 + 词法自动降级）、SKU 规格与库存、订单/物流查询、**对话内加购**
 - **转人工与运营**：坐席工作台（接入/回复/转接/结束）、客服工单、知识库（切片+向量化重建）、快捷回复、服务看板
 - **安全护栏**：用户级对话限流、会话生成互斥、邮箱验证码防爆破、PII 掩码、注入检测、AI 生成标识、全量审计
-- **评估层**：50 条 Golden 业务用例（20 核心 + 30 扩容）+ 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 或每周 CI 自动运行（graph 路径生产实测 50/50，裁判均分 ~0.9 作为趋势信号）；另有 823 条夜间全量回归（API + UI 双浏览器，0 失败）与 74 条 e2e 浏览器用例
+- **评估层**：100 条 Golden 业务用例（20 核心 + 80 扩容，覆盖 30 个在售 SPU 实价/知识政策/订单/转人工/安全/多轮）+ 确定性断言（零 LLM 成本）+ GEval-lite 裁判，`mvn test -Peval` 或每周 CI 自动运行（graph 路径生产实测 100/100，裁判均分 ~0.9 作为趋势信号）；另有 823 条夜间全量回归（API + UI 双浏览器，0 失败）与 74 条 e2e 浏览器用例
 - 设计主源见 [`docs/03-ai/customer-service-智能客服.md`](docs/03-ai/customer-service-智能客服.md)
 
 ### V3.1 Agent 运行时（已上线：2026-11-07 起生产 `AGENT_ENGINE=graph`）
@@ -102,7 +102,7 @@
 - **Tool Gateway**：工具契约、子 Agent 白名单、必填参数、读 1s/写 3s 超时、幂等键、`tool_call` 留痕；模型不能拼 SQL / 任意发 HTTP
 - **写操作风险分级**：加购低风险直执行；取消订单 / 确认收货 / 售后走 `pending_action` + 用户确认 + CAS + 幂等，确认前不写
 - **Trace**：`agent_run / agent_step / llm_call / tool_call / retrieval / guardrail_event` 落 PostgreSQL；管理端「Agent 轨迹」可查步骤、模型、工具、检索与 token
-- **评测**：50 条 Golden（graph 生产实测 50/50）+ 10/10 写操作安全矩阵（`AgentWriteSafetyIntegrationTest`）+ 8 条图编排集成测试（真实 PG + mock commerce/LLM）；周度 CI 已切 `AGENT_ENGINE=graph`
+- **评测**：100 条 Golden（graph 生产实测 100/100）+ 10/10 写操作安全矩阵（`AgentWriteSafetyIntegrationTest`）+ 8 条图编排集成测试（真实 PG + mock commerce/LLM）；周度 CI 已切 `AGENT_ENGINE=graph`
 - **开关**：`AGENT_ENGINE=legacy|graph`（代码默认 `legacy`，生产已设 `graph`）；回滚只需改回 `legacy`
 - 设计与取舍见 [ADR-0007](docs/04-architecture/adr/0007-agent-runtime.md)、[ADR-0008](docs/04-architecture/adr/0008-write-confirmation-idempotency.md)、[方案对比备忘](docs/03-ai/agent/README.md)
 
