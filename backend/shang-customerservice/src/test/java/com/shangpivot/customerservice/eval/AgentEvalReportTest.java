@@ -40,6 +40,10 @@ class AgentEvalReportTest {
     @Test
     void goldenRegression() throws Exception {
         List<GoldenCase> cases = GoldenDataset.all();
+        int caseLimit = Integer.parseInt(System.getenv().getOrDefault("EVAL_CASE_LIMIT", "0"));
+        if (caseLimit > 0 && caseLimit < cases.size()) {
+            cases = cases.subList(0, caseLimit);
+        }
         AgentHarness harness = new AgentHarness();
         LlmJudge judge = new LlmJudge();
 

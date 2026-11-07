@@ -96,13 +96,14 @@ public class LlmJudge {
                 2) 不要用你自己的商品知识臆断价格或库存；无法从回答确认的事实不要当作错误。
                 """;
         String user = "用户输入：" + question + "\n\n客服回答：" + answer;
+        // 评测网关同样会丢弃 system role：评分说明必须与输入放在同一条 user 消息
+        String judgePrompt = "【评分说明】\n" + system + "\n\n【待评回答】\n" + user
+                + "\n\n只输出 JSON，不要输出额外解释。";
         String body = objectMapper.writeValueAsString(Map.of(
                 "model", MODEL,
-                "messages", List.of(
-                        Map.of("role", "system", "content", system),
-                        Map.of("role", "user", "content", user)),
+                "messages", List.of(Map.of("role", "user", "content", judgePrompt)),
                 "temperature", 0.1,
-                "max_tokens", 300,
+                "max_tokens", 500,
                 "reasoning_effort", "none"));
 
         HttpRequest req = HttpRequest.newBuilder()

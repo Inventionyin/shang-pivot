@@ -32,6 +32,8 @@ public class LlmSettingsResolver {
     private int envEmbeddingDim;
     @Value("${LLM_REASONING_EFFORT:none}")
     private String envReasoningEffort;
+    @Value("${LLM_PROMPT_MODE:native}")
+    private String envPromptMode;
 
     public static final String DEFAULT_SYSTEM_PROMPT = """
             你是尚品汇商城的智能客服小尚。规则：
@@ -50,6 +52,7 @@ public class LlmSettingsResolver {
         String temp = cfg("llm.temperature");
         s.setTemperature(temp != null && !temp.isBlank() ? parseDouble(temp, envTemperature) : envTemperature);
         s.setSystemPrompt(firstNonBlank(cfg("llm.system-prompt"), DEFAULT_SYSTEM_PROMPT));
+        s.setPromptMode(firstNonBlank(cfg("llm.prompt-mode"), firstNonBlank(envPromptMode, "native")));
 
         s.setEmbeddingBaseUrl(firstNonBlank(cfg("llm.embedding.base-url"), envEmbeddingBaseUrl));
         s.setEmbeddingApiKey(firstNonBlank(cfg("llm.embedding.api-key"), envEmbeddingApiKey));

@@ -70,7 +70,7 @@ class AgentGraphOrchestratorTest {
                 new HandoffPolicy(), toolRegistry, pendingActionService, traceService, runContexts,
                 chatSessionService, guardRailService, messageMapper, productQueryApi, productSkuApi,
                 retrievalService, guardPipeline, new ObjectMapper(),
-                new org.bsc.langgraph4j.checkpoint.MemorySaver());
+                new org.bsc.langgraph4j.checkpoint.MemorySaver(), new com.shangpivot.customerservice.agent.AnswerGuard());
         orchestrator.init();
 
         AgentRun run = new AgentRun();
@@ -84,6 +84,8 @@ class AgentGraphOrchestratorTest {
                 .thenReturn(message(99L));
         when(guardPipeline.filterOutput(anyString())).thenAnswer(inv -> inv.getArgument(0));
         when(guardPipeline.stripPlanningPrefix(anyString())).thenAnswer(inv -> inv.getArgument(0));
+        when(guardPipeline.inspectInput(anyString()))
+                .thenReturn(new GuardPipeline.GuardResult(false, ""));
         when(messageMapper.selectList(any())).thenReturn(List.of());
         when(llmClient.available()).thenReturn(false);
     }

@@ -49,6 +49,10 @@ public class AgentGraphState extends AgentState {
         return value("answer").map(String::valueOf).orElse("");
     }
 
+    public String displayAnswer() {
+        return value("displayAnswer").map(String::valueOf).orElse("");
+    }
+
     public String reasoning() {
         return value("reasoning").map(String::valueOf).orElse("");
     }

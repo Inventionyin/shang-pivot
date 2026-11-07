@@ -15,6 +15,9 @@ public class LlmSettings {
     private double temperature;
     private String systemPrompt;
 
+    /** native：走 system role；user：系统指令折叠为最后一条 user 消息（兼容丢弃 system 的网关）。 */
+    private String promptMode;
+
     /** 思考强度：none 关闭思考流（网关支持时生效，见 ADR-0005 补充）；留空则不带该参数 */
     private String reasoningEffort;
 

@@ -107,6 +107,11 @@ public class IntentRouter {
         if (message.matches(".*(规格|参数|配置|颜色|配色|尺寸|型号|版本|几个版本|有货|有没有货|库存|多大|多重).*")) {
             return make(Type.SPECS, message, no, 1);
         }
+        // 优惠/折扣是售前咨询，不能被通用 LLM 分类误判成售后或知识问答。
+        if (message.matches(".*(优惠|折扣|活动价|便宜点|便宜些|有优惠).*")
+                && !message.matches(".*(退货|换货|售后|退款|退换|订单|物流|发货|快递).*")) {
+            return make(Type.PRESALE, message, no, 1);
+        }
         if (message.contains("退货") || message.contains("换货") || message.contains("售后") || message.contains("退款")
                 || message.contains("退换") || message.contains("无理由") || message.contains("可以退")) {
             return make(Type.AFTERSALE, message, no, 1);
@@ -155,13 +160,15 @@ public class IntentRouter {
         if (message == null) {
             return "";
         }
+        // “手机号/手机号码”是 PII 语境，不是手机品类；避免优惠咨询被当成导购检索
+        String normalized = message.replace("手机号码", " ").replace("手机号", " ");
         java.util.List<String> categories = CATEGORY_WORDS.stream()
-                .filter(message::contains)
+                .filter(normalized::contains)
                 .toList();
         if (!categories.isEmpty()) {
             return String.join(" ", categories);
         }
-        String cleaned = message
+        String cleaned = normalized
                 // 加购数量前缀（“来三个收纳盒”“来一台 HUAWEI Mate X5”）不是商品名的一部分
                 .replaceFirst("^\\s*(来|要|加|拿)\\s*[一二两三四五六七八九十\\d]+\\s*[台个件份套双顶盒瓶支]?", " ")
                 .replace("我想买", " ").replace("我想购买", " ").replace("帮我推荐", " ")

@@ -14,6 +14,8 @@ import com.shangpivot.commerce.api.ProductSkuApi;
 import com.shangpivot.commerce.api.ProductSkuDTO;
 import com.shangpivot.common.exception.BizException;
 import com.shangpivot.common.result.PageResult;
+import com.shangpivot.customerservice.agent.contract.AgentName;
+import com.shangpivot.customerservice.agent.graph.SupervisorAgent;
 import com.shangpivot.customerservice.entity.ChatSession;
 import com.shangpivot.customerservice.entity.CsAuditLog;
 import com.shangpivot.customerservice.entity.CsMessage;
@@ -21,15 +23,19 @@ import com.shangpivot.customerservice.llm.LlmClient;
 import com.shangpivot.customerservice.llm.LlmSettingsResolver;
 import com.shangpivot.customerservice.mapper.CsMessageMapper;
 import com.shangpivot.customerservice.retrieval.KnowledgeSearchService;
+import com.shangpivot.customerservice.retrieval.ProductConstraintParser;
+import com.shangpivot.customerservice.retrieval.ProductConstraints;
 import com.shangpivot.customerservice.retrieval.RetrievalService;
 import com.shangpivot.customerservice.service.ChatSessionService;
 import com.shangpivot.customerservice.service.CsAuditService;
 import com.shangpivot.customerservice.service.CsGuardRailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -63,6 +69,12 @@ public class ChatOrchestrator implements ChatResponder {
     private final ChatSessionService chatSessionService;
     private final CsAuditService auditService;
     private final CsMessageMapper messageMapper;
+    private final AnswerGuard answerGuard;
+
+    @Value("${agent.fact-answer-enabled:true}")
+    private boolean factAnswerEnabled = true;
+    @Value("${agent.retrieval-constraints-enabled:true}")
+    private boolean retrievalConstraintsEnabled = true;
 
     /** 编排一次应答；在 csAgentExecutor 线程上执行。controller 已保存用户消息并取得会话锁。 */
     public void respond(SseEmitter emitter, ChatSession session, CsMessage userMsg) {
@@ -70,9 +82,11 @@ public class ChatOrchestrator implements ChatResponder {
         IntentRouter.Intent intent = null;
         try {
             GuardPipeline.GuardResult guard = guardPipeline.inspectInput(userText);
-            if (guard.injectionSuspected()) {
+            if (guard.injectionSuspected() && factAnswerEnabled) {
                 auditService.record("injection_detected", CsAuditLog.RISK_MID, session.getId(),
                         session.getCustomerId(), Map.of("preview", preview(userText)));
+                replyInjection(emitter, session);
+                return;
             }
 
             intent = intentRouter.route(userText);
@@ -80,6 +94,11 @@ public class ChatOrchestrator implements ChatResponder {
                     Map.of("intent", intent.type().name(), "byRule", intent.byRule()));
 
             Facts facts = collectFacts(intent, session, userText);
+
+            if (factAnswerEnabled && !facts.displayAnswer().isBlank()) {
+                replyFacts(emitter, session, intent, facts);
+                return;
+            }
 
             if (!llmClient.available()) {
                 degrade(emitter, session, intent, facts, "LLM 未配置");
@@ -100,20 +119,22 @@ public class ChatOrchestrator implements ChatResponder {
 
                 @Override
                 public void onContent(String delta) {
+                    // 完整回答先缓冲，AnswerGuard 校验后再下发
                     content.append(delta);
-                    send(emitter, "delta", Map.of("delta", guardPipeline.filterOutput(delta)));
                 }
             });
 
-            String answer = guardPipeline.filterOutput(
-                    result.content().isBlank() ? "抱歉，我暂时没有生成回答，请重试或转人工。" : result.content());
+            String raw = result.content().isBlank() ? "抱歉，我暂时没有生成回答，请重试或转人工。" : result.content();
             // 思考残留兜底剥离（网关混流时正文开头可能带规划语）
-            answer = guardPipeline.stripPlanningPrefix(answer);
+            raw = guardPipeline.stripPlanningPrefix(raw);
             // 正文为空兜底（个别网关把内容全部放进思考流）
             if (content.isEmpty() && !result.reasoning().isBlank()) {
-                answer = guardPipeline.filterOutput(summarizeFallback(intent, facts));
+                raw = summarizeFallback(intent, facts);
             }
-            send(emitter, "delta", Map.of("delta", "")); // 结束占位，保证前端时序
+            AnswerGuard.Result guarded = answerGuard.guard(agentOf(intent), actionOf(intent), facts.block(),
+                    toCardDtos(facts.cards()), facts.displayAnswer(), raw);
+            String answer = guardPipeline.filterOutput(guarded.answer());
+            send(emitter, "delta", Map.of("delta", answer));
             emitCards(emitter, facts.cards());
 
             Map<String, Object> metadata = facts.cards().isEmpty() ? null : Map.of(CsMessage.META_ITEMS, facts.cards());
@@ -123,6 +144,9 @@ public class ChatOrchestrator implements ChatResponder {
             auditDetail.put("intent", intent.type().name());
             auditDetail.put("degraded", false);
             auditDetail.put("sources", facts.trace().getOrDefault("sources", List.of()));
+            if (guarded.replaced()) {
+                auditDetail.put("answerGuard", guarded.reason());
+            }
             if (result.promptTokens() > 0 || result.completionTokens() > 0) {
                 auditDetail.put("tokens", Map.of("prompt", result.promptTokens(), "completion", result.completionTokens()));
             }
@@ -133,6 +157,9 @@ public class ChatOrchestrator implements ChatResponder {
             doneData.put("sessionStatus", session.getStatus());
             doneData.put("degraded", false);
             doneData.put("sources", facts.trace().getOrDefault("sources", List.of()));
+            if (guarded.replaced()) {
+                doneData.put("answerGuard", guarded.reason());
+            }
             if (result.promptTokens() > 0 || result.completionTokens() > 0) {
                 doneData.put("tokens", Map.of("prompt", result.promptTokens(), "completion", result.completionTokens()));
             }
@@ -160,7 +187,8 @@ public class ChatOrchestrator implements ChatResponder {
 
     // ---------- 事实收集 ----------
 
-    private record Facts(String block, List<Map<String, Object>> cards, Map<String, Object> trace) {
+    private record Facts(String block, List<Map<String, Object>> cards, Map<String, Object> trace,
+                         String displayAnswer) {
         Facts {
             if (cards == null) {
                 cards = List.of();
@@ -168,25 +196,132 @@ public class ChatOrchestrator implements ChatResponder {
             if (trace == null) {
                 trace = Map.of();
             }
+            if (displayAnswer == null) {
+                displayAnswer = "";
+            }
+        }
+    }
+
+    private void replyInjection(SseEmitter emitter, ChatSession session) {
+        String text = FactAnswerRenderer.injectionRefusal();
+        CsMessage saved = chatSessionService.saveAssistantMessage(session.getId(), CsMessage.ROLE_ASSISTANT,
+                text, null, null, Map.of("guard", "injection"), false);
+        send(emitter, "delta", Map.of("delta", text));
+        send(emitter, "done", Map.of("messageId", saved.getId(), "sessionStatus", session.getStatus(),
+                "degraded", false, "sources", List.of(), "answerGuard", "injection"));
+    }
+
+    private void replyFacts(SseEmitter emitter, ChatSession session, IntentRouter.Intent intent, Facts facts) {
+        String text = guardPipeline.filterOutput(facts.displayAnswer());
+        Map<String, Object> metadata = facts.cards().isEmpty() ? null : Map.of(CsMessage.META_ITEMS, facts.cards());
+        CsMessage saved = chatSessionService.saveAssistantMessage(session.getId(), CsMessage.ROLE_ASSISTANT,
+                text, null, metadata, facts.trace(), false);
+        send(emitter, "delta", Map.of("delta", text));
+        emitCards(emitter, facts.cards());
+        Map<String, Object> auditDetail = new java.util.HashMap<>();
+        auditDetail.put("intent", intent.type().name());
+        auditDetail.put("degraded", false);
+        auditDetail.put("factAnswer", true);
+        auditDetail.put("sources", facts.trace().getOrDefault("sources", List.of()));
+        auditService.record("ai_reply", CsAuditLog.RISK_LOW, session.getId(), session.getCustomerId(), auditDetail);
+        chatSessionService.autoSummarize(session.getId());
+        send(emitter, "done", Map.of("messageId", saved.getId(), "sessionStatus", session.getStatus(),
+                "degraded", false, "sources", facts.trace().getOrDefault("sources", List.of()),
+                "factAnswer", true));
+    }
+
+    private AgentName agentOf(IntentRouter.Intent intent) {
+        return switch (intent.type()) {
+            case PRESALE, SPECS, ADDCART -> AgentName.SHOPPING_GUIDE;
+            case ORDER -> AgentName.ORDER;
+            case AFTERSALE -> AgentName.AFTER_SALE;
+            case KNOWLEDGE -> AgentName.KNOWLEDGE;
+            case CHITCHAT -> AgentName.SHOPPING_GUIDE;
+        };
+    }
+
+    private SupervisorAgent.Action actionOf(IntentRouter.Intent intent) {
+        return switch (intent.type()) {
+            case PRESALE -> SupervisorAgent.Action.SEARCH_PRODUCTS;
+            case SPECS -> SupervisorAgent.Action.GET_STOCK;
+            case ADDCART -> SupervisorAgent.Action.ADD_TO_CART;
+            case ORDER -> SupervisorAgent.Action.GET_ORDER;
+            case KNOWLEDGE, AFTERSALE -> SupervisorAgent.Action.SEARCH_KNOWLEDGE;
+            case CHITCHAT -> SupervisorAgent.Action.NONE;
+        };
+    }
+
+    private List<ProductCardDTO> toCardDtos(List<Map<String, Object>> cards) {
+        List<ProductCardDTO> result = new ArrayList<>();
+        if (cards == null) {
+            return result;
+        }
+        for (Map<String, Object> card : cards) {
+            result.add(new ProductCardDTO(
+                    card.get("spuId") instanceof Number n ? n.longValue() : null,
+                    String.valueOf(card.get("name")),
+                    card.get("subtitle") == null ? null : String.valueOf(card.get("subtitle")),
+                    card.get("pic") == null ? null : String.valueOf(card.get("pic")),
+                    decimal(card.get("price")),
+                    decimal(card.get("priceMax")),
+                    card.get("soldCount") instanceof Number n ? n.longValue() : null));
+        }
+        return result;
+    }
+
+    private static BigDecimal decimal(Object value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            return new BigDecimal(String.valueOf(value));
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 
     private Facts collectFacts(IntentRouter.Intent intent, ChatSession session, String userText) {
         return switch (intent.type()) {
             case PRESALE -> presaleFacts(session.getId(), intent.keyword() == null || intent.keyword().isBlank()
-                    ? IntentRouter.extractKeyword(userText) : intent.keyword());
+                    ? IntentRouter.extractKeyword(userText) : intent.keyword(), userText);
             case ORDER -> orderFacts(session, intent.orderNo());
             case AFTERSALE -> afterSaleFacts(userText);
             case KNOWLEDGE -> knowledgeFacts(userText);
             case SPECS -> specsFacts(session, userText, intent.productRef());
             case ADDCART -> addCartFacts(session, userText, intent.productRef(), intent.quantity());
-            case CHITCHAT -> new Facts("", List.of(), Map.of("sources", List.of()));
+            case CHITCHAT -> new Facts("", List.of(), Map.of("sources", List.of()), chitchatDisplay(userText));
         };
     }
 
-    private Facts presaleFacts(Long sessionId, String keyword) {
-        List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(keyword, MAX_PRODUCTS);
+    private String chitchatDisplay(String text) {
+        String message = text == null ? "" : text;
+        if (message.contains("你是谁") || message.contains("你叫什么") || message.contains("真人")
+                || message.contains("身份")) {
+            return FactAnswerRenderer.identity();
+        }
+        if (message.contains("天气") || message.contains("几点") || message.contains("新闻")) {
+            return FactAnswerRenderer.weather();
+        }
+        return "";
+    }
+
+    private Facts presaleFacts(Long sessionId, String keyword, String userText) {
+        ProductConstraints constraints = retrievalConstraintsEnabled
+                ? ProductConstraintParser.parse(userText) : ProductConstraints.none();
+        if (FactAnswerRenderer.isPiiDiscount(userText)) {
+            return new Facts("（用户提供了手机号并询问优惠：只回应隐私保护与优惠结论，不推荐随机商品）",
+                    List.of(), Map.of("sources", List.of()),
+                    FactAnswerRenderer.noProducts(keyword, userText));
+        }
+        List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(keyword, MAX_PRODUCTS, constraints);
         List<ProductCardDTO> previous = lastRecommendedCards(sessionId);
+
+        // 明确新品类/新商品但无命中：cards 必须为空，不得回填上文
+        if (hits.isEmpty() && constraints.explicitNewQuery()) {
+            return new Facts("（商品检索无结果：如实告知未找到匹配商品，可建议换个说法或去分类页逛逛）",
+                    List.of(), Map.of("sources", List.of("lexical:none")),
+                    FactAnswerRenderer.noProducts(keyword));
+        }
 
         // 追问场景：本轮检索无有效命中，但此前推荐过商品 → 围绕上文商品回答
         if (hits.isEmpty()) {
@@ -205,9 +340,12 @@ public class ChatOrchestrator implements ChatResponder {
                     sources.add(Map.of("spuId", c.spuId(), "source", "context"));
                     i++;
                 }
-                return new Facts(sb.toString(), cards, Map.of("sources", sources));
+                return new Facts(sb.toString(), cards, Map.of("sources", sources),
+                        FactAnswerRenderer.previousProducts(previous));
             }
-            return new Facts("（商品检索无结果：如实告知未找到匹配商品，可建议换个说法或去分类页逛逛）", List.of(), Map.of("sources", List.of("lexical:none")));
+            return new Facts("（商品检索无结果：如实告知未找到匹配商品，可建议换个说法或去分类页逛逛）",
+                    List.of(), Map.of("sources", List.of("lexical:none")),
+                    FactAnswerRenderer.noProducts(keyword, userText));
         }
 
         List<Map<String, Object>> cards = new ArrayList<>();
@@ -237,7 +375,11 @@ public class ChatOrchestrator implements ChatResponder {
             }
             sb.append("\n");
         }
-        return new Facts(sb.toString(), cards, Map.of("sources", sources));
+        String hint = hits.stream().anyMatch(hit -> !hit.withinBudget())
+                ? "带“超预算”标注的商品不符合预算，仅作对比" : "";
+        return new Facts(sb.toString(), cards, Map.of("sources", sources),
+                FactAnswerRenderer.presale(keyword, hits, previous, constraints.budgetLabel(), hint,
+                        constraints.explicitNewQuery(), userText));
     }
 
     /** 规格追问：解析用户指代的上文商品 → 拉取真实 SKU 规格（含库存）。 */
@@ -255,14 +397,16 @@ public class ChatOrchestrator implements ChatResponder {
                     cards.add(cardMap(c, i));
                     i++;
                 }
-                return new Facts(sb.toString(), cards, Map.of("sources", List.of("context-ask")));
+                return new Facts(sb.toString(), cards, Map.of("sources", List.of("context-ask")),
+                        FactAnswerRenderer.clarifyProducts(previous));
             }
             return new Facts("（用户在问商品规格，但当前会话没有可指代的商品上下文：请用户说明具体是哪款商品，或先描述需求）",
-                    List.of(), Map.of("sources", List.of()));
+                    List.of(), Map.of("sources", List.of()), FactAnswerRenderer.noProductContext());
         }
         List<ProductSkuDTO> skus = productSkuApi.listEnabledBySpu(target.spuId());
         if (skus.isEmpty()) {
-            return new Facts("（该商品暂无可售规格：如实告知，建议关注补货或转人工）", List.of(), Map.of("sources", List.of()));
+            return new Facts("（该商品暂无可售规格：如实告知，建议关注补货或转人工）", List.of(), Map.of("sources", List.of()),
+                    "《" + target.name() + "》暂无可售规格，建议关注补货或转人工。");
         }
         StringBuilder sb = new StringBuilder("用户询问的商品与其真实规格（如实引用，禁止编造）：\n");
         sb.append("商品：").append(target.name());
@@ -281,7 +425,8 @@ public class ChatOrchestrator implements ChatResponder {
         }
         sb.append("（用户若问卡片未覆盖的参数，请如实说明需进详情页或转人工）\n");
         List<Map<String, Object>> cards = List.of(cardMap(target, 1));
-        return new Facts(sb.toString(), cards, Map.of("sources", List.of("sku:" + target.spuId())));
+        return new Facts(sb.toString(), cards, Map.of("sources", List.of("sku:" + target.spuId())),
+                FactAnswerRenderer.specs(target, skus));
     }
 
     /** 对话内加购：解析目标商品与规格 → 调 commerce 加购 → 告知结果。 */
@@ -298,25 +443,27 @@ public class ChatOrchestrator implements ChatResponder {
                     cards.add(cardMap(c, i));
                     i++;
                 }
-                return new Facts(sb.toString(), cards, Map.of("sources", List.of("context-ask")));
+                return new Facts(sb.toString(), cards, Map.of("sources", List.of("context-ask")),
+                        FactAnswerRenderer.clarifyProducts(previous));
             }
             return new Facts("（用户想购买，但当前会话没有可指代的商品：请用户说明要哪款，或先为其推荐）",
-                    List.of(), Map.of("sources", List.of()));
+                    List.of(), Map.of("sources", List.of()), FactAnswerRenderer.noProductContext());
         }
         List<ProductSkuDTO> skus = productSkuApi.listEnabledBySpu(target.spuId());
         if (skus.isEmpty()) {
-            return new Facts("（该商品暂无可售规格，无法加购：如实告知）", List.of(), Map.of("sources", List.of()));
+            return new Facts("（该商品暂无可售规格，无法加购：如实告知）", List.of(), Map.of("sources", List.of()),
+                    "《" + target.name() + "》暂无可售规格，暂时无法加购。");
         }
         ProductSkuDTO chosen = pickSku(skus, userText);
         if (chosen == null) {
             StringBuilder sb = new StringBuilder("（该商品有多个规格，用户未说明要哪个：请列出以下规格让用户选择，不要自行加购）：\n");
             int i = 1;
             for (ProductSkuDTO sku : skus) {
-                sb.append("【规格").append(i).append("】").append(sku.title()).append("，").append(sku.price()).append(" 元\n");
-                i++;
+                sb.append("【规格").append(i++).append("】").append(sku.title()).append("，").append(sku.price()).append(" 元\n");
             }
             List<Map<String, Object>> cards = List.of(cardMap(target, 1));
-            return new Facts(sb.toString(), cards, Map.of("sources", List.of("sku-ask:" + target.spuId())));
+            return new Facts(sb.toString(), cards, Map.of("sources", List.of("sku-ask:" + target.spuId())),
+                    FactAnswerRenderer.addCartClarify(target, skus));
         }
         int qty = Math.max(1, Math.min(quantity, Math.max(chosen.availableStock(), 1)));
         try {
@@ -327,10 +474,11 @@ public class ChatOrchestrator implements ChatResponder {
             auditService.record("tool_add_cart", CsAuditLog.RISK_LOW, session.getId(), session.getCustomerId(),
                     Map.of("spuId", target.spuId(), "skuId", chosen.skuId(), "qty", qty, "cartTotal", added.quantity()));
             List<Map<String, Object>> cards = List.of(cardMap(target, 1));
-            return new Facts(text, cards, Map.of("sources", List.of("cart:" + chosen.skuId())));
+            return new Facts(text, cards, Map.of("sources", List.of("cart:" + chosen.skuId())),
+                    FactAnswerRenderer.addCartSuccess(target, chosen, qty, added.quantity()));
         } catch (BizException e) {
             return new Facts("（加购失败：" + e.getMessage() + "。如实告知用户失败原因）",
-                    List.of(), Map.of("sources", List.of("cart-fail")));
+                    List.of(), Map.of("sources", List.of("cart-fail")), FactAnswerRenderer.addCartFail(e.getMessage()));
         }
     }
 
@@ -352,18 +500,22 @@ public class ChatOrchestrator implements ChatResponder {
         // 2) 商品名匹配（上文卡片名 or 指代词本身含商品名片段）
         for (ProductCardDTO c : previous) {
             String head = c.name().length() > 4 ? c.name().substring(0, 4) : c.name();
-            if (text.contains(head) || (ref.length() >= 2 && c.name().contains(ref))) {
+            if (text.toLowerCase(java.util.Locale.ROOT).contains(head.toLowerCase(java.util.Locale.ROOT))
+                    || (ref.length() >= 2 && c.name().toLowerCase(java.util.Locale.ROOT)
+                    .contains(ref.toLowerCase(java.util.Locale.ROOT)))) {
                 return c;
             }
         }
         // 2.5) 用户点名了目录中的商品（如「那 iPhone 呢」）：按名字在目录里定位，优先于代词兜底
         if (!text.isBlank()) {
             List<RetrievalService.ProductHit> named = retrievalService.searchProducts(
-                    IntentRouter.extractKeyword(text), 2);
+                    IntentRouter.extractKeyword(text), 2, constraints(text));
             for (RetrievalService.ProductHit hit : named) {
                 String name = hit.card().name();
                 String head = name.length() > 4 ? name.substring(0, 4) : name;
-                if (text.contains(head) || (ref.length() >= 2 && name.contains(ref))) {
+                if (text.toLowerCase(java.util.Locale.ROOT).contains(head.toLowerCase(java.util.Locale.ROOT))
+                        || (ref.length() >= 2 && name.toLowerCase(java.util.Locale.ROOT)
+                        .contains(ref.toLowerCase(java.util.Locale.ROOT)))) {
                     return hit.card();
                 }
             }
@@ -375,10 +527,14 @@ public class ChatOrchestrator implements ChatResponder {
         // 4) 完全无上文：按消息内容检索一次（此时没有更好的依据）
         if (previous.isEmpty()) {
             List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(
-                    IntentRouter.extractKeyword(text), 1);
+                    IntentRouter.extractKeyword(text), 1, constraints(text));
             return hits.isEmpty() ? null : hits.get(0).card();
         }
         return null;
+    }
+
+    private ProductConstraints constraints(String text) {
+        return retrievalConstraintsEnabled ? ProductConstraintParser.parse(text) : ProductConstraints.none();
     }
 
     /** 选 SKU：消息里点名规格 → 命中；单一规格 → 直选；否则 null（反问用户）。 */
@@ -422,7 +578,9 @@ public class ChatOrchestrator implements ChatResponder {
             if (spuIds.isEmpty()) {
                 return List.of();
             }
-            return productCardsApi.getBySpuIds(spuIds);
+            Map<Long, ProductCardDTO> byId = productCardsApi.getBySpuIds(spuIds).stream()
+                    .collect(java.util.stream.Collectors.toMap(ProductCardDTO::spuId, c -> c, (a, b) -> a));
+            return spuIds.stream().map(byId::get).filter(java.util.Objects::nonNull).toList();
         } catch (Exception e) {
             log.debug("[cs] 读取上文推荐商品失败: {}", e.getMessage());
             return List.of();
@@ -434,7 +592,8 @@ public class ChatOrchestrator implements ChatResponder {
         if (orderNo != null && !orderNo.isBlank()) {
             OrderTraceDTO t = orderQueryApi.getTrace(session.getCustomerId(), orderNo);
             if (t == null) {
-                return new Facts("（未找到订单 " + orderNo + "：如实告知，并提醒核对订单号）", List.of(), Map.of("sources", List.of("order:" + orderNo)));
+                return new Facts("（未找到订单 " + orderNo + "：如实告知，并提醒核对订单号）", List.of(),
+                        Map.of("sources", List.of("order:" + orderNo)), FactAnswerRenderer.orderNotFound(orderNo));
             }
             sb.append("订单 ").append(t.orderNo()).append("，状态 ").append(statusText(t.status()))
                     .append("，实付 ").append(t.payAmount() == null ? "-" : t.payAmount()).append(" 元");
@@ -448,11 +607,13 @@ public class ChatOrchestrator implements ChatResponder {
                 sb.append("；暂无发货记录");
             }
             sb.append("\n");
-            return new Facts(sb.toString(), List.of(), Map.of("sources", List.of("order:" + t.orderNo())));
+            return new Facts(sb.toString(), List.of(), Map.of("sources", List.of("order:" + t.orderNo())),
+                    FactAnswerRenderer.orderTrace(t));
         }
         PageResult<OrderBriefDTO> page = orderQueryApi.pageByCustomer(session.getCustomerId(), 1, 3);
         if (page.getRecords().isEmpty()) {
-            return new Facts("（该会员名下没有订单：如实告知）", List.of(), Map.of("sources", List.of("order:list")));
+            return new Facts("（该会员名下没有订单：如实告知）", List.of(), Map.of("sources", List.of("order:list")),
+                    FactAnswerRenderer.noOrder());
         }
         for (OrderBriefDTO o : page.getRecords()) {
             sb.append("订单 ").append(o.orderNo()).append("，状态 ").append(statusText(o.status()))
@@ -462,7 +623,8 @@ public class ChatOrchestrator implements ChatResponder {
             }
             sb.append("\n");
         }
-        return new Facts(sb.toString(), List.of(), Map.of("sources", List.of("order:list")));
+        return new Facts(sb.toString(), List.of(), Map.of("sources", List.of("order:list")),
+                FactAnswerRenderer.orders(page.getRecords()));
     }
 
     private Facts afterSaleFacts(String userText) {
@@ -474,7 +636,8 @@ public class ChatOrchestrator implements ChatResponder {
         if (hits.isEmpty()) {
             sb.append("（无匹配知识；引导用户在 App 内「我的订单 → 申请售后」操作，或转人工）\n");
         }
-        return new Facts(sb.toString(), List.of(), Map.of("sources", hits.stream().map(h -> "doc:" + h.docId()).toList()));
+        return new Facts(sb.toString(), List.of(), Map.of("sources", hits.stream().map(h -> "doc:" + h.docId()).toList()),
+                FactAnswerRenderer.knowledge(hits, userText));
     }
 
     private Facts knowledgeFacts(String userText) {
@@ -486,7 +649,8 @@ public class ChatOrchestrator implements ChatResponder {
         if (hits.isEmpty()) {
             sb.append("（无匹配知识：如实告知，建议换问法或转人工）\n");
         }
-        return new Facts(sb.toString(), List.of(), Map.of("sources", hits.stream().map(h -> "doc:" + h.docId()).toList()));
+        return new Facts(sb.toString(), List.of(), Map.of("sources", hits.stream().map(h -> "doc:" + h.docId()).toList()),
+                FactAnswerRenderer.knowledge(hits));
     }
 
     // ---------- 降级 ----------

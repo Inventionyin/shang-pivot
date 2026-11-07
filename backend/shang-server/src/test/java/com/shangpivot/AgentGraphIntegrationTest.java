@@ -121,7 +121,7 @@ class AgentGraphIntegrationTest {
         ProductCardDTO card = new ProductCardDTO(1L, "Redmi K70", "12+256G", null,
                 new BigDecimal("2299"), null, 100L);
         when(productQueryApi.getBySpuIds(any())).thenReturn(List.of(card));
-        when(retrievalService.searchProducts(any(), anyInt()))
+        when(retrievalService.searchProducts(any(), anyInt(), any()))
                 .thenReturn(List.of(new RetrievalService.ProductHit(card, 0.9, "lexical")));
         when(orderQueryApi.getTrace(eq(100L), eq("O20261107001"))).thenReturn(
                 new OrderTraceDTO("O20261107001", "PENDING_PAY", "100", null, null, null, null, List.of()));

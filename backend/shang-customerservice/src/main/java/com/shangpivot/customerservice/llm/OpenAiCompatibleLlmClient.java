@@ -60,9 +60,9 @@ public class OpenAiCompatibleLlmClient implements LlmClient {
         if (!s.chatReady()) {
             throw new LlmException("LLM 未配置（llm.base-url/api-key/model）");
         }
-        List<Map<String, String>> payloadMessages = new ArrayList<>();
-        payloadMessages.add(Map.of("role", "system", "content", systemPrompt == null ? "" : systemPrompt));
-        payloadMessages.addAll(messages);
+        List<Map<String, String>> payloadMessages = LlmPromptTransport.userMode(s)
+                ? LlmPromptTransport.streamMessages(systemPrompt, messages)
+                : LlmPromptTransport.nativeMessages(systemPrompt, messages);
 
         java.util.Map<String, Object> payload = new java.util.HashMap<>();
         payload.put("model", s.getModel());
@@ -136,16 +136,28 @@ public class OpenAiCompatibleLlmClient implements LlmClient {
         if (!s.chatReady()) {
             throw new LlmException("LLM 未配置");
         }
-        Map<String, Object> payload = Map.of(
-                "model", s.getModel(),
-                "messages", List.of(
-                        Map.of("role", "system", "content", systemPrompt == null ? "" : systemPrompt),
-                        Map.of("role", "user", "content", userPrompt)
-                ),
-                "temperature", temperature,
-                "max_tokens", maxTokens,
-                "stream", false
-        );
+        Map<String, Object> payload;
+        if (LlmPromptTransport.userMode(s)) {
+            payload = Map.of(
+                    "model", s.getModel(),
+                    "messages", List.of(Map.of("role", "user",
+                            "content", LlmPromptTransport.chatContent(systemPrompt, userPrompt))),
+                    "temperature", temperature,
+                    "max_tokens", maxTokens,
+                    "stream", false
+            );
+        } else {
+            payload = Map.of(
+                    "model", s.getModel(),
+                    "messages", List.of(
+                            Map.of("role", "system", "content", systemPrompt == null ? "" : systemPrompt),
+                            Map.of("role", "user", "content", userPrompt)
+                    ),
+                    "temperature", temperature,
+                    "max_tokens", maxTokens,
+                    "stream", false
+            );
+        }
         HttpRequest request = buildRequest(s, payload);
         try {
             HttpResponse<String> resp = http().send(request, HttpResponse.BodyHandlers.ofString());

@@ -59,7 +59,7 @@ public class SpringAiLlmClient implements LlmClient {
             throw new LlmException("LLM 未配置（llm.base-url/api-key/model）");
         }
         OpenAiChatModel model = model(settings);
-        Prompt prompt = new Prompt(toMessages(systemPrompt, messages));
+        Prompt prompt = new Prompt(toMessages(settings, systemPrompt, messages));
         StringBuilder reasoning = new StringBuilder();
         StringBuilder content = new StringBuilder();
         String lastReasoning = "";
@@ -113,7 +113,7 @@ public class SpringAiLlmClient implements LlmClient {
                 .temperature(temperature)
                 .maxTokens(maxTokens)
                 .build();
-        Prompt prompt = new Prompt(toMessages(systemPrompt,
+        Prompt prompt = new Prompt(toMessages(settings, systemPrompt,
                 List.of(Map.of("role", "user", "content", userPrompt))), options);
         try {
             ChatResponse response = model(settings).call(prompt);
@@ -179,15 +179,21 @@ public class SpringAiLlmClient implements LlmClient {
         }
     }
 
-    private static List<Message> toMessages(String systemPrompt, List<Map<String, String>> messages) {
+    static List<Message> toMessages(LlmSettings settings, String systemPrompt,
+                                    List<Map<String, String>> messages) {
         List<Message> result = new ArrayList<>();
-        result.add(new SystemMessage(systemPrompt == null ? "" : systemPrompt));
+        if (!LlmPromptTransport.userMode(settings)) {
+            result.add(new SystemMessage(systemPrompt == null ? "" : systemPrompt));
+        }
         if (messages != null) {
             for (Map<String, String> message : messages) {
                 String role = message.getOrDefault("role", "user");
                 String content = message.getOrDefault("content", "");
                 result.add("assistant".equals(role) ? new AssistantMessage(content) : new UserMessage(content));
             }
+        }
+        if (LlmPromptTransport.userMode(settings)) {
+            result.add(new UserMessage(LlmPromptTransport.foldSystem(systemPrompt)));
         }
         return result;
     }

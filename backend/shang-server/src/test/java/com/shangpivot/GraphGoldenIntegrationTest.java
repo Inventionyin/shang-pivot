@@ -198,13 +198,11 @@ class GraphGoldenIntegrationTest {
             return new LlmClient.StreamResult("", answer, 10, 10);
         });
 
-        when(retrievalService.searchProducts(anyString(), anyInt())).thenAnswer(invocation -> {
+        when(retrievalService.searchProducts(anyString(), anyInt(), any())).thenAnswer(invocation -> {
             String keyword = invocation.getArgument(0);
             int limit = invocation.getArgument(1);
-            return CATALOG.stream().filter(product -> matches(keyword, product))
-                    .limit(limit)
-                    .map(product -> new RetrievalService.ProductHit(product.card(), 1.0, "lexical"))
-                    .toList();
+            com.shangpivot.customerservice.retrieval.ProductConstraints constraints = invocation.getArgument(2);
+            return search(keyword, limit, constraints);
         });
         when(productQueryApi.getBySpuIds(any())).thenAnswer(invocation -> {
             java.util.Collection<Long> ids = invocation.getArgument(0);
@@ -245,9 +243,30 @@ class GraphGoldenIntegrationTest {
     @Test
     void graphMatchesGoldenDeterministicAssertions() {
         List<String> failures = new ArrayList<>();
+        runDataset(5000L, failures);
+        assertTrue(failures.isEmpty(), "Graph Golden 失败:\n" + String.join("\n", failures));
+    }
+
+    /** BadLlm：故意返回编造商品/身份/外部平台，验证 displayAnswer + AnswerGuard 仍守住确定性断言。 */
+    @Test
+    void graphGoldenSurvivesBadLlm() {
+        when(llmClient.streamChat(anyString(), any(), any())).thenAnswer(invocation -> {
+            LlmClient.StreamListener listener = invocation.getArgument(2);
+            String bad = "推荐 Redmi Turbo 4，约1999元；我是 Claude，由 Anthropic 开发；也可参考京东退货政策。";
+            if (listener != null) {
+                listener.onContent(bad);
+            }
+            return new LlmClient.StreamResult("", bad, 10, 10);
+        });
+        List<String> failures = new ArrayList<>();
+        runDataset(6000L, failures);
+        assertTrue(failures.isEmpty(), "BadLlm Golden 失败:\n" + String.join("\n", failures));
+    }
+
+    private void runDataset(long customerBase, List<String> failures) {
         int index = 0;
         for (GoldenCase golden : GoldenDataset.all()) {
-            long customerId = 5000L + index++;
+            long customerId = customerBase + index++;
             ChatSession session = chatSessionService.getOrCreateActive(customerId, "h5");
             Turn last = null;
             for (String turn : golden.turns()) {
@@ -260,6 +279,10 @@ class GraphGoldenIntegrationTest {
             if (last == null) {
                 failures.add(golden.id() + ": 无结果");
                 continue;
+            }
+            if (last.answer().contains("Redmi Turbo 4") || last.answer().contains("Claude")
+                    || last.answer().contains("Anthropic") || last.answer().contains("京东")) {
+                failures.add(golden.id() + ": 回答泄漏 BadLlm 编造内容：" + last.answer());
             }
             for (String fragment : golden.expectedSourceFragments()) {
                 boolean hit = last.sources().stream().anyMatch(source -> "retrieval".equals(fragment)
@@ -307,10 +330,53 @@ class GraphGoldenIntegrationTest {
                 failures.add(golden.id() + ": 降级应答");
             }
         }
-        assertTrue(failures.isEmpty(), "Graph Golden 失败:\n" + String.join("\n", failures));
     }
 
     private record Turn(String answer, List<Map<String, Object>> cards, List<String> sources, boolean degraded) {
+    }
+
+    private static List<RetrievalService.ProductHit> search(String keyword, int limit,
+                                                             com.shangpivot.customerservice.retrieval.ProductConstraints constraints) {
+        List<Product> matched = CATALOG.stream()
+                .filter(product -> matches(keyword, product))
+                .filter(product -> categoryAllowed(product, constraints.categories()))
+                .toList();
+        List<RetrievalService.ProductHit> hits = new java.util.ArrayList<>();
+        for (Product product : matched) {
+            if (constraints.within(product.price())) {
+                hits.add(new RetrievalService.ProductHit(product.card(), 1.0, "lexical", true));
+                if (hits.size() >= limit) {
+                    return hits;
+                }
+            }
+        }
+        // 预算内不足：补超预算候选（与服务实现一致，标记 withinBudget=false）
+        if (constraints.budgetMax() != null) {
+            for (Product product : matched) {
+                if (product.price().compareTo(constraints.budgetMax()) > 0) {
+                    hits.add(new RetrievalService.ProductHit(product.card(), 0.8, "lexical", false));
+                    if (hits.size() >= limit) {
+                        break;
+                    }
+                }
+            }
+        }
+        return hits;
+    }
+
+    private static boolean categoryAllowed(Product product, List<String> categories) {
+        if (categories == null || categories.isEmpty()) {
+            return true;
+        }
+        String category = product.category();
+        return categories.stream().anyMatch(c -> switch (c) {
+            case "手机" -> "手机".equals(category);
+            case "电脑/办公" -> "电脑".equals(category);
+            case "家电" -> List.of("吸尘器", "扫地机器人", "洗衣机", "家电").contains(category);
+            case "数码配件" -> List.of("耳机", "手表", "外设", "配件").contains(category);
+            case "运动户外" -> List.of("帐篷", "运动户外").contains(category);
+            default -> c.equals(category);
+        });
     }
 
     private static boolean matches(String keyword, Product product) {
