@@ -404,6 +404,7 @@ public class AgentGraphOrchestrator implements ChatResponder {
         }
         ProductSkuDTO chosen = pickSku(skus, state.userText());
         if (chosen == null) {
+            sources.add("sku:" + product.spuId());
             return "（该商品有多个规格，用户未说明要哪个：请列出以下规格让用户选择，不要自行加购）\n"
                     + skuFacts(product, skus);
         }
@@ -638,13 +639,16 @@ public class AgentGraphOrchestrator implements ChatResponder {
             }
         }
         // 用户点名了目录里的其它商品（如“那 iPhone 呢”）：优先于“上文唯一”的代词兜底
-        List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(
-                IntentRouter.extractKeyword(text), 2);
+        String keyword = IntentRouter.extractKeyword(text);
+        List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(keyword, 5);
         for (RetrievalService.ProductHit hit : hits) {
             ProductCardDTO card = hit.card();
             String name = card.name();
             String head = name.length() > 4 ? name.substring(0, 4) : name;
-            if (text.contains(head) || (ref.length() >= 2 && name.contains(ref))) {
+            // 关键词直接命中商品名（“来三个收纳盒” → 抽屉式收纳盒）；避免品牌前缀导致前 4 字匹配失败
+            boolean keywordHit = keyword.length() >= 2
+                    && (name.contains(keyword) || keyword.contains(name));
+            if (keywordHit || text.contains(head) || (ref.length() >= 2 && name.contains(ref))) {
                 return card;
             }
         }

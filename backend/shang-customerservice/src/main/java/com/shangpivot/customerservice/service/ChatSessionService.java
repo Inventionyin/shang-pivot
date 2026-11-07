@@ -44,6 +44,20 @@ public class ChatSessionService {
         return s;
     }
 
+    /** 结束当前所有进行中会话并新建一个（“开始新会话”；评测/冒烟用）。 */
+    public ChatSession startFresh(Long customerId, String clientType) {
+        List<ChatSession> actives = sessionMapper.selectList(new LambdaQueryWrapper<ChatSession>()
+                .eq(ChatSession::getCustomerId, customerId)
+                .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
+                        ChatSession.STATUS_HUMAN_ONGOING));
+        for (ChatSession s : actives) {
+            s.setStatus(ChatSession.STATUS_ENDED);
+            s.setEndedAt(OffsetDateTime.now());
+            sessionMapper.updateById(s);
+        }
+        return getOrCreateActive(customerId, clientType);
+    }
+
     public ChatSession requireOwned(Long sessionId, Long customerId) {
         ChatSession s = sessionMapper.selectById(sessionId);
         if (s == null || Boolean.TRUE.equals(s.getDeleted())) {

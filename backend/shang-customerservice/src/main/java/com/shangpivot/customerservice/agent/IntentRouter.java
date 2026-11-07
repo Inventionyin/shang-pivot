@@ -100,6 +100,10 @@ public class IntentRouter {
         if (addcart) {
             return make(Type.ADDCART, message, no, extractQty(message));
         }
+        // 对比/二选一必须走商品检索拿两张卡，不能被“吸力/降噪”等属性词误判成单商品 SPECS
+        if (message.matches(".*(对比|比较|哪个.{0,6}(好|强|便宜|贵|划算|值得|适合)|vs|VS).*")) {
+            return make(Type.PRESALE, message, no, 1);
+        }
         if (message.matches(".*(规格|参数|配置|颜色|配色|尺寸|型号|版本|几个版本|有货|有没有货|库存|多大|多重).*")) {
             return make(Type.SPECS, message, no, 1);
         }

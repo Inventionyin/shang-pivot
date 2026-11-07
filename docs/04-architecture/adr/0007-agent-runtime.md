@@ -368,7 +368,9 @@ spike 边界（不夸大为生产验收）：
 - **线程隔离**：每条用户消息使用独立 `run-<runId>-<uuid>`，避免 LangGraph4j 按 threadId 续跑上一轮；`runId` 前缀便于从 `agent_run` 反查。
 - **失败降级**：`ResilientCheckpointSaver` 包装 `PostgresSaver`，put/get/release 异常只记 warn 并继续对话；启动时建表失败回退 `MemorySaver`。
 - **配置**：`AGENT_CHECKPOINT=postgres|memory`（默认 postgres），已写入 `.env.example`。
-- **数据集**：Graph Golden 扩到 100 条（`EVAL_DATASET_VERSION=v31-100`），生产 100/100；发现并修复“商品名数字被当购买数量”的路由 bug。
+- **数据集**：Graph Golden 扩到 100 条（`EVAL_DATASET_VERSION=v31-100`）；生产 100/100 确定性断言通过（2026-11-07 23:03）；发现并修复“商品名数字被当购买数量”的路由 bug。
+- **评测隔离**：`POST /api/chat/sessions?fresh=true` 结束当前进行中会话再新建；`AgentHarness` 每个用例强制新会话，避免跨用例卡片/指代污染，以及转人工后的 QUEUED 会话吞掉后续用例。
+- **路由/选品修正**：对比与二选一（“哪个吸力好/哪个便宜”）强制走商品检索而非单商品 SPECS；`resolveProduct` 允许检索关键词直接命中商品名（修复“来三个收纳盒”因品牌前缀匹配失败）；多规格商品未指定规格时返回 `sku:` 来源并反问，不擅自加购。
 - **保留策略**：LG4J checkpoint 当前不自动清理；按每轮 4 行估算，后续可按 `saved_at` 增加月度归档/清理任务（未实现）。
 
 > **生产状态（2026-11-07 21:10）**：生产 `.env` 已设 `AGENT_ENGINE=graph`（`AGENT_LLM_CLIENT=legacy`）；legacy 20/20、graph 50/50 确定性通过；高风险写演练（取消/确认收货/售后/取消动作）已用真实测试订单验证；管理端 Agent 轨迹持续出数。代码默认仍为 `legacy`，回滚只需改环境变量并重启。

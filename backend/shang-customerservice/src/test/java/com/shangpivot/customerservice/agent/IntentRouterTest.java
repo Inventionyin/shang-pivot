@@ -99,4 +99,14 @@ class IntentRouterTest {
         assertThat(router.route("来三个收纳盒").keyword()).isEqualTo("收纳盒");
         assertThat(router.route("来一台 HUAWEI Mate X5").keyword()).doesNotContain("来一台");
     }
+
+    @Test
+    void 对比与二选一不被属性词误判为单商品规格() {
+        assertThat(router.route("戴森 V12 和 石头 扫拖机器人 哪个吸力好").type())
+                .isEqualTo(IntentRouter.Type.PRESALE);
+        assertThat(router.route("AirPods Pro 2 和 索尼 WH-1000XM5 哪个降噪好").type())
+                .isEqualTo(IntentRouter.Type.PRESALE);
+        assertThat(router.route("iPhone 15 和 iPhone 15 Pro 哪个贵").type())
+                .isEqualTo(IntentRouter.Type.PRESALE);
+    }
 }

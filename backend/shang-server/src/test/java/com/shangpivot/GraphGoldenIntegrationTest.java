@@ -136,6 +136,22 @@ class GraphGoldenIntegrationTest {
             new Product(30L, "减震跑步鞋 男款", "日常慢跑训练", "运动户外", new BigDecimal("399"))
     );
 
+    /** 与生产一致的多规格商品（未指定规格时必须反问，不能擅自加购）。 */
+    private static final Map<Long, List<ProductSkuDTO>> MULTI_SKUS = Map.of(
+            8L, List.of(
+                    new ProductSkuDTO(801L, 8L, "双人帐篷 防雨款 军绿", Map.of("材质", "防雨涤纶", "颜色", "军绿"),
+                            new BigDecimal("599"), null, 120),
+                    new ProductSkuDTO(802L, 8L, "双人帐篷 防雨款 墨绿", Map.of("材质", "防雨涤纶", "颜色", "墨绿"),
+                            new BigDecimal("599"), null, 180),
+                    new ProductSkuDTO(803L, 8L, "双人帐篷 防雨款 卡其", Map.of("材质", "防雨涤纶", "颜色", "卡其"),
+                            new BigDecimal("619"), null, 90)),
+            30L, List.of(
+                    new ProductSkuDTO(3001L, 30L, "减震跑步鞋 男款 42码 黑", Map.of("容量", "42码", "颜色", "黑"),
+                            new BigDecimal("399"), null, 260),
+                    new ProductSkuDTO(3002L, 30L, "减震跑步鞋 男款 41码 黑灰", Map.of("容量", "41码", "颜色", "黑灰"),
+                            new BigDecimal("399"), null, 260))
+    );
+
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS customerservice");
@@ -197,6 +213,10 @@ class GraphGoldenIntegrationTest {
         });
         when(productSkuApi.listEnabledBySpu(anyLong())).thenAnswer(invocation -> {
             long spuId = invocation.getArgument(0);
+            List<ProductSkuDTO> multi = MULTI_SKUS.get(spuId);
+            if (multi != null) {
+                return multi;
+            }
             return CATALOG.stream().filter(product -> product.spuId() == spuId)
                     .map(product -> new ProductSkuDTO(spuId * 10, spuId, product.subtitle(),
                             Map.of("配置", product.subtitle()), product.price(), null, 50))

@@ -93,7 +93,8 @@ public class AgentHarness {
         token = node.path("data").path("accessToken").asText();
 
         HttpRequest create = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/api/chat/sessions"))
+                // 每个用例独立会话：复用旧会话会带入上一用例的卡片/指代，评测结果不可比
+                .uri(URI.create(BASE + "/api/chat/sessions?fresh=true"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
                 .POST(HttpRequest.BodyPublishers.ofString("{}", StandardCharsets.UTF_8))

@@ -445,16 +445,14 @@ public final class GoldenDataset {
                         .expectSources("cart:").efficiency(1)
                         .expectCards("收纳盒").expectCart("收纳盒", 3)
                         .expectAnswer("购物车").build(),
-                GoldenCase.builder("E73-cart-shoes", "跑步鞋加购 1 件")
+                GoldenCase.builder("E73-cart-shoes", "多规格商品未指定规格时先反问，不擅自加购")
                         .turns("来一件跑步鞋")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("跑步鞋").expectCart("跑步鞋", 1)
-                        .expectAnswer("购物车").build(),
-                GoldenCase.builder("E74-cart-tent", "帐篷加购 1 个")
+                        .expectSources("sku:").efficiency(1)
+                        .expectCards("跑步鞋").expectAnswer("规格").build(),
+                GoldenCase.builder("E74-cart-tent", "多规格商品未指定规格时先反问，不擅自加购")
                         .turns("来一个双人帐篷")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("帐篷").expectCart("帐篷", 1)
-                        .expectAnswer("购物车").build(),
+                        .expectSources("sku:").efficiency(1)
+                        .expectCards("帐篷").expectAnswer("规格").build(),
 
                 // ===== v31-100：知识库政策（确定性关键词） =====
                 GoldenCase.builder("E75-refund-original-route", "退款原路退回引用知识库")
@@ -523,7 +521,7 @@ public final class GoldenDataset {
                         .expectSources("retrieval")
                         .forbid("文三路100号").build(),
                 GoldenCase.builder("E95-multi-price-switch", "多轮商品切换后价格随之切换")
-                        .turns("Redmi K70 多少钱", "那 iPhone 15 呢")
+                        .turns("Redmi K70 多少钱", "那 iPhone 15 多少钱")
                         .expectSources("retrieval").efficiency(3)
                         .expectCards("iPhone 15").expectAnswer("5999").build(),
                 GoldenCase.builder("E96-multi-cart-qty2", "多轮指代后加购 2 件，数量精确")

@@ -20,6 +20,7 @@ import com.shangpivot.customerservice.mapper.QuickReplyMapper;
 import com.shangpivot.customerservice.service.ChatSessionService;
 import com.shangpivot.customerservice.service.CsAuditService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotBlank;
@@ -77,9 +78,13 @@ public class ChatController {
 
     @Operation(summary = "创建/取进行中会话")
     @PostMapping("/sessions")
-    public Result<Map<String, Object>> createSession() {
+    public Result<Map<String, Object>> createSession(
+            @Parameter(description = "true=结束当前进行中会话并新建（开始新会话）")
+            @RequestParam(defaultValue = "false") boolean fresh) {
         LoginUser user = SecurityContexts.get();
-        ChatSession s = chatSessionService.getOrCreateActive(user.getUserId(), user.getClientType());
+        ChatSession s = fresh
+                ? chatSessionService.startFresh(user.getUserId(), user.getClientType())
+                : chatSessionService.getOrCreateActive(user.getUserId(), user.getClientType());
         Map<String, Object> data = new HashMap<>();
         data.put("sessionId", s.getId());
         data.put("status", s.getStatus());
