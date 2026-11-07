@@ -21,7 +21,8 @@ public class IntentRouter {
 
     public enum Type {PRESALE, ORDER, AFTERSALE, KNOWLEDGE, CHITCHAT, SPECS, ADDCART}
 
-    public record Intent(Type type, String keyword, String orderNo, String productRef, int quantity, boolean byRule) {
+    public record Intent(Type type, String keyword, String orderNo, String productRef, int quantity, boolean byRule)
+            implements java.io.Serializable {
     }
 
     private static final Pattern ORDER_NO = Pattern.compile("[A-Z0-9]{10,}");
@@ -102,8 +103,12 @@ public class IntentRouter {
         if (message.matches(".*(规格|参数|配置|颜色|配色|尺寸|型号|版本|几个版本|有货|有没有货|库存|多大|多重).*")) {
             return make(Type.SPECS, message, no, 1);
         }
-        if (message.contains("退货") || message.contains("换货") || message.contains("售后") || message.contains("退款")) {
+        if (message.contains("退货") || message.contains("换货") || message.contains("售后") || message.contains("退款")
+                || message.contains("退换") || message.contains("无理由") || message.contains("可以退")) {
             return make(Type.AFTERSALE, message, no, 1);
+        }
+        if (message.matches(".*(你是谁|你叫什么|天气|几点|讲个笑话|谢谢|你好|在吗).*")) {
+            return make(Type.CHITCHAT, message, no, 1);
         }
         return null;
     }
@@ -137,10 +142,19 @@ public class IntentRouter {
         return m.find() ? m.group() : null;
     }
 
-    /** 轻量关键词抽取：去停用词后的前 12 字符。 */
-    static String extractKeyword(String message) {
+    private static final java.util.List<String> CATEGORY_WORDS = java.util.List.of(
+            "手机", "耳机", "吸尘器", "扫地机器人", "帐篷", "洗衣机", "跑步鞋", "蓝牙耳机", "自行车");
+
+    /** 轻量关键词抽取：先识别品类词（长描述也能命中），再去停用词取前 12 字符。 */
+    public static String extractKeyword(String message) {
         if (message == null) {
             return "";
+        }
+        java.util.List<String> categories = CATEGORY_WORDS.stream()
+                .filter(message::contains)
+                .toList();
+        if (!categories.isEmpty()) {
+            return String.join(" ", categories);
         }
         String cleaned = message
                 .replace("我想买", " ").replace("我想购买", " ").replace("帮我推荐", " ")

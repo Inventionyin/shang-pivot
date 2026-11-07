@@ -82,17 +82,24 @@ public class AfterSaleService {
     /** C 端申请售后：待收货 / 已完成可申请。 */
     @Transactional
     public Long apply(ApplyReq req) {
-        Long customerId = SecurityContexts.requireUserId();
-        if (req.getOrderId() == null || !StringUtils.hasText(req.getType()) || !StringUtils.hasText(req.getReason())) {
+        return apply(SecurityContexts.requireUserId(), req.getOrderId(), req.getType(), req.getReason(),
+                req.getEvidenceKeys(), req.getRefundAmount());
+    }
+
+    /** 跨上下文（Agent 工具）入口：customerId 显式传入，仍做归属/状态校验。 */
+    @Transactional
+    public Long apply(Long customerId, Long orderId, String type, String reason,
+                      java.util.List<String> evidenceKeys, java.math.BigDecimal refundAmount) {
+        if (orderId == null || !StringUtils.hasText(type) || !StringUtils.hasText(reason)) {
             throw new BizException(ErrorCode.BAD_REQUEST, "订单、类型、原因必填");
         }
-        if (!Set.of("REFUND", "RETURN_REFUND", "EXCHANGE").contains(req.getType())) {
+        if (!Set.of("REFUND", "RETURN_REFUND", "EXCHANGE").contains(type)) {
             throw new BizException(ErrorCode.BAD_REQUEST, "type 无效");
         }
-        if (req.getReason().trim().length() > 512) {
+        if (reason.trim().length() > 512) {
             throw new BizException(ErrorCode.BAD_REQUEST, "售后原因不能超过 512 个字符");
         }
-        Order order = orderMapper.selectById(req.getOrderId());
+        Order order = orderMapper.selectById(orderId);
         if (order == null || !customerId.equals(order.getCustomerId())) {
             throw new BizException(ErrorCode.NOT_FOUND, "订单不存在");
         }
@@ -110,11 +117,11 @@ public class AfterSaleService {
                 + String.format("%04d", (int) (Math.random() * 10000)));
         as.setOrderId(order.getId());
         as.setCustomerId(customerId);
-        as.setType(req.getType());
-        as.setReason(req.getReason().trim());
-        as.setEvidencePics(req.getEvidenceKeys());
+        as.setType(type);
+        as.setReason(reason.trim());
+        as.setEvidencePics(evidenceKeys);
         as.setStatus("PENDING_AUDIT");
-        as.setRefundAmount(req.getRefundAmount() != null ? req.getRefundAmount() : order.getPayAmount());
+        as.setRefundAmount(refundAmount != null ? refundAmount : order.getPayAmount());
         afterSaleMapper.insert(as);
         return as.getId();
     }

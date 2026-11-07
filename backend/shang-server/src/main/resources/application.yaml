@@ -103,6 +103,12 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   mapper-locations: classpath*:/mapper/**/*.xml
 
+# V3.1 Agent 编排开关：legacy=V3.0 两阶段；graph=LangGraph4j 图编排
+agent:
+  engine: ${AGENT_ENGINE:legacy}
+  # legacy=JDK HttpClient SSE（默认，已验证）；spring-ai=Spring AI ChatModel 适配层
+  llm-client: ${AGENT_LLM_CLIENT:legacy}
+
 # JWT / OSS
 shang:
   jwt:

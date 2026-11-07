@@ -33,10 +33,26 @@
 		<swagger-annotations.version>2.2.47</swagger-annotations.version>
 		<minio.version>8.5.17</minio.version>
 		<hutool.version>5.8.47</hutool.version>
+		<spring-ai.version>2.0.2</spring-ai.version>
+		<langgraph4j.version>1.9.8</langgraph4j.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-bom</artifactId>
+				<version>${spring-ai.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.bsc.langgraph4j</groupId>
+				<artifactId>langgraph4j-bom</artifactId>
+				<version>${langgraph4j.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<dependency>
 				<groupId>com.shangpivot</groupId>
 				<artifactId>shang-common</artifactId>

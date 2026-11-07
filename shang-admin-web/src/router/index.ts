@@ -183,6 +183,12 @@ const router = createRouter({
           component: () => import('@/views/CsStatsView.vue'),
           meta: { title: '服务看板', permission: 'cs-stats' },
         },
+        {
+          path: 'customer-service/agent-runs',
+          name: 'cs-agent-runs',
+          component: () => import('@/views/CsAgentRunsView.vue'),
+          meta: { title: 'Agent 运行轨迹', permission: 'cs-agent-runs' },
+        },
       ],
     },
     { path: '/:pathMatch(.*)*', redirect: '/dashboard' },

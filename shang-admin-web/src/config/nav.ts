@@ -65,6 +65,12 @@ export const NAV_GROUPS: NavGroup[] = [
       { key: 'cs-quick-replies', label: '快捷回复', path: '/cs-quick-replies', icon: 'Comment' },
       { key: 'cs-seats', label: '坐席管理', path: '/cs-seats', icon: 'Headset' },
       { key: 'cs-stats', label: '服务看板', path: '/cs-stats', icon: 'DataAnalysis' },
+      {
+        key: 'cs-agent-runs',
+        label: 'Agent 运行轨迹',
+        path: '/customer-service/agent-runs',
+        icon: 'Connection',
+      },
     ],
   },
 ]
@@ -98,6 +104,7 @@ export const ROUTE_PERMISSION: Record<string, string> = {
   '/cs-quick-replies': 'cs-quick-replies',
   '/cs-seats': 'cs-seats',
   '/cs-stats': 'cs-stats',
+  '/customer-service/agent-runs': 'cs-agent-runs',
 }
 
 export function resolveRoutePermission(path: string): string | undefined {
@@ -130,9 +137,11 @@ export const CRUMB_MAP: Record<string, { group: string; title: string }> = {
   dicts: { group: '系统管理', title: '字典管理' },
   logs: { group: '系统管理', title: '操作日志' },
   settings: { group: '系统管理', title: '系统设置' },
+  'cs-agent-runs': { group: '智能客服', title: 'Agent 运行轨迹' },
 }
 
 export function resolveNavKey(path: string): string {
+  if (path.startsWith('/customer-service/agent-runs')) return 'cs-agent-runs'
   if (path.startsWith('/products/edit')) return 'product-edit'
   if (path.startsWith('/products')) return 'products'
   if (path.startsWith('/in-out')) return 'in-out'

@@ -34,7 +34,7 @@ public interface KnowledgeChunkMapper extends BaseMapper<KnowledgeChunk> {
 
     /** 余弦相似检索；返回 chunk_text + score。 */
     @Select("""
-            SELECT chunk_text, 1 - (embedding <=> CAST(#{query} AS vector)) AS score
+            SELECT doc_id, chunk_text, 1 - (embedding <=> CAST(#{query} AS vector)) AS score
             FROM customerservice.knowledge_chunk
             WHERE deleted = FALSE AND embedding IS NOT NULL
             ORDER BY embedding <=> CAST(#{query} AS vector)

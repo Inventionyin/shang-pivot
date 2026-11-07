@@ -68,6 +68,100 @@ export interface CsSeat {
   ongoingCount?: number
 }
 
+// ---------- V3.1 Agent 运行轨迹 ----------
+
+export interface CsAgentRun {
+  id: string | number
+  traceId?: string | null
+  sessionId?: string | number | null
+  customerId?: string | number | null
+  intent?: string | null
+  agent?: string | null
+  status: string
+  startedAt?: string | null
+  finishedAt?: string | null
+  totalTokens?: number | null
+  /** 后端已聚合的运行耗时；缺失时由 startedAt / finishedAt 计算 */
+  latencyMs?: number | null
+  error?: string | null
+  model?: string | null
+  promptVersion?: string | null
+}
+
+export interface CsAgentRunStep {
+  id: string | number
+  runId?: string | number
+  parentStepId?: string | number | null
+  node: string
+  agent?: string | null
+  status: string
+  inputSummary?: string | null
+  outputSummary?: string | null
+  latencyMs?: number | null
+  checkpointId?: string | null
+  createdAt?: string | null
+}
+
+export interface CsLlmCall {
+  id: string | number
+  runId?: string | number
+  stepId?: string | number | null
+  model?: string | null
+  promptVersion?: string | null
+  inputTokens?: number | null
+  outputTokens?: number | null
+  latencyMs?: number | null
+  finishReason?: string | null
+  status: string
+  requestRef?: string | null
+  responseRef?: string | null
+  createdAt?: string | null
+}
+
+export interface CsToolCall {
+  id: string | number
+  runId?: string | number
+  stepId?: string | number | null
+  toolName: string
+  argsJson?: unknown
+  resultJson?: unknown
+  status: string
+  latencyMs?: number | null
+  retryCount?: number | null
+  idempotencyKey?: string | null
+  errorCode?: string | null
+  createdAt?: string | null
+}
+
+export interface CsRetrieval {
+  id: string | number
+  runId?: string | number
+  query?: string | null
+  topK?: number | null
+  docIds?: unknown
+  scores?: unknown
+  latencyMs?: number | null
+  hit?: boolean | null
+  backend?: string | null
+  createdAt?: string | null
+}
+
+export interface CsAgentRunDetail {
+  run: CsAgentRun
+  steps: CsAgentRunStep[]
+  llmCalls: CsLlmCall[]
+  toolCalls: CsToolCall[]
+  retrievals: CsRetrieval[]
+}
+
+export interface CsAgentRunQuery {
+  page?: number
+  size?: number
+  status?: string
+  agent?: string
+  intent?: string
+}
+
 // ---------- 会话 ----------
 
 export function fetchCsSessions(params?: { status?: string; page?: number; pageSize?: number }) {
@@ -225,6 +319,18 @@ export function updateSeatStatus(id: string | number, status: string) {
 
 export function updateSeatConcurrency(id: string | number, maxConcurrent: number) {
   return http({ url: `/admin/customer-service/seats/${id}/max-concurrent`, method: 'PUT', data: { maxConcurrent } })
+}
+
+// ---------- Agent 运行轨迹 ----------
+
+export function fetchAgentRuns(
+  params?: CsAgentRunQuery,
+): Promise<ApiResult<{ total: number; records: CsAgentRun[] }>> {
+  return http({ url: '/admin/customer-service/agent-runs', method: 'GET', params })
+}
+
+export function fetchAgentRunDetail(runId: string | number): Promise<ApiResult<CsAgentRunDetail>> {
+  return http({ url: `/admin/customer-service/agent-runs/${runId}`, method: 'GET' })
 }
 
 // ---------- 看板 / AI 配置 ----------

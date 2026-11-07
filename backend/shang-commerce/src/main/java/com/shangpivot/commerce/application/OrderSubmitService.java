@@ -127,7 +127,12 @@ public class OrderSubmitService {
 
     @Transactional
     public void cancel(Long orderId) {
-        Long customerId = requireActiveCustomer();
+        cancel(requireActiveCustomer(), orderId);
+    }
+
+    /** 跨上下文（Agent 工具）入口：customerId 显式传入，仍做归属校验。 */
+    @Transactional
+    public void cancel(Long customerId, Long orderId) {
         Order order = orderMapper.selectById(orderId);
         if (order == null || !customerId.equals(order.getCustomerId())) {
             throw new BizException(ErrorCode.NOT_FOUND, "订单不存在");
@@ -163,7 +168,12 @@ public class OrderSubmitService {
 
     @Transactional
     public void confirmReceive(Long orderId) {
-        Long customerId = requireActiveCustomer();
+        confirmReceive(requireActiveCustomer(), orderId);
+    }
+
+    /** 跨上下文（Agent 工具）入口：customerId 显式传入，仍做归属校验。 */
+    @Transactional
+    public void confirmReceive(Long customerId, Long orderId) {
         Order order = orderMapper.selectById(orderId);
         if (order == null || !customerId.equals(order.getCustomerId())) {
             throw new BizException(ErrorCode.NOT_FOUND, "订单不存在");
