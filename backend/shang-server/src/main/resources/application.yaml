@@ -108,6 +108,17 @@ agent:
   engine: ${AGENT_ENGINE:legacy}
   # legacy=JDK HttpClient SSE（默认，已验证）；spring-ai=Spring AI ChatModel 适配层
   llm-client: ${AGENT_LLM_CLIENT:legacy}
+  cart:
+    # 加购风险分级：数量>1 或 单价×数量>=阈值时生成待确认动作
+    confirm-amount-threshold: ${AGENT_CART_CONFIRM_AMOUNT_THRESHOLD:500}
+
+# 真实数据推送（AI 测试平台）
+platform:
+  webhook:
+    enabled: ${PLATFORM_WEBHOOK_ENABLED:false}
+    url: ${PLATFORM_WEBHOOK_URL:}
+    secret: ${PLATFORM_WEBHOOK_SECRET:}
+    include-test: ${PLATFORM_WEBHOOK_INCLUDE_TEST:false}
 
 # JWT / OSS
 shang:

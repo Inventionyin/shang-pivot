@@ -32,6 +32,13 @@ public class AgentRun {
 
     private String agent;
 
+    /** 平台测试流量标记；生产会话为 false。 */
+    private Boolean isTest;
+
+    private String testSource;
+
+    private String testRunId;
+
     /** RUNNING/OK/NEED_CONFIRMATION/HANDOFF/FAILED。 */
     private String status;
 

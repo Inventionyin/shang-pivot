@@ -540,6 +540,16 @@ public class ChatOrchestrator implements ChatResponder {
     /** 选 SKU：消息里点名规格 → 命中；单一规格 → 直选；否则 null（反问用户）。 */
     private ProductSkuDTO pickSku(List<ProductSkuDTO> skus, String userText) {
         String text = userText == null ? "" : userText;
+        java.util.regex.Matcher ordinal = java.util.regex.Pattern
+                .compile("(?:规格\\s*第?\\s*|第\\s*|选\\s*)([一二三四五1-5])\\s*(?:个|款|号|规格)?")
+                .matcher(text);
+        if (ordinal.find()) {
+            int n = "一二三四五".indexOf(ordinal.group(1));
+            int index = n >= 0 ? n : Integer.parseInt(ordinal.group(1)) - 1;
+            if (index >= 0 && index < skus.size()) {
+                return skus.get(index);
+            }
+        }
         for (ProductSkuDTO sku : skus) {
             if (text.contains(sku.title())) {
                 return sku;

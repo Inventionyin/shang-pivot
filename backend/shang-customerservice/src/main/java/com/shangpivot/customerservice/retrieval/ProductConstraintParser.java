@@ -33,6 +33,7 @@ public final class ProductConstraintParser {
             new CategoryRule("吸尘器", "家电"),
             new CategoryRule("洗衣机", "家电"),
             new CategoryRule("冰箱", "家电"),
+            new CategoryRule("空调", "空调"),
             new CategoryRule("蓝牙耳机", "数码配件"),
             new CategoryRule("耳机", "数码配件"),
             new CategoryRule("智能手表", "数码配件"),
@@ -80,8 +81,8 @@ public final class ProductConstraintParser {
         }
         return query.contains("耳机") || query.contains("手表") || query.contains("吸尘器")
                 || query.contains("扫地") || query.contains("扫拖") || query.contains("洗衣机")
-                || query.contains("冰箱") || query.contains("帐篷") || query.contains("跑步鞋")
-                || query.contains("充电器") || query.contains("显示器");
+                || query.contains("冰箱") || query.contains("空调") || query.contains("帐篷")
+                || query.contains("跑步鞋") || query.contains("充电器") || query.contains("显示器");
     }
 
     public static boolean matchesTerm(String query, com.shangpivot.commerce.api.ProductCardDTO card) {
@@ -107,6 +108,9 @@ public final class ProductConstraintParser {
         }
         if (query.contains("冰箱")) {
             return containsAny(text, "冰箱");
+        }
+        if (query.contains("空调")) {
+            return containsAny(text, "空调");
         }
         if (query.contains("帐篷")) {
             return containsAny(text, "帐篷");

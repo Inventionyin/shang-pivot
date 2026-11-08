@@ -15,7 +15,9 @@ import com.shangpivot.customerservice.agent.FactAnswerRenderer;
 import com.shangpivot.customerservice.agent.GuardPipeline;
 import com.shangpivot.customerservice.agent.IntentRouter;
 import com.shangpivot.customerservice.agent.contract.AgentName;
+import com.shangpivot.customerservice.agent.service.CartConfirmationPolicy;
 import com.shangpivot.customerservice.agent.service.PendingActionService;
+import com.shangpivot.customerservice.agent.service.PlatformWebhookService;
 import com.shangpivot.customerservice.agent.tool.ToolContext;
 import com.shangpivot.customerservice.agent.tool.ToolRegistry;
 import com.shangpivot.customerservice.agent.tool.ToolResult;
@@ -78,6 +80,8 @@ public class AgentGraphOrchestrator implements ChatResponder {
     private final HandoffPolicy handoffPolicy;
     private final ToolRegistry toolRegistry;
     private final PendingActionService pendingActionService;
+    private final CartConfirmationPolicy cartConfirmationPolicy;
+    private final PlatformWebhookService platformWebhookService;
     private final AgentTraceService traceService;
     private final RunContextRegistry runContexts;
     private final ChatSessionService chatSessionService;
@@ -127,7 +131,8 @@ public class AgentGraphOrchestrator implements ChatResponder {
     public void respond(SseEmitter emitter, ChatSession session, CsMessage userMsg) {
         String userText = userMsg.getContent() == null ? "" : userMsg.getContent();
         AgentRun run = traceService.startRun(session.getId(), session.getCustomerId(),
-                session.getClientType(), null, null, null, null);
+                session.getClientType(), null, null, null, null,
+                Boolean.TRUE.equals(session.getIsTest()), session.getTestSource(), session.getTestRunId());
         Long runId = run.getId() == null || run.getId() == 0L ? System.nanoTime() : run.getId();
         runContexts.put(runId, new RunContextRegistry.RunContext(emitter, session, userMsg));
         long started = System.currentTimeMillis();
@@ -250,9 +255,12 @@ public class AgentGraphOrchestrator implements ChatResponder {
                 displayAnswer = result.displayAnswer();
             }
             case ADD_TO_CART -> {
-                FactsResult result = addToCart(state, route, cards, sources, tools);
-                facts = result.facts();
-                displayAnswer = result.displayAnswer();
+                CartOutcome cart = addToCart(state, route, cards, sources, tools);
+                facts = cart.facts();
+                displayAnswer = cart.displayAnswer();
+                status = cart.status();
+                answer = cart.answer();
+                pendingActionId = cart.pendingActionId();
             }
             case GET_ORDER -> {
                 FactsResult result = orderFacts(state, route, sources, tools);
@@ -298,6 +306,17 @@ public class AgentGraphOrchestrator implements ChatResponder {
     }
 
     private record FactsResult(String facts, String displayAnswer) {
+    }
+
+    private record CartOutcome(String facts, String displayAnswer, String status, String answer,
+                               Long pendingActionId) {
+        static CartOutcome ok(String facts, String displayAnswer) {
+            return new CartOutcome(facts, displayAnswer, "OK", null, null);
+        }
+
+        static CartOutcome confirm(String facts, String answer, Long pendingActionId) {
+            return new CartOutcome(facts, answer, "NEED_CONFIRMATION", answer, pendingActionId);
+        }
     }
 
     private String chitchatDisplay(String text) {
@@ -536,34 +555,52 @@ public class AgentGraphOrchestrator implements ChatResponder {
                         : FactAnswerRenderer.specs(product, skus));
     }
 
-    private FactsResult addToCart(AgentGraphState state, SupervisorAgent.RouteResult route,
+    private CartOutcome addToCart(AgentGraphState state, SupervisorAgent.RouteResult route,
                                   List<Map<String, Object>> cards, List<String> sources, List<String> tools) {
         ProductCardDTO product = resolveProduct(state.sessionId(), state.userText(), route.productRef());
         if (product == null) {
-            return askWhichProduct(state, cards, sources);
+            FactsResult ask = askWhichProduct(state, cards, sources);
+            return CartOutcome.ok(ask.facts(), ask.displayAnswer());
         }
         cards.add(cardMap(product));
         ToolResult stock = tool(state, route, "getStock", Map.of("spuId", product.spuId()), tools);
         List<ProductSkuDTO> skus = dataList(stock, ProductSkuDTO.class);
         if (skus.isEmpty()) {
-            return new FactsResult("（该商品暂无可售规格，无法加购：如实告知）",
+            return CartOutcome.ok("（该商品暂无可售规格，无法加购：如实告知）",
                     "《" + product.name() + "》暂无可售规格，暂时无法加购。");
         }
         ProductSkuDTO chosen = pickSku(skus, state.userText());
         if (chosen == null) {
             sources.add("sku:" + product.spuId());
-            return new FactsResult("（该商品有多个规格，用户未说明要哪个：请列出以下规格让用户选择，不要自行加购）\n"
+            return CartOutcome.ok("（该商品有多个规格，用户未说明要哪个：请列出以下规格让用户选择，不要自行加购）\n"
                     + skuFacts(product, skus), FactAnswerRenderer.addCartClarify(product, skus));
         }
         int qty = Math.max(1, Math.min(route.quantity(), Math.max(chosen.availableStock(), 1)));
+
+        // 风险分级：单规格、1 件、金额低于阈值直接加购；否则生成待确认动作。
+        if (cartConfirmationPolicy.requiresConfirmation(product, chosen, qty)) {
+            Map<String, Object> args = new LinkedHashMap<>();
+            args.put("skuId", chosen.skuId());
+            args.put("quantity", qty);
+            args.put("productName", product.name());
+            args.put("skuTitle", chosen.title());
+            args.put("price", chosen.price());
+            PendingAction action = pendingActionService.createOrReuse(state.sessionId(), state.customerId(),
+                    state.runId(), route.agent(), "addToCart", args);
+            String summary = pendingActionService.summary("addToCart", args);
+            sources.add("cart-confirm:" + chosen.skuId());
+            return CartOutcome.confirm("（已生成待确认加购动作：" + summary + "；不要声称已加购）",
+                    FactAnswerRenderer.pendingWrite(summary), action.getId());
+        }
+
         ToolResult result = tool(state, route, "addToCart",
                 Map.of("skuId", chosen.skuId(), "quantity", qty), tools);
         if (!result.success()) {
-            return new FactsResult("（加购失败：" + result.errorMessage() + "。如实告知用户失败原因）",
+            return CartOutcome.ok("（加购失败：" + result.errorMessage() + "。如实告知用户失败原因）",
                     FactAnswerRenderer.addCartFail(result.errorMessage()));
         }
         sources.add("cart:" + chosen.skuId());
-        return new FactsResult("（已成功为用户加入购物车：商品「" + product.name() + "」，规格「" + chosen.title()
+        return CartOutcome.ok("（已成功为用户加入购物车：商品「" + product.name() + "」，规格「" + chosen.title()
                 + "」，单价 " + chosen.price() + " 元，本次加入 " + qty + " 件。告知用户已加购，可到购物车结算）",
                 FactAnswerRenderer.addCartSuccess(product, chosen, qty, null));
     }
@@ -694,6 +731,29 @@ public class AgentGraphOrchestrator implements ChatResponder {
         trace.put("sources", state.sources());
         CsMessage saved = chatSessionService.saveAssistantMessage(session.getId(), CsMessage.ROLE_ASSISTANT,
                 answer, state.reasoning(), metadata, trace, false);
+
+        // 真实数据 webhook：业务事务只写 outbox，异步投递；测试流量默认不推送。
+        Map<String, Object> event = new LinkedHashMap<>();
+        event.put("externalSessionId", String.valueOf(session.getId()));
+        event.put("externalRunId", String.valueOf(state.runId()));
+        event.put("externalMessageId", String.valueOf(saved.getId()));
+        event.put("isTest", Boolean.TRUE.equals(session.getIsTest()));
+        event.put("testSource", session.getTestSource());
+        event.put("clientType", session.getClientType());
+        event.put("userText", state.userText());
+        event.put("answer", answer);
+        event.put("cards", state.cards());
+        event.put("sources", state.sources());
+        event.put("tools", state.toolNames());
+        event.put("intent", state.route() == null ? null : state.route().intent().type().name());
+        event.put("agent", state.route() == null ? null : state.route().agent().name());
+        event.put("status", state.status());
+        event.put("latencyMs", System.currentTimeMillis() - started);
+        event.put("tokens", state.totalTokens());
+        // AI 自动测试不推送（平台自己记录）；人工体验要推送到真实数据看板。
+        boolean suppress = Boolean.TRUE.equals(session.getIsTest())
+                && !"human".equals(session.getTestSource());
+        platformWebhookService.enqueue("run.finished", event, suppress);
 
         if (!state.cards().isEmpty()) {
             send(emitter, "cards", Map.of(CsMessage.META_ITEMS, state.cards()));
@@ -857,6 +917,17 @@ public class AgentGraphOrchestrator implements ChatResponder {
 
     private ProductSkuDTO pickSku(List<ProductSkuDTO> skus, String userText) {
         String text = userText == null ? "" : userText;
+        // 规格序号：“第一个/第2款/规格1/选1”
+        java.util.regex.Matcher ordinal = java.util.regex.Pattern
+                .compile("(?:规格\\s*第?\\s*|第\\s*|选\\s*)([一二三四五1-5])\\s*(?:个|款|号|规格)?")
+                .matcher(text);
+        if (ordinal.find()) {
+            int n = "一二三四五".indexOf(ordinal.group(1));
+            int index = n >= 0 ? n : Integer.parseInt(ordinal.group(1)) - 1;
+            if (index >= 0 && index < skus.size()) {
+                return skus.get(index);
+            }
+        }
         for (ProductSkuDTO sku : skus) {
             if (text.contains(sku.title())) {
                 return sku;

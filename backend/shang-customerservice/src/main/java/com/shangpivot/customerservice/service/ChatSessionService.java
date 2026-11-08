@@ -27,11 +27,24 @@ public class ChatSessionService {
 
     /** 取进行中会话，无则创建（开场即返回快捷问，前端拼装首屏）。 */
     public ChatSession getOrCreateActive(Long customerId, String clientType) {
-        ChatSession active = sessionMapper.selectOne(new LambdaQueryWrapper<ChatSession>()
-                .eq(ChatSession::getCustomerId, customerId)
-                .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED, ChatSession.STATUS_HUMAN_ONGOING)
-                .orderByDesc(ChatSession::getId)
-                .last("LIMIT 1"));
+        return getOrCreateActive(customerId, clientType, false, "", "");
+    }
+
+    /**
+     * 测试流量（isTest=true）不参与真实会话复用：每次建独立会话，避免把测试消息写进真实用户会话。
+     */
+    public ChatSession getOrCreateActive(Long customerId, String clientType,
+                                         boolean isTest, String testSource, String testRunId) {
+        ChatSession active = null;
+        if (!isTest) {
+            active = sessionMapper.selectOne(new LambdaQueryWrapper<ChatSession>()
+                    .eq(ChatSession::getCustomerId, customerId)
+                    .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
+                            ChatSession.STATUS_HUMAN_ONGOING)
+                    .and(w -> w.eq(ChatSession::getIsTest, false).or().isNull(ChatSession::getIsTest))
+                    .orderByDesc(ChatSession::getId)
+                    .last("LIMIT 1"));
+        }
         if (active != null) {
             return active;
         }
@@ -40,22 +53,37 @@ public class ChatSessionService {
         s.setClientType(clientType == null ? "h5" : clientType);
         s.setStatus(ChatSession.STATUS_AI_ONGOING);
         s.setStartedAt(OffsetDateTime.now());
+        s.setIsTest(isTest);
+        s.setTestSource(testSource == null ? "" : testSource);
+        s.setTestRunId(testRunId == null ? "" : testRunId);
         sessionMapper.insert(s);
         return s;
     }
 
     /** 结束当前所有进行中会话并新建一个（“开始新会话”；评测/冒烟用）。 */
     public ChatSession startFresh(Long customerId, String clientType) {
-        List<ChatSession> actives = sessionMapper.selectList(new LambdaQueryWrapper<ChatSession>()
+        return startFresh(customerId, clientType, false, "", "");
+    }
+
+    /** 测试流量只结束同类测试会话，不能误关真实用户正在进行的会话。 */
+    public ChatSession startFresh(Long customerId, String clientType,
+                                  boolean isTest, String testSource, String testRunId) {
+        LambdaQueryWrapper<ChatSession> query = new LambdaQueryWrapper<ChatSession>()
                 .eq(ChatSession::getCustomerId, customerId)
                 .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
-                        ChatSession.STATUS_HUMAN_ONGOING));
+                        ChatSession.STATUS_HUMAN_ONGOING);
+        if (isTest) {
+            query.eq(ChatSession::getIsTest, true);
+        } else {
+            query.and(w -> w.eq(ChatSession::getIsTest, false).or().isNull(ChatSession::getIsTest));
+        }
+        List<ChatSession> actives = sessionMapper.selectList(query);
         for (ChatSession s : actives) {
             s.setStatus(ChatSession.STATUS_ENDED);
             s.setEndedAt(OffsetDateTime.now());
             sessionMapper.updateById(s);
         }
-        return getOrCreateActive(customerId, clientType);
+        return getOrCreateActive(customerId, clientType, isTest, testSource, testRunId);
     }
 
     public ChatSession requireOwned(Long sessionId, Long customerId) {

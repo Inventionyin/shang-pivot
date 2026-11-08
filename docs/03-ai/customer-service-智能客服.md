@@ -124,3 +124,12 @@
 - 会话消息异步持久化，不阻塞流式返回。
 - Token/耗时/转人工率埋点入审计与看板。
 - 向量化重建异步执行，不阻塞后台编辑。
+
+## 11. 测试流量与真实数据分层（V3.2）
+
+- 平台自动化请求带 `X-Agent-Test: ai`，人工体验带 `X-Agent-Test: human`，并带 `X-Agent-Test-Run-Id`。
+- `chat_session` / `agent_run` 记录 `is_test`、`test_source`、`test_run_id`；测试会话独立创建，不复用真实用户会话。
+- AI 自动测试的 webhook 默认不推送；人工体验（`testSource=human`）与生产会话通过 `platform_outbox` 异步推送到平台。
+- 加购风险分级：单规格、1 件、金额低于 `agent.cart.confirm-amount-threshold`（默认 500 元）直接加购；
+  多件或高金额生成待确认动作；用户可用确认卡或文字“确认/取消”完成。
+- “帮我购买第一款/就买第二个/我要这个/买它”必须确定性识别为加购，不能走售前检索。

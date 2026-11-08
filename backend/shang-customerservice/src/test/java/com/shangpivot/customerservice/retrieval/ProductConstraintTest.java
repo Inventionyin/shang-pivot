@@ -42,6 +42,14 @@ class ProductConstraintTest {
     }
 
     @Test
+    void airConditionerIsExplicitOutOfCatalogCategory() {
+        ProductConstraints c = ProductConstraintParser.parse("帮我推荐一下空调");
+        assertThat(c.categories()).containsExactly("空调");
+        assertThat(c.explicitNewQuery()).isTrue();
+        assertThat(ProductConstraintParser.needsTermFilter("空调")).isTrue();
+    }
+
+    @Test
     void followUpWithoutNewCategoryDoesNotSetExplicitNewQuery() {
         ProductConstraints c = ProductConstraintParser.parse("它都有哪些规格，有货吗");
         assertThat(c.categories()).isEmpty();

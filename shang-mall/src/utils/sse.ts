@@ -20,10 +20,14 @@ export interface StreamPostOptions extends SseHandlers {
 
 function buildHeaders(): HeadersInit {
   const token = localStorage.getItem('shang_mall_access')
+  const humanTest = localStorage.getItem('shang_mall_test_mode') === 'human'
   return {
     'Content-Type': 'application/json',
     Accept: 'text/event-stream',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(humanTest
+      ? { 'X-Agent-Test': 'human', 'X-Agent-Test-Run-Id': `human-${Date.now()}` }
+      : {}),
   }
 }
 

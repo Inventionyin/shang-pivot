@@ -50,7 +50,14 @@ export interface ChatPendingAction {
 }
 
 export function createSession() {
-  return http<CreateSessionResult>({ url: '/api/chat/sessions', method: 'POST' })
+  const humanTest = localStorage.getItem('shang_mall_test_mode') === 'human'
+  return http<CreateSessionResult>({
+    url: '/api/chat/sessions',
+    method: 'POST',
+    headers: humanTest
+      ? { 'X-Agent-Test': 'human', 'X-Agent-Test-Run-Id': `human-${Date.now()}` }
+      : undefined,
+  })
 }
 
 export function listSessions(page = 1, size = 10) {

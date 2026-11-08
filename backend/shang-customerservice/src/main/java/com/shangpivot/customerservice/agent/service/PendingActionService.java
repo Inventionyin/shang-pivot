@@ -83,6 +83,14 @@ public class PendingActionService {
         }
     }
 
+    public PendingAction latestPending(Long sessionId) {
+        return mapper.selectOne(new LambdaQueryWrapper<PendingAction>()
+                .eq(PendingAction::getSessionId, sessionId)
+                .eq(PendingAction::getStatus, PENDING)
+                .orderByDesc(PendingAction::getId)
+                .last("LIMIT 1"));
+    }
+
     public PendingAction requireOwned(Long actionId, Long customerId) {
         PendingAction action = mapper.selectById(actionId);
         if (action == null || Boolean.TRUE.equals(action.getDeleted())) {
@@ -191,7 +199,14 @@ public class PendingActionService {
             case "cancelOrder" -> "取消订单 " + orderNo;
             case "confirmReceive" -> "确认收货 " + orderNo;
             case "createAfterSale" -> "为订单 " + orderNo + " 申请售后";
-            case "addToCart" -> "加入购物车（SKU " + (args == null ? "" : args.get("skuId")) + "）";
+            case "addToCart" -> {
+                String name = args == null ? "" : String.valueOf(args.getOrDefault("productName", "商品"));
+                String spec = args == null ? "" : String.valueOf(args.getOrDefault("skuTitle", ""));
+                String qty = args == null ? "1" : String.valueOf(args.getOrDefault("quantity", 1));
+                String price = args == null ? "" : String.valueOf(args.getOrDefault("price", ""));
+                yield "加入购物车：" + name + (spec.isBlank() ? "" : " / " + spec)
+                        + " × " + qty + (price.isBlank() ? "" : "，单价 " + price + " 元");
+            }
             case "createTicket" -> "创建客服工单";
             default -> toolName;
         };

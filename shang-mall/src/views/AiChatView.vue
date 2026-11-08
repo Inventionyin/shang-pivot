@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useClientType } from '@/composables/useClientType'
 import { Sparkles, Headset } from 'lucide-vue-next'
 import { formatPrice } from '@/utils/format'
@@ -19,6 +20,7 @@ import {
 } from '@/api/chat'
 
 const { isH5, isWeb } = useClientType()
+const route = useRoute()
 
 type ActionStatus = 'PENDING' | 'SUBMITTING' | 'CONFIRMED' | 'CANCELLED' | 'FAILED'
 
@@ -84,11 +86,16 @@ const statusText = computed(() => {
 })
 
 onMounted(() => {
+  // 平台“人工体验”入口：本次会话标记为 human test，并推送到测试平台真实数据看板。
+  if (route.query.test === 'human') {
+    localStorage.setItem('shang_mall_test_mode', 'human')
+  }
   void ensureSession()
 })
 
 onBeforeUnmount(() => {
   abort?.abort()
+  localStorage.removeItem('shang_mall_test_mode')
 })
 
 async function bootstrap() {

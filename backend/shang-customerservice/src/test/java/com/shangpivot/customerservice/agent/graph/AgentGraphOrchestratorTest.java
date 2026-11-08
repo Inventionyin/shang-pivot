@@ -8,7 +8,9 @@ import com.shangpivot.commerce.api.ProductSkuApi;
 import com.shangpivot.customerservice.agent.GuardPipeline;
 import com.shangpivot.customerservice.agent.IntentRouter;
 import com.shangpivot.customerservice.agent.contract.AgentName;
+import com.shangpivot.customerservice.agent.service.CartConfirmationPolicy;
 import com.shangpivot.customerservice.agent.service.PendingActionService;
+import com.shangpivot.customerservice.agent.service.PlatformWebhookService;
 import com.shangpivot.customerservice.agent.tool.ToolRegistry;
 import com.shangpivot.customerservice.agent.tool.ToolResult;
 import com.shangpivot.customerservice.agent.trace.AgentTraceService;
@@ -52,6 +54,8 @@ class AgentGraphOrchestratorTest {
     private final SupervisorAgent supervisor = Mockito.mock(SupervisorAgent.class);
     private final ToolRegistry toolRegistry = Mockito.mock(ToolRegistry.class);
     private final PendingActionService pendingActionService = Mockito.mock(PendingActionService.class);
+    private final CartConfirmationPolicy cartConfirmationPolicy = Mockito.mock(CartConfirmationPolicy.class);
+    private final PlatformWebhookService platformWebhookService = Mockito.mock(PlatformWebhookService.class);
     private final AgentTraceService traceService = Mockito.mock(AgentTraceService.class);
     private final RunContextRegistry runContexts = new RunContextRegistry();
     private final ChatSessionService chatSessionService = Mockito.mock(ChatSessionService.class);
@@ -67,7 +71,8 @@ class AgentGraphOrchestratorTest {
     @BeforeEach
     void setUp() {
         orchestrator = new AgentGraphOrchestrator(llmClient, settingsResolver, promptFactory, supervisor,
-                new HandoffPolicy(), toolRegistry, pendingActionService, traceService, runContexts,
+                new HandoffPolicy(), toolRegistry, pendingActionService, cartConfirmationPolicy,
+                platformWebhookService, traceService, runContexts,
                 chatSessionService, guardRailService, messageMapper, productQueryApi, productSkuApi,
                 retrievalService, guardPipeline, new ObjectMapper(),
                 new org.bsc.langgraph4j.checkpoint.MemorySaver(), new com.shangpivot.customerservice.agent.AnswerGuard());
@@ -78,7 +83,8 @@ class AgentGraphOrchestratorTest {
         LlmSettings settings = new LlmSettings();
         settings.setModel("test-model");
         when(settingsResolver.resolve()).thenReturn(settings);
-        when(traceService.startRun(anyLong(), anyLong(), any(), any(), any(), any(), any())).thenReturn(run);
+        when(traceService.startRun(anyLong(), anyLong(), any(), any(), any(), any(), any(),
+                anyBoolean(), any(), any())).thenReturn(run);
         when(traceService.startStep(anyLong(), any(), anyString(), any(), any())).thenReturn(10L);
         when(chatSessionService.saveAssistantMessage(anyLong(), anyString(), anyString(), any(), any(), any(), anyBoolean()))
                 .thenReturn(message(99L));

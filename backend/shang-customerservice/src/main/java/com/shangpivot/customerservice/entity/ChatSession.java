@@ -19,6 +19,11 @@ public class ChatSession extends BaseEntity {
     private String summary;
     private OffsetDateTime startedAt;
     private OffsetDateTime endedAt;
+    /** 平台测试流量标记；生产会话为 false。 */
+    private Boolean isTest;
+    /** ai=平台自动化测试；human=平台人工体验。 */
+    private String testSource;
+    private String testRunId;
 
     public static final String STATUS_AI_ONGOING = "AI_ONGOING";
     public static final String STATUS_QUEUED = "QUEUED";

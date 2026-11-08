@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,11 +81,16 @@ public class ChatController {
     @PostMapping("/sessions")
     public Result<Map<String, Object>> createSession(
             @Parameter(description = "true=结束当前进行中会话并新建（开始新会话）")
-            @RequestParam(defaultValue = "false") boolean fresh) {
+            @RequestParam(defaultValue = "false") boolean fresh,
+            @Parameter(description = "平台测试标记：ai/human；生产请求不传")
+            @RequestHeader(value = "X-Agent-Test", required = false) String testHeader,
+            @RequestHeader(value = "X-Agent-Test-Run-Id", required = false) String testRunId) {
         LoginUser user = SecurityContexts.get();
+        boolean isTest = testHeader != null && !testHeader.isBlank() && !"0".equals(testHeader);
+        String testSource = isTest ? ("human".equalsIgnoreCase(testHeader) ? "human" : "ai") : "";
         ChatSession s = fresh
-                ? chatSessionService.startFresh(user.getUserId(), user.getClientType())
-                : chatSessionService.getOrCreateActive(user.getUserId(), user.getClientType());
+                ? chatSessionService.startFresh(user.getUserId(), user.getClientType(), isTest, testSource, testRunId)
+                : chatSessionService.getOrCreateActive(user.getUserId(), user.getClientType(), isTest, testSource, testRunId);
         Map<String, Object> data = new HashMap<>();
         data.put("sessionId", s.getId());
         data.put("status", s.getStatus());
@@ -126,6 +132,18 @@ public class ChatController {
         if (!ChatSession.STATUS_AI_ONGOING.equals(s.getStatus())) {
             guardRailService.unlockSession(s.getId());
             sendNoAiReply(emitter, s);
+            return emitter;
+        }
+        // 文字确认：存在待确认动作时，用户回复“确认/好的”直接执行，不再走意图模型。
+        PendingAction pending = pendingActionService.latestPending(s.getId());
+        if (pending != null && isConfirmText(content)) {
+            guardRailService.unlockSession(s.getId());
+            confirmByText(emitter, s, pending, user.getUserId());
+            return emitter;
+        }
+        if (pending != null && isCancelText(content)) {
+            guardRailService.unlockSession(s.getId());
+            cancelByText(emitter, s, pending, user.getUserId());
             return emitter;
         }
         auditService.record("message_sent", CsAuditLog.RISK_LOW, s.getId(), user.getUserId(), null);
@@ -214,6 +232,64 @@ public class ChatController {
                 .stream()
                 .map(QuickReply::getContent)
                 .toList();
+    }
+
+    private boolean isConfirmText(String text) {
+        return text != null && text.trim().matches("^(确认|确认执行|确定|好的|可以|执行|是|是的|ok|OK)$");
+    }
+
+    private boolean isCancelText(String text) {
+        return text != null && text.trim().matches("^(取消|取消操作|不用了|算了|不要了|别执行)$");
+    }
+
+    /** 文字确认：复用与确认按钮相同的 PendingAction 执行路径。 */
+    private void confirmByText(SseEmitter emitter, ChatSession session, PendingAction action, Long customerId) {
+        String message;
+        try {
+            PendingActionService.ConfirmOutcome outcome = pendingActionService.confirm(
+                    action.getId(), customerId, SupervisorAgent.agentForTool(action.getToolName()));
+            message = outcome.idempotent()
+                    ? "该操作已执行过，无需重复确认。"
+                    : "已执行：" + pendingActionService.summary(action.getToolName(), action.getArgsJson());
+            auditService.record("action_confirmed", CsAuditLog.RISK_MID, session.getId(), customerId,
+                    Map.of("actionId", action.getId(), "tool", action.getToolName(), "via", "text"));
+        } catch (Exception e) {
+            message = e.getMessage() == null ? "操作执行失败，请稍后重试。" : e.getMessage();
+        }
+        CsMessage saved = chatSessionService.saveAssistantMessage(session.getId(), CsMessage.ROLE_ASSISTANT,
+                message, null, null, Map.of("actionId", action.getId(), "tool", action.getToolName()), false);
+        try {
+            emitter.send(SseEmitter.event().name("delta").data(Map.of("delta", message), MediaType.APPLICATION_JSON));
+            emitter.send(SseEmitter.event().name("done").data(Map.of(
+                    "messageId", saved.getId(), "sessionStatus", session.getStatus(), "degraded", false),
+                    MediaType.APPLICATION_JSON));
+            emitter.complete();
+        } catch (Exception ignored) {
+            // 客户端断开
+        }
+    }
+
+    private void cancelByText(SseEmitter emitter, ChatSession session, PendingAction action, Long customerId) {
+        String message;
+        try {
+            pendingActionService.cancel(action.getId(), customerId);
+            message = "已取消该操作。";
+            auditService.record("action_cancelled", CsAuditLog.RISK_LOW, session.getId(), customerId,
+                    Map.of("actionId", action.getId(), "tool", action.getToolName(), "via", "text"));
+        } catch (Exception e) {
+            message = e.getMessage() == null ? "取消失败，请稍后重试。" : e.getMessage();
+        }
+        CsMessage saved = chatSessionService.saveAssistantMessage(session.getId(), CsMessage.ROLE_ASSISTANT,
+                message, null, null, Map.of("actionId", action.getId(), "tool", action.getToolName()), false);
+        try {
+            emitter.send(SseEmitter.event().name("delta").data(Map.of("delta", message), MediaType.APPLICATION_JSON));
+            emitter.send(SseEmitter.event().name("done").data(Map.of(
+                    "messageId", saved.getId(), "sessionStatus", session.getStatus(), "degraded", false),
+                    MediaType.APPLICATION_JSON));
+            emitter.complete();
+        } catch (Exception ignored) {
+            // 客户端断开
+        }
     }
 
     private void sendNoAiReply(SseEmitter emitter, ChatSession s) {

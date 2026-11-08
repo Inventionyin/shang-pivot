@@ -109,4 +109,12 @@ class IntentRouterTest {
         assertThat(router.route("iPhone 15 和 iPhone 15 Pro 哪个贵").type())
                 .isEqualTo(IntentRouter.Type.PRESALE);
     }
+
+    @Test
+    void 明确购买上文第N款识别为加购() {
+        assertThat(router.route("帮我购买第一款").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("就买第二个").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("我要这个").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("买它").type()).isEqualTo(IntentRouter.Type.ADDCART);
+    }
 }

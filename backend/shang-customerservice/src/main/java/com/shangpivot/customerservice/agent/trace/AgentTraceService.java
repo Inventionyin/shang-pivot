@@ -43,6 +43,13 @@ public class AgentTraceService implements ToolCallRecorder {
 
     public AgentRun startRun(Long sessionId, Long customerId, String channel,
                              String intent, String agent, String model, String promptVersion) {
+        return startRun(sessionId, customerId, channel, intent, agent, model, promptVersion,
+                false, "", "");
+    }
+
+    public AgentRun startRun(Long sessionId, Long customerId, String channel,
+                             String intent, String agent, String model, String promptVersion,
+                             boolean isTest, String testSource, String testRunId) {
         AgentRun run = new AgentRun();
         run.setTraceId(UUID.randomUUID().toString().replace("-", ""));
         run.setSessionId(sessionId);
@@ -50,6 +57,9 @@ public class AgentTraceService implements ToolCallRecorder {
         run.setChannel(channel);
         run.setIntent(intent);
         run.setAgent(agent);
+        run.setIsTest(isTest);
+        run.setTestSource(testSource == null ? "" : testSource);
+        run.setTestRunId(testRunId == null ? "" : testRunId);
         run.setStatus("RUNNING");
         run.setModel(model);
         run.setPromptVersion(promptVersion);

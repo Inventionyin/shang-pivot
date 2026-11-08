@@ -3,6 +3,9 @@ import { getAccessToken } from '@/utils/request'
 import { useAuthStore } from '@/stores/auth'
 import { openLoginLayer } from '@/composables/useLoginLayer'
 
+/** 仅“用户主动从站内入口进入 AI”时置位；直接打开/收藏的 /ai 会被导回商品首页。 */
+const AI_ENTRY_KEY = 'shangpin:ai-entry'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior: () => ({ top: 0 }),
@@ -140,6 +143,14 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
+  // 默认落地页必须是商品首页：直接打开/恢复的 /ai 不带站内入口标记时回首页。
+  // 站内点击 AI 入口时 from.name 有值，正常放行；进入后写标记，支持在 AI 页刷新。
+  // 平台“人工体验”入口带 ?test=human，属于显式入口，允许直接打开。
+  const humanTestEntry = to.name === 'ai-chat' && to.query.test === 'human'
+  if (to.name === 'ai-chat' && !humanTestEntry && !from.name && sessionStorage.getItem(AI_ENTRY_KEY) !== '1') {
+    return { path: '/', replace: true }
+  }
+
   const auth = useAuthStore()
   if (!auth.bootstrapped) {
     await auth.bootstrap()
@@ -161,6 +172,14 @@ router.beforeEach(async (to, from) => {
   const title = (to.meta.title as string) || ''
   if (title) document.title = title
   return true
+})
+
+router.afterEach((to) => {
+  if (to.name === 'ai-chat') {
+    sessionStorage.setItem(AI_ENTRY_KEY, '1')
+  } else {
+    sessionStorage.removeItem(AI_ENTRY_KEY)
+  }
 })
 
 export default router
