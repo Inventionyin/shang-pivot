@@ -154,6 +154,18 @@ tags/source
 - 3 个评估手机号轮换，规避 20 条/5 分钟限流（200 条约 240 轮，需 4–5 个限流窗口）；
 - harness 每个用例调用 `POST /api/chat/sessions?fresh=true`，保证独立会话与购物车，不受上一用例卡片/转人工状态影响。
 
+### 5.1 导出给外部测试平台
+
+```bash
+cd backend
+./mvnw -q -pl shang-customerservice -am test \
+  -Dtest=GoldenJsonlExportTest \
+  -Dgolden.output=../../scripts/eval/golden-200.jsonl \
+  -Dsurefire.failIfNoSpecifiedTests=false
+```
+
+产物：[`scripts/eval/golden-200.jsonl`](../../../scripts/eval/golden-200.jsonl)，200 行、200 个稳定 `sourceId`、20 条 Judge、860 条 checks。字段包含 `sourceId/datasetVersion/turns/expected/checks/tags/judge`，可直接由平台同步脚本按 `sourceId` upsert。
+
 本地复跑：
 
 ```bash
