@@ -19,6 +19,8 @@ public class ChatSession extends BaseEntity {
     private String summary;
     private OffsetDateTime startedAt;
     private OffsetDateTime endedAt;
+    /** 最后一条消息时间（用户或助手），用于空闲会话自动结束。 */
+    private OffsetDateTime lastMessageAt;
     /** 平台测试流量标记；生产会话为 false。 */
     private Boolean isTest;
     /** ai=平台自动化测试；human=平台人工体验。 */

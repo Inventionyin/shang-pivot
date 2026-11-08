@@ -94,6 +94,8 @@ public class ChatController {
         Map<String, Object> data = new HashMap<>();
         data.put("sessionId", s.getId());
         data.put("status", s.getStatus());
+        data.put("isTest", Boolean.TRUE.equals(s.getIsTest()));
+        data.put("testSource", s.getTestSource());
         data.put("greeting", "您好，我是尚品汇智能客服小尚~ 想买什么尽管说，我帮您挑！");
         data.put("quickQuestions", recommendedQuestions());
         return Result.ok(data);

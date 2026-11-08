@@ -177,7 +177,9 @@ router.beforeEach(async (to, from) => {
 router.afterEach((to) => {
   if (to.name === 'ai-chat') {
     sessionStorage.setItem(AI_ENTRY_KEY, '1')
-  } else {
+  } else if (to.name !== 'product') {
+    // 商品详情是 AI 会话的临时跳转：保留入口标记，返回/刷新 AI 页仍可进入。
+    // 去首页、分类、我的等页面时清除，维持“直接打开 /ai 回首页”的默认规则。
     sessionStorage.removeItem(AI_ENTRY_KEY)
   }
 })

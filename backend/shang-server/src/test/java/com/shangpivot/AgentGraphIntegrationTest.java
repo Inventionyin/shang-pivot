@@ -12,6 +12,7 @@ import com.shangpivot.commerce.api.ProductSkuApi;
 import com.shangpivot.commerce.api.ProductSkuDTO;
 import com.shangpivot.customerservice.agent.contract.AgentName;
 import com.shangpivot.customerservice.agent.graph.AgentGraphOrchestrator;
+import com.shangpivot.customerservice.agent.service.CartConfirmationPolicy;
 import com.shangpivot.customerservice.agent.service.PendingActionService;
 import com.shangpivot.customerservice.agent.trace.entity.PendingAction;
 import com.shangpivot.customerservice.agent.trace.mapper.PendingActionMapper;
@@ -78,6 +79,8 @@ class AgentGraphIntegrationTest {
     @MockitoBean
     private CartMutationApi cartMutationApi;
     @MockitoBean
+    private CartConfirmationPolicy cartConfirmationPolicy;
+    @MockitoBean
     private CsGuardRailService guardRailService;
     @MockitoBean
     private LlmSettingsResolver settingsResolver;
@@ -133,6 +136,8 @@ class AgentGraphIntegrationTest {
                 .thenReturn(new CartAddResultDTO(1L, 10L, 2));
         when(knowledgeSearchService.search(any(), anyInt())).thenReturn(List.of(
                 new KnowledgeSearchService.KnowledgeHit(1L, "退换货政策", "签收后 7 天内可无理由退货", 0.9, "vector")));
+        // 本测试验证低风险加购直接执行；确认阈值策略由 CartConfirmationPolicyTest 单独覆盖。
+        when(cartConfirmationPolicy.requiresConfirmation(any(), any(), anyInt())).thenReturn(false);
     }
 
     @Test

@@ -112,6 +112,13 @@ agent:
     # 加购风险分级：数量>1 或 单价×数量>=阈值时生成待确认动作
     confirm-amount-threshold: ${AGENT_CART_CONFIRM_AMOUNT_THRESHOLD:500}
 
+# C 端会话空闲回收：最后一条消息（用户或助手）超过阈值后自动结束。
+chat:
+  session:
+    idle-timeout-minutes: ${CHAT_SESSION_IDLE_MINUTES:30}
+    # 扫描间隔；测试环境可调小，生产默认 60s。
+    idle-scan-ms: ${CHAT_SESSION_IDLE_SCAN_MS:60000}
+
 # 真实数据推送（AI 测试平台）
 platform:
   webhook:

@@ -1,6 +1,7 @@
 package com.shangpivot.customerservice.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shangpivot.common.exception.BizException;
 import com.shangpivot.common.result.ErrorCode;
@@ -12,6 +13,7 @@ import com.shangpivot.customerservice.mapper.CsMessageMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +46,17 @@ public class ChatSessionService {
                     .and(w -> w.eq(ChatSession::getIsTest, false).or().isNull(ChatSession::getIsTest))
                     .orderByDesc(ChatSession::getId)
                     .last("LIMIT 1"));
+        } else if ("human".equalsIgnoreCase(testSource)) {
+            // 人工体验是“同一个用户手动续聊”的场景：恢复最近一场未结束的 human 测试会话。
+            // 平台自动化测试（testSource=ai）仍不复用，避免跨用例污染。
+            active = sessionMapper.selectOne(new LambdaQueryWrapper<ChatSession>()
+                    .eq(ChatSession::getCustomerId, customerId)
+                    .eq(ChatSession::getIsTest, true)
+                    .eq(ChatSession::getTestSource, "human")
+                    .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
+                            ChatSession.STATUS_HUMAN_ONGOING)
+                    .orderByDesc(ChatSession::getId)
+                    .last("LIMIT 1"));
         }
         if (active != null) {
             return active;
@@ -53,6 +66,7 @@ public class ChatSessionService {
         s.setClientType(clientType == null ? "h5" : clientType);
         s.setStatus(ChatSession.STATUS_AI_ONGOING);
         s.setStartedAt(OffsetDateTime.now());
+        s.setLastMessageAt(s.getStartedAt());
         s.setIsTest(isTest);
         s.setTestSource(testSource == null ? "" : testSource);
         s.setTestRunId(testRunId == null ? "" : testRunId);
@@ -74,6 +88,10 @@ public class ChatSessionService {
                         ChatSession.STATUS_HUMAN_ONGOING);
         if (isTest) {
             query.eq(ChatSession::getIsTest, true);
+            // 人工体验与平台 AI 自动化测试互不干扰：只结束同一类测试会话。
+            if (testSource != null && !testSource.isBlank()) {
+                query.eq(ChatSession::getTestSource, testSource);
+            }
         } else {
             query.and(w -> w.eq(ChatSession::getIsTest, false).or().isNull(ChatSession::getIsTest));
         }
@@ -108,6 +126,9 @@ public class ChatSessionService {
             m.put("summary", s.getSummary());
             m.put("startedAt", s.getStartedAt());
             m.put("endedAt", s.getEndedAt());
+            m.put("lastMessageAt", s.getLastMessageAt());
+            m.put("isTest", Boolean.TRUE.equals(s.getIsTest()));
+            m.put("testSource", s.getTestSource());
             CsMessage last = messageMapper.selectOne(new LambdaQueryWrapper<CsMessage>()
                     .eq(CsMessage::getSessionId, s.getId())
                     .orderByDesc(CsMessage::getId)
@@ -134,6 +155,7 @@ public class ChatSessionService {
         msg.setContentType(CsMessage.TYPE_TEXT);
         msg.setContent(content);
         messageMapper.insert(msg);
+        touchSession(sessionId);
         return msg;
     }
 
@@ -150,7 +172,20 @@ public class ChatSessionService {
         msg.setToolTrace(toolTrace);
         msg.setDegraded(degraded);
         messageMapper.insert(msg);
+        touchSession(sessionId);
         return msg;
+    }
+
+    /** 消息落库后刷新会话活跃时间；空闲调度以此计算 30 分钟自动结束。 */
+    private void touchSession(Long sessionId) {
+        if (sessionId == null) {
+            return;
+        }
+        OffsetDateTime now = OffsetDateTime.now();
+        sessionMapper.update(null, new LambdaUpdateWrapper<ChatSession>()
+                .eq(ChatSession::getId, sessionId)
+                .set(ChatSession::getLastMessageAt, now)
+                .set(ChatSession::getUpdatedAt, now));
     }
 
     /** 转人工 / 撤回。 */
@@ -203,6 +238,21 @@ public class ChatSessionService {
         s.setEndedAt(OffsetDateTime.now());
         sessionMapper.updateById(s);
         return s;
+    }
+
+    /**
+     * 结束超过空闲阈值的进行中会话（AI/排队/人工均适用）。
+     * 返回本次实际结束的会话数；调度器每分钟调用一次，多实例重复执行也安全。
+     */
+    public int endIdleSessions(OffsetDateTime now, Duration idleTimeout) {
+        OffsetDateTime cutoff = now.minus(idleTimeout);
+        return sessionMapper.update(null, new LambdaUpdateWrapper<ChatSession>()
+                .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
+                        ChatSession.STATUS_HUMAN_ONGOING)
+                .lt(ChatSession::getLastMessageAt, cutoff)
+                .set(ChatSession::getStatus, ChatSession.STATUS_ENDED)
+                .set(ChatSession::getEndedAt, now)
+                .set(ChatSession::getUpdatedAt, now));
     }
 
     public Map<String, Object> toVo(CsMessage msg) {

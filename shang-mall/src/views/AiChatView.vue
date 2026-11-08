@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, onBeforeRouteLeave } from 'vue-router'
 import { useClientType } from '@/composables/useClientType'
 import { Sparkles, Headset } from 'lucide-vue-next'
 import { formatPrice } from '@/utils/format'
@@ -48,6 +48,7 @@ const sessionStatus = ref('AI_ONGOING')
 const bubbles = ref<Bubble[]>([])
 const input = ref('')
 const sending = ref(false)
+const restoring = ref(false)
 const quickQuestions = ref<string[]>([])
 const showHistory = ref(false)
 const historyLoading = ref(false)
@@ -56,6 +57,7 @@ const errorMsg = ref('')
 const scrollHost = ref<HTMLElement>()
 
 let seq = 0
+let sessionEpoch = 0
 const nextKey = () => `m${++seq}`
 let abort: AbortController | null = null
 
@@ -88,33 +90,86 @@ const statusText = computed(() => {
 onMounted(() => {
   // 平台“人工体验”入口：本次会话标记为 human test，并推送到测试平台真实数据看板。
   if (route.query.test === 'human') {
-    localStorage.setItem('shang_mall_test_mode', 'human')
+    sessionStorage.setItem('shang_mall_test_mode', 'human')
   }
   void ensureSession()
 })
 
-onBeforeUnmount(() => {
-  abort?.abort()
-  localStorage.removeItem('shang_mall_test_mode')
+onBeforeRouteLeave((to) => {
+  // 商品详情是 AI 会话的临时跳转：保留人工体验标记，返回时才能续接同一会话。
+  // 去首页/分类/我的等页面时清除，避免后续普通会话被误标为测试流量。
+  if (to.name !== 'product') {
+    sessionStorage.removeItem('shang_mall_test_mode')
+  }
 })
 
-async function bootstrap() {
+onBeforeUnmount(() => {
+  abort?.abort()
+})
+
+function toBubbles(messages: ChatMessage[]): Bubble[] {
+  return (messages || [])
+    .slice()
+    .reverse()
+    .map((m: ChatMessage) => ({
+      key: `h${m.id}`,
+      role: (m.role === 'AGENT' ? 'AGENT' : m.role === 'USER' ? 'USER' : 'ASSISTANT') as Bubble['role'],
+      content: m.content || '',
+      reasoning: m.reasoning || undefined,
+      cards: m.metadata?.items,
+      degraded: m.degraded,
+      seatName: m.metadata?.seatName,
+    }))
+}
+
+function greetingBubble(content?: string): Bubble {
+  return {
+    key: nextKey(),
+    role: 'ASSISTANT',
+    content: content || '您好，我是智能客服小尚~',
+  }
+}
+
+async function bootstrap(fresh = false) {
+  const epoch = ++sessionEpoch
   errorMsg.value = ''
+  restoring.value = true
   try {
-    const res = await createSession()
+    const res = await createSession(fresh)
+    if (epoch !== sessionEpoch) return
     sessionId.value = res.data.sessionId
     sessionStatus.value = res.data.status
     quickQuestions.value = res.data.quickQuestions || []
-    if (bubbles.value.length === 0) {
-      bubbles.value.push({
-        key: nextKey(),
-        role: 'ASSISTANT',
-        content: res.data.greeting || '您好，我是智能客服小尚~',
-      })
+    // 后端返回的测试标记是最终口径：避免 sessionStorage 里的旧标记污染普通会话。
+    if (res.data.testSource === 'human') {
+      sessionStorage.setItem('shang_mall_test_mode', 'human')
+    } else {
+      sessionStorage.removeItem('shang_mall_test_mode')
+    }
+    if (!fresh) {
+      try {
+        const history = await listMessages(res.data.sessionId, 0, 50)
+        if (epoch !== sessionEpoch) return
+        const restored = toBubbles(history.data || [])
+        bubbles.value = restored.length ? restored : [greetingBubble(res.data.greeting)]
+      } catch {
+        if (epoch !== sessionEpoch) return
+        // 历史接口失败不阻塞新会话输入，仍保留 sessionId 让用户可继续发送。
+        bubbles.value = [greetingBubble(res.data.greeting)]
+        errorMsg.value = '历史消息加载失败，可点右上角「历史会话」重试'
+      }
+    } else {
+      bubbles.value = [greetingBubble(res.data.greeting)]
     }
     await scrollBottom()
   } catch {
-    errorMsg.value = '会话初始化失败，请稍后重试'
+    if (epoch === sessionEpoch) {
+      errorMsg.value = '会话初始化失败，请稍后重试'
+    }
+  } finally {
+    if (epoch === sessionEpoch) {
+      restoring.value = false
+    }
   }
 }
 
@@ -127,19 +182,22 @@ let bootTask: Promise<void> | null = null
 function ensureSession(): Promise<void> {
   if (sessionId.value) return Promise.resolve()
   if (!bootTask) {
-    bootTask = bootstrap().finally(() => {
+    bootTask = bootstrap(false).finally(() => {
       bootTask = null
     })
   }
   return bootTask
 }
 
-function startNewSession() {
+async function startNewSession() {
   abort?.abort()
+  // 让仍在进行中的首次 bootstrap 失效，避免它晚到后覆盖新会话。
+  sessionEpoch++
+  bootTask = null
   bubbles.value = []
   sessionStatus.value = 'AI_ONGOING'
   sessionId.value = ''
-  void ensureSession()
+  await bootstrap(true)
 }
 
 async function openHistory() {
@@ -159,22 +217,17 @@ async function loadSession(item: ChatSessionBrief) {
   abort?.abort()
   showHistory.value = false
   errorMsg.value = ''
+  restoring.value = true
   try {
     const res = await listMessages(item.sessionId, 0, 50)
     sessionId.value = item.sessionId
     sessionStatus.value = item.status
-    bubbles.value = (res.data || [])
-      .slice()
-      .reverse()
-      .map((m: ChatMessage) => ({
-        key: `h${m.id}`,
-        role: (m.role === 'AGENT' ? 'AGENT' : m.role === 'USER' ? 'USER' : 'ASSISTANT') as Bubble['role'],
-        content: m.content || '',
-        reasoning: m.reasoning || undefined,
-        cards: m.metadata?.items,
-        degraded: m.degraded,
-        seatName: m.metadata?.seatName,
-      }))
+    if (item.testSource === 'human') {
+      sessionStorage.setItem('shang_mall_test_mode', 'human')
+    } else {
+      sessionStorage.removeItem('shang_mall_test_mode')
+    }
+    bubbles.value = toBubbles(res.data || [])
     if (item.status === 'ENDED') {
       bubbles.value.push({
         key: nextKey(),
@@ -185,12 +238,14 @@ async function loadSession(item: ChatSessionBrief) {
     await scrollBottom()
   } catch {
     errorMsg.value = '历史消息加载失败'
+  } finally {
+    restoring.value = false
   }
 }
 
 async function send(text?: string) {
   const content = (text ?? input.value).trim()
-  if (!content || sending.value) return
+  if (!content || sending.value || restoring.value) return
   if (!sessionId.value) {
     await ensureSession()
     if (!sessionId.value) return // 初始化失败，errorMsg 已提示
@@ -413,7 +468,7 @@ function statusLabel(item: ChatSessionBrief): string {
 </script>
 
 <template>
-  <div class="ai-chat" :class="{ 'is-h5': isH5, 'is-web': isWeb }">
+  <div class="ai-chat" :class="{ 'is-h5': isH5, 'is-web': isWeb }" data-testid="ai-chat">
     <header class="ai-chat__header">
       <div class="ai-chat__title">
         <span class="ai-orb ai-orb--sm" aria-hidden="true"><Sparkles :size="17" :stroke-width="2.2" /></span>
@@ -423,13 +478,21 @@ function statusLabel(item: ChatSessionBrief): string {
         </div>
       </div>
       <div class="ai-chat__actions">
-        <button class="link-btn" type="button" @click="openHistory">历史会话</button>
-        <button class="link-btn" type="button" @click="startNewSession">新对话</button>
+        <button class="link-btn" type="button" data-testid="ai-chat-history" @click="openHistory">历史会话</button>
+        <button class="link-btn" type="button" data-testid="ai-chat-new" @click="startNewSession">新对话</button>
       </div>
     </header>
 
-    <div ref="scrollHost" class="ai-chat__body">
-      <div v-for="b in bubbles" :key="b.key" class="row" :class="`row--${b.role.toLowerCase()}`">
+    <div ref="scrollHost" class="ai-chat__body" data-testid="ai-chat-messages">
+      <div v-if="restoring && bubbles.length === 0" class="state-label">正在恢复会话…</div>
+      <div
+        v-for="b in bubbles"
+        :key="b.key"
+        class="row"
+        :class="`row--${b.role.toLowerCase()}`"
+        data-testid="ai-chat-bubble"
+        :data-streaming="b.streaming ? 'true' : 'false'"
+      >
         <span v-if="b.role !== 'USER'" class="ai-orb ai-orb--bubble" aria-hidden="true">
           <Sparkles v-if="b.role === 'ASSISTANT'" :size="17" :stroke-width="2.2" />
           <Headset v-else :size="17" :stroke-width="2.2" />
@@ -444,7 +507,7 @@ function statusLabel(item: ChatSessionBrief): string {
             <div v-if="b.content || !b.streaming" class="content">{{ b.content }}</div>
             <div v-else-if="!b.reasoning" class="content typing"><span />思考中…</div>
             <div v-if="b.cards?.length" class="cards">
-              <RouterLink v-for="c in b.cards" :key="c.spuId" class="card" :to="`/product/${c.spuId}`">
+              <RouterLink v-for="c in b.cards" :key="c.spuId" class="card" :to="`/product/${c.spuId}`" data-testid="ai-chat-card">
                 <div class="card__pic">
                   <img v-if="c.pic" :src="resolveMediaUrl(c.pic)" :alt="c.name" />
                   <span v-else class="card__placeholder">暂无图片</span>
@@ -531,11 +594,18 @@ function statusLabel(item: ChatSessionBrief): string {
       <form class="composer" @submit.prevent="send()">
         <input
           v-model="input"
-          :disabled="sessionStatus === 'ENDED'"
+          data-testid="ai-chat-input"
+          :disabled="sessionStatus === 'ENDED' || restoring"
           maxlength="500"
           placeholder="想买什么？描述需求，我来帮你挑~"
         />
-        <button type="submit" :disabled="sending || !input.trim() || sessionStatus === 'ENDED'">发送</button>
+        <button
+          type="submit"
+          data-testid="ai-chat-send"
+          :disabled="sending || restoring || !input.trim() || sessionStatus === 'ENDED'"
+        >
+          发送
+        </button>
       </form>
     </footer>
 

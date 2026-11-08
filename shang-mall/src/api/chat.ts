@@ -31,11 +31,16 @@ export interface ChatSessionBrief {
   startedAt?: string
   endedAt?: string
   lastMessage?: string | null
+  lastMessageAt?: string | null
+  isTest?: boolean
+  testSource?: string | null
 }
 
 export interface CreateSessionResult {
   sessionId: string | number
   status: string
+  isTest?: boolean
+  testSource?: string | null
   greeting: string
   quickQuestions: string[]
 }
@@ -49,11 +54,12 @@ export interface ChatPendingAction {
   expiresAt?: string
 }
 
-export function createSession() {
-  const humanTest = localStorage.getItem('shang_mall_test_mode') === 'human'
+export function createSession(fresh = false) {
+  const humanTest = sessionStorage.getItem('shang_mall_test_mode') === 'human'
   return http<CreateSessionResult>({
     url: '/api/chat/sessions',
     method: 'POST',
+    params: fresh ? { fresh: true } : undefined,
     headers: humanTest
       ? { 'X-Agent-Test': 'human', 'X-Agent-Test-Run-Id': `human-${Date.now()}` }
       : undefined,
