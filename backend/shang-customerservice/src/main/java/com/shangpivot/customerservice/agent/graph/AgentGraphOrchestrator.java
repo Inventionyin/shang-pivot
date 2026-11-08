@@ -918,10 +918,16 @@ public class AgentGraphOrchestrator implements ChatResponder {
     private ProductSkuDTO pickSku(List<ProductSkuDTO> skus, String userText) {
         String text = userText == null ? "" : userText;
         // 规格序号：“第一个/第2款/规格1/选1”
+        // 只识别“规格 1/规格第一个/选 1”或单独数字，避免把“购买第一款”的商品序号当成规格序号。
         java.util.regex.Matcher ordinal = java.util.regex.Pattern
-                .compile("(?:规格\\s*第?\\s*|第\\s*|选\\s*)([一二三四五1-5])\\s*(?:个|款|号|规格)?")
+                .compile("(?:规格\\s*第?\\s*|选\\s*)([一二三四五1-5])\\s*(?:个|款|号|规格)?")
                 .matcher(text);
-        if (ordinal.find()) {
+        boolean ordinalFound = ordinal.find();
+        if (!ordinalFound) {
+            ordinal = java.util.regex.Pattern.compile("^\\s*([1-5])\\s*$").matcher(text);
+            ordinalFound = ordinal.find();
+        }
+        if (ordinalFound) {
             int n = "一二三四五".indexOf(ordinal.group(1));
             int index = n >= 0 ? n : Integer.parseInt(ordinal.group(1)) - 1;
             if (index >= 0 && index < skus.size()) {
