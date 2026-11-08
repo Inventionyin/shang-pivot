@@ -30,7 +30,7 @@ V3.1：显式状态图 + 4 个 LLM 子 Agent + Handoff 策略 + 自建 Tool Gate
 | 写操作 | 模型提计划；确认 + 幂等 + 审计；首期只读 | 加购直接执行，无确认/无幂等键；取消/确认收货/售后未由 Agent 执行 | 风险分级：`WRITE_LOW` 默认执行 + 幂等；`WRITE_HIGH` 走 `pending_action` + 用户确认 + 幂等 + 审计 |
 | 状态与恢复 | 状态机 + checkpointer；断点恢复 | 会话/消息落 PostgreSQL；无图检查点 | LangGraph4j + Postgres saver（每 run 独立 thread，DB 异常自动降级）；checkpoint 只存状态槽位；写操作不因恢复重复执行 |
 | Trace | Langfuse/Phoenix + PostgreSQL + ClickHouse（规模上来后）；OTel/SkyWalking | `audit_log` + `message.tool_trace` + token 审计；无 `agent_run` 表 | PostgreSQL 自建表：`agent_run` / `agent_step` / `llm_call` / `tool_call` / `retrieval` / `guardrail_event`；不引入 Langfuse/ClickHouse |
-| 评测 | 首期 200–500 条 golden cases；CI 门禁 | 100 条 Golden cases（20 核心 + 80 扩容）；确定性断言硬门禁 + LLM Judge 趋势；每周 CI | 先守住 100 条高频/高风险用例，从失败 trace/工单逐步扩充；不追求首期数量 |
+| 评测 | 首期 200–500 条 golden cases；CI 门禁 | 200 条 Golden cases（20 核心 + 180 扩容）；确定性断言硬门禁 + LLM Judge 趋势；每周 CI | 先守住 20 条核心高频/高风险用例，200 条做周度/发布前全量 |
 | RAG | pgvector + BM25 混合、引用、拒答 | 词法兜底 + 可插拔向量；`auto` 模式；引用来源 | 沿用 `ADR-0006`，本版不重做 RAG |
 | 协议 | MCP 管工具，A2A 管跨团队 Agent；首期不引入 A2A | 进程内 Java 接口 | 进程内 Java 接口；MCP 只做可选外部/QA 工具；A2A 不引入 |
 | 新增基础设施 | Langfuse/ClickHouse、Python 训练链路 | 无新增（Postgres/Redis/MinIO 已有） | 只新增 PostgreSQL 表；不新增中间件、不新增 Python 在线服务 |
@@ -44,7 +44,7 @@ V3.1：显式状态图 + 4 个 LLM 子 Agent + Handoff 策略 + 自建 Tool Gate
 | 子 Agent 契约 | 蓝图 §5.2：每个子 Agent 声明 `allowed_tools` / `max_tool_steps` / `timeout_ms` / `fallback_policy` | `AgentName` / `AgentStatus` / `SupervisorAgent.RouteResult` / `ToolResult` 等价契约；4 个 Agent + Handoff | 已实现；未单独建 `AgentTask/AgentResult` 类，避免重复建模 |
 | 显式状态机与检查点 | 蓝图 §6.2：`ROUTING → NEED_SLOT → PLANNING → TOOL_CALLING → WAIT_CONFIRM → ANSWERING → ESCALATED` | LangGraph4j 状态图；条件边；Handoff；V3.0 两阶段作为回退 | `route → execute → answer` + 条件边已实现并有集成测试；Postgres checkpoint 已接（`LG4JThread`/`LG4JCheckpoint`，每轮 4 个 checkpoint） |
 | 全链路 trace | 蓝图 §13：`traceId + sessionId + agentRunId + toolCallId`；每一步可追溯 | V25 表结构；流式结束后聚合 `llm_call`；敏感字段脱敏；大字段可转 MinIO | V25 已在 PG17 验证；`AgentTraceService` + `CsAgentTraceController` 已接线；MinIO 大字段未接 |
-| 评测闭环 | 蓝图 §13.2/§13.3：golden set、失败分类、CI 门禁 | 100 条 Golden cases；确定性断言硬门禁，Judge 只作趋势；每周 CI | graph 周度 CI 已接（`AGENT_ENGINE=graph`，3 个账号轮换）；100 条生产/本地确定性断言通过；10/10 写安全矩阵通过 |
+| 评测闭环 | 蓝图 §13.2/§13.3：golden set、失败分类、CI 门禁 | 200 条 Golden cases；确定性断言硬门禁，Judge 只作趋势；每周 CI | graph 周度 CI 已接（`AGENT_ENGINE=graph`，3 个账号轮换）；200 条本地确定性断言通过；100 条生产/100 条历史记录；10/10 写安全矩阵通过 |
 | 写操作安全 | 蓝图 §0.3/§12：模型只提计划，确认 + 幂等 + 审计 + 人工兜底 | 风险分级；`pending_action` 状态机；唯一幂等键；确认接口；审计事件 | 已实现并通过集成测试；确认/取消 HTTP 接口已接线；失败保持 CONFIRMED 可重试 |
 | 降级与回退 | 蓝图 §11：LLM/工具失败可降级 | 图运行时异常回退 V3.0 两阶段；LLM 不可用走规则/FAQ；写操作 fail closed | LLM 不可用/异常有 fallback；图运行时不自动回退 legacy，需开关 `AGENT_ENGINE=legacy` 回滚 |
 
@@ -69,8 +69,8 @@ V3.1：显式状态图 + 4 个 LLM 子 Agent + Handoff 策略 + 自建 Tool Gate
 | 问题 | 单 Agent 工具太多、上下文太杂；跨订单/物流/售后/商品；网关原生 `tool_calls` 不可靠；写操作有真实副作用 | V3.0 两阶段编排能跑通，但所有意图集中在 `ChatOrchestrator`；加购直接执行；取消/售后未开放 | 不要把它说成“已经多 Agent” |
 | 架构 | Supervisor 管状态，子 Agent 管领域，Tool Gateway 管权限与执行，Postgres 管 trace | 状态图 + 4 个 LLM Agent + Handoff 策略 + Tool Gateway + `agent_run` 表 | 说明 Supervisor 是图/规则，不是第 5 个 LLM |
 | 取舍 | 为什么单体、为什么 4 个、为什么 Postgres、为什么 20 条、为什么不用 Python | 见 §2/§4 的对照表；每个“不做”都给触发条件 | 取舍要能说出“什么情况下会改” |
-| 数据 | 用什么指标证明不是“感觉更聪明” | 100 条 Golden；确定性断言（工具/卡片/关键词/禁止模式）；Judge 趋势；首字/P95/token/转人工率/写操作审计覆盖率 | 只报真实跑过的数据；生产 graph 100/100（v31-100），扩容前的 50 条与 20 条均有记录 |
-| 结果 | 已实现什么、目标是什么、还差什么 | V3.0 两阶段 + V3.1 graph 均已上线；100 条 Golden、10 条写安全、Postgres checkpoint、管理端 Trace 已落地 | 明确“已上线/已拍板/已验证/未实现”四层状态 |
+| 数据 | 用什么指标证明不是“感觉更聪明” | 200 条 Golden；确定性断言（工具/卡片/关键词/禁止模式）；Judge 趋势；首字/P95/token/转人工率/写操作审计覆盖率 | 只报真实跑过的数据；本地 graph/legacy 各 200/200（v32-200），生产历史 100/100（v31-100） |
+| 结果 | 已实现什么、目标是什么、还差什么 | V3.0 两阶段 + V3.1 graph 均已上线；200 条 Golden、10 条写安全、Postgres checkpoint、管理端 Trace 已落地 | 明确“已上线/已拍板/已验证/未实现”四层状态 |
 
 ### 5.2 常见追问与回答要点
 
@@ -79,14 +79,14 @@ V3.1：显式状态图 + 4 个 LLM 子 Agent + Handoff 策略 + 自建 Tool Gate
 | 为什么不用 Python LangGraph？ | 在线主应用是 Java/Spring，Python 会引入双栈部署、鉴权、trace 与数据一致性成本；LangGraph4j 足够表达状态图/检查点，且能复用 Spring AI 与现有事务。Python 只保留离线评测/训练的可能性 |
 | 为什么不是 5 个 Agent？ | Handoff 是策略不是领域能力；用规则判定更快、更可解释、更便宜。蓝图本身也说 Handoff 可以不单独做 Agent |
 | 为什么不用 Langfuse？ | 当前规模 PostgreSQL 够用；Langfuse 带来额外中间件、PII 与值班成本。等出现 prompt 实验/人工标注/高频分析需求再评估 |
-| 为什么只有 100 条用例？ | 先覆盖高频与高风险，确保每条都能定位失败原因；用例从真实目录/知识/失败 trace/工单扩充，比一次性堆 500 条更有维护价值 |
+| 为什么只有 200 条用例？ | 先覆盖高频与高风险，确保每条都能定位失败原因；用例从真实目录/知识/失败 trace/工单扩充，比一次性堆 500 条更有维护价值 |
 | 为什么还留在单体？ | 模块化单体已有编译期边界与进程内低延迟；独立 Agent 服务在当前体量下收益小于运维成本。拆分触发条件写在 ADR-0001/0007 |
 | 网关不支持 `tool_calls` 怎么办？ | 不把生产执行面建立在它上面；模型输出结构化计划，后端校验后由 Tool Gateway 执行。代价是多一次往返与 JSON 容错 |
 | 写操作怎么保证不重复？ | 服务端幂等键 + `pending_action` 唯一索引 + CAS 确认 + `tool_call` 部分唯一索引 + 领域状态守卫；崩溃窄窗口用领域幂等/可逆性兜底，不引入分布式事务 |
 
 ### 5.3 90 秒口述稿（可按需删减）
 
-> “V3.0 用两阶段编排解决了网关不支持原生 tool_calls 的问题：先用轻量提示词做意图和槽位，后端执行 commerce/RAG，再让模型流式生成。它能跑通，但所有意图都堆在一个编排器里，写操作也没有统一的确认和幂等。V3.1 在同一个 Java 单体里引入 LangGraph4j 状态图和 4 个有边界的子 Agent，Supervisor 负责状态、预算和转人工，Handoff 用规则而不是第 5 次 LLM 调用；所有工具只能经过自建 Tool Gateway，模型只提计划，高风险写操作要用户确认并带幂等键；trace 全部落 PostgreSQL。我们没有拆 Python 服务，没有把 MCP/A2A 放进热路径，也没有为了好看上 Langfuse/ClickHouse。验证上用 100 条 Golden 做确定性门禁；生产已切 graph，Postgres checkpoint 每轮 4 个检查点，写确认 HTTP 接口与 Trace 查询均已接线。”
+> “V3.0 用两阶段编排解决了网关不支持原生 tool_calls 的问题：先用轻量提示词做意图和槽位，后端执行 commerce/RAG，再让模型流式生成。它能跑通，但所有意图都堆在一个编排器里，写操作也没有统一的确认和幂等。V3.1 在同一个 Java 单体里引入 LangGraph4j 状态图和 4 个有边界的子 Agent，Supervisor 负责状态、预算和转人工，Handoff 用规则而不是第 5 次 LLM 调用；所有工具只能经过自建 Tool Gateway，模型只提计划，高风险写操作要用户确认并带幂等键；trace 全部落 PostgreSQL。我们没有拆 Python 服务，没有把 MCP/A2A 放进热路径，也没有为了好看上 Langfuse/ClickHouse。验证上用 200 条 Golden 做确定性门禁；生产已切 graph，Postgres checkpoint 每轮 4 个检查点，写确认 HTTP 接口与 Trace 查询均已接线。”
 
 ## 6. 现状与边界（避免过度承诺）
 
@@ -97,8 +97,8 @@ V3.1：显式状态图 + 4 个 LLM 子 Agent + Handoff 策略 + 自建 Tool Gate
 | V3.0 两阶段编排 | 代码默认入口（`AGENT_ENGINE` 未设时）；生产 `.env` 已切 graph，可随时回滚 | `backend/shang-customerservice/src/main/java/com/shangpivot/customerservice/agent/ChatOrchestrator.java`、`ChatController.java` |
 | 意图识别（含 SPECS/ADDCART） | 已实现 | `IntentRouter.java` |
 | 对话内加购 | V3.0 内联调用；V3.1 `AddToCartTool` 已接入 graph 路径并通过集成测试 | `ChatOrchestrator.addCartFacts()`、`agent/tool/impl/AddToCartTool.java` |
-| 50 → 100 条 Golden 评测 + graph 每周 CI | 已实现（`EVAL_DATASET_VERSION=v31-100`） | `eval/GoldenDataset.java`、`AgentEvalReportTest.java`、`.github/workflows/eval.yml`、`eval-dataset.md` |
-| Graph Golden 对等 | 100/100 确定性断言通过（不跑裁判） | `GraphGoldenIntegrationTest` |
+| 100 → 200 条 Golden 评测 + graph 每周 CI | 已实现（`EVAL_DATASET_VERSION=v32-200`） | `eval/GoldenDataset.java`、`AgentEvalReportTest.java`、`.github/workflows/eval.yml`、`eval-dataset.md` |
+| Graph Golden 对等 | 200/200 确定性断言通过（不跑裁判） | `GraphGoldenIntegrationTest` |
 | 写操作安全矩阵 | 10/10（确认前不写/确认一次/幂等/取消/过期/越权/缺参） | `AgentWriteSafetyIntegrationTest` |
 | Spring AI 2.0.2 + Boot 4.1.1 + LangGraph4j 1.9.8 兼容性 | 已验证（3 个 spike 用例通过） | `AgentRuntimeSpikeTest.java` |
 | Spring AI 适配层 | 已实现 `SpringAiLlmClient`，`AGENT_LLM_CLIENT=spring-ai` 切换；流式 reasoning diff 单测通过 | `llm/SpringAiLlmClient.java`、`SpringAiLlmClientTest` |

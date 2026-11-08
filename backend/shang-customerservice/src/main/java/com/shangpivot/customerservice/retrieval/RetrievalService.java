@@ -73,10 +73,12 @@ public class RetrievalService {
         if (hits.size() > searchLimit) {
             hits = new ArrayList<>(hits.subList(0, searchLimit));
         }
-        // 预算内优先；同组按价格升序，便于用户先看到最贴近预算的候选
-        hits.sort(java.util.Comparator
-                .comparing(ProductHit::withinBudget).reversed()
-                .thenComparing(hit -> hit.card().price() == null ? BigDecimal.ZERO : hit.card().price()));
+        // 有预算时才按“预算内优先、价格升序”重排；无预算必须保留检索相关度顺序
+        if (c.hasBudget()) {
+            hits.sort(java.util.Comparator
+                    .comparing(ProductHit::withinBudget).reversed()
+                    .thenComparing(hit -> hit.card().price() == null ? BigDecimal.ZERO : hit.card().price()));
+        }
         if (ProductConstraintParser.needsTermFilter(query)) {
             hits = hits.stream()
                     .filter(hit -> ProductConstraintParser.matchesTerm(query, hit.card()))

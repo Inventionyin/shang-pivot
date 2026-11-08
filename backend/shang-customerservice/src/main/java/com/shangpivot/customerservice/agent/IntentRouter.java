@@ -3,6 +3,7 @@ package com.shangpivot.customerservice.agent;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shangpivot.customerservice.llm.LlmClient;
+import com.shangpivot.customerservice.retrieval.ProductConstraintParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -113,8 +114,14 @@ public class IntentRouter {
             return make(Type.PRESALE, message, no, 1);
         }
         if (message.contains("退货") || message.contains("换货") || message.contains("售后") || message.contains("退款")
-                || message.contains("退换") || message.contains("无理由") || message.contains("可以退")) {
+                || message.contains("退换") || message.contains("无理由") || message.contains("可以退")
+                || message.matches(".*(能退|退吗|质量问题|运费谁|退运费|怎么退).*")) {
             return make(Type.AFTERSALE, message, no, 1);
+        }
+        // “在吗/想问下 + 品类 + 购买词”是导购，不是闲聊
+        if (ProductConstraintParser.parse(message).hasCategories()
+                && message.matches(".*(买|想买|想给|推荐|预算|多少钱|有货|看看|换新).*")) {
+            return make(Type.PRESALE, message, no, 1);
         }
         if (message.matches(".*(你是谁|你叫什么|天气|几点|讲个笑话|谢谢|你好|在吗).*")) {
             return make(Type.CHITCHAT, message, no, 1);

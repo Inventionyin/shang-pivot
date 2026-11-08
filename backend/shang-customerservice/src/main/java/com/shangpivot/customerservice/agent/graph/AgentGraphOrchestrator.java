@@ -425,11 +425,13 @@ public class AgentGraphOrchestrator implements ChatResponder {
             return new FactsResult("（优惠咨询：无专属优惠，如实告知；不要推荐无关商品）",
                     FactAnswerRenderer.noProducts(keyword, state.userText()));
         }
+        boolean compareQuery = state.userText()
+                .matches(".*(和|与|对比|哪个好|哪个更|哪个便宜|哪个贵|哪个强|vs|VS).*");
         ToolResult result = tool(state, route, "searchProducts",
-                searchArgs(keyword, MAX_PRODUCTS, constraints), tools);
+                searchArgs(keyword, compareQuery ? 1 : MAX_PRODUCTS, constraints), tools);
         List<RetrievalService.ProductHit> hits = new ArrayList<>(dataList(result, RetrievalService.ProductHit.class));
         // 对比/多品类查询：按“和/与/对比/哪个好”拆段各检索一次，避免只命中其中一款
-        if (state.userText().matches(".*(和|与|对比|哪个好|哪个更|哪个便宜|哪个贵|哪个强|vs|VS).*")) {
+        if (compareQuery) {
             Map<Long, RetrievalService.ProductHit> merged = new LinkedHashMap<>();
             hits.forEach(hit -> merged.put(hit.card().spuId(), hit));
             for (String part : state.userText().split("(?:和|与|对比|哪个好|哪个更|哪个便宜|哪个贵|哪个强|vs|VS)")) {
@@ -527,7 +529,11 @@ public class AgentGraphOrchestrator implements ChatResponder {
             return new FactsResult("（该商品暂无可售规格：如实告知，建议关注补货或转人工）",
                     "《" + product.name() + "》暂无可售规格，建议关注补货或转人工。");
         }
-        return new FactsResult(skuFacts(product, skus), FactAnswerRenderer.specs(product, skus));
+        boolean stockQuestion = state.userText().contains("有货")
+                && !state.userText().matches(".*(规格|参数|配置|颜色|版本|型号).*");
+        return new FactsResult(skuFacts(product, skus),
+                stockQuestion ? FactAnswerRenderer.availability(product, skus)
+                        : FactAnswerRenderer.specs(product, skus));
     }
 
     private FactsResult addToCart(AgentGraphState state, SupervisorAgent.RouteResult route,
@@ -637,6 +643,9 @@ public class AgentGraphOrchestrator implements ChatResponder {
         String orderNo = route.orderNo();
         ToolResult check = tool(state, route, "getOrder", Map.of("orderNo", orderNo), tools);
         if (!check.success()) {
+            if (orderNo != null && !orderNo.isBlank()) {
+                sources.add("order:" + orderNo);
+            }
             return new WriteOutcome("（" + check.errorMessage() + "：如实告知，并提醒核对订单号）",
                     "OK", FactAnswerRenderer.orderNotFound(orderNo), null);
         }
@@ -779,28 +788,50 @@ public class AgentGraphOrchestrator implements ChatResponder {
             }
         }
         if (ref.matches("\\d+")) {
-            List<ProductCardDTO> named = productQueryApi.getBySpuIds(List.of(Long.parseLong(ref)));
-            if (!named.isEmpty()) {
-                return named.get(0);
+            // LLM 可能从历史里带出旧 spuId；用户本轮明确点名商品时以文本为准
+            boolean namesProduct = text.matches(".*(Redmi|iPhone|Xiaomi|HUAWEI|OPPO|vivo|荣耀|索尼|AirPods|戴森|石头|MacBook|ThinkPad|ROG|拯救者|Dell|美的|海尔|Anker|Apple Watch|iQOO|一加|红米|华为|小米).*");
+            if (!namesProduct) {
+                List<ProductCardDTO> named = productQueryApi.getBySpuIds(List.of(Long.parseLong(ref)));
+                if (!named.isEmpty()) {
+                    return named.get(0);
+                }
             }
         }
         // 用户点名了目录里的其它商品（如“那 iPhone 呢”）：优先于“上文唯一”的代词兜底
-        String keyword = IntentRouter.extractKeyword(text);
+        String keyword = IntentRouter.extractKeyword(text)
+                .replace("那", "")
+                .replace("有货", "")
+                .replace("库存", "")
+                .replaceAll("\\s+", " ")
+                .replaceAll("\\s*有$", "")
+                .trim();
         List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(keyword, 5, constraints(text));
         String textLower = text.toLowerCase(java.util.Locale.ROOT);
         String keywordLower = keyword.toLowerCase(java.util.Locale.ROOT);
+        // 先按“关键词/显式商品名”精确命中；多个命中（如泛称 iPhone）取价格最低的基础款，
+        // 避免 iPhone 15 Pro 抢先于 iPhone 15。
+        List<ProductCardDTO> exact = new ArrayList<>();
         for (RetrievalService.ProductHit hit : hits) {
-            ProductCardDTO card = hit.card();
-            String name = card.name();
-            String nameLower = name.toLowerCase(java.util.Locale.ROOT);
-            String head = name.length() > 4 ? name.substring(0, 4) : name;
-            String headLower = head.toLowerCase(java.util.Locale.ROOT);
-            // 关键词直接命中商品名（“来三个收纳盒” → 抽屉式收纳盒）；避免品牌前缀导致前 4 字匹配失败
+            String nameLower = hit.card().name().toLowerCase(java.util.Locale.ROOT);
             boolean keywordHit = keywordLower.length() >= 2
                     && (nameLower.contains(keywordLower) || keywordLower.contains(nameLower));
-            if (keywordHit || textLower.contains(headLower)
-                    || (ref.length() >= 2 && nameLower.contains(ref.toLowerCase(java.util.Locale.ROOT)))) {
-                return card;
+            boolean refHit = ref.length() >= 2
+                    && nameLower.contains(ref.toLowerCase(java.util.Locale.ROOT));
+            if (keywordHit || refHit) {
+                exact.add(hit.card());
+            }
+        }
+        if (!exact.isEmpty()) {
+            return exact.stream()
+                    .min(java.util.Comparator.comparing(card ->
+                            card.price() == null ? new java.math.BigDecimal("999999999") : card.price()))
+                    .orElse(exact.get(0));
+        }
+        for (RetrievalService.ProductHit hit : hits) {
+            String name = hit.card().name();
+            String head = name.length() > 4 ? name.substring(0, 4) : name;
+            if (textLower.contains(head.toLowerCase(java.util.Locale.ROOT))) {
+                return hit.card();
             }
         }
         if (!previous.isEmpty() && (ref.isBlank() || ref.matches(".*(它|这个|那个|刚才|上面|这款|同款).*"))) {

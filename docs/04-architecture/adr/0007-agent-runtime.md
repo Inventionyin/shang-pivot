@@ -356,7 +356,7 @@ spike 边界（不夸大为生产验收）：
 | 写操作待确认服务 | 已实现（创建/复用、CAS 确认、取消、TTL、失败保持 CONFIRMED 可重试）；确认/取消 HTTP 接口已接线 | 见 `ADR-0008` |
 | 管理端 UI | Trace 列表/详情 + Agent 指标卡已实现并通过前端构建 | `CsAgentRunsView.vue`、`CsStatsView.vue` |
 | 图编排集成测试 | 已通过（8/8，真实 PG + mock commerce/LLM） | `AgentGraphIntegrationTest` |
-| Graph Golden 对等 | 100/100 确定性断言通过（20 核心 + 80 扩容；sources/cards/answer/forbid/效率/购物车；未跑裁判） | `GraphGoldenIntegrationTest` + `GoldenDataset` |
+| Graph Golden 对等 | 200/200 确定性断言通过（20 核心 + 180 扩容；sources/cards/answer/forbid/效率/购物车；未跑裁判） | `GraphGoldenIntegrationTest` + `GoldenDataset` |
 | 写操作安全矩阵 | 10/10（未确认不写、确认一次、重复确认幂等、取消/过期不写、越权拒绝、缺参/越权工具拒绝） | `AgentWriteSafetyIntegrationTest` |
 | V3.0 两阶段编排 | 仍是当前 Controller 注入的默认路径 | `ChatController` 注入 `ChatOrchestrator` |
 
@@ -368,7 +368,7 @@ spike 边界（不夸大为生产验收）：
 - **线程隔离**：每条用户消息使用独立 `run-<runId>-<uuid>`，避免 LangGraph4j 按 threadId 续跑上一轮；`runId` 前缀便于从 `agent_run` 反查。
 - **失败降级**：`ResilientCheckpointSaver` 包装 `PostgresSaver`，put/get/release 异常只记 warn 并继续对话；启动时建表失败回退 `MemorySaver`。
 - **配置**：`AGENT_CHECKPOINT=postgres|memory`（默认 postgres），已写入 `.env.example`。
-- **数据集**：Graph Golden 扩到 100 条（`EVAL_DATASET_VERSION=v31-100`）；生产 100/100 确定性断言通过（2026-11-07 23:03）；发现并修复“商品名数字被当购买数量”的路由 bug。
+- **数据集**：Graph Golden 扩到 200 条（`EVAL_DATASET_VERSION=v32-200`，本地 graph/legacy 各 200/200 确定性通过，Judge 均分 0.98/0.99）；生产历史 100/100（v31-100，2026-11-07 23:03）；发现并修复“商品名数字被当购买数量”的路由 bug。
 - **评测隔离**：`POST /api/chat/sessions?fresh=true` 结束当前进行中会话再新建；`AgentHarness` 每个用例强制新会话，避免跨用例卡片/指代污染，以及转人工后的 QUEUED 会话吞掉后续用例。
 - **路由/选品修正**：对比与二选一（“哪个吸力好/哪个便宜”）强制走商品检索而非单商品 SPECS；`resolveProduct` 允许检索关键词直接命中商品名（修复“来三个收纳盒”因品牌前缀匹配失败）；多规格商品未指定规格时返回 `sku:` 来源并反问，不擅自加购。
 - **保留策略**：LG4J checkpoint 当前不自动清理；按每轮 4 行估算，后续可按 `saved_at` 增加月度归档/清理任务（未实现）。

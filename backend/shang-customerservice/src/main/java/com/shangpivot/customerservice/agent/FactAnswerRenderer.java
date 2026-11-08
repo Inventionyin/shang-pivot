@@ -164,6 +164,19 @@ public final class FactAnswerRenderer {
         return sb.append("以上均为此前推荐过的商品；如需更具体的规格或价格，请先确认款式。").toString().trim();
     }
 
+    public static String availability(ProductCardDTO product, List<ProductSkuDTO> skus) {
+        if (skus == null || skus.isEmpty()) {
+            return "《" + product.name() + "》暂无可售规格，建议关注补货或转人工。";
+        }
+        ProductSkuDTO sku = skus.stream()
+                .min(java.util.Comparator.comparing(s -> s.price() == null ? new BigDecimal("999999999") : s.price()))
+                .orElse(skus.get(0));
+        return "《" + baseName(product.name()) + "》目前"
+                + (sku.availableStock() <= 0 ? "库存紧张/无货" : "有货")
+                + "：" + skuLabel(sku) + "，价格 " + money(sku.price()) + " 元，库存 "
+                + Math.max(0, sku.availableStock()) + "。其他规格可回复“规格”查看。";
+    }
+
     public static String specs(ProductCardDTO product, List<ProductSkuDTO> skus) {
         if (skus == null || skus.isEmpty()) {
             return "《" + product.name() + "》暂无可售规格，建议关注补货或转人工。";
