@@ -11,6 +11,7 @@ import com.shangpivot.customerservice.entity.CsMessage;
 import com.shangpivot.customerservice.mapper.ChatSessionMapper;
 import com.shangpivot.customerservice.mapper.CsMessageMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 会话与消息的领域服务（状态机见 PRD §6.1）。 */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatSessionService {
@@ -182,10 +184,15 @@ public class ChatSessionService {
             return;
         }
         OffsetDateTime now = OffsetDateTime.now();
-        sessionMapper.update(null, new LambdaUpdateWrapper<ChatSession>()
-                .eq(ChatSession::getId, sessionId)
-                .set(ChatSession::getLastMessageAt, now)
-                .set(ChatSession::getUpdatedAt, now));
+        try {
+            sessionMapper.update(null, new LambdaUpdateWrapper<ChatSession>()
+                    .eq(ChatSession::getId, sessionId)
+                    .set(ChatSession::getLastMessageAt, now)
+                    .set(ChatSession::getUpdatedAt, now));
+        } catch (Exception e) {
+            // 活跃时间是辅助数据：刷新失败不能影响用户消息/回答的落库与流式返回。
+            log.warn("[cs] touch session {} failed: {}", sessionId, e.getMessage());
+        }
     }
 
     /** 转人工 / 撤回。 */
