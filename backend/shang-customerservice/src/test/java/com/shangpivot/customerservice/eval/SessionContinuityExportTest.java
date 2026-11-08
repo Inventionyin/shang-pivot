@@ -59,7 +59,8 @@ class SessionContinuityExportTest {
         row.put("tags", List.of("session:" + c.id(), "suite:" + SUITE));
         row.put("priority", "P1");
         row.put("enabled", true);
-        row.put("version", VERSION);
+        // 平台 agent_test_cases.version 列为 VARCHAR(10)，数据集版本放在 payload.datasetVersion。
+        row.put("version", "v33-sess");
         return row;
     }
 
