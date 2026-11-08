@@ -52,7 +52,9 @@ public final class ProductConstraintParser {
             new CategoryRule("口红", "美妆个护"),
             new CategoryRule("坚果", "食品生鲜"),
             new CategoryRule("咖啡", "食品生鲜"),
-            new CategoryRule("自行车", "自行车")
+            new CategoryRule("自行车", "自行车"),
+            new CategoryRule("平板", "平板"),
+            new CategoryRule("相机", "相机")
     );
 
     private ProductConstraintParser() {
