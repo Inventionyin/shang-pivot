@@ -48,7 +48,8 @@ public class RetrievalService {
      */
     public List<ProductHit> searchProducts(String query, int topK, ProductConstraints constraints) {
         ProductConstraints c = constraints == null ? ProductConstraints.none() : constraints;
-        List<ProductHit> hits = new ArrayList<>(searchRaw(query, topK, c));
+        int searchLimit = ProductConstraintParser.needsTermFilter(query) ? Math.max(topK + 6, 12) : topK;
+        List<ProductHit> hits = new ArrayList<>(searchRaw(query, searchLimit, c));
         if (c.budgetMax() != null && hits.size() < topK) {
             ProductConstraints overBudget = new ProductConstraints(c.categories(), c.budgetMin(), null,
                     c.budgetLabel(), c.explicitNewQuery());
@@ -69,13 +70,21 @@ public class RetrievalService {
             }
             hits = new ArrayList<>(merged.values());
         }
-        if (hits.size() > topK) {
-            hits = new ArrayList<>(hits.subList(0, topK));
+        if (hits.size() > searchLimit) {
+            hits = new ArrayList<>(hits.subList(0, searchLimit));
         }
         // 预算内优先；同组按价格升序，便于用户先看到最贴近预算的候选
         hits.sort(java.util.Comparator
                 .comparing(ProductHit::withinBudget).reversed()
                 .thenComparing(hit -> hit.card().price() == null ? BigDecimal.ZERO : hit.card().price()));
+        if (ProductConstraintParser.needsTermFilter(query)) {
+            hits = hits.stream()
+                    .filter(hit -> ProductConstraintParser.matchesTerm(query, hit.card()))
+                    .limit(topK)
+                    .toList();
+        } else if (hits.size() > topK) {
+            hits = hits.subList(0, topK);
+        }
         return hits;
     }
 

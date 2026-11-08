@@ -68,6 +68,68 @@ public final class ProductConstraintParser {
         return new ProductConstraints(categories, budget.min, budget.max, budget.label, explicitNewQuery);
     }
 
+    /**
+     * 大类目（数码配件/家电）需要二级词过滤，避免“耳机”召回 Apple Watch、“吸尘器”召回冰箱。
+     * 返回 true 时 RetrievalService 会扩大召回窗口并按商品名/副标题过滤。
+     */
+    public static boolean needsTermFilter(String query) {
+        if (query == null) {
+            return false;
+        }
+        return query.contains("耳机") || query.contains("手表") || query.contains("吸尘器")
+                || query.contains("扫地") || query.contains("扫拖") || query.contains("洗衣机")
+                || query.contains("冰箱") || query.contains("帐篷") || query.contains("跑步鞋")
+                || query.contains("充电器") || query.contains("显示器");
+    }
+
+    public static boolean matchesTerm(String query, com.shangpivot.commerce.api.ProductCardDTO card) {
+        if (query == null || card == null || !needsTermFilter(query)) {
+            return true;
+        }
+        String text = ((card.name() == null ? "" : card.name()) + " "
+                + (card.subtitle() == null ? "" : card.subtitle())).toLowerCase(java.util.Locale.ROOT);
+        if (query.contains("耳机")) {
+            return containsAny(text, "耳机", "airpods", "wh-1000", "降噪", "入耳", "头戴");
+        }
+        if (query.contains("手表")) {
+            return containsAny(text, "手表");
+        }
+        if (query.contains("吸尘器")) {
+            return containsAny(text, "吸尘器", "dyson", "戴森");
+        }
+        if (query.contains("扫地") || query.contains("扫拖")) {
+            return containsAny(text, "扫地", "扫拖", "机器人");
+        }
+        if (query.contains("洗衣机")) {
+            return containsAny(text, "洗衣机");
+        }
+        if (query.contains("冰箱")) {
+            return containsAny(text, "冰箱");
+        }
+        if (query.contains("帐篷")) {
+            return containsAny(text, "帐篷");
+        }
+        if (query.contains("跑步鞋")) {
+            return containsAny(text, "跑步鞋");
+        }
+        if (query.contains("充电器")) {
+            return containsAny(text, "充电器");
+        }
+        if (query.contains("显示器")) {
+            return containsAny(text, "显示器");
+        }
+        return true;
+    }
+
+    private static boolean containsAny(String text, String... terms) {
+        for (String term : terms) {
+            if (text.contains(term)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static List<String> categories(String text) {
         Set<String> result = new LinkedHashSet<>();
         // “手机号/手机号码”不是商品品类，避免把 PII 咨询误判成手机导购
