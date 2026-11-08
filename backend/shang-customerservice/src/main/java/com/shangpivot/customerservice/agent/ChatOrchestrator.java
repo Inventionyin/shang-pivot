@@ -16,6 +16,9 @@ import com.shangpivot.common.exception.BizException;
 import com.shangpivot.common.result.PageResult;
 import com.shangpivot.customerservice.agent.contract.AgentName;
 import com.shangpivot.customerservice.agent.graph.SupervisorAgent;
+import com.shangpivot.customerservice.agent.service.CartConfirmationPolicy;
+import com.shangpivot.customerservice.agent.service.PendingActionService;
+import com.shangpivot.customerservice.agent.trace.entity.PendingAction;
 import com.shangpivot.customerservice.entity.ChatSession;
 import com.shangpivot.customerservice.entity.CsAuditLog;
 import com.shangpivot.customerservice.entity.CsMessage;
@@ -68,6 +71,8 @@ public class ChatOrchestrator implements ChatResponder {
     private final ObjectMapper objectMapper;
     private final ChatSessionService chatSessionService;
     private final CsAuditService auditService;
+    private final CartConfirmationPolicy cartConfirmationPolicy;
+    private final PendingActionService pendingActionService;
     private final CsMessageMapper messageMapper;
     private final AnswerGuard answerGuard;
 
@@ -188,7 +193,11 @@ public class ChatOrchestrator implements ChatResponder {
     // ---------- 事实收集 ----------
 
     private record Facts(String block, List<Map<String, Object>> cards, Map<String, Object> trace,
-                         String displayAnswer) {
+                         String displayAnswer, String status, Long pendingActionId) {
+        Facts(String block, List<Map<String, Object>> cards, Map<String, Object> trace, String displayAnswer) {
+            this(block, cards, trace, displayAnswer, "OK", null);
+        }
+
         Facts {
             if (cards == null) {
                 cards = List.of();
@@ -198,6 +207,9 @@ public class ChatOrchestrator implements ChatResponder {
             }
             if (displayAnswer == null) {
                 displayAnswer = "";
+            }
+            if (status == null) {
+                status = "OK";
             }
         }
     }
@@ -216,6 +228,16 @@ public class ChatOrchestrator implements ChatResponder {
         Map<String, Object> metadata = facts.cards().isEmpty() ? null : Map.of(CsMessage.META_ITEMS, facts.cards());
         CsMessage saved = chatSessionService.saveAssistantMessage(session.getId(), CsMessage.ROLE_ASSISTANT,
                 text, null, metadata, facts.trace(), false);
+        if ("NEED_CONFIRMATION".equals(facts.status()) && facts.pendingActionId() != null) {
+            PendingAction action = pendingActionService.requireOwned(facts.pendingActionId(), session.getCustomerId());
+            Map<String, Object> payload = new LinkedHashMap<>();
+            payload.put("actionId", action.getId());
+            payload.put("tool", action.getToolName());
+            payload.put("summary", pendingActionService.summary(action.getToolName(), action.getArgsJson()));
+            payload.put("args", action.getArgsJson());
+            payload.put("expiresAt", action.getExpiresAt());
+            send(emitter, "action", payload);
+        }
         send(emitter, "delta", Map.of("delta", text));
         emitCards(emitter, facts.cards());
         Map<String, Object> auditDetail = new java.util.HashMap<>();
@@ -466,6 +488,20 @@ public class ChatOrchestrator implements ChatResponder {
                     FactAnswerRenderer.addCartClarify(target, skus));
         }
         int qty = Math.max(1, Math.min(quantity, Math.max(chosen.availableStock(), 1)));
+        if (cartConfirmationPolicy.requiresConfirmation(target, chosen, qty)) {
+            Map<String, Object> args = new LinkedHashMap<>();
+            args.put("skuId", chosen.skuId());
+            args.put("quantity", qty);
+            args.put("productName", target.name());
+            args.put("skuTitle", chosen.title());
+            args.put("price", chosen.price());
+            PendingAction action = pendingActionService.createOrReuse(session.getId(), session.getCustomerId(),
+                    null, AgentName.SHOPPING_GUIDE, "addToCart", args);
+            String summary = pendingActionService.summary("addToCart", args);
+            return new Facts("（已生成待确认加购动作：" + summary + "；不要声称已加购）",
+                    List.of(cardMap(target, 1)), Map.of("sources", List.of("cart-confirm:" + chosen.skuId())),
+                    FactAnswerRenderer.pendingWrite(summary), "NEED_CONFIRMATION", action.getId());
+        }
         try {
             CartAddResultDTO added = cartMutationApi.addToCart(session.getCustomerId(), chosen.skuId(), qty);
             String text = "（已成功为用户加入购物车：商品「" + target.name() + "」，规格「" + chosen.title()
