@@ -64,6 +64,16 @@ class IntentRouterTest {
     }
 
     @Test
+    void 序数指代商品时数量必须为一() {
+        var second = router.route("就买第二个");
+        assertThat(second.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(second.quantity()).isEqualTo(1);
+        var first = router.route("帮我购买第一款");
+        assertThat(first.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(first.quantity()).isEqualTo(1);
+    }
+
+    @Test
     void 数量短句走加购意图并解析中文数量() {
         var intent = router.route("来两台");
         assertThat(intent.type()).isEqualTo(IntentRouter.Type.ADDCART);

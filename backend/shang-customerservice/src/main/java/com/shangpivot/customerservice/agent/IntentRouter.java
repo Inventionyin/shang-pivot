@@ -134,10 +134,12 @@ public class IntentRouter {
         return null;
     }
 
-    /** 消息中的购买数量：中文数字/阿拉伯数字，默认 1。 */
+    /** 消息中的购买数量：中文数字/阿拉伯数字，默认 1；“第二个”是商品序号，不是数量 2。 */
     static int extractQty(String message) {
+        String cleaned = message == null ? ""
+                : message.replaceAll("第\\s*[一二三四五1-5]\\s*[个款台]?", " ");
         // 数字必须跟在购买动词后（“来2台”），否则商品名里的数字（Mate X5 / iPhone 15）会被误当数量
-        Matcher arabic = Pattern.compile("(?:来|要|加|拿|买|拍)\\s*(\\d+)\\s*(个|台|件|部|双|只|盒)?").matcher(message);
+        Matcher arabic = Pattern.compile("(?:来|要|加|拿|买|拍)\\s*(\\d+)\\s*(个|台|件|部|双|只|盒)?").matcher(cleaned);
         if (arabic.find()) {
             int n = Integer.parseInt(arabic.group(1));
             if (n >= 1 && n <= 99) {
@@ -147,8 +149,8 @@ public class IntentRouter {
         String[] cn = {"一", "两", "二", "三", "四", "五"};
         int[] qty = {1, 2, 2, 3, 4, 5};
         for (int i = 0; i < cn.length; i++) {
-            if (message.contains("来" + cn[i]) || message.contains("买" + cn[i]) || message.contains(cn[i] + "个")
-                    || message.contains(cn[i] + "台") || message.contains(cn[i] + "件")) {
+            if (cleaned.contains("来" + cn[i]) || cleaned.contains("买" + cn[i]) || cleaned.contains(cn[i] + "个")
+                    || cleaned.contains(cn[i] + "台") || cleaned.contains(cn[i] + "件")) {
                 return qty[i];
             }
         }
@@ -187,7 +189,8 @@ public class IntentRouter {
                 .replace("请帮我", " ").replace("推荐一下", " ").replace("有什么", " ")
                 .replace("多少钱", " ").replace("想买", " ").replace("推荐", " ")
                 .replace("？", " ").replace("?", " ").replace("。", " ").replace("，", " ")
-                .replace("吗", " ").replace("呢", " ").replace("吧", " ").trim();
+                .replace("吗", " ").replace("呢", " ").replace("吧", " ")
+                .replaceFirst("^个", " ").trim();
         return cleaned.length() > 12 ? cleaned.substring(0, 12) : cleaned;
     }
 }
