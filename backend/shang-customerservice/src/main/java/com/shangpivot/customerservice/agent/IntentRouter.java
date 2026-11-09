@@ -97,14 +97,26 @@ public class IntentRouter {
         // 数量表达（来两台/再加一件/拿三个）也是加购强特征；句首数量短句单独匹配，避免误伤“来一台手机推荐”
         // 明确购买“上文第 N 款/这个/那个/它”：优先于售前检索。
         // 注意不要用裸“买/要”匹配，“想买手机推荐”仍应是售前。
-        boolean purchaseRef = message.matches(".*(购买|买|要|拿|来|下单|拍下).{0,8}(第\\s*[一二三四五1-5]\\s*(款|个)|这个|那个|它|这款|同款).*")
-                || message.matches(".*(就买|就要|直接买|帮我买|给我买|买下|拍下|下单).*");
-        boolean addcart = purchaseRef
+        String refWord = "(第\\s*[一二三四五1-5]\\s*(?:款|个)|上面(?:那个|这款|的商品)?|刚才(?:那个|的)?|"
+                + "刚刚(?:那个|的)?|前面(?:那个|的)?|上一个|这个|那个|它|这款|同款)";
+        boolean purchaseRef = message.matches(".*(购买|买|要|拿|来|下单|拍下).{0,8}" + refWord + ".*")
+                || message.matches(".*(就买|就要|直接买|帮我买|给我买|买下|拍下|下单).*")
+                || message.matches(".*(?:把|将|给|帮我).{0,8}" + refWord + ".*(?:加|放|加入|加进|添加).*");
+        // “加进/加入购物车”“把某商品加进购物车”必须走加购，而不是重新检索。
+        boolean cartPhrase = message.matches(".*(?:加入|加进|加到|放进|放入|添加).{0,4}购物车.*")
+                || message.matches(".*(?:把|将|给|帮我).{0,20}(?:加入|加进|加到|放进|放入|添加|加).{0,4}购物车.*");
+        // 单句购买确认（“我现在买”“买了”“下单吧”）：依赖上文商品，不能再做商品检索。
+        boolean purchaseConfirm = message.matches(
+                "^\\s*(?:我)?(?:现在|现|就|直接)?(?:我)?(?:买|要|下单|拍下)(?:了|吧|呀|啊|啦|这个|这款|它)?\\s*[。！!]?\\s*$");
+        boolean addcart = cartPhrase || purchaseConfirm || purchaseRef
                 || message.matches(".*(加购|加入购物车|来一[单份个]|直接拍|就?要?(这个|那个|它|这款)[了嘛吧]|给我(来|拿|加)|下单买|再来|再加|加[一二两三四五六七八九十\\d]+[台个件份套部]).*")
                 || (message.matches("^\\s*(来|要|加|拿)[一二两三四五六七八九十\\d]+[台个件份套部].*")
                     && !message.matches(".*(推荐|介绍|看看|哪款|什么|怎么选).*"));
         if (addcart) {
-            return make(Type.ADDCART, message, no, extractQty(message));
+            String productRef = (cartPhrase || purchaseRef) && !purchaseConfirm
+                    ? extractProductRef(message) : "";
+            return new Intent(Type.ADDCART, extractKeyword(message), no, productRef,
+                    extractQty(message), true);
         }
         // 对比/二选一必须走商品检索拿两张卡，不能被“吸力/降噪”等属性词误判成单商品 SPECS
         if (message.matches(".*(对比|比较|哪个.{0,6}(好|强|便宜|贵|划算|值得|适合)|vs|VS).*")) {
@@ -157,6 +169,39 @@ public class IntentRouter {
         return 1;
     }
 
+    /**
+     * 从“帮我把上面那个美的风冷冰箱加进购物车”这类句子里提取商品指代。
+     * 返回空串表示只说了“上面那个/这个/它”，交由编排器按上文卡片解析。
+     */
+    static String extractProductRef(String message) {
+        if (message == null || message.isBlank()) {
+            return "";
+        }
+        if (message.matches(".*第\\s*[一二三四五1-5].*")) {
+            return "";
+        }
+        String ref = message
+                .replaceAll("^(?:(?:帮我|请|麻烦|我想|我要|想要|把|将|给|上面那个|上面这款|上面|"
+                        + "刚才那个|刚才|刚刚|前面那个|前面|上一个|这个|那个|这款|那款|同款|它|的)\\s*)+", " ")
+                .replaceAll("(?:加入|加进|加到|放进|放入|添加|加).{0,4}购物车", " ")
+                .replaceAll("(?:购买|买|下单|拍下)(?:了|吧|呀|啊|啦)?\\s*$", " ")
+                .replaceAll("[\\s，。！？、：；\"'“”‘’（）【】《》,.!?]", "")
+                .trim();
+        if (ref.isBlank() || ref.length() > 40 || ref.matches(".*(那个|这个|它|上面|刚才|同款).*")) {
+            return "";
+        }
+        return ref;
+    }
+
+    /** 商品名匹配归一化：去掉空格/中英文标点并转小写（“美的 风冷 冰箱”≈“美的风冷冰箱”）。 */
+    public static String normalizeProductText(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replaceAll("[\\s\\p{Punct}，。！？、：；“”‘’（）【】《》]", "")
+                .toLowerCase(java.util.Locale.ROOT);
+    }
+
     private static Intent make(Type t, String message, String orderNo, int qty) {
         return new Intent(t, extractKeyword(message), orderNo, "", qty, true);
     }
@@ -185,6 +230,11 @@ public class IntentRouter {
         String cleaned = normalized
                 // 加购数量前缀（“来三个收纳盒”“来一台 HUAWEI Mate X5”）不是商品名的一部分
                 .replaceFirst("^\\s*(来|要|加|拿)\\s*[一二两三四五六七八九十\\d]+\\s*[台个件份套双顶盒瓶支]?", " ")
+                // 加购句式（“帮我把上面那个美的风冷冰箱加进购物车”）保留商品名，去掉指代/动作
+                .replaceAll("(?:帮我|请|麻烦|把|将|给|上面那个|上面|刚才那个|刚才|前面那个|前面|上一个|"
+                        + "这个|那个|这款|那款|同款|它)", " ")
+                .replaceAll("(?:加入|加进|加到|放进|放入|添加|加).{0,4}购物车", " ")
+                .replace("购物车", " ")
                 .replace("我想买", " ").replace("我想购买", " ").replace("帮我推荐", " ")
                 .replace("请帮我", " ").replace("推荐一下", " ").replace("有什么", " ")
                 .replace("多少钱", " ").replace("想买", " ").replace("推荐", " ")

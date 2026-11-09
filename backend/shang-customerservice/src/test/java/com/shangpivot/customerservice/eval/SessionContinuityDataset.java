@@ -53,6 +53,15 @@ public final class SessionContinuityDataset {
                         .efficiency(1)
                         .expectCards("Redmi K70", "iPhone 15")
                         .forbid("双人帐篷", "洗衣机", "收纳盒")
+                        .build(),
+
+                GoldenCase.builder("S06-fridge-now-buy", "上一轮推荐冰箱后说“我现在买”，必须直接操作上文冰箱而不是重新检索")
+                        .turns("我要买冰箱", "我现在买")
+                        .expectSources("cart-confirm:")
+                        .efficiency(1)
+                        .expectCards("美的")
+                        .expectAnswer("请确认")
+                        .forbid("联想", "口红", "AirPods")
                         .build()
         );
     }

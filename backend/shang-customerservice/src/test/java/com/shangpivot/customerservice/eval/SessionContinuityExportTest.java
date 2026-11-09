@@ -13,15 +13,15 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/** 导出会话连续性 5 条数据集，供 AI 测试平台按 sourceId upsert。 */
+/** 导出会话连续性 6 条数据集，供 AI 测试平台按 sourceId upsert。 */
 class SessionContinuityExportTest {
 
     private static final String VERSION = "v33-session";
     private static final String SUITE = "session-continuity";
 
     @Test
-    void exportFiveCases() throws Exception {
-        String output = System.getProperty("session.output", "target/session-continuity-5.jsonl");
+    void exportSixCases() throws Exception {
+        String output = System.getProperty("session.output", "target/session-continuity-6.jsonl");
         Path path = Path.of(output);
         if (path.getParent() != null) {
             Files.createDirectories(path.getParent());
@@ -33,7 +33,7 @@ class SessionContinuityExportTest {
         }
         Files.write(path, lines, StandardCharsets.UTF_8);
 
-        assertThat(lines).hasSize(5);
+        assertThat(lines).hasSize(6);
         for (String line : lines) {
             assertThat(mapper.readTree(line).path("sourceId").asText()).isNotBlank();
             assertThat(mapper.readTree(line).path("payload").path("suite").asText()).isEqualTo(SUITE);

@@ -58,6 +58,16 @@ public class MallAiChatUiSteps {
         new MallAiChatPage(session()).expectCardVisible();
     }
 
+    @Then("AI 助手应显示待确认加购卡片")
+    public void expectAiActionCard() {
+        new MallAiChatPage(session()).expectActionCardVisible();
+    }
+
+    @Then("AI 助手消息区应滚动到底部")
+    public void expectAiAtBottom() {
+        new MallAiChatPage(session()).expectMessagesAtBottom();
+    }
+
     @When("我点击第一张 AI 商品卡片")
     public void clickFirstAiCard() {
         new MallAiChatPage(session()).clickFirstCard();

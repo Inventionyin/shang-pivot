@@ -534,11 +534,15 @@ public class ChatOrchestrator implements ChatResponder {
             }
         }
         // 2) 商品名匹配（上文卡片名 or 指代词本身含商品名片段）
+        String textNorm = IntentRouter.normalizeProductText(text);
+        String refNorm = IntentRouter.normalizeProductText(ref);
         for (ProductCardDTO c : previous) {
-            String head = c.name().length() > 4 ? c.name().substring(0, 4) : c.name();
-            if (text.toLowerCase(java.util.Locale.ROOT).contains(head.toLowerCase(java.util.Locale.ROOT))
-                    || (ref.length() >= 2 && c.name().toLowerCase(java.util.Locale.ROOT)
-                    .contains(ref.toLowerCase(java.util.Locale.ROOT)))) {
+            String name = c.name();
+            String head = name.length() > 4 ? name.substring(0, 4) : name;
+            String nameNorm = IntentRouter.normalizeProductText(name);
+            String headNorm = IntentRouter.normalizeProductText(head);
+            if ((!headNorm.isBlank() && textNorm.contains(headNorm))
+                    || (refNorm.length() >= 2 && nameNorm.contains(refNorm))) {
                 return c;
             }
         }
@@ -549,9 +553,10 @@ public class ChatOrchestrator implements ChatResponder {
             for (RetrievalService.ProductHit hit : named) {
                 String name = hit.card().name();
                 String head = name.length() > 4 ? name.substring(0, 4) : name;
-                if (text.toLowerCase(java.util.Locale.ROOT).contains(head.toLowerCase(java.util.Locale.ROOT))
-                        || (ref.length() >= 2 && name.toLowerCase(java.util.Locale.ROOT)
-                        .contains(ref.toLowerCase(java.util.Locale.ROOT)))) {
+                String nameNorm = IntentRouter.normalizeProductText(name);
+                String headNorm = IntentRouter.normalizeProductText(head);
+                if ((!headNorm.isBlank() && textNorm.contains(headNorm))
+                        || (refNorm.length() >= 2 && nameNorm.contains(refNorm))) {
                     return hit.card();
                 }
             }

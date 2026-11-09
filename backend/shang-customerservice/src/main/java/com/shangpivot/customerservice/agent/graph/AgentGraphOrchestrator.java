@@ -841,9 +841,15 @@ public class AgentGraphOrchestrator implements ChatResponder {
                 return previous.get(zero);
             }
         }
+        String textNorm = IntentRouter.normalizeProductText(text);
+        String refNorm = IntentRouter.normalizeProductText(ref);
         for (ProductCardDTO card : previous) {
-            String head = card.name().length() > 4 ? card.name().substring(0, 4) : card.name();
-            if (text.contains(head) || (ref.length() >= 2 && card.name().contains(ref))) {
+            String name = card.name();
+            String head = name.length() > 4 ? name.substring(0, 4) : name;
+            String nameNorm = IntentRouter.normalizeProductText(name);
+            String headNorm = IntentRouter.normalizeProductText(head);
+            if ((!headNorm.isBlank() && textNorm.contains(headNorm))
+                    || (refNorm.length() >= 2 && nameNorm.contains(refNorm))) {
                 return card;
             }
         }
@@ -867,16 +873,15 @@ public class AgentGraphOrchestrator implements ChatResponder {
                 .trim();
         List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(keyword, 5, constraints(text));
         String textLower = text.toLowerCase(java.util.Locale.ROOT);
-        String keywordLower = keyword.toLowerCase(java.util.Locale.ROOT);
         // 先按“关键词/显式商品名”精确命中；多个命中（如泛称 iPhone）取价格最低的基础款，
         // 避免 iPhone 15 Pro 抢先于 iPhone 15。
+        String keywordNorm = IntentRouter.normalizeProductText(keyword);
         List<ProductCardDTO> exact = new ArrayList<>();
         for (RetrievalService.ProductHit hit : hits) {
-            String nameLower = hit.card().name().toLowerCase(java.util.Locale.ROOT);
-            boolean keywordHit = keywordLower.length() >= 2
-                    && (nameLower.contains(keywordLower) || keywordLower.contains(nameLower));
-            boolean refHit = ref.length() >= 2
-                    && nameLower.contains(ref.toLowerCase(java.util.Locale.ROOT));
+            String nameNorm = IntentRouter.normalizeProductText(hit.card().name());
+            boolean keywordHit = keywordNorm.length() >= 2
+                    && (nameNorm.contains(keywordNorm) || keywordNorm.contains(nameNorm));
+            boolean refHit = refNorm.length() >= 2 && nameNorm.contains(refNorm);
             if (keywordHit || refHit) {
                 exact.add(hit.card());
             }

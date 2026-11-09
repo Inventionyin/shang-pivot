@@ -65,6 +65,35 @@ public final class MallAiChatPage extends BasePage {
         assertThat(page().getByTestId("ai-chat-card").first()).isVisible();
     }
 
+    public void expectActionCardVisible() {
+        assertThat(page().locator(".action-card").last()).isVisible();
+        assertThat(page().locator(".action-card__summary").last()).containsText("加入购物车");
+    }
+
+    public void expectMessagesAtBottom() {
+        String expression = "() => { const el = document.querySelector('[data-testid=ai-chat-messages]');"
+                + " return !!el && el.scrollHeight - el.scrollTop - el.clientHeight < 40; }";
+        try {
+            page().waitForFunction(expression, null,
+                    new Page.WaitForFunctionOptions().setTimeout(5_000));
+        } catch (com.microsoft.playwright.TimeoutError ignored) {
+            // 下面统一读取实际值给出可诊断的失败信息。
+        }
+        Object raw = page().evaluate(
+                "() => { const el = document.querySelector('[data-testid=ai-chat-messages]');"
+                        + " return el ? {top: el.scrollTop, client: el.clientHeight, height: el.scrollHeight} : null; }");
+        if (!(raw instanceof java.util.Map<?, ?> map)) {
+            throw new AssertionError("找不到 AI 消息区");
+        }
+        double top = ((Number) map.get("top")).doubleValue();
+        double client = ((Number) map.get("client")).doubleValue();
+        double height = ((Number) map.get("height")).doubleValue();
+        if (top + client < height - 40) {
+            throw new AssertionError("AI 消息区未滚动到底部：top=" + top
+                    + " client=" + client + " height=" + height);
+        }
+    }
+
     public void clickFirstCard() {
         page().getByTestId("ai-chat-card").first().click();
         expectPath("/product/");

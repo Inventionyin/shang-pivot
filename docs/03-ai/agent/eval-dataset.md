@@ -180,17 +180,17 @@ EVAL_CUSTOMER_PHONES=13900009999,13900009998,13900009997 \
 
 ### 5.2 会话连续性专项数据集（v33-session）
 
-`golden-200` 保持不变；新增独立 5 条 suite，覆盖同一会话内多轮上下文延续（规格追问、加购、商品切换、价格切换、指代不明反问）：
+`golden-200` 保持不变；新增独立 6 条 suite，覆盖同一会话内多轮上下文延续（规格追问、加购、商品切换、价格切换、指代不明反问、上一轮商品直接购买）：
 
 ```bash
 cd backend
 ./mvnw -q -pl shang-customerservice -am test \
   -Dtest=SessionContinuityExportTest \
-  -Dsession.output=../../scripts/eval/session-continuity-5.jsonl \
+  -Dsession.output=../../scripts/eval/session-continuity-6.jsonl \
   -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
-产物：[`scripts/eval/session-continuity-5.jsonl`](../../../scripts/eval/session-continuity-5.jsonl)，5 行、`datasetVersion=v33-session`、`suite=session-continuity`。平台导入后按 `sourceId` upsert，作为 200 条全量之外的附加 suite 运行。
+产物：[`scripts/eval/session-continuity-6.jsonl`](../../../scripts/eval/session-continuity-6.jsonl)，6 行、`datasetVersion=v33-session`、`suite=session-continuity`。平台导入后按 `sourceId` upsert，作为 200 条全量之外的附加 suite 运行。
 
 > 浏览器层的“进商品详情再返回、刷新、新对话”由 `automation/` 的 Playwright 场景 `15-mall-ai-chat.feature` 覆盖；Golden/平台数据集只覆盖同一会话的 API/Agent 连续性，不能替代 UI 路由回归。
 

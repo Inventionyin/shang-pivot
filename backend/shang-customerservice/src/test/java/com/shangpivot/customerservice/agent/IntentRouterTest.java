@@ -127,4 +127,26 @@ class IntentRouterTest {
         assertThat(router.route("我要这个").type()).isEqualTo(IntentRouter.Type.ADDCART);
         assertThat(router.route("买它").type()).isEqualTo(IntentRouter.Type.ADDCART);
     }
+
+    @Test
+    void 加进购物车句式必须走加购而不是重新检索() {
+        var name = router.route("帮我把上面那个美的风冷冰箱加进购物车");
+        assertThat(name.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(name.productRef()).contains("美的");
+
+        var pronoun = router.route("把上面那个加进购物车");
+        assertThat(pronoun.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(pronoun.productRef()).isBlank();
+
+        var confirm = router.route("我现在买");
+        assertThat(confirm.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(confirm.quantity()).isEqualTo(1);
+        assertThat(router.route("现我买").type()).isEqualTo(IntentRouter.Type.ADDCART);
+    }
+
+    @Test
+    void 购买确认短语不误伤普通导购() {
+        assertThat(router.route("我想买冰箱").type()).isEqualTo(IntentRouter.Type.PRESALE);
+        assertThat(router.route("购物车怎么结算").type()).isNotEqualTo(IntentRouter.Type.ADDCART);
+    }
 }

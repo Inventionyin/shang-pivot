@@ -417,26 +417,26 @@ async function send(text?: string) {
     {
       onReasoning: (full) => {
         pending.reasoning = full
-        void scrollBottom()
+        void scrollBottom(false)
       },
       onDelta: (full, delta) => {
         if (delta) received = true
         pending.content = full
         if (full) pending.reasoning = undefined
-        void scrollBottom()
+        void scrollBottom(false)
       },
       onCards: (items) => {
         pending.cards = items
-        void scrollBottom()
+        void scrollBottom(false)
       },
       onState: (payload) => {
         const label = payload.label || STATE_FALLBACK_LABELS[payload.state || ''] || ''
         if (label) pending.stateLabel = label
-        void scrollBottom()
+        void scrollBottom(false)
       },
       onAction: (payload) => {
         pending.action = { ...payload, status: 'PENDING' }
-        void scrollBottom()
+        void scrollBottom(false)
       },
       onDone: (payload) => {
         pending.streaming = false
@@ -446,20 +446,22 @@ async function send(text?: string) {
         }
         pending.degraded = payload.degraded
         sessionStatus.value = payload.sessionStatus
-        void scrollBottom()
+        // 一轮回答结束必须保证最新内容在视口内（图片/卡片随后加载也会继续贴底）。
+        void scrollBottom(true)
+        keepAtBottom()
       },
       onError: (payload) => {
         pending.streaming = false
         pending.stateLabel = undefined
         pending.content = pending.content || payload.msg || '服务开小差了，请重试'
-        void scrollBottom()
+        void scrollBottom(false)
       },
       onNetworkError: (msg) => {
         pending.streaming = false
         pending.stateLabel = undefined
         pending.content = pending.content || msg
         errorMsg.value = msg
-        void scrollBottom()
+        void scrollBottom(false)
       },
     },
     abort.signal,
@@ -599,10 +601,39 @@ async function toggleEscalate() {
   }
 }
 
-async function scrollBottom() {
+async function scrollBottom(force = true) {
   await nextTick()
   const host = scrollHost.value
-  if (host) host.scrollTop = host.scrollHeight
+  if (!host) return
+  if (force) stickToBottom = true
+  if (stickToBottom) {
+    host.scrollTop = host.scrollHeight
+  }
+}
+
+let stickToBottom = true
+
+function onBodyScroll() {
+  const host = scrollHost.value
+  if (!host) return
+  stickToBottom = host.scrollHeight - host.scrollTop - host.clientHeight < 80
+}
+
+/** 商品图片加载后高度会变化；只有用户仍在底部时才跟随，避免打断向上翻阅。 */
+function onMediaLoad() {
+  if (stickToBottom) {
+    void scrollBottom(false)
+    keepAtBottom()
+  }
+}
+
+/** 卡片/图片/字体渲染可能晚于流结束；在贴底状态做几次延迟校正。 */
+function keepAtBottom() {
+  ;[0, 100, 300].forEach((delay) => {
+    window.setTimeout(() => {
+      if (stickToBottom) void scrollBottom(false)
+    }, delay)
+  })
 }
 
 function statusLabel(item: ChatSessionBrief): string {
@@ -635,7 +666,7 @@ function statusLabel(item: ChatSessionBrief): string {
       </div>
     </header>
 
-    <div ref="scrollHost" class="ai-chat__body" data-testid="ai-chat-messages">
+    <div ref="scrollHost" class="ai-chat__body" data-testid="ai-chat-messages" @scroll.passive="onBodyScroll">
       <div v-if="previousSessionId && !restoring" class="session-banner" data-testid="ai-chat-previous-ended">
         上一场会话已结束，已为您开启新会话。
         <button type="button" class="link-btn" @click="openHistory">查看历史会话</button>
@@ -680,7 +711,7 @@ function statusLabel(item: ChatSessionBrief): string {
               <div v-if="b.historical" class="cards-history-note">历史商品卡 · 价格/库存以详情页为准</div>
               <RouterLink v-for="c in b.cards" :key="c.spuId" class="card" :to="`/product/${c.spuId}`" data-testid="ai-chat-card">
                 <div class="card__pic">
-                  <img v-if="c.pic" :src="resolveMediaUrl(c.pic)" :alt="c.name" />
+                  <img v-if="c.pic" :src="resolveMediaUrl(c.pic)" :alt="c.name" @load="onMediaLoad" />
                   <span v-else class="card__placeholder">暂无图片</span>
                 </div>
                 <div class="card__body">
@@ -804,13 +835,20 @@ function statusLabel(item: ChatSessionBrief): string {
 .ai-chat {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: calc(100dvh - 220px);
+  min-height: 420px;
 }
 
 .ai-chat.is-web {
   max-width: 860px;
   margin: 0 auto;
-  min-height: calc(100vh - 220px);
+  height: calc(100dvh - 220px);
+  min-height: 460px;
+}
+
+.ai-chat.is-h5 {
+  height: calc(100dvh - 180px);
+  min-height: 360px;
 }
 
 /* 头部 */
@@ -861,14 +899,14 @@ function statusLabel(item: ChatSessionBrief): string {
 
 /* 消息流 */
 .ai-chat__body {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 14px 12px 20px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: calc(100vh - 260px);
-  min-height: 320px;
 }
 
 .row {
