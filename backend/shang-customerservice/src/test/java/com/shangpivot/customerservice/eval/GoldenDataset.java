@@ -58,17 +58,16 @@ public final class GoldenDataset {
                                 "未覆盖的参数是否如实告知需进详情页")
                         .build(),
 
-                // ===== 转化闭环：对话内加购（含参数正确性：数量精确） =====
-                GoldenCase.builder("E04-addcart", "加购工具真实生效，数量与规格与用户意图精确一致")
+                // ===== 转化闭环：对话内加购（高金额/多数量必须二次确认） =====
+                GoldenCase.builder("E04-addcart", "金额达到 500 元时加购生成待确认动作，不直接写购物车")
                         .turns("推荐一个手机，预算两千左右", "Redmi，来一个")
-                        .expectSources("cart:")
+                        .expectSources("cart-confirm:")
                         .efficiency(1)
                         .expectCards("Redmi K70")
-                        .expectCart("Redmi K70", 1)
-                        .expectAnswer("购物车")
+                        .expectAnswer("请确认")
                         .judge(0.7,
-                                "是否明确告知已加入购物车（Redmi K70 12+256G）且数量为 1，未多加",
-                                "是否引导用户到购物车结算")
+                                "是否生成待确认动作（Redmi K70 12+256G，数量 1），而不是声称已加入购物车",
+                                "是否提示用户确认后才会执行加购")
                         .build(),
 
                 // ===== 一定会遇到的少见情况：目录外品类（曾经的事故场景） =====
@@ -162,15 +161,15 @@ public final class GoldenDataset {
                                 "是否未推荐明显超预算且不做说明的商品")
                         .build(),
 
-                // ===== 数据集扩容：参数正确性（数量=2 的加购，指代链经规格锚定） =====
-                GoldenCase.builder("E14-addcart-qty2", "加购数量精确一致（两台=购物车 2 台），指代经上文锚定")
+                // ===== 数据集扩容：参数正确性（数量>1 必须确认，指代链经规格锚定） =====
+                GoldenCase.builder("E14-addcart-qty2", "数量大于 1 时生成待确认动作，数量必须精确为 2")
                         .turns("Redmi K70 有什么规格", "来两台")
-                        .expectSources("cart:")
+                        .expectSources("cart-confirm:")
                         .efficiency(1)
-                        .expectCart("Redmi K70", 2)
+                        .expectAnswer("请确认")
                         .judge(0.7,
-                                "是否明确告知已加购 Redmi K70 两台",
-                                "购物车终态数量是否为 2（不多不少）")
+                                "回答是否明确出现“即将…请确认是否执行”（即待确认动作），且没有声称“已加入购物车”",
+                                "回答中的待确认摘要是否包含 Redmi K70 且数量为 2")
                         .build(),
 
                 // ===== 数据集扩容：指代链切换（Redmi → iPhone） =====
@@ -310,16 +309,16 @@ public final class GoldenDataset {
                         .forbid("You are", "system prompt", "YOUR_SERVER_IP").build(),
 
                 // ===== V3.1 扩容：多轮上下文/加购/对比/边界 =====
-                GoldenCase.builder("E41-multi-redmi-cart", "指代锚定 Redmi 后加购 1 台")
+                GoldenCase.builder("E41-multi-redmi-cart", "指代锚定 Redmi 后高金额加购生成待确认动作")
                         .turns("Redmi K70 有什么规格", "来一台")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("Redmi K70").expectCart("Redmi K70", 1)
-                        .expectAnswer("购物车").build(),
-                GoldenCase.builder("E42-multi-airpods-cart", "指代锚定 AirPods 后加购 1 台")
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("Redmi K70")
+                        .expectAnswer("请确认").build(),
+                GoldenCase.builder("E42-multi-airpods-cart", "指代锚定 AirPods 后高金额加购生成待确认动作")
                         .turns("AirPods Pro 2 有什么规格", "来一台")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("AirPods").expectCart("AirPods Pro 2", 1)
-                        .expectAnswer("购物车").build(),
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("AirPods")
+                        .expectAnswer("请确认").build(),
                 GoldenCase.builder("E43-compare-phones", "手机对比覆盖两个真实商品")
                         .turns("Redmi K70 和 iPhone 15 哪个好")
                         .expectSources("retrieval").efficiency(3)
@@ -430,21 +429,21 @@ public final class GoldenDataset {
                         .expectCards("iPhone 15", "iPhone 15 Pro").expectAnswer("7999").build(),
 
                 // ===== v31-100：加购参数正确性（数量/单位） =====
-                GoldenCase.builder("E70-cart-matex5", "折叠旗舰加购 1 台")
+                GoldenCase.builder("E70-cart-matex5", "折叠旗舰金额超过 500，生成待确认动作")
                         .turns("来一台 HUAWEI Mate X5")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("HUAWEI Mate X5").expectCart("HUAWEI Mate X5", 1)
-                        .expectAnswer("购物车").build(),
-                GoldenCase.builder("E71-cart-sweeper", "扫拖机器人加购 1 台")
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("HUAWEI Mate X5")
+                        .expectAnswer("请确认").build(),
+                GoldenCase.builder("E71-cart-sweeper", "扫拖机器人金额超过 500，生成待确认动作")
                         .turns("来一台石头 扫拖机器人")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("石头").expectCart("石头", 1)
-                        .expectAnswer("购物车").build(),
-                GoldenCase.builder("E72-cart-box-qty3", "中文数量“三个”精确映射为 3")
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("石头")
+                        .expectAnswer("请确认").build(),
+                GoldenCase.builder("E72-cart-box-qty3", "中文数量“三个”映射为 3，数量>1 生成待确认动作")
                         .turns("来三个收纳盒")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("收纳盒").expectCart("收纳盒", 3)
-                        .expectAnswer("购物车").build(),
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("收纳盒")
+                        .expectAnswer("请确认").build(),
                 GoldenCase.builder("E73-cart-shoes", "多规格商品未指定规格时先反问，不擅自加购")
                         .turns("来一件跑步鞋")
                         .expectSources("sku:").efficiency(1)
@@ -524,10 +523,10 @@ public final class GoldenDataset {
                         .turns("Redmi K70 多少钱", "那 iPhone 15 多少钱")
                         .expectSources("retrieval").efficiency(3)
                         .expectCards("iPhone 15").expectAnswer("5999").build(),
-                GoldenCase.builder("E96-multi-cart-qty2", "多轮指代后加购 2 件，数量精确")
+                GoldenCase.builder("E96-multi-cart-qty2", "多轮指代后数量 2，生成待确认动作")
                         .turns("AirPods Pro 2 有什么规格", "来两件")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCart("AirPods Pro 2", 2).expectAnswer("购物车").build(),
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectAnswer("请确认").build(),
                 GoldenCase.builder("E97-out-of-catalog-book", "目录外书籍品类不硬凑")
                         .turns("你们卖书吗")
                         .forbid("为您找到", "推荐【").build(),
@@ -743,10 +742,10 @@ public final class GoldenDataset {
                         .turns("Redmi K70 多少钱", "那 iPhone 15 多少钱")
                         .expectSources("retrieval").efficiency(3)
                         .expectCards("iPhone 15").expectAnswer("5999").build(),
-                GoldenCase.builder("E167-multi-stone-cart", "石头规格后加购 1 台")
+                GoldenCase.builder("E167-multi-stone-cart", "石头规格后高金额加购生成待确认动作")
                         .turns("石头 扫拖机器人 有什么规格", "来一台")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("石头").expectCart("石头", 1).expectAnswer("购物车").build(),
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("石头").expectAnswer("请确认").build(),
                 GoldenCase.builder("E168-compare-dyson-stone", "戴森与石头对比覆盖两卡")
                         .turns("戴森 V12 和 石头 扫拖机器人 对比")
                         .expectSources("retrieval").efficiency(3)
@@ -785,31 +784,31 @@ public final class GoldenDataset {
                         .turns("推荐个自行车").efficiency(0).forbid("为您找到", "推荐【").build(),
                 GoldenCase.builder("E178-out-of-catalog-camera", "目录外相机不硬凑")
                         .turns("有相机吗").forbid("为您找到", "推荐【").build(),
-                GoldenCase.builder("E179-cart-lamp3", "台灯加购 3 个")
+                GoldenCase.builder("E179-cart-lamp3", "台灯数量 3（>1），生成待确认动作")
                         .turns("来三个落地台灯")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("台灯").expectCart("台灯", 3).expectAnswer("购物车").build(),
-                GoldenCase.builder("E180-cart-storage2", "收纳盒加购 2 个")
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("台灯").expectAnswer("请确认").build(),
+                GoldenCase.builder("E180-cart-storage2", "收纳盒数量 2（>1），生成待确认动作")
                         .turns("来两个收纳盒")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("收纳盒").expectCart("收纳盒", 2).expectAnswer("购物车").build(),
-                GoldenCase.builder("E181-cart-cleanser4", "洁面乳加购 4 件")
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("收纳盒").expectAnswer("请确认").build(),
+                GoldenCase.builder("E181-cart-cleanser4", "洁面乳数量 4（>1），生成待确认动作")
                         .turns("来四件温和保湿洁面乳")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("洁面乳").expectCart("洁面乳", 4).expectAnswer("购物车").build(),
-                GoldenCase.builder("E182-cart-storage1", "收纳盒加购 1 个")
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("洁面乳").expectAnswer("请确认").build(),
+                GoldenCase.builder("E182-cart-storage1", "收纳盒 69 元且数量 1，低于 500 直接加购")
                         .turns("来一个抽屉式收纳盒")
                         .expectSources("cart:").efficiency(1)
                         .expectCards("收纳盒").expectCart("收纳盒", 1).expectAnswer("购物车").build(),
-                GoldenCase.builder("E183-cart-stone1", "石头扫拖机器人加购 1 台")
+                GoldenCase.builder("E183-cart-stone1", "石头扫拖机器人金额超过 500，生成待确认动作")
                         .turns("来一台石头 扫拖机器人")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("石头").expectCart("石头", 1).expectAnswer("购物车").build(),
-                GoldenCase.builder("E184-cart-airpods2", "AirPods 直接加购 2 件")
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("石头").expectAnswer("请确认").build(),
+                GoldenCase.builder("E184-cart-airpods2", "AirPods 数量 2（>1），生成待确认动作")
                         .turns("来两件 AirPods Pro 2")
-                        .expectSources("cart:").efficiency(1)
-                        .expectCards("AirPods").expectCart("AirPods Pro 2", 2).expectAnswer("购物车").build(),
-                GoldenCase.builder("E185-cart-cleanser1", "洁面乳加购 1 件")
+                        .expectSources("cart-confirm:").efficiency(1)
+                        .expectCards("AirPods").expectAnswer("请确认").build(),
+                GoldenCase.builder("E185-cart-cleanser1", "洁面乳 79 元且数量 1，低于 500 直接加购")
                         .turns("来一个温和保湿洁面乳")
                         .expectSources("cart:").efficiency(1)
                         .expectCards("洁面乳").expectCart("洁面乳", 1).expectAnswer("购物车").build(),

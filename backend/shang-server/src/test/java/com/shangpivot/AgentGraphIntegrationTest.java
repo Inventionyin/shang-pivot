@@ -12,7 +12,6 @@ import com.shangpivot.commerce.api.ProductSkuApi;
 import com.shangpivot.commerce.api.ProductSkuDTO;
 import com.shangpivot.customerservice.agent.contract.AgentName;
 import com.shangpivot.customerservice.agent.graph.AgentGraphOrchestrator;
-import com.shangpivot.customerservice.agent.service.CartConfirmationPolicy;
 import com.shangpivot.customerservice.agent.service.PendingActionService;
 import com.shangpivot.customerservice.agent.trace.entity.PendingAction;
 import com.shangpivot.customerservice.agent.trace.mapper.PendingActionMapper;
@@ -45,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,8 +78,6 @@ class AgentGraphIntegrationTest {
     private AfterSaleApi afterSaleApi;
     @MockitoBean
     private CartMutationApi cartMutationApi;
-    @MockitoBean
-    private CartConfirmationPolicy cartConfirmationPolicy;
     @MockitoBean
     private CsGuardRailService guardRailService;
     @MockitoBean
@@ -137,8 +135,6 @@ class AgentGraphIntegrationTest {
                 .thenReturn(new CartAddResultDTO(1L, 10L, 2));
         when(knowledgeSearchService.search(any(), anyInt())).thenReturn(List.of(
                 new KnowledgeSearchService.KnowledgeHit(1L, "退换货政策", "签收后 7 天内可无理由退货", 0.9, "vector")));
-        // 本测试验证低风险加购直接执行；确认阈值策略由 CartConfirmationPolicyTest 单独覆盖。
-        when(cartConfirmationPolicy.requiresConfirmation(any(), any(), anyInt())).thenReturn(false);
     }
 
     @Test
@@ -200,16 +196,16 @@ class AgentGraphIntegrationTest {
     }
 
     @Test
-    void addToCartExecutesLowRiskWriteWithQuantity() {
+    void addToCartQuantityTwoCreatesConfirmation() {
         ChatSession session = chatSessionService.getOrCreateActive(100L, "h5");
         CsMessage user = chatSessionService.saveUserMessage(session.getId(), "来两台");
 
         CapturingEmitter emitter = new CapturingEmitter();
         orchestrator.respond(emitter, session, user);
 
-        assertTrue(emitter.doneJson().contains("addToCart"));
-        verify(cartMutationApi).addToCart(100L, 10L, 2);
-        assertEquals(0, pendingActionCount());
+        assertTrue(emitter.allText().contains("请确认"));
+        assertEquals(1, pendingActionCount());
+        verify(cartMutationApi, never()).addToCart(eq(100L), eq(10L), anyInt());
     }
 
     @Test

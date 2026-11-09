@@ -14,7 +14,6 @@ import com.shangpivot.commerce.api.ProductSkuDTO;
 import com.shangpivot.common.result.PageResult;
 import com.shangpivot.customerservice.agent.GuardPipeline;
 import com.shangpivot.customerservice.agent.graph.AgentGraphOrchestrator;
-import com.shangpivot.customerservice.agent.service.CartConfirmationPolicy;
 import com.shangpivot.customerservice.entity.ChatSession;
 import com.shangpivot.customerservice.entity.CsMessage;
 import com.shangpivot.customerservice.eval.GoldenCase;
@@ -88,8 +87,6 @@ class GraphGoldenIntegrationTest {
     private AfterSaleApi afterSaleApi;
     @MockitoBean
     private CartMutationApi cartMutationApi;
-    @MockitoBean
-    private CartConfirmationPolicy cartConfirmationPolicy;
     @MockitoBean
     private KnowledgeSearchService knowledgeSearchService;
     @MockitoBean
@@ -183,9 +180,6 @@ class GraphGoldenIntegrationTest {
             jdbcTemplate.update("DELETE FROM customerservice." + table);
         }
         carts.clear();
-        // Golden 断言的是“加购工具确实执行”，待确认动作由 CartConfirmationPolicyTest 单独覆盖；
-        // 这里让策略直接放行，避免阈值/数量策略把 Golden 变成待确认卡。
-        when(cartConfirmationPolicy.requiresConfirmation(any(), any(), anyInt())).thenReturn(false);
 
         LlmSettings settings = new LlmSettings();
         settings.setSystemPrompt("你是尚品汇客服");
