@@ -42,6 +42,12 @@ public class MallAiChatUiSteps {
         new MallAiChatPage(session()).openHumanTest();
     }
 
+    @Given("我用新手机号登录商城并通过 H5 悬浮球打开 AI 助手")
+    public void loginAndOpenH5Ai() {
+        loginNewCustomer();
+        new MallAiChatPage(session()).openFromHomeH5();
+    }
+
     @When("我在 AI 助手发送 {string}")
     public void sendInAi(String text) {
         new MallAiChatPage(session()).sendAndWaitAnswer(text);

@@ -31,36 +31,34 @@ public class ChatSessionService {
 
     /** 取进行中会话，无则创建（开场即返回快捷问，前端拼装首屏）。 */
     public ChatSession getOrCreateActive(Long customerId, String clientType) {
-        return getOrCreateActive(customerId, clientType, false, "", "");
+        return getOrCreateActive(customerId, clientType, "", false, "", "");
+    }
+
+    /** 兼容测试/内部调用：未提供 clientKey 时沿用同账号复用语义。 */
+    public ChatSession getOrCreateActive(Long customerId, String clientType,
+                                         boolean isTest, String testSource, String testRunId) {
+        return getOrCreateActive(customerId, clientType, "", isTest, testSource, testRunId);
     }
 
     /**
      * 测试流量（isTest=true）不参与真实会话复用：每次建独立会话，避免把测试消息写进真实用户会话。
+     * clientKey 用于同一账号多浏览器/设备隔离；空值表示未提供（平台自动化测试、脚本客户端）。
      */
-    public ChatSession getOrCreateActive(Long customerId, String clientType,
+    public ChatSession getOrCreateActive(Long customerId, String clientType, String clientKey,
                                          boolean isTest, String testSource, String testRunId) {
-        ChatSession active = null;
-        if (!isTest) {
-            active = sessionMapper.selectOne(new LambdaQueryWrapper<ChatSession>()
-                    .eq(ChatSession::getCustomerId, customerId)
-                    .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
-                            ChatSession.STATUS_HUMAN_ONGOING)
-                    .and(w -> w.eq(ChatSession::getIsTest, false).or().isNull(ChatSession::getIsTest))
-                    .orderByDesc(ChatSession::getId)
-                    .last("LIMIT 1"));
-        } else if ("human".equalsIgnoreCase(testSource)) {
-            // 人工体验是“同一个用户手动续聊”的场景：恢复最近一场未结束的 human 测试会话。
-            // 平台自动化测试（testSource=ai）仍不复用，避免跨用例污染。
-            active = sessionMapper.selectOne(new LambdaQueryWrapper<ChatSession>()
-                    .eq(ChatSession::getCustomerId, customerId)
-                    .eq(ChatSession::getIsTest, true)
-                    .eq(ChatSession::getTestSource, "human")
-                    .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
-                            ChatSession.STATUS_HUMAN_ONGOING)
-                    .orderByDesc(ChatSession::getId)
-                    .last("LIMIT 1"));
+        String key = normalizeClientKey(clientKey);
+        ChatSession active = findActive(customerId, key, isTest, testSource);
+        // 兼容上线前没有 client_key 的进行中会话：首个带 key 的客户端接管它，避免升级瞬间“会话丢失”。
+        if (active == null && !key.isBlank()) {
+            ChatSession legacy = findActive(customerId, "", isTest, testSource);
+            if (legacy != null) {
+                legacy.setClientKey(key);
+                sessionMapper.updateById(legacy);
+                active = legacy;
+            }
         }
         if (active != null) {
+            active.setResumed(true);
             return active;
         }
         ChatSession s = new ChatSession();
@@ -72,22 +70,85 @@ public class ChatSessionService {
         s.setIsTest(isTest);
         s.setTestSource(testSource == null ? "" : testSource);
         s.setTestRunId(testRunId == null ? "" : testRunId);
+        s.setClientKey(key);
+        s.setResumed(false);
+        s.setPreviousSessionId(findPreviousSessionId(customerId, key, isTest, testSource));
         sessionMapper.insert(s);
         return s;
     }
 
-    /** 结束当前所有进行中会话并新建一个（“开始新会话”；评测/冒烟用）。 */
-    public ChatSession startFresh(Long customerId, String clientType) {
-        return startFresh(customerId, clientType, false, "", "");
-    }
-
-    /** 测试流量只结束同类测试会话，不能误关真实用户正在进行的会话。 */
-    public ChatSession startFresh(Long customerId, String clientType,
-                                  boolean isTest, String testSource, String testRunId) {
+    private ChatSession findActive(Long customerId, String clientKey, boolean isTest, String testSource) {
         LambdaQueryWrapper<ChatSession> query = new LambdaQueryWrapper<ChatSession>()
                 .eq(ChatSession::getCustomerId, customerId)
                 .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
                         ChatSession.STATUS_HUMAN_ONGOING);
+        if (!isTest) {
+            query.and(w -> w.eq(ChatSession::getIsTest, false).or().isNull(ChatSession::getIsTest));
+        } else if ("human".equalsIgnoreCase(testSource)) {
+            query.eq(ChatSession::getIsTest, true).eq(ChatSession::getTestSource, "human");
+        } else {
+            // 平台 AI 自动化测试不复用会话，避免跨用例污染。
+            return null;
+        }
+        applyClientKey(query, clientKey);
+        return sessionMapper.selectOne(query.orderByDesc(ChatSession::getId).last("LIMIT 1"));
+    }
+
+    private Long findPreviousSessionId(Long customerId, String clientKey, boolean isTest, String testSource) {
+        if (isTest && !"human".equalsIgnoreCase(testSource)) {
+            return null;
+        }
+        LambdaQueryWrapper<ChatSession> query = new LambdaQueryWrapper<ChatSession>()
+                .eq(ChatSession::getCustomerId, customerId)
+                .eq(ChatSession::getStatus, ChatSession.STATUS_ENDED)
+                .orderByDesc(ChatSession::getId)
+                .last("LIMIT 1");
+        if (!isTest) {
+            query.and(w -> w.eq(ChatSession::getIsTest, false).or().isNull(ChatSession::getIsTest));
+        } else {
+            query.eq(ChatSession::getIsTest, true).eq(ChatSession::getTestSource, "human");
+        }
+        applyClientKey(query, clientKey);
+        ChatSession previous = sessionMapper.selectOne(query);
+        return previous == null ? null : previous.getId();
+    }
+
+    private static void applyClientKey(LambdaQueryWrapper<ChatSession> query, String clientKey) {
+        if (clientKey == null || clientKey.isBlank()) {
+            query.and(w -> w.isNull(ChatSession::getClientKey).or().eq(ChatSession::getClientKey, ""));
+        } else {
+            query.eq(ChatSession::getClientKey, clientKey);
+        }
+    }
+
+    private static String normalizeClientKey(String clientKey) {
+        if (clientKey == null) {
+            return "";
+        }
+        String key = clientKey.trim();
+        return key.length() > 64 ? key.substring(0, 64) : key;
+    }
+
+    /** 结束当前所有进行中会话并新建一个（“开始新会话”；评测/冒烟用）。 */
+    public ChatSession startFresh(Long customerId, String clientType) {
+        return startFresh(customerId, clientType, "", false, "", "");
+    }
+
+    /** 兼容测试/内部调用：未提供 clientKey 时结束同账号所有进行中会话。 */
+    public ChatSession startFresh(Long customerId, String clientType,
+                                  boolean isTest, String testSource, String testRunId) {
+        return startFresh(customerId, clientType, "", isTest, testSource, testRunId);
+    }
+
+    /** 测试流量只结束同类测试会话，不能误关真实用户正在进行的会话。 */
+    public ChatSession startFresh(Long customerId, String clientType, String clientKey,
+                                  boolean isTest, String testSource, String testRunId) {
+        String key = normalizeClientKey(clientKey);
+        LambdaQueryWrapper<ChatSession> query = new LambdaQueryWrapper<ChatSession>()
+                .eq(ChatSession::getCustomerId, customerId)
+                .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
+                        ChatSession.STATUS_HUMAN_ONGOING);
+        applyClientKey(query, key);
         if (isTest) {
             query.eq(ChatSession::getIsTest, true);
             // 人工体验与平台 AI 自动化测试互不干扰：只结束同一类测试会话。
@@ -103,7 +164,7 @@ public class ChatSessionService {
             s.setEndedAt(OffsetDateTime.now());
             sessionMapper.updateById(s);
         }
-        return getOrCreateActive(customerId, clientType, isTest, testSource, testRunId);
+        return getOrCreateActive(customerId, clientType, key, isTest, testSource, testRunId);
     }
 
     public ChatSession requireOwned(Long sessionId, Long customerId) {
@@ -256,7 +317,10 @@ public class ChatSessionService {
         return sessionMapper.update(null, new LambdaUpdateWrapper<ChatSession>()
                 .in(ChatSession::getStatus, ChatSession.STATUS_AI_ONGOING, ChatSession.STATUS_QUEUED,
                         ChatSession.STATUS_HUMAN_ONGOING)
-                .lt(ChatSession::getLastMessageAt, cutoff)
+                // 以消息表真实时间为兜底：即使应用侧 last_message_at 刷新失败，也不会误结束正在聊的会话。
+                .apply("COALESCE((SELECT MAX(m.created_at) FROM customerservice.message m "
+                        + "WHERE m.session_id = chat_session.id AND m.deleted = FALSE), last_message_at) < {0}",
+                        cutoff)
                 .set(ChatSession::getStatus, ChatSession.STATUS_ENDED)
                 .set(ChatSession::getEndedAt, now)
                 .set(ChatSession::getUpdatedAt, now));
@@ -269,7 +333,8 @@ public class ChatSessionService {
         m.put("role", msg.getRole());
         m.put("contentType", msg.getContentType());
         m.put("content", msg.getContent());
-        m.put("reasoning", msg.getReasoning());
+        // 历史回放不回传思考链，避免长期保存/暴露模型内部推理；实时流仍按原协议返回。
+        m.put("reasoning", null);
         m.put("metadata", msg.getMetadata());
         m.put("degraded", Boolean.TRUE.equals(msg.getDegraded()));
         m.put("createdAt", msg.getCreatedAt());

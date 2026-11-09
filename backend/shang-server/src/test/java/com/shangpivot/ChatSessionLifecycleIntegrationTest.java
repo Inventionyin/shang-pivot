@@ -58,7 +58,8 @@ class ChatSessionLifecycleIntegrationTest {
                     deleted BOOLEAN NOT NULL DEFAULT FALSE, trace_id VARCHAR(64),
                     is_test BOOLEAN NOT NULL DEFAULT FALSE,
                     test_source VARCHAR(16) NOT NULL DEFAULT '',
-                    test_run_id VARCHAR(64) NOT NULL DEFAULT '')
+                    test_run_id VARCHAR(64) NOT NULL DEFAULT '',
+                    client_key VARCHAR(64) NOT NULL DEFAULT '')
                 """);
         jdbcTemplate.execute("ALTER TABLE customerservice.chat_session "
                 + "ADD COLUMN IF NOT EXISTS last_message_at TIMESTAMPTZ");
@@ -121,6 +122,34 @@ class ChatSessionLifecycleIntegrationTest {
         assertEquals(ChatSession.STATUS_ENDED, ended.getStatus());
         assertNotNull(ended.getEndedAt());
         assertEquals(ChatSession.STATUS_AI_ONGOING, fresh.getStatus());
+    }
+
+    @Test
+    void clientKeysIsolateSessionsAndPreviousSessionIsReported() {
+        ChatSession a1 = chatSessionService.getOrCreateActive(CUSTOMER_A, "h5", "device-a", false, "", "");
+        ChatSession b1 = chatSessionService.getOrCreateActive(CUSTOMER_A, "h5", "device-b", false, "", "");
+        assertNotEquals(a1.getId(), b1.getId(), "不同浏览器/设备不能复用同一会话");
+        assertFalse(Boolean.TRUE.equals(a1.getResumed()));
+
+        ChatSession a2 = chatSessionService.getOrCreateActive(CUSTOMER_A, "h5", "device-a", false, "", "");
+        assertEquals(a1.getId(), a2.getId());
+        assertTrue(Boolean.TRUE.equals(a2.getResumed()));
+
+        ChatSession fresh = chatSessionService.startFresh(CUSTOMER_A, "h5", "device-a", false, "", "");
+        assertEquals(a1.getId(), fresh.getPreviousSessionId());
+        assertFalse(Boolean.TRUE.equals(fresh.getResumed()));
+    }
+
+    @Test
+    void idleSweepFallsBackToMessageTimeWhenTouchFailed() {
+        ChatSession session = chatSessionService.getOrCreateActive(CUSTOMER_A, "h5", "device-a", false, "", "");
+        chatSessionService.saveUserMessage(session.getId(), "我还在");
+        // 模拟应用侧 last_message_at 刷新失败：DB 里的活跃时间很旧，但消息表有刚刚的消息。
+        sessionMapper.update(null, new LambdaUpdateWrapper<ChatSession>()
+                .eq(ChatSession::getId, session.getId())
+                .set(ChatSession::getLastMessageAt, OffsetDateTime.now().minusMinutes(31)));
+        chatSessionService.endIdleSessions(OffsetDateTime.now(), Duration.ofMinutes(30));
+        assertEquals(ChatSession.STATUS_AI_ONGOING, sessionMapper.selectById(session.getId()).getStatus());
     }
 
     @Test

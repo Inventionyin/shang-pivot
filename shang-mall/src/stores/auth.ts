@@ -8,6 +8,7 @@ import {
   type CustomerProfile,
 } from '@/api/auth'
 import { clearTokens, getAccessToken, setTokens } from '@/utils/request'
+import { clearChatTestMode } from '@/utils/chatStorage'
 
 export const useAuthStore = defineStore('auth', () => {
   const customer = ref<CustomerProfile | null>(null)
@@ -34,6 +35,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(phone: string, code: string) {
     const res = await loginByPhone(phone, code)
+    clearChatTestMode()
     setTokens(res.data.accessToken, res.data.refreshToken)
     customer.value = res.data.customer
     return res.data
@@ -41,6 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function loginByEmail(email: string, code: string) {
     const res = await loginByEmailApi(email, code)
+    clearChatTestMode()
     setTokens(res.data.accessToken, res.data.refreshToken)
     customer.value = res.data.customer
     return res.data
@@ -53,6 +56,7 @@ export const useAuthStore = defineStore('auth', () => {
       /* ignore */
     }
     clearTokens()
+    clearChatTestMode()
     customer.value = null
   }
 

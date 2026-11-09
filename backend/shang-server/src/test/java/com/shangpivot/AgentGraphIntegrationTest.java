@@ -100,7 +100,8 @@ class AgentGraphIntegrationTest {
                     seat_id BIGINT, summary VARCHAR(255),
                     started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), ended_at TIMESTAMPTZ,
                     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                    deleted BOOLEAN NOT NULL DEFAULT FALSE, trace_id VARCHAR(64))
+                    deleted BOOLEAN NOT NULL DEFAULT FALSE, trace_id VARCHAR(64),
+                    client_key VARCHAR(64) NOT NULL DEFAULT '')
                 """);
         jdbcTemplate.execute("""
                 CREATE TABLE IF NOT EXISTS customerservice.message (

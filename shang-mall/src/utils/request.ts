@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
 import { showToast } from 'vant'
+import { clearChatTestMode } from '@/utils/chatStorage'
 
 export interface ApiResult<T = unknown> {
   code: number
@@ -67,6 +68,7 @@ request.interceptors.response.use(
     const status = error.response?.status as number | undefined
     if (status === 401) {
       clearTokens()
+      clearChatTestMode()
       const redirect = encodeURIComponent(window.location.pathname + window.location.search)
       if (!window.location.pathname.startsWith('/login')) {
         window.location.href = `/login?redirect=${redirect}`

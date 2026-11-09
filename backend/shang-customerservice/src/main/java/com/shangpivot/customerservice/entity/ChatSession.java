@@ -1,5 +1,6 @@
 package com.shangpivot.customerservice.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.shangpivot.common.entity.BaseEntity;
 import lombok.Data;
@@ -26,6 +27,14 @@ public class ChatSession extends BaseEntity {
     /** ai=平台自动化测试；human=平台人工体验。 */
     private String testSource;
     private String testRunId;
+    /** 浏览器/设备标识，用于同一账号多端会话隔离；空值表示未提供。 */
+    private String clientKey;
+    /** 本次查询是否复用了已有进行中会话（不落库，仅接口返回）。 */
+    @TableField(exist = false)
+    private Boolean resumed;
+    /** 新建会话时，同一客户端的上一场已结束会话（不落库，仅接口返回）。 */
+    @TableField(exist = false)
+    private Long previousSessionId;
 
     public static final String STATUS_AI_ONGOING = "AI_ONGOING";
     public static final String STATUS_QUEUED = "QUEUED";

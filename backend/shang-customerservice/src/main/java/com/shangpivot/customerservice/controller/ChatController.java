@@ -26,6 +26,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,7 @@ import java.util.concurrent.Executor;
 @RestController
 @RequestMapping("/api/chat")
 @RequiredArgsConstructor
+@Slf4j
 public class ChatController {
 
     private final ChatSessionService chatSessionService;
@@ -66,6 +69,10 @@ public class ChatController {
     /** legacy=V3.0 两阶段编排；graph=V3.1 LangGraph4j 编排。 */
     @Value("${agent.engine:legacy}")
     private String agentEngine;
+
+    /** 可接收 X-Agent-Test 的测试账号手机号；为空时兼容开发环境放开。 */
+    @Value("${agent.test.allowed-phones:}")
+    private String allowedTestPhones;
 
     /** 独立命名注入：容器内存在多个 Executor bean（含 Boot 的 applicationTaskExecutor）。 */
     @Resource(name = "csAgentExecutor")
@@ -84,21 +91,36 @@ public class ChatController {
             @RequestParam(defaultValue = "false") boolean fresh,
             @Parameter(description = "平台测试标记：ai/human；生产请求不传")
             @RequestHeader(value = "X-Agent-Test", required = false) String testHeader,
-            @RequestHeader(value = "X-Agent-Test-Run-Id", required = false) String testRunId) {
+            @RequestHeader(value = "X-Agent-Test-Run-Id", required = false) String testRunId,
+            @RequestHeader(value = "X-Chat-Client-Key", required = false) String clientKeyHeader) {
         LoginUser user = SecurityContexts.get();
-        boolean isTest = testHeader != null && !testHeader.isBlank() && !"0".equals(testHeader);
+        String clientKey = normalizeClientKey(clientKeyHeader);
+        boolean testRequested = testHeader != null && !testHeader.isBlank() && !"0".equals(testHeader);
+        boolean isTest = testRequested && isAllowedTestUser(user.getUsername());
+        if (testRequested && !isTest) {
+            log.warn("[cs] ignore X-Agent-Test for non-allowlisted user {}", user.getUserId());
+        }
         String testSource = isTest ? ("human".equalsIgnoreCase(testHeader) ? "human" : "ai") : "";
-        ChatSession s = fresh
-                ? chatSessionService.startFresh(user.getUserId(), user.getClientType(), isTest, testSource, testRunId)
-                : chatSessionService.getOrCreateActive(user.getUserId(), user.getClientType(), isTest, testSource, testRunId);
-        Map<String, Object> data = new HashMap<>();
-        data.put("sessionId", s.getId());
-        data.put("status", s.getStatus());
-        data.put("isTest", Boolean.TRUE.equals(s.getIsTest()));
-        data.put("testSource", s.getTestSource());
-        data.put("greeting", "您好，我是尚品汇智能客服小尚~ 想买什么尽管说，我帮您挑！");
-        data.put("quickQuestions", recommendedQuestions());
-        return Result.ok(data);
+        String lockToken = guardRailService.lockSessionCreate(user.getUserId(), clientKey);
+        try {
+            ChatSession s = fresh
+                    ? chatSessionService.startFresh(user.getUserId(), user.getClientType(), clientKey,
+                            isTest, testSource, testRunId)
+                    : chatSessionService.getOrCreateActive(user.getUserId(), user.getClientType(), clientKey,
+                            isTest, testSource, testRunId);
+            Map<String, Object> data = new HashMap<>();
+            data.put("sessionId", s.getId());
+            data.put("status", s.getStatus());
+            data.put("isTest", Boolean.TRUE.equals(s.getIsTest()));
+            data.put("testSource", s.getTestSource());
+            data.put("resumed", Boolean.TRUE.equals(s.getResumed()));
+            data.put("previousSessionId", s.getPreviousSessionId());
+            data.put("greeting", "您好，我是尚品汇智能客服小尚~ 想买什么尽管说，我帮您挑！");
+            data.put("quickQuestions", recommendedQuestions());
+            return Result.ok(data);
+        } finally {
+            guardRailService.unlockSessionCreate(user.getUserId(), clientKey, lockToken);
+        }
     }
 
     @Operation(summary = "我的会话列表")
@@ -117,11 +139,39 @@ public class ChatController {
         return Result.ok(chatSessionService.history(s.getId(), beforeId, limit));
     }
 
+    @Operation(summary = "会话状态与待确认动作")
+    @GetMapping("/sessions/{id}")
+    public Result<Map<String, Object>> sessionState(@PathVariable Long id) {
+        ChatSession s = chatSessionService.requireOwned(id, SecurityContexts.requireUserId());
+        Map<String, Object> data = new HashMap<>();
+        data.put("sessionId", s.getId());
+        data.put("status", s.getStatus());
+        data.put("isTest", Boolean.TRUE.equals(s.getIsTest()));
+        data.put("testSource", s.getTestSource());
+        data.put("lastMessageAt", s.getLastMessageAt());
+        PendingAction pending = pendingActionService.latestPending(s.getId());
+        if (pending != null && (pending.getExpiresAt() == null
+                || pending.getExpiresAt().isAfter(OffsetDateTime.now()))) {
+            Map<String, Object> action = new HashMap<>();
+            action.put("actionId", pending.getId());
+            action.put("tool", pending.getToolName());
+            action.put("summary", pendingActionService.summary(pending.getToolName(), pending.getArgsJson()));
+            action.put("args", pending.getArgsJson());
+            action.put("expiresAt", pending.getExpiresAt());
+            data.put("pendingAction", action);
+        }
+        return Result.ok(data);
+    }
+
     @Operation(summary = "发送消息（SSE 流式应答）")
     @PostMapping(value = "/sessions/{id}/messages", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter send(@PathVariable Long id, @RequestBody SendMessageRequest req) {
         LoginUser user = SecurityContexts.get();
         ChatSession s = chatSessionService.requireOwned(id, user.getUserId());
+        // 已结束（含 30 分钟空闲自动结束）不再把消息静默写进旧会话，避免用户以为消息已发送。
+        if (ChatSession.STATUS_ENDED.equals(s.getStatus())) {
+            throw new BizException(ErrorCode.CONFLICT, "会话已结束，请点击「新对话」继续咨询");
+        }
         // P0 护栏：用户级限流 + 会话级生成互斥（在入库前校验，避免被限流的消息也落库）
         guardRailService.checkChatRateLimit(user.getUserId());
         guardRailService.lockSession(s.getId());
@@ -234,6 +284,30 @@ public class ChatController {
                 .stream()
                 .map(QuickReply::getContent)
                 .toList();
+    }
+
+    /** 测试标记只允许测试账号池使用；未配置时兼容开发环境。 */
+    private boolean isAllowedTestUser(String username) {
+        if (allowedTestPhones == null || allowedTestPhones.isBlank()) {
+            return true;
+        }
+        if (username == null) {
+            return false;
+        }
+        for (String phone : allowedTestPhones.split(",")) {
+            if (username.equals(phone.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static String normalizeClientKey(String clientKey) {
+        if (clientKey == null) {
+            return "";
+        }
+        String key = clientKey.trim();
+        return key.length() > 64 ? key.substring(0, 64) : key;
     }
 
     private boolean isConfirmText(String text) {

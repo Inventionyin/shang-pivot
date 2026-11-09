@@ -1,5 +1,6 @@
 import { http } from '@/utils/request'
 import { streamPost } from '@/utils/sse'
+import { getChatClientKey, isHumanTestMode } from '@/utils/chatStorage'
 
 export interface ChatProductCard {
   seq?: number
@@ -41,8 +42,19 @@ export interface CreateSessionResult {
   status: string
   isTest?: boolean
   testSource?: string | null
+  resumed?: boolean
+  previousSessionId?: string | number | null
   greeting: string
   quickQuestions: string[]
+}
+
+export interface ChatSessionState {
+  sessionId: string | number
+  status: string
+  isTest?: boolean
+  testSource?: string | null
+  lastMessageAt?: string | null
+  pendingAction?: ChatPendingAction | null
 }
 
 /** 写操作待确认卡片（SSE action 事件） */
@@ -55,14 +67,17 @@ export interface ChatPendingAction {
 }
 
 export function createSession(fresh = false) {
-  const humanTest = sessionStorage.getItem('shang_mall_test_mode') === 'human'
+  const humanTest = isHumanTestMode()
   return http<CreateSessionResult>({
     url: '/api/chat/sessions',
     method: 'POST',
     params: fresh ? { fresh: true } : undefined,
-    headers: humanTest
-      ? { 'X-Agent-Test': 'human', 'X-Agent-Test-Run-Id': `human-${Date.now()}` }
-      : undefined,
+    headers: {
+      'X-Chat-Client-Key': getChatClientKey(),
+      ...(humanTest
+        ? { 'X-Agent-Test': 'human', 'X-Agent-Test-Run-Id': `human-${Date.now()}` }
+        : {}),
+    },
   })
 }
 
@@ -74,11 +89,19 @@ export function listSessions(page = 1, size = 10) {
   })
 }
 
-export function listMessages(sessionId: string | number, beforeId = 0, limit = 30) {
+export function listMessages(sessionId: string | number, beforeId: string | number = 0, limit = 30) {
   return http<ChatMessage[]>({
     url: `/api/chat/sessions/${sessionId}/messages`,
     method: 'GET',
     params: { beforeId, limit },
+  })
+}
+
+/** 会话状态 + 未过期待确认动作（用于恢复和页面打开时的状态轮询）。 */
+export function getSessionState(sessionId: string | number) {
+  return http<ChatSessionState>({
+    url: `/api/chat/sessions/${sessionId}`,
+    method: 'GET',
   })
 }
 

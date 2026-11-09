@@ -10,14 +10,17 @@ import {
   type ChatPendingAction,
   type ChatProductCard,
   type ChatSessionBrief,
+  type ChatSessionState,
   cancelChatAction,
   confirmChatAction,
   createSession,
   escalate,
+  getSessionState,
   listMessages,
   listSessions,
   sendMessageStream,
 } from '@/api/chat'
+import { CHAT_TEST_MODE_KEY, clearChatTestMode } from '@/utils/chatStorage'
 
 const { isH5, isWeb } = useClientType()
 const route = useRoute()
@@ -41,6 +44,8 @@ interface Bubble {
   seatName?: string
   stateLabel?: string
   action?: BubbleAction
+  /** true=历史回放消息（商品卡价格/库存可能已变化）。 */
+  historical?: boolean
 }
 
 const sessionId = ref<string | number>('')
@@ -55,6 +60,13 @@ const historyLoading = ref(false)
 const historyItems = ref<ChatSessionBrief[]>([])
 const errorMsg = ref('')
 const scrollHost = ref<HTMLElement>()
+const restoreFailed = ref(false)
+const previousSessionId = ref<string | number | null>(null)
+const hasEarlier = ref(false)
+const earlierLoading = ref(false)
+const historyCursor = ref<string | number>(0)
+const pendingActionId = ref<string | number>('')
+let stateTimer: number | undefined
 
 let seq = 0
 let sessionEpoch = 0
@@ -73,7 +85,10 @@ watch(sessionStatus, (st) => {
     queueTimer = window.setInterval(() => { queueWaitSec.value += 1 }, 1000)
   }
 })
-onUnmounted(() => { if (queueTimer) window.clearInterval(queueTimer) })
+onUnmounted(() => {
+  if (queueTimer) window.clearInterval(queueTimer)
+  stopStatePolling()
+})
 const statusText = computed(() => {
   switch (sessionStatus.value) {
     case 'QUEUED':
@@ -90,7 +105,7 @@ const statusText = computed(() => {
 onMounted(() => {
   // 平台“人工体验”入口：本次会话标记为 human test，并推送到测试平台真实数据看板。
   if (route.query.test === 'human') {
-    sessionStorage.setItem('shang_mall_test_mode', 'human')
+    sessionStorage.setItem(CHAT_TEST_MODE_KEY, 'human')
   }
   void ensureSession()
 })
@@ -99,12 +114,13 @@ onBeforeRouteLeave((to) => {
   // 商品详情是 AI 会话的临时跳转：保留人工体验标记，返回时才能续接同一会话。
   // 去首页/分类/我的等页面时清除，避免后续普通会话被误标为测试流量。
   if (to.name !== 'product') {
-    sessionStorage.removeItem('shang_mall_test_mode')
+    clearChatTestMode()
   }
 })
 
 onBeforeUnmount(() => {
   abort?.abort()
+  stopStatePolling()
 })
 
 function toBubbles(messages: ChatMessage[]): Bubble[] {
@@ -115,10 +131,12 @@ function toBubbles(messages: ChatMessage[]): Bubble[] {
       key: `h${m.id}`,
       role: (m.role === 'AGENT' ? 'AGENT' : m.role === 'USER' ? 'USER' : 'ASSISTANT') as Bubble['role'],
       content: m.content || '',
-      reasoning: m.reasoning || undefined,
+      // 历史回放不回传思考链；旧接口即使返回了也不展示。
+      reasoning: undefined,
       cards: m.metadata?.items,
       degraded: m.degraded,
       seatName: m.metadata?.seatName,
+      historical: true,
     }))
 }
 
@@ -130,9 +148,21 @@ function greetingBubble(content?: string): Bubble {
   }
 }
 
+async function loadHistoryInto(targetSessionId: string | number, greeting?: string) {
+  const history = await listMessages(targetSessionId, 0, 50)
+  const raw = history.data || []
+  const restored = toBubbles(raw)
+  bubbles.value = restored.length ? restored : [greetingBubble(greeting)]
+  hasEarlier.value = raw.length >= 50
+  historyCursor.value = raw.length ? raw[raw.length - 1].id : 0
+  restoreFailed.value = false
+}
+
 async function bootstrap(fresh = false) {
   const epoch = ++sessionEpoch
   errorMsg.value = ''
+  restoreFailed.value = false
+  previousSessionId.value = null
   restoring.value = true
   try {
     const res = await createSession(fresh)
@@ -140,31 +170,59 @@ async function bootstrap(fresh = false) {
     sessionId.value = res.data.sessionId
     sessionStatus.value = res.data.status
     quickQuestions.value = res.data.quickQuestions || []
+    previousSessionId.value = fresh || res.data.resumed ? null : (res.data.previousSessionId ?? null)
     // 后端返回的测试标记是最终口径：避免 sessionStorage 里的旧标记污染普通会话。
     if (res.data.testSource === 'human') {
-      sessionStorage.setItem('shang_mall_test_mode', 'human')
+      sessionStorage.setItem(CHAT_TEST_MODE_KEY, 'human')
     } else {
-      sessionStorage.removeItem('shang_mall_test_mode')
+      clearChatTestMode()
     }
     if (!fresh) {
       try {
-        const history = await listMessages(res.data.sessionId, 0, 50)
-        if (epoch !== sessionEpoch) return
-        const restored = toBubbles(history.data || [])
-        bubbles.value = restored.length ? restored : [greetingBubble(res.data.greeting)]
+        await loadHistoryInto(res.data.sessionId, res.data.greeting)
       } catch {
         if (epoch !== sessionEpoch) return
-        // 历史接口失败不阻塞新会话输入，仍保留 sessionId 让用户可继续发送。
-        bubbles.value = [greetingBubble(res.data.greeting)]
-        errorMsg.value = '历史消息加载失败，可点右上角「历史会话」重试'
+        // 历史加载失败时不能假装是新会话继续发：保留空态并禁用输入，等待重试。
+        bubbles.value = []
+        restoreFailed.value = true
+        errorMsg.value = '历史消息加载失败，请重试后再继续发送'
       }
     } else {
       bubbles.value = [greetingBubble(res.data.greeting)]
+      hasEarlier.value = false
+      historyCursor.value = 0
     }
+    await refreshSessionState()
+    startStatePolling()
     await scrollBottom()
   } catch {
     if (epoch === sessionEpoch) {
+      restoreFailed.value = true
       errorMsg.value = '会话初始化失败，请稍后重试'
+    }
+  } finally {
+    if (epoch === sessionEpoch) {
+      restoring.value = false
+    }
+  }
+}
+
+async function retryRestore() {
+  if (!sessionId.value) {
+    await bootstrap(false)
+    return
+  }
+  const epoch = sessionEpoch
+  restoring.value = true
+  errorMsg.value = ''
+  try {
+    await loadHistoryInto(sessionId.value)
+    await refreshSessionState()
+    startStatePolling()
+  } catch {
+    if (epoch === sessionEpoch) {
+      restoreFailed.value = true
+      errorMsg.value = '历史消息加载失败，请稍后重试'
     }
   } finally {
     if (epoch === sessionEpoch) {
@@ -194,10 +252,95 @@ async function startNewSession() {
   // 让仍在进行中的首次 bootstrap 失效，避免它晚到后覆盖新会话。
   sessionEpoch++
   bootTask = null
+  stopStatePolling()
   bubbles.value = []
   sessionStatus.value = 'AI_ONGOING'
   sessionId.value = ''
+  previousSessionId.value = null
+  restoreFailed.value = false
+  hasEarlier.value = false
+  historyCursor.value = 0
+  pendingActionId.value = ''
+  errorMsg.value = ''
   await bootstrap(true)
+}
+
+function stopStatePolling() {
+  if (stateTimer) {
+    window.clearInterval(stateTimer)
+    stateTimer = undefined
+  }
+}
+
+function startStatePolling() {
+  stopStatePolling()
+  stateTimer = window.setInterval(() => {
+    if (document.visibilityState === 'visible' && sessionId.value && !sending.value) {
+      void refreshSessionState()
+    }
+  }, 30_000)
+}
+
+async function refreshSessionState() {
+  if (!sessionId.value) return
+  try {
+    const res = await getSessionState(sessionId.value)
+    const state: ChatSessionState = res.data
+    if (state.status && state.status !== sessionStatus.value) {
+      sessionStatus.value = state.status
+      if (state.status === 'ENDED') {
+        stopStatePolling()
+        errorMsg.value = '会话已结束，请点击右上角「新对话」继续咨询'
+      }
+    }
+    applyPendingAction(state.pendingAction)
+  } catch {
+    // 状态轮询是增强能力；网络失败不打断当前对话。
+  }
+}
+
+function applyPendingAction(action?: ChatPendingAction | null) {
+  if (!action || action.actionId == null) return
+  if (pendingActionId.value === action.actionId) return
+  pendingActionId.value = action.actionId
+  const existing = bubbles.value.find((b) => b.action?.actionId === action.actionId)
+  if (existing) {
+    existing.action = { ...action, status: 'PENDING' }
+    return
+  }
+  bubbles.value.push({
+    key: nextKey(),
+    role: 'ASSISTANT',
+    content: '有一项操作待确认',
+    action: { ...action, status: 'PENDING' },
+  })
+  void scrollBottom()
+}
+
+async function loadEarlier() {
+  if (!hasEarlier.value || earlierLoading.value || !historyCursor.value) return
+  earlierLoading.value = true
+  const host = scrollHost.value
+  const beforeHeight = host?.scrollHeight || 0
+  const beforeTop = host?.scrollTop || 0
+  try {
+    const res = await listMessages(sessionId.value, historyCursor.value, 50)
+    const raw = res.data || []
+    const older = toBubbles(raw)
+    if (older.length) {
+      bubbles.value = [...older, ...bubbles.value]
+      historyCursor.value = raw[raw.length - 1].id
+      hasEarlier.value = raw.length >= 50
+      await nextTick()
+      if (host) host.scrollTop = host.scrollHeight - beforeHeight + beforeTop
+    } else {
+      hasEarlier.value = false
+    }
+  } catch {
+    errorMsg.value = '更早消息加载失败，请稍后重试'
+  } finally {
+    earlierLoading.value = false
+  }
 }
 
 async function openHistory() {
@@ -215,29 +358,36 @@ async function openHistory() {
 
 async function loadSession(item: ChatSessionBrief) {
   abort?.abort()
+  stopStatePolling()
   showHistory.value = false
   errorMsg.value = ''
+  restoreFailed.value = false
+  previousSessionId.value = null
+  pendingActionId.value = ''
   restoring.value = true
   try {
-    const res = await listMessages(item.sessionId, 0, 50)
     sessionId.value = item.sessionId
     sessionStatus.value = item.status
     if (item.testSource === 'human') {
-      sessionStorage.setItem('shang_mall_test_mode', 'human')
+      sessionStorage.setItem(CHAT_TEST_MODE_KEY, 'human')
     } else {
-      sessionStorage.removeItem('shang_mall_test_mode')
+      clearChatTestMode()
     }
-    bubbles.value = toBubbles(res.data || [])
+    await loadHistoryInto(item.sessionId)
     if (item.status === 'ENDED') {
       bubbles.value.push({
         key: nextKey(),
         role: 'ASSISTANT',
         content: '该会话已结束，点击右上角「新对话」继续咨询~',
       })
+    } else {
+      await refreshSessionState()
+      startStatePolling()
     }
     await scrollBottom()
   } catch {
-    errorMsg.value = '历史消息加载失败'
+    restoreFailed.value = true
+    errorMsg.value = '历史消息加载失败，请稍后重试'
   } finally {
     restoring.value = false
   }
@@ -245,7 +395,7 @@ async function loadSession(item: ChatSessionBrief) {
 
 async function send(text?: string) {
   const content = (text ?? input.value).trim()
-  if (!content || sending.value || restoring.value) return
+  if (!content || sending.value || restoring.value || restoreFailed.value || sessionStatus.value === 'ENDED') return
   if (!sessionId.value) {
     await ensureSession()
     if (!sessionId.value) return // 初始化失败，errorMsg 已提示
@@ -390,6 +540,7 @@ async function confirmAction(b: Bubble) {
     const message = res.data?.message
     action.status = 'CONFIRMED'
     action.resultText = message || '已执行'
+    pendingActionId.value = ''
     if (!message) {
       bubbles.value.push({
         key: nextKey(),
@@ -418,6 +569,7 @@ async function cancelAction(b: Bubble) {
     await cancelChatAction(sessionId.value, action.actionId)
     action.status = 'CANCELLED'
     action.resultText = '已取消'
+    pendingActionId.value = ''
     bubbles.value.push({ key: nextKey(), role: 'ASSISTANT', content: '已取消该操作' })
     await scrollBottom()
   } catch (err) {
@@ -484,6 +636,24 @@ function statusLabel(item: ChatSessionBrief): string {
     </header>
 
     <div ref="scrollHost" class="ai-chat__body" data-testid="ai-chat-messages">
+      <div v-if="previousSessionId && !restoring" class="session-banner" data-testid="ai-chat-previous-ended">
+        上一场会话已结束，已为您开启新会话。
+        <button type="button" class="link-btn" @click="openHistory">查看历史会话</button>
+      </div>
+      <div v-if="restoreFailed" class="restore-error" data-testid="ai-chat-restore-error">
+        历史消息加载失败。为避免在缺少上下文的情况下继续发送，请先重新加载。
+        <button type="button" class="link-btn" @click="retryRestore">重新加载</button>
+      </div>
+      <button
+        v-if="hasEarlier && !restoreFailed"
+        type="button"
+        class="load-earlier"
+        data-testid="ai-chat-load-earlier"
+        :disabled="earlierLoading"
+        @click="loadEarlier"
+      >
+        {{ earlierLoading ? '加载中…' : '加载更早消息' }}
+      </button>
       <div v-if="restoring && bubbles.length === 0" class="state-label">正在恢复会话…</div>
       <div
         v-for="b in bubbles"
@@ -507,6 +677,7 @@ function statusLabel(item: ChatSessionBrief): string {
             <div v-if="b.content || !b.streaming" class="content">{{ b.content }}</div>
             <div v-else-if="!b.reasoning" class="content typing"><span />思考中…</div>
             <div v-if="b.cards?.length" class="cards">
+              <div v-if="b.historical" class="cards-history-note">历史商品卡 · 价格/库存以详情页为准</div>
               <RouterLink v-for="c in b.cards" :key="c.spuId" class="card" :to="`/product/${c.spuId}`" data-testid="ai-chat-card">
                 <div class="card__pic">
                   <img v-if="c.pic" :src="resolveMediaUrl(c.pic)" :alt="c.name" />
@@ -570,7 +741,7 @@ function statusLabel(item: ChatSessionBrief): string {
         </div>
       </div>
 
-      <div v-if="quickQuestions.length && bubbles.length <= 1 && isAiOngoing" class="quick-qs">
+      <div v-if="quickQuestions.length && bubbles.length <= 1 && isAiOngoing && !restoreFailed" class="quick-qs">
         <button v-for="q in quickQuestions" :key="q" type="button" @click="send(q)">{{ q }}</button>
       </div>
 
@@ -595,14 +766,14 @@ function statusLabel(item: ChatSessionBrief): string {
         <input
           v-model="input"
           data-testid="ai-chat-input"
-          :disabled="sessionStatus === 'ENDED' || restoring"
+          :disabled="sessionStatus === 'ENDED' || restoring || restoreFailed"
           maxlength="500"
           placeholder="想买什么？描述需求，我来帮你挑~"
         />
         <button
           type="submit"
           data-testid="ai-chat-send"
-          :disabled="sending || restoring || !input.trim() || sessionStatus === 'ENDED'"
+          :disabled="sending || restoring || restoreFailed || !input.trim() || sessionStatus === 'ENDED'"
         >
           发送
         </button>
@@ -1041,6 +1212,43 @@ function statusLabel(item: ChatSessionBrief): string {
   border: 1px solid #f0d8a8;
   border-radius: 8px;
   padding: 8px 10px;
+}
+
+.session-banner,
+.restore-error {
+  font-size: 12px;
+  border-radius: 8px;
+  padding: 8px 10px;
+  line-height: 1.5;
+}
+
+.session-banner {
+  color: #6b5a3e;
+  background: #fff8ec;
+  border: 1px solid #f0d8a8;
+}
+
+.restore-error {
+  color: #c8453c;
+  background: #fff7f6;
+  border: 1px solid #f0c7c3;
+}
+
+.load-earlier {
+  align-self: center;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cards-history-note {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 2px 0;
 }
 
 .ai-gen-tag {

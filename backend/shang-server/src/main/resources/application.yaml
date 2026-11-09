@@ -111,6 +111,9 @@ agent:
   cart:
     # 加购风险分级：数量>1 或 单价×数量>=阈值时生成待确认动作
     confirm-amount-threshold: ${AGENT_CART_CONFIRM_AMOUNT_THRESHOLD:500}
+  test:
+    # 允许携带 X-Agent-Test 的测试账号手机号（逗号分隔）；为空时开发环境放开。
+    allowed-phones: ${AGENT_TEST_ALLOWED_PHONES:}
 
 # C 端会话空闲回收：最后一条消息（用户或助手）超过阈值后自动结束。
 chat:

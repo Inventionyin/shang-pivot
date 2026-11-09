@@ -40,3 +40,13 @@ Feature: 商城 AI 助手会话恢复
     When 我点击第一张 AI 商品卡片
     And 我返回 AI 助手页面
     Then AI 助手对话应包含 "推荐一个手机，预算两千左右"
+
+  @AI-CHAT-RESUME-005 @h5
+  Scenario: H5 悬浮球进入 AI 后从商品详情返回仍恢复会话
+    Given 我用新手机号登录商城并通过 H5 悬浮球打开 AI 助手
+    When 我在 AI 助手发送 "推荐一个手机，预算两千左右"
+    Then AI 助手应展示商品卡片
+    When 我点击第一张 AI 商品卡片
+    And 我返回 AI 助手页面
+    Then AI 助手对话应包含 "推荐一个手机，预算两千左右"
+    And AI 助手应展示商品卡片

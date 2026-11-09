@@ -4,6 +4,8 @@
  * 事件协议见 docs/04-architecture/v3.0/接口设计.md §1。
  */
 
+import { clearChatTestMode, isHumanTestMode } from '@/utils/chatStorage'
+
 export interface SseMessage {
   event: string
   data: string
@@ -20,7 +22,7 @@ export interface StreamPostOptions extends SseHandlers {
 
 function buildHeaders(): HeadersInit {
   const token = localStorage.getItem('shang_mall_access')
-  const humanTest = sessionStorage.getItem('shang_mall_test_mode') === 'human'
+  const humanTest = isHumanTestMode()
   return {
     'Content-Type': 'application/json',
     Accept: 'text/event-stream',
@@ -35,6 +37,7 @@ function buildHeaders(): HeadersInit {
 function handleUnauthorized() {
   localStorage.removeItem('shang_mall_access')
   localStorage.removeItem('shang_mall_refresh')
+  clearChatTestMode()
   const redirect = encodeURIComponent(window.location.pathname + window.location.search)
   if (!window.location.pathname.startsWith('/login')) {
     window.location.href = `/login?redirect=${redirect}`
@@ -62,6 +65,19 @@ export async function streamPost(url: string, body: unknown, options: StreamPost
     return
   }
   if (!resp.ok || !resp.body) {
+    let msg = `请求失败（${resp.status}）`
+    try {
+      const data = await resp.json()
+      if (data?.msg) msg = data.msg
+    } catch {
+      /* 非 JSON 响应体 */
+    }
+    options.onError?.(new Error(msg))
+    return
+  }
+  // 业务异常（如会话已结束）由全局异常处理返回 JSON，不是 SSE；按错误展示，避免空回复。
+  const contentType = resp.headers.get('content-type') || ''
+  if (!contentType.includes('text/event-stream')) {
     let msg = `请求失败（${resp.status}）`
     try {
       const data = await resp.json()

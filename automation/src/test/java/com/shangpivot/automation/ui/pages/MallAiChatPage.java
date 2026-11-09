@@ -34,6 +34,17 @@ public final class MallAiChatPage extends BasePage {
         waitForFirstBubble();
     }
 
+    /** H5 形态：从首页悬浮球进入，验证移动端返回栈。 */
+    public void openFromHomeH5() {
+        page().setViewportSize(390, 844);
+        open("/");
+        waitVisible(page().locator(".h5-ai-orb"), 20_000);
+        page().locator(".h5-ai-orb").click();
+        expectPath("/ai");
+        waitVisible(page().getByTestId("ai-chat"), 20_000);
+        waitForFirstBubble();
+    }
+
     public void sendAndWaitAnswer(String text) {
         int before = page().getByTestId("ai-chat-bubble").count();
         Locator input = page().getByTestId("ai-chat-input");
