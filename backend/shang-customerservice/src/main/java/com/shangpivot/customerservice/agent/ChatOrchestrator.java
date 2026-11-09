@@ -16,6 +16,8 @@ import com.shangpivot.common.exception.BizException;
 import com.shangpivot.common.result.PageResult;
 import com.shangpivot.customerservice.agent.contract.AgentName;
 import com.shangpivot.customerservice.agent.graph.SupervisorAgent;
+import com.shangpivot.customerservice.agent.reference.ChatCardContextService;
+import com.shangpivot.customerservice.agent.reference.ProductReferenceResolver;
 import com.shangpivot.customerservice.agent.service.CartConfirmationPolicy;
 import com.shangpivot.customerservice.agent.service.PendingActionService;
 import com.shangpivot.customerservice.agent.trace.entity.PendingAction;
@@ -67,6 +69,8 @@ public class ChatOrchestrator implements ChatResponder {
     private final ProductQueryApi productCardsApi;
     private final ProductSkuApi productSkuApi;
     private final CartMutationApi cartMutationApi;
+    private final ProductReferenceResolver productReferenceResolver;
+    private final ChatCardContextService cardContextService;
     private final CsGuardRailService guardRailService;
     private final ObjectMapper objectMapper;
     private final ChatSessionService chatSessionService;
@@ -286,7 +290,8 @@ public class ChatOrchestrator implements ChatResponder {
                     card.get("pic") == null ? null : String.valueOf(card.get("pic")),
                     decimal(card.get("price")),
                     decimal(card.get("priceMax")),
-                    card.get("soldCount") instanceof Number n ? n.longValue() : null));
+                    card.get("soldCount") instanceof Number n ? n.longValue() : null,
+                    card.get("categoryName") == null ? null : String.valueOf(card.get("categoryName"))));
         }
         return result;
     }
@@ -336,7 +341,7 @@ public class ChatOrchestrator implements ChatResponder {
                     FactAnswerRenderer.noProducts(keyword, userText));
         }
         List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(keyword, MAX_PRODUCTS, constraints);
-        List<ProductCardDTO> previous = lastRecommendedCards(sessionId);
+        List<ProductCardDTO> previous = cardContextService.latestCards(sessionId);
 
         // 明确新品类/新商品但无命中：cards 必须为空，不得回填上文
         if (hits.isEmpty() && constraints.explicitNewQuery()) {
@@ -406,9 +411,12 @@ public class ChatOrchestrator implements ChatResponder {
 
     /** 规格追问：解析用户指代的上文商品 → 拉取真实 SKU 规格（含库存）。 */
     private Facts specsFacts(ChatSession session, String userText, String productRef) {
-        ProductCardDTO target = resolveContextProduct(session.getId(), userText, productRef);
-        if (target == null) {
-            List<ProductCardDTO> previous = lastRecommendedCards(session.getId());
+        ProductReferenceResolver.Resolution resolution = resolveProduct(session.getId(), userText, productRef);
+        if (!(resolution instanceof ProductReferenceResolver.Unique unique)) {
+            List<ProductCardDTO> previous = candidatesOf(resolution);
+            if (previous.isEmpty()) {
+                previous = cardContextService.latestCards(session.getId());
+            }
             if (!previous.isEmpty()) {
                 // 指代不明：列出上文商品让用户确认，绝不瞎猜
                 StringBuilder sb = new StringBuilder("（用户在问规格但没说清是哪一款：请列出以下此前推荐过的商品，请用户确认后再答）：\n");
@@ -425,6 +433,7 @@ public class ChatOrchestrator implements ChatResponder {
             return new Facts("（用户在问商品规格，但当前会话没有可指代的商品上下文：请用户说明具体是哪款商品，或先描述需求）",
                     List.of(), Map.of("sources", List.of()), FactAnswerRenderer.noProductContext());
         }
+        ProductCardDTO target = unique.product();
         List<ProductSkuDTO> skus = productSkuApi.listEnabledBySpu(target.spuId());
         if (skus.isEmpty()) {
             return new Facts("（该商品暂无可售规格：如实告知，建议关注补货或转人工）", List.of(), Map.of("sources", List.of()),
@@ -453,9 +462,12 @@ public class ChatOrchestrator implements ChatResponder {
 
     /** 对话内加购：解析目标商品与规格 → 调 commerce 加购 → 告知结果。 */
     private Facts addCartFacts(ChatSession session, String userText, String productRef, int quantity) {
-        ProductCardDTO target = resolveContextProduct(session.getId(), userText, productRef);
-        if (target == null) {
-            List<ProductCardDTO> previous = lastRecommendedCards(session.getId());
+        ProductReferenceResolver.Resolution resolution = resolveProduct(session.getId(), userText, productRef);
+        if (!(resolution instanceof ProductReferenceResolver.Unique unique)) {
+            List<ProductCardDTO> previous = candidatesOf(resolution);
+            if (previous.isEmpty()) {
+                previous = cardContextService.latestCards(session.getId());
+            }
             if (!previous.isEmpty()) {
                 StringBuilder sb = new StringBuilder("（用户想购买但没说清是哪一款：请列出以下此前推荐过的商品，请用户确认后再加购）：\n");
                 List<Map<String, Object>> cards = new ArrayList<>();
@@ -471,6 +483,7 @@ public class ChatOrchestrator implements ChatResponder {
             return new Facts("（用户想购买，但当前会话没有可指代的商品：请用户说明要哪款，或先为其推荐）",
                     List.of(), Map.of("sources", List.of()), FactAnswerRenderer.noProductContext());
         }
+        ProductCardDTO target = unique.product();
         List<ProductSkuDTO> skus = productSkuApi.listEnabledBySpu(target.spuId());
         if (skus.isEmpty()) {
             return new Facts("（该商品暂无可售规格，无法加购：如实告知）", List.of(), Map.of("sources", List.of()),
@@ -518,60 +531,14 @@ public class ChatOrchestrator implements ChatResponder {
         }
     }
 
-    /** 解析用户指代的商品：显式序号/商品名 → 上文卡片；指代不明且上文唯一 → 上文；否则 null（由调用方反问用户，禁止瞎检索）。 */
-    private ProductCardDTO resolveContextProduct(Long sessionId, String userText, String productRef) {
-        List<ProductCardDTO> previous = lastRecommendedCards(sessionId);
-        String ref = productRef == null ? "" : productRef.trim();
-        String text = userText == null ? "" : userText;
+    /** 解析用户指代的商品：显式序号/商品名/品类/品牌 → 唯一命中；多候选由调用方反问。 */
+    private ProductReferenceResolver.Resolution resolveProduct(Long sessionId, String userText, String productRef) {
+        return productReferenceResolver.resolve(cardContextService.recentCards(sessionId), userText, productRef);
+    }
 
-        // 1) 序号指代
-        java.util.regex.Matcher idx = java.util.regex.Pattern.compile("第\\s*([一二三四五1-5])").matcher(ref + " " + text);
-        if (idx.find()) {
-            int n = "一二三四五".indexOf(idx.group(1));
-            int zero = n >= 0 ? n : (Integer.parseInt(idx.group(1)) - 1);
-            if (zero >= 0 && zero < previous.size()) {
-                return previous.get(zero);
-            }
-        }
-        // 2) 商品名匹配（上文卡片名 or 指代词本身含商品名片段）
-        String textNorm = IntentRouter.normalizeProductText(text);
-        String refNorm = IntentRouter.normalizeProductText(ref);
-        for (ProductCardDTO c : previous) {
-            String name = c.name();
-            String head = name.length() > 4 ? name.substring(0, 4) : name;
-            String nameNorm = IntentRouter.normalizeProductText(name);
-            String headNorm = IntentRouter.normalizeProductText(head);
-            if ((!headNorm.isBlank() && textNorm.contains(headNorm))
-                    || (refNorm.length() >= 2 && nameNorm.contains(refNorm))) {
-                return c;
-            }
-        }
-        // 2.5) 用户点名了目录中的商品（如「那 iPhone 呢」）：按名字在目录里定位，优先于代词兜底
-        if (!text.isBlank()) {
-            List<RetrievalService.ProductHit> named = retrievalService.searchProducts(
-                    IntentRouter.extractKeyword(text), 2, constraints(text));
-            for (RetrievalService.ProductHit hit : named) {
-                String name = hit.card().name();
-                String head = name.length() > 4 ? name.substring(0, 4) : name;
-                String nameNorm = IntentRouter.normalizeProductText(name);
-                String headNorm = IntentRouter.normalizeProductText(head);
-                if ((!headNorm.isBlank() && textNorm.contains(headNorm))
-                        || (refNorm.length() >= 2 && nameNorm.contains(refNorm))) {
-                    return hit.card();
-                }
-            }
-        }
-        // 3) 指代词或空：上文唯一则取唯一；多个上文 + 模糊指代 → null（反问用户，绝不拿垃圾检索凑数）
-        if (!previous.isEmpty() && (ref.isBlank() || ref.matches(".*(它|这个|那个|刚才|上面|这款|同款).*"))) {
-            return previous.size() == 1 ? previous.get(0) : null;
-        }
-        // 4) 完全无上文：按消息内容检索一次（此时没有更好的依据）
-        if (previous.isEmpty()) {
-            List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(
-                    IntentRouter.extractKeyword(text), 1, constraints(text));
-            return hits.isEmpty() ? null : hits.get(0).card();
-        }
-        return null;
+    private static List<ProductCardDTO> candidatesOf(ProductReferenceResolver.Resolution resolution) {
+        return resolution instanceof ProductReferenceResolver.Ambiguous ambiguous
+                ? ambiguous.candidates() : List.of();
     }
 
     private ProductConstraints constraints(String text) {
@@ -610,37 +577,6 @@ public class ChatOrchestrator implements ChatResponder {
             }
         }
         return skus.size() == 1 ? skus.get(0) : null;
-    }
-
-    /** 会话内最近一条带商品卡片的助手消息（即上一轮推荐结果）。 */
-    private List<ProductCardDTO> lastRecommendedCards(Long sessionId) {
-        try {
-            CsMessage last = messageMapper.selectOne(new LambdaQueryWrapper<CsMessage>()
-                    .eq(CsMessage::getSessionId, sessionId)
-                    .eq(CsMessage::getRole, CsMessage.ROLE_ASSISTANT)
-                    .eq(CsMessage::getContentType, CsMessage.TYPE_PRODUCT_CARDS)
-                    .orderByDesc(CsMessage::getId)
-                    .last("LIMIT 1"));
-            if (last == null || last.getMetadata() == null || last.getMetadata().get(CsMessage.META_ITEMS) == null) {
-                return List.of();
-            }
-            List<Map<String, Object>> items = objectMapper.convertValue(last.getMetadata().get(CsMessage.META_ITEMS),
-                    new TypeReference<List<Map<String, Object>>>() { });
-            List<Long> spuIds = items.stream()
-                    .map(m -> m.get("spuId"))
-                    .filter(java.util.Objects::nonNull)
-                    .map(v -> Long.valueOf(String.valueOf(v)))
-                    .toList();
-            if (spuIds.isEmpty()) {
-                return List.of();
-            }
-            Map<Long, ProductCardDTO> byId = productCardsApi.getBySpuIds(spuIds).stream()
-                    .collect(java.util.stream.Collectors.toMap(ProductCardDTO::spuId, c -> c, (a, b) -> a));
-            return spuIds.stream().map(byId::get).filter(java.util.Objects::nonNull).toList();
-        } catch (Exception e) {
-            log.debug("[cs] 读取上文推荐商品失败: {}", e.getMessage());
-            return List.of();
-        }
     }
 
     private Facts orderFacts(ChatSession session, String orderNo) {
@@ -796,6 +732,7 @@ public class ChatOrchestrator implements ChatResponder {
         m.put("price", c.price());
         m.put("priceMax", c.priceMax());
         m.put("soldCount", c.soldCount());
+        m.put("categoryName", c.categoryName());
         return m;
     }
 

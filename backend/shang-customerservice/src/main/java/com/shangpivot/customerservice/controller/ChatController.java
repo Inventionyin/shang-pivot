@@ -1,6 +1,8 @@
 package com.shangpivot.customerservice.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.shangpivot.commerce.api.ProductCardDTO;
+import com.shangpivot.commerce.api.ProductQueryApi;
 import com.shangpivot.common.exception.BizException;
 import com.shangpivot.common.result.ErrorCode;
 import com.shangpivot.common.result.Result;
@@ -23,7 +25,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +66,7 @@ public class ChatController {
     private final QuickReplyMapper quickReplyMapper;
     private final com.shangpivot.customerservice.service.CsGuardRailService guardRailService;
     private final com.shangpivot.customerservice.agent.GuardPipeline guardPipeline;
+    private final ProductQueryApi productQueryApi;
 
     /** legacy=V3.0 两阶段编排；graph=V3.1 LangGraph4j 编排。 */
     @Value("${agent.engine:legacy}")
@@ -78,7 +80,11 @@ public class ChatController {
     @Resource(name = "csAgentExecutor")
     private Executor csAgentExecutor;
 
-    public record SendMessageRequest(@NotBlank @Size(max = 500, message = "请输入 1-500 字") String content) {
+    /**
+     * 文本消息或商品卡按钮动作。
+     * 商品卡按钮只传 spuId，后端按当前商品名生成“把「商品名」加入购物车”，避免前端自由文本歧义。
+     */
+    public record SendMessageRequest(@Size(max = 500, message = "请输入 1-500 字") String content, Long spuId) {
     }
 
     public record EscalateRequest(Boolean cancel) {
@@ -163,6 +169,25 @@ public class ChatController {
         return Result.ok(data);
     }
 
+    /** 商品卡按钮只传 spuId；文本消息走 content。两者互斥，spuId 优先。 */
+    private String resolveSendContent(SendMessageRequest req) {
+        if (req.spuId() != null) {
+            List<ProductCardDTO> cards = productQueryApi.getBySpuIds(List.of(req.spuId()));
+            if (cards.isEmpty()) {
+                throw new BizException(ErrorCode.NOT_FOUND, "商品已下架，请刷新后重试");
+            }
+            return "把「" + cards.get(0).name() + "」加入购物车";
+        }
+        String content = req.content() == null ? "" : req.content().trim();
+        if (content.isBlank()) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "请输入消息");
+        }
+        if (content.length() > 500) {
+            throw new BizException(ErrorCode.BAD_REQUEST, "请输入 1-500 字");
+        }
+        return content;
+    }
+
     @Operation(summary = "发送消息（SSE 流式应答）")
     @PostMapping(value = "/sessions/{id}/messages", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter send(@PathVariable Long id, @RequestBody SendMessageRequest req) {
@@ -176,7 +201,7 @@ public class ChatController {
         guardRailService.checkChatRateLimit(user.getUserId());
         guardRailService.lockSession(s.getId());
         // P1.5 合规：用户消息入库前做 PII 掩码（手机号/身份证），LLM 与存储均只见掩码
-        String content = guardPipeline.maskPii(req.content().trim());
+        String content = guardPipeline.maskPii(resolveSendContent(req));
 
         SseEmitter emitter = new SseEmitter(120_000L);
         // 非进行中-ai：消息照常入库，但不触发 AI 应答

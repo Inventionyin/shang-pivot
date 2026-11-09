@@ -108,9 +108,12 @@ public class IntentRouter {
         // 单句购买确认（“我现在买”“买了”“下单吧”）：依赖上文商品，不能再做商品检索。
         boolean purchaseConfirm = message.matches(
                 "^\\s*(?:我)?(?:现在|现|就|直接)?(?:我)?(?:买|要|下单|拍下)(?:了|吧|呀|啊|啦|这个|这款|它)?\\s*[。！!]?\\s*$");
-        boolean addcart = cartPhrase || purchaseConfirm || purchaseRef
+        // 纯指示代词确认（“就这个”“这个吧”“那就这个吧”）：同样依赖上文，不能重新检索。
+        boolean demonstrativeConfirm = message.matches(
+                "^\\s*(?:那|那就|就|就要|那就要|我就要)?\\s*(?:这个|那个|它|这款|那款)\\s*(?:吧|了|呀|啊|啦)?\\s*[。！!]?\\s*$");
+        boolean addcart = cartPhrase || purchaseConfirm || demonstrativeConfirm || purchaseRef
                 || message.matches(".*(加购|加入购物车|来一[单份个]|直接拍|就?要?(这个|那个|它|这款)[了嘛吧]|给我(来|拿|加)|下单买|再来|再加|加[一二两三四五六七八九十\\d]+[台个件份套部]).*")
-                || (message.matches("^\\s*(来|要|加|拿)[一二两三四五六七八九十\\d]+[台个件份套部].*")
+                || (message.matches("^\\s*(来|要|加|拿)[一二两三四五六七八九十\\d]+[台个件份套部双瓶支盒].*")
                     && !message.matches(".*(推荐|介绍|看看|哪款|什么|怎么选).*"));
         if (addcart) {
             String productRef = (cartPhrase || purchaseRef) && !purchaseConfirm

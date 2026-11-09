@@ -194,6 +194,27 @@ cd backend
 
 > 浏览器层的“进商品详情再返回、刷新、新对话”由 `automation/` 的 Playwright 场景 `15-mall-ai-chat.feature` 覆盖；Golden/平台数据集只覆盖同一会话的 API/Agent 连续性，不能替代 UI 路由回归。
 
+### 5.3 全品类指代加购专项数据集（v35-refcart，50 条）
+
+`reference-cart-50` 与 `golden-200` 分开维护，专门验证“上文商品 → 现在买/加进购物车”在 30 个在售 SPU 上都能命中，而不是只对冰箱生效：
+
+- **30 条 SPU 点名**：每个在售 SPU 一条“推荐{商品名} → 现在买”；单 SKU 断言 `cart-confirm:`/`cart:`，多 SKU 断言 `sku:` + 规格反问。
+- **10 条品类/品牌指代**：手机、电脑、耳机、手表、华为、小米、苹果、联想、戴森、海尔；唯一候选直接加购，多候选必须 `context-ask` 反问。
+- **10 条边界对抗**：第二个、iPhone 15 不得命中 Pro、多卡“它”、无上文点名、帐篷/跑步鞋多规格、收纳盒直加、冰箱确认、目录外洗碗机、“我想买手机”非加购。
+
+```bash
+cd backend
+./mvnw -q -pl shang-customerservice -am test \
+  -Dtest=ReferenceCartExportTest \
+  -Dreference.output=../../scripts/eval/reference-cart-50.jsonl \
+  -Dsurefire.failIfNoSpecifiedTests=false
+```
+
+产物：[`scripts/eval/reference-cart-50.jsonl`](../../../scripts/eval/reference-cart-50.jsonl)，50 行、`datasetVersion=v35-refcart`、`suite=reference-cart`；平台 `version` 列写 `v35ref`（VARCHAR(10) 限制）。
+
+> 30×6=180 条“商品×说法”矩阵在 `ProductReferenceResolverTest` 中跑，属于每次 PR 的确定性门禁；平台 50 条只做端到端代表性验证，避免把 180 条重复搬上平台。
+
+
 ## 6. 数据治理
 
 - 不把真实客户原文直接入仓；入集前脱敏并人工复核；

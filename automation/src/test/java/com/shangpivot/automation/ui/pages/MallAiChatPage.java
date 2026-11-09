@@ -95,9 +95,14 @@ public final class MallAiChatPage extends BasePage {
     }
 
     public void clickFirstCard() {
-        page().getByTestId("ai-chat-card").first().click();
+        page().getByTestId("ai-chat-card").first().locator(".card__main").click();
         expectPath("/product/");
         waitVisible(page().locator("h1.page-title"), 30_000);
+    }
+
+    /** 点击第一张商品卡的“加入购物车”按钮（不离开 /ai）。 */
+    public void clickFirstCardAddToCart() {
+        page().getByTestId("ai-chat-add-cart").first().click();
     }
 
     public void goBackToAi() {

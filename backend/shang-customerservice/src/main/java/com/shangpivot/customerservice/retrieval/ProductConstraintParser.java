@@ -136,7 +136,7 @@ public final class ProductConstraintParser {
         return false;
     }
 
-    static List<String> categories(String text) {
+    public static List<String> categories(String text) {
         Set<String> result = new LinkedHashSet<>();
         // “手机号/手机号码”不是商品品类，避免把 PII 咨询误判成手机导购
         String normalized = text.replace("手机号码", " ").replace("手机号", " ");

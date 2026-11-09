@@ -101,6 +101,7 @@ public class ProductQueryApiImpl implements ProductQueryApi {
         if (spus.isEmpty()) {
             return Collections.emptyList();
         }
+        Map<Long, String> categoryNames = categoryNamesOf(spus);
         Map<Long, List<Sku>> skusBySpu = skuMapper.selectList(new LambdaQueryWrapper<Sku>()
                         .in(Sku::getSpuId, spus.stream().map(Spu::getId).toList())
                         .eq(Sku::getStatus, "ENABLED"))
@@ -117,7 +118,8 @@ public class ProductQueryApiImpl implements ProductQueryApi {
                     spu.getPics() == null || spu.getPics().isEmpty() ? null : spu.getPics().get(0),
                     min,
                     max.compareTo(min) == 0 ? null : max,
-                    spu.getSoldCount() == null ? 0L : spu.getSoldCount()
+                    spu.getSoldCount() == null ? 0L : spu.getSoldCount(),
+                    categoryNames.get(spu.getCategoryId())
             );
         }).toList();
     }

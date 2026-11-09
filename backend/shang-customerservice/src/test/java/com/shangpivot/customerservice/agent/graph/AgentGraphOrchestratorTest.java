@@ -64,6 +64,10 @@ class AgentGraphOrchestratorTest {
     private final ProductQueryApi productQueryApi = Mockito.mock(ProductQueryApi.class);
     private final ProductSkuApi productSkuApi = Mockito.mock(ProductSkuApi.class);
     private final RetrievalService retrievalService = Mockito.mock(RetrievalService.class);
+    private final com.shangpivot.customerservice.agent.reference.ProductReferenceResolver referenceResolver =
+            Mockito.mock(com.shangpivot.customerservice.agent.reference.ProductReferenceResolver.class);
+    private final com.shangpivot.customerservice.agent.reference.ChatCardContextService cardContextService =
+            Mockito.mock(com.shangpivot.customerservice.agent.reference.ChatCardContextService.class);
     private final GuardPipeline guardPipeline = Mockito.mock(GuardPipeline.class);
 
     private AgentGraphOrchestrator orchestrator;
@@ -74,7 +78,7 @@ class AgentGraphOrchestratorTest {
                 new HandoffPolicy(), toolRegistry, pendingActionService, cartConfirmationPolicy,
                 platformWebhookService, traceService, runContexts,
                 chatSessionService, guardRailService, messageMapper, productQueryApi, productSkuApi,
-                retrievalService, guardPipeline, new ObjectMapper(),
+                retrievalService, referenceResolver, cardContextService, guardPipeline, new ObjectMapper(),
                 new org.bsc.langgraph4j.checkpoint.MemorySaver(), new com.shangpivot.customerservice.agent.AnswerGuard());
         orchestrator.init();
 

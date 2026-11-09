@@ -393,16 +393,16 @@ async function loadSession(item: ChatSessionBrief) {
   }
 }
 
-async function send(text?: string) {
+async function send(text?: string, opts?: { spuId?: string | number; display?: string }) {
   const content = (text ?? input.value).trim()
-  if (!content || sending.value || restoring.value || restoreFailed.value || sessionStatus.value === 'ENDED') return
+  if ((!content && opts?.spuId == null) || sending.value || restoring.value || restoreFailed.value || sessionStatus.value === 'ENDED') return
   if (!sessionId.value) {
     await ensureSession()
     if (!sessionId.value) return // 初始化失败，errorMsg 已提示
   }
   input.value = ''
   errorMsg.value = ''
-  bubbles.value.push({ key: nextKey(), role: 'USER', content })
+  bubbles.value.push({ key: nextKey(), role: 'USER', content: opts?.display ?? content })
 
   const pending: Bubble = { key: nextKey(), role: 'ASSISTANT', content: '', streaming: true }
   bubbles.value.push(pending)
@@ -465,11 +465,17 @@ async function send(text?: string) {
       },
     },
     abort.signal,
+    opts?.spuId,
   )
   pending.streaming = false
   pending.stateLabel = undefined
   sending.value = false
   abort = null
+}
+
+/** 商品卡“加入购物车”：只传 spuId，后端按商品名走同一加购/确认链路。 */
+function addCardToCart(card: ChatProductCard) {
+  void send('', { spuId: card.spuId, display: `把「${card.name}」加入购物车` })
 }
 
 const STATE_FALLBACK_LABELS: Record<string, string> = {
@@ -709,20 +715,31 @@ function statusLabel(item: ChatSessionBrief): string {
             <div v-else-if="!b.reasoning" class="content typing"><span />思考中…</div>
             <div v-if="b.cards?.length" class="cards">
               <div v-if="b.historical" class="cards-history-note">历史商品卡 · 价格/库存以详情页为准</div>
-              <RouterLink v-for="c in b.cards" :key="c.spuId" class="card" :to="`/product/${c.spuId}`" data-testid="ai-chat-card">
-                <div class="card__pic">
-                  <img v-if="c.pic" :src="resolveMediaUrl(c.pic)" :alt="c.name" @load="onMediaLoad" />
-                  <span v-else class="card__placeholder">暂无图片</span>
-                </div>
-                <div class="card__body">
-                  <div class="card__name">{{ c.name }}</div>
-                  <div v-if="c.subtitle" class="card__sub">{{ c.subtitle }}</div>
-                  <div class="card__meta">
-                    <span class="price">¥{{ formatPrice(c.price) }}<template v-if="c.priceMax"> 起</template></span>
-                    <span v-if="c.soldCount != null" class="sold">{{ c.soldCount }} 人付款</span>
+              <div v-for="c in b.cards" :key="c.spuId" class="card" data-testid="ai-chat-card">
+                <RouterLink class="card__main" :to="`/product/${c.spuId}`">
+                  <div class="card__pic">
+                    <img v-if="c.pic" :src="resolveMediaUrl(c.pic)" :alt="c.name" @load="onMediaLoad" />
+                    <span v-else class="card__placeholder">暂无图片</span>
                   </div>
-                </div>
-              </RouterLink>
+                  <div class="card__body">
+                    <div class="card__name">{{ c.name }}</div>
+                    <div v-if="c.subtitle" class="card__sub">{{ c.subtitle }}</div>
+                    <div class="card__meta">
+                      <span class="price">¥{{ formatPrice(c.price) }}<template v-if="c.priceMax"> 起</template></span>
+                      <span v-if="c.soldCount != null" class="sold">{{ c.soldCount }} 人付款</span>
+                    </div>
+                  </div>
+                </RouterLink>
+                <button
+                  class="card__add"
+                  type="button"
+                  :disabled="sending || sessionStatus === 'ENDED'"
+                  data-testid="ai-chat-add-cart"
+                  @click.stop="addCardToCart(c)"
+                >
+                  加入购物车
+                </button>
+              </div>
             </div>
             <div v-if="b.role === 'AGENT'" class="agent-tag">人工客服{{ b.seatName ? ` · ${b.seatName}` : '' }}</div>
             <div v-else-if="b.role === 'ASSISTANT' && b.content" class="ai-gen-tag">AI 生成</div>
@@ -1155,12 +1172,35 @@ function statusLabel(item: ChatSessionBrief): string {
 
 .card {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
   background: var(--sand, #f7f5f0);
   text-decoration: none;
+}
+
+.card__main {
+  display: flex;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.card__add {
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: #fff;
+  color: #2f6b4f;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.card__add:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
 }
 
 .card__pic {

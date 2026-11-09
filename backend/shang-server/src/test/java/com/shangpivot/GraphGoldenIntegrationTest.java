@@ -18,6 +18,7 @@ import com.shangpivot.customerservice.entity.ChatSession;
 import com.shangpivot.customerservice.entity.CsMessage;
 import com.shangpivot.customerservice.eval.GoldenCase;
 import com.shangpivot.customerservice.eval.GoldenDataset;
+import com.shangpivot.customerservice.eval.ReferenceCartDataset;
 import com.shangpivot.customerservice.llm.LlmClient;
 import com.shangpivot.customerservice.llm.LlmSettings;
 import com.shangpivot.customerservice.llm.LlmSettingsResolver;
@@ -98,7 +99,7 @@ class GraphGoldenIntegrationTest {
 
     private record Product(long spuId, String name, String subtitle, String category, BigDecimal price) {
         ProductCardDTO card() {
-            return new ProductCardDTO(spuId, name, subtitle, null, price, null, 100L);
+            return new ProductCardDTO(spuId, name, subtitle, null, price, null, 100L, category);
         }
     }
 
@@ -137,20 +138,41 @@ class GraphGoldenIntegrationTest {
     );
 
     /** 与生产一致的多规格商品（未指定规格时必须反问，不能擅自加购）。 */
-    private static final Map<Long, List<ProductSkuDTO>> MULTI_SKUS = Map.of(
-            8L, List.of(
-                    new ProductSkuDTO(801L, 8L, "双人帐篷 防雨款 军绿", Map.of("材质", "防雨涤纶", "颜色", "军绿"),
-                            new BigDecimal("599"), null, 120),
-                    new ProductSkuDTO(802L, 8L, "双人帐篷 防雨款 墨绿", Map.of("材质", "防雨涤纶", "颜色", "墨绿"),
-                            new BigDecimal("599"), null, 180),
-                    new ProductSkuDTO(803L, 8L, "双人帐篷 防雨款 卡其", Map.of("材质", "防雨涤纶", "颜色", "卡其"),
-                            new BigDecimal("619"), null, 90)),
-            30L, List.of(
-                    new ProductSkuDTO(3001L, 30L, "减震跑步鞋 男款 42码 黑", Map.of("容量", "42码", "颜色", "黑"),
-                            new BigDecimal("399"), null, 260),
-                    new ProductSkuDTO(3002L, 30L, "减震跑步鞋 男款 41码 黑灰", Map.of("容量", "41码", "颜色", "黑灰"),
-                            new BigDecimal("399"), null, 260))
+    private static final Map<Long, List<ProductSkuDTO>> MULTI_SKUS = Map.ofEntries(
+            Map.entry(2L, List.of(
+                    sku(201L, 2L, "iPhone 15 128G 蓝色", "128GB", "蓝色", "5999"),
+                    sku(202L, 2L, "iPhone 15 256G 粉色", "256GB", "粉色", "6999"))),
+            Map.entry(10L, List.of(
+                    sku(1001L, 10L, "iPhone 15 Pro 128G 原色钛金属", "128GB", "原色钛金属", "7999"),
+                    sku(1002L, 10L, "iPhone 15 Pro 256G 原色钛金属", "256GB", "原色钛金属", "8999"))),
+            Map.entry(11L, List.of(
+                    sku(1101L, 11L, "MacBook Air 13 M3 16G 午夜色", "16GB", "午夜色", "9999"),
+                    sku(1102L, 11L, "MacBook Air 13 M3 24G 星光色", "24GB", "星光色", "11999"))),
+            Map.entry(14L, List.of(
+                    sku(1401L, 14L, "Xiaomi 14 Pro 12+256G 黑色", "12GB", "黑色", "4999"),
+                    sku(1402L, 14L, "Xiaomi 14 Pro 16+512G 黑色", "16GB", "黑色", "5599"))),
+            Map.entry(8L, List.of(
+                    sku(801L, 8L, "双人帐篷 防雨款 军绿", "防雨涤纶", "军绿", "599"),
+                    sku(802L, 8L, "双人帐篷 防雨款 墨绿", "防雨涤纶", "墨绿", "599"),
+                    sku(803L, 8L, "双人帐篷 防雨款 卡其", "防雨涤纶", "卡其", "619"))),
+            Map.entry(27L, List.of(
+                    sku(2701L, 27L, "丝绒雾面口红 豆沙", "丝绒雾面", "豆沙", "139"),
+                    sku(2702L, 27L, "丝绒雾面口红 正红", "丝绒雾面", "正红", "139"))),
+            Map.entry(28L, List.of(
+                    sku(2801L, 28L, "每日坚果 750g 原味", "750g", "原味", "89"),
+                    sku(2802L, 28L, "每日坚果 1.5kg 原味", "1.5kg", "原味", "159"))),
+            Map.entry(29L, List.of(
+                    sku(2901L, 29L, "挂耳咖啡 20袋 中烘", "20袋", "中烘", "69"),
+                    sku(2902L, 29L, "挂耳咖啡 40袋 深烘", "40袋", "深烘", "119"))),
+            Map.entry(30L, List.of(
+                    sku(3001L, 30L, "减震跑步鞋 男款 42码 黑", "42码", "黑", "399"),
+                    sku(3002L, 30L, "减震跑步鞋 男款 41码 黑灰", "41码", "黑灰", "399")))
     );
+
+    private static ProductSkuDTO sku(long id, long spuId, String title, String size, String color, String price) {
+        return new ProductSkuDTO(id, spuId, title, Map.of("容量", size, "颜色", color),
+                new BigDecimal(price), null, 100);
+    }
 
     @BeforeEach
     void setUp() {
@@ -244,8 +266,15 @@ class GraphGoldenIntegrationTest {
     @Test
     void graphMatchesGoldenDeterministicAssertions() {
         List<String> failures = new ArrayList<>();
-        runDataset(5000L, failures);
+        runDataset(5000L, GoldenDataset.all(), failures);
         assertTrue(failures.isEmpty(), "Graph Golden 失败:\n" + String.join("\n", failures));
+    }
+
+    @Test
+    void graphMatchesReferenceCartDeterministicAssertions() {
+        List<String> failures = new ArrayList<>();
+        runDataset(7000L, ReferenceCartDataset.all(), failures);
+        assertTrue(failures.isEmpty(), "Reference Cart 失败:\n" + String.join("\n", failures));
     }
 
     /** BadLlm：故意返回编造商品/身份/外部平台，验证 displayAnswer + AnswerGuard 仍守住确定性断言。 */
@@ -260,13 +289,13 @@ class GraphGoldenIntegrationTest {
             return new LlmClient.StreamResult("", bad, 10, 10);
         });
         List<String> failures = new ArrayList<>();
-        runDataset(6000L, failures);
+        runDataset(6000L, GoldenDataset.all(), failures);
         assertTrue(failures.isEmpty(), "BadLlm Golden 失败:\n" + String.join("\n", failures));
     }
 
-    private void runDataset(long customerBase, List<String> failures) {
+    private void runDataset(long customerBase, List<GoldenCase> dataset, List<String> failures) {
         int index = 0;
-        for (GoldenCase golden : GoldenDataset.all()) {
+        for (GoldenCase golden : dataset) {
             long customerId = customerBase + index++;
             ChatSession session = chatSessionService.getOrCreateActive(customerId, "h5");
             Turn last = null;
@@ -338,8 +367,13 @@ class GraphGoldenIntegrationTest {
 
     private static List<RetrievalService.ProductHit> search(String keyword, int limit,
                                                              com.shangpivot.customerservice.retrieval.ProductConstraints constraints) {
-        List<Product> matched = CATALOG.stream()
-                .filter(product -> matches(keyword, product))
+        String q = keyword == null ? "" : keyword.trim();
+        List<Product> exact = !q.isBlank() ? CATALOG.stream()
+                .filter(product -> norm(product.name()).contains(norm(q)))
+                .toList() : List.of();
+        List<Product> matched = (exact.isEmpty()
+                ? CATALOG.stream().filter(product -> matches(keyword, product))
+                : exact.stream())
                 .filter(product -> categoryAllowed(product, constraints.categories()))
                 .toList();
         List<RetrievalService.ProductHit> hits = new java.util.ArrayList<>();
@@ -384,7 +418,8 @@ class GraphGoldenIntegrationTest {
         if (keyword == null || keyword.isBlank()) {
             return false;
         }
-        String q = keyword.toLowerCase();
+        String q = norm(keyword);
+        String name = norm(product.name());
         boolean phone = q.contains("手机");
         boolean earphone = q.contains("耳机");
         boolean vacuum = q.contains("吸尘");
@@ -401,8 +436,14 @@ class GraphGoldenIntegrationTest {
                     || (tent && "帐篷".equals(category))
                     || (washer && "洗衣机".equals(category));
         }
-        String name = product.name().toLowerCase();
-        return name.contains(q) || q.contains(name.substring(0, Math.min(4, name.length())));
+        return name.contains(q)
+                || (name.length() >= 4 && q.contains(name.substring(0, 4)));
+    }
+
+    private static String norm(String value) {
+        return value == null ? "" : value
+                .replaceAll("[\\s\\p{Punct}，。！？、：；“”‘’（）【】《》]", "")
+                .toLowerCase(java.util.Locale.ROOT);
     }
 
     private static String scriptedAnswer(String system, List<Map<String, String>> history) {

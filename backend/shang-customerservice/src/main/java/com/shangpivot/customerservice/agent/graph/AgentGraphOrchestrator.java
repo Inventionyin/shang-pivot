@@ -15,6 +15,8 @@ import com.shangpivot.customerservice.agent.FactAnswerRenderer;
 import com.shangpivot.customerservice.agent.GuardPipeline;
 import com.shangpivot.customerservice.agent.IntentRouter;
 import com.shangpivot.customerservice.agent.contract.AgentName;
+import com.shangpivot.customerservice.agent.reference.ChatCardContextService;
+import com.shangpivot.customerservice.agent.reference.ProductReferenceResolver;
 import com.shangpivot.customerservice.agent.service.CartConfirmationPolicy;
 import com.shangpivot.customerservice.agent.service.PendingActionService;
 import com.shangpivot.customerservice.agent.service.PlatformWebhookService;
@@ -90,6 +92,8 @@ public class AgentGraphOrchestrator implements ChatResponder {
     private final ProductQueryApi productQueryApi;
     private final ProductSkuApi productSkuApi;
     private final RetrievalService retrievalService;
+    private final ProductReferenceResolver productReferenceResolver;
+    private final ChatCardContextService cardContextService;
     private final GuardPipeline guardPipeline;
     private final ObjectMapper objectMapper;
     private final BaseCheckpointSaver checkpointSaver;
@@ -413,7 +417,8 @@ public class AgentGraphOrchestrator implements ChatResponder {
                     card.get("pic") == null ? null : String.valueOf(card.get("pic")),
                     decimal(card.get("price")),
                     decimal(card.get("priceMax")),
-                    card.get("soldCount") instanceof Number n ? n.longValue() : null));
+                    card.get("soldCount") instanceof Number n ? n.longValue() : null,
+                    card.get("categoryName") == null ? null : String.valueOf(card.get("categoryName"))));
         }
         return result;
     }
@@ -468,7 +473,7 @@ public class AgentGraphOrchestrator implements ChatResponder {
                 hits = new ArrayList<>(hits.subList(0, MAX_PRODUCTS));
             }
         }
-        List<ProductCardDTO> previous = lastRecommendedCards(state.sessionId());
+        List<ProductCardDTO> previous = cardContextService.latestCards(state.sessionId());
         if (!hits.isEmpty()) {
             List<ProductCardDTO> hitCards = new ArrayList<>();
             for (RetrievalService.ProductHit hit : hits) {
@@ -536,10 +541,12 @@ public class AgentGraphOrchestrator implements ChatResponder {
 
     private FactsResult stockFacts(AgentGraphState state, SupervisorAgent.RouteResult route,
                                    List<Map<String, Object>> cards, List<String> sources, List<String> tools) {
-        ProductCardDTO product = resolveProduct(state.sessionId(), state.userText(), route.productRef());
-        if (product == null) {
-            return askWhichProduct(state, cards, sources);
+        ProductReferenceResolver.Resolution resolution =
+                resolveProduct(state.sessionId(), state.userText(), route.productRef());
+        if (!(resolution instanceof ProductReferenceResolver.Unique unique)) {
+            return askWhichProduct(state, cards, sources, candidatesOf(resolution));
         }
+        ProductCardDTO product = unique.product();
         cards.add(cardMap(product));
         sources.add("sku:" + product.spuId());
         ToolResult result = tool(state, route, "getStock", Map.of("spuId", product.spuId()), tools);
@@ -557,11 +564,13 @@ public class AgentGraphOrchestrator implements ChatResponder {
 
     private CartOutcome addToCart(AgentGraphState state, SupervisorAgent.RouteResult route,
                                   List<Map<String, Object>> cards, List<String> sources, List<String> tools) {
-        ProductCardDTO product = resolveProduct(state.sessionId(), state.userText(), route.productRef());
-        if (product == null) {
-            FactsResult ask = askWhichProduct(state, cards, sources);
+        ProductReferenceResolver.Resolution resolution =
+                resolveProduct(state.sessionId(), state.userText(), route.productRef());
+        if (!(resolution instanceof ProductReferenceResolver.Unique unique)) {
+            FactsResult ask = askWhichProduct(state, cards, sources, candidatesOf(resolution));
             return CartOutcome.ok(ask.facts(), ask.displayAnswer());
         }
+        ProductCardDTO product = unique.product();
         cards.add(cardMap(product));
         ToolResult stock = tool(state, route, "getStock", Map.of("spuId", product.spuId()), tools);
         List<ProductSkuDTO> skus = dataList(stock, ProductSkuDTO.class);
@@ -828,85 +837,19 @@ public class AgentGraphOrchestrator implements ChatResponder {
 
     // ---------- 商品上下文 ----------
 
-    private ProductCardDTO resolveProduct(Long sessionId, String userText, String productRef) {
-        List<ProductCardDTO> previous = lastRecommendedCards(sessionId);
-        String ref = productRef == null ? "" : productRef.trim();
-        String text = userText == null ? "" : userText;
-
-        Matcher idx = Pattern.compile("第\\s*([一二三四五1-5])").matcher(ref + " " + text);
-        if (idx.find()) {
-            int n = "一二三四五".indexOf(idx.group(1));
-            int zero = n >= 0 ? n : (Integer.parseInt(idx.group(1)) - 1);
-            if (zero >= 0 && zero < previous.size()) {
-                return previous.get(zero);
-            }
-        }
-        String textNorm = IntentRouter.normalizeProductText(text);
-        String refNorm = IntentRouter.normalizeProductText(ref);
-        for (ProductCardDTO card : previous) {
-            String name = card.name();
-            String head = name.length() > 4 ? name.substring(0, 4) : name;
-            String nameNorm = IntentRouter.normalizeProductText(name);
-            String headNorm = IntentRouter.normalizeProductText(head);
-            if ((!headNorm.isBlank() && textNorm.contains(headNorm))
-                    || (refNorm.length() >= 2 && nameNorm.contains(refNorm))) {
-                return card;
-            }
-        }
-        if (ref.matches("\\d+")) {
-            // LLM 可能从历史里带出旧 spuId；用户本轮明确点名商品时以文本为准
-            boolean namesProduct = text.matches(".*(Redmi|iPhone|Xiaomi|HUAWEI|OPPO|vivo|荣耀|索尼|AirPods|戴森|石头|MacBook|ThinkPad|ROG|拯救者|Dell|美的|海尔|Anker|Apple Watch|iQOO|一加|红米|华为|小米).*");
-            if (!namesProduct) {
-                List<ProductCardDTO> named = productQueryApi.getBySpuIds(List.of(Long.parseLong(ref)));
-                if (!named.isEmpty()) {
-                    return named.get(0);
-                }
-            }
-        }
-        // 用户点名了目录里的其它商品（如“那 iPhone 呢”）：优先于“上文唯一”的代词兜底
-        String keyword = IntentRouter.extractKeyword(text)
-                .replace("那", "")
-                .replace("有货", "")
-                .replace("库存", "")
-                .replaceAll("\\s+", " ")
-                .replaceAll("\\s*有$", "")
-                .trim();
-        List<RetrievalService.ProductHit> hits = retrievalService.searchProducts(keyword, 5, constraints(text));
-        String textLower = text.toLowerCase(java.util.Locale.ROOT);
-        // 先按“关键词/显式商品名”精确命中；多个命中（如泛称 iPhone）取价格最低的基础款，
-        // 避免 iPhone 15 Pro 抢先于 iPhone 15。
-        String keywordNorm = IntentRouter.normalizeProductText(keyword);
-        List<ProductCardDTO> exact = new ArrayList<>();
-        for (RetrievalService.ProductHit hit : hits) {
-            String nameNorm = IntentRouter.normalizeProductText(hit.card().name());
-            boolean keywordHit = keywordNorm.length() >= 2
-                    && (nameNorm.contains(keywordNorm) || keywordNorm.contains(nameNorm));
-            boolean refHit = refNorm.length() >= 2 && nameNorm.contains(refNorm);
-            if (keywordHit || refHit) {
-                exact.add(hit.card());
-            }
-        }
-        if (!exact.isEmpty()) {
-            return exact.stream()
-                    .min(java.util.Comparator.comparing(card ->
-                            card.price() == null ? new java.math.BigDecimal("999999999") : card.price()))
-                    .orElse(exact.get(0));
-        }
-        for (RetrievalService.ProductHit hit : hits) {
-            String name = hit.card().name();
-            String head = name.length() > 4 ? name.substring(0, 4) : name;
-            if (textLower.contains(head.toLowerCase(java.util.Locale.ROOT))) {
-                return hit.card();
-            }
-        }
-        if (!previous.isEmpty() && (ref.isBlank() || ref.matches(".*(它|这个|那个|刚才|上面|这款|同款).*"))) {
-            return previous.size() == 1 ? previous.get(0) : null;
-        }
-        return hits.size() == 1 ? hits.get(0).card() : null;
+    private ProductReferenceResolver.Resolution resolveProduct(Long sessionId, String userText, String productRef) {
+        return productReferenceResolver.resolve(cardContextService.recentCards(sessionId), userText, productRef);
     }
 
-    private FactsResult askWhichProduct(AgentGraphState state, List<Map<String, Object>> cards, List<String> sources) {
-        List<ProductCardDTO> previous = lastRecommendedCards(state.sessionId());
+    private static List<ProductCardDTO> candidatesOf(ProductReferenceResolver.Resolution resolution) {
+        return resolution instanceof ProductReferenceResolver.Ambiguous ambiguous
+                ? ambiguous.candidates() : List.of();
+    }
+
+    private FactsResult askWhichProduct(AgentGraphState state, List<Map<String, Object>> cards,
+                                        List<String> sources, List<ProductCardDTO> candidates) {
+        List<ProductCardDTO> previous = candidates == null || candidates.isEmpty()
+                ? cardContextService.latestCards(state.sessionId()) : candidates;
         if (previous.isEmpty()) {
             return new FactsResult("（用户想操作商品但当前会话没有可指代的商品：请用户说明具体是哪款，或先为其推荐）",
                     FactAnswerRenderer.noProductContext());
@@ -953,36 +896,6 @@ public class AgentGraphOrchestrator implements ChatResponder {
             }
         }
         return skus.size() == 1 ? skus.get(0) : null;
-    }
-
-    private List<ProductCardDTO> lastRecommendedCards(Long sessionId) {
-        try {
-            CsMessage last = messageMapper.selectOne(new LambdaQueryWrapper<CsMessage>()
-                    .eq(CsMessage::getSessionId, sessionId)
-                    .eq(CsMessage::getRole, CsMessage.ROLE_ASSISTANT)
-                    .eq(CsMessage::getContentType, CsMessage.TYPE_PRODUCT_CARDS)
-                    .orderByDesc(CsMessage::getId)
-                    .last("LIMIT 1"));
-            if (last == null || last.getMetadata() == null || last.getMetadata().get(CsMessage.META_ITEMS) == null) {
-                return List.of();
-            }
-            List<Map<String, Object>> items = objectMapper.convertValue(last.getMetadata().get(CsMessage.META_ITEMS),
-                    new TypeReference<List<Map<String, Object>>>() { });
-            List<Long> spuIds = items.stream()
-                    .map(m -> m.get("spuId"))
-                    .filter(java.util.Objects::nonNull)
-                    .map(v -> Long.valueOf(String.valueOf(v)))
-                    .toList();
-            if (spuIds.isEmpty()) {
-                return List.of();
-            }
-            Map<Long, ProductCardDTO> byId = productQueryApi.getBySpuIds(spuIds).stream()
-                    .collect(java.util.stream.Collectors.toMap(ProductCardDTO::spuId, c -> c, (a, b) -> a));
-            return spuIds.stream().map(byId::get).filter(java.util.Objects::nonNull).toList();
-        } catch (Exception e) {
-            log.debug("[cs] read previous cards failed: {}", e.getMessage());
-            return List.of();
-        }
     }
 
     // ---------- 工具 ----------
@@ -1104,6 +1017,7 @@ public class AgentGraphOrchestrator implements ChatResponder {
         map.put("price", card.price());
         map.put("priceMax", card.priceMax());
         map.put("soldCount", card.soldCount());
+        map.put("categoryName", card.categoryName());
         return map;
     }
 

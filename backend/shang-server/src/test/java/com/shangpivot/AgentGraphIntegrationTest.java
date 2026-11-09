@@ -198,6 +198,9 @@ class AgentGraphIntegrationTest {
     @Test
     void addToCartQuantityTwoCreatesConfirmation() {
         ChatSession session = chatSessionService.getOrCreateActive(100L, "h5");
+        CsMessage first = chatSessionService.saveUserMessage(session.getId(), "推荐 Redmi K70");
+        orchestrator.respond(new CapturingEmitter(), session, first);
+
         CsMessage user = chatSessionService.saveUserMessage(session.getId(), "来两台");
 
         CapturingEmitter emitter = new CapturingEmitter();

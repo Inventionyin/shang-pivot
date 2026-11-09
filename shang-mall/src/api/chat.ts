@@ -154,12 +154,13 @@ export async function sendMessageStream(
   content: string,
   events: StreamEvents,
   signal?: AbortSignal,
+  spuId?: string | number,
 ): Promise<void> {
   let reasoning = ''
   let answer = ''
   await streamPost(
     `/api/chat/sessions/${sessionId}/messages`,
-    { content },
+    spuId != null ? { content, spuId } : { content },
     {
       signal,
       onMessage: ({ event, data }) => {

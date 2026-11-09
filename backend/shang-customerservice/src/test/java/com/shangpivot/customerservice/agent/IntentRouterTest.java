@@ -145,6 +145,27 @@ class IntentRouterTest {
     }
 
     @Test
+    void 纯指示代词确认识别为加购() {
+        assertThat(router.route("就这个").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("这个吧").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("那就这个吧").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("就它了").type()).isEqualTo(IntentRouter.Type.ADDCART);
+    }
+
+    @Test
+    void 指示代词问价不误判加购() {
+        assertThat(router.route("这个多少钱").type()).isNotEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("这款有什么颜色").type()).isNotEqualTo(IntentRouter.Type.ADDCART);
+    }
+
+    @Test
+    void 来两双跑步鞋识别为加购且数量为二() {
+        var intent = router.route("来两双减震跑步鞋");
+        assertThat(intent.type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(intent.quantity()).isEqualTo(2);
+    }
+
+    @Test
     void 购买确认短语不误伤普通导购() {
         assertThat(router.route("我想买冰箱").type()).isEqualTo(IntentRouter.Type.PRESALE);
         assertThat(router.route("购物车怎么结算").type()).isNotEqualTo(IntentRouter.Type.ADDCART);
