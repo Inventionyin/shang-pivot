@@ -87,3 +87,6 @@ api_testcases/artifacts/**
 ui_testcases/artifacts/
 # ---------- 本地工具链（Allure CLI 等大体积二进制，按需下载，不入库） ----------
 .tools/
+# ---------- Python 评测脚本缓存 ----------
+__pycache__/
+*.pyc

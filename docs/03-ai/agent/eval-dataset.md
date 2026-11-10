@@ -215,6 +215,16 @@ cd backend
 
 > 30×6=180 条“商品×说法”矩阵在 `ProductReferenceResolverTest` 中跑，属于每次 PR 的确定性门禁；平台 50 条只做端到端代表性验证，避免把 180 条重复搬上平台。
 
+### 5.4 目录驱动与评测自动化（P1）
+
+- `scripts/eval/catalog_snapshot.py`：从管理端 `/admin/products?status=ON` 导出在售 SPU/SKU 快照。
+- `scripts/eval/generate_reference_cases.py`：每个 ON SPU 生成一条 `REF-<spuId>-named-add`，输出独立 suite `reference-cart-auto`（`v36-refcart-auto`）。
+- `scripts/eval/check_reference_coverage.py`：覆盖率门禁；缺失 SPU、重复 sourceId、用例缺可失败断言都会退出 1。
+- `scripts/eval/mine_failure_candidates.py`：只读挖掘 `FAILED/HANDOFF/tool_error/retrieval_miss`，脱敏后输出候选，人工复核后入集。
+- `scripts/eval/sync_platform_cases.py`：按 `(targetId, sourceId)` upsert 到 AI 测试平台；凭据只走环境变量。
+
+每周 `.github/workflows/eval.yml` 自动执行脚本单测、目录快照、auto 用例生成、覆盖率门禁，并上传覆盖率报告与候选样本。当前生产目录 30 个 ON SPU 覆盖 **30/30**；新增 SPU 后重新生成并同步即可，不需要改手写 50 条。
+
 
 ## 6. 数据治理
 

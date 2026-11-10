@@ -117,6 +117,35 @@ jobs:
             -H "Authorization: Bearer $TOKEN" \
             -H 'Content-Type: application/json' -d '{"full":true}'; echo
 
+      - name: 参考用例脚本单测
+        run: python3 -m unittest discover -s scripts/eval/tests -v
+
+      - name: 目录驱动用例 + 覆盖率门禁
+        env:
+          SHANG_BASE_URL: http://127.0.0.1:8086
+          SHANG_ADMIN_PASSWORD: Admin@123
+        run: |
+          OUT=backend/shang-server/target/reference
+          mkdir -p "$OUT"
+          python3 scripts/eval/catalog_snapshot.py \
+            --base-url "$SHANG_BASE_URL" --out "$OUT/catalog.json"
+          python3 scripts/eval/generate_reference_cases.py \
+            --catalog "$OUT/catalog.json" --out "$OUT/reference-cart-auto.jsonl"
+          python3 scripts/eval/check_reference_coverage.py \
+            --catalog "$OUT/catalog.json" --dataset "$OUT/reference-cart-auto.jsonl" \
+            --report "$OUT/reference-coverage.md"
+          python3 scripts/eval/mine_failure_candidates.py \
+            --host 127.0.0.1 --port 5432 --database shang --user shang --password shang \
+            --out "$OUT/reference-candidates.jsonl" || true
+
+      - name: 上传覆盖率与候选样本
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-coverage-${{ github.run_id }}
+          path: backend/shang-server/target/reference/
+          if-no-files-found: warn
+
       - name: Golden 评估（200 用例 + graph 路径 + 裁判趋势）
         working-directory: backend
         env:
