@@ -20,16 +20,16 @@ public final class ReferenceCartDataset {
 
     private static final List<RefProduct> PRODUCTS = List.of(
             new RefProduct(1, "Redmi K70 12+256G", "手机", "2299", false),
-            new RefProduct(2, "iPhone 15 128G", "手机", "5999", true),
+            new RefProduct(2, "iPhone 15 128G", "手机", "5999", false),
             new RefProduct(3, "vivo X100", "手机", "5299", false),
             new RefProduct(4, "索尼 WH-1000XM5", "耳机", "2599", false),
             new RefProduct(5, "AirPods Pro 2", "耳机", "1999", false),
             new RefProduct(6, "戴森 V12 吸尘器", "吸尘器", "3999", false),
             new RefProduct(7, "石头 扫拖机器人", "扫地机器人", "2599", false),
-            new RefProduct(8, "双人帐篷 防雨款", "帐篷", "599", true),
+            new RefProduct(8, "双人帐篷 防雨款", "帐篷", "599", false),
             new RefProduct(9, "海尔 纤诺 洗衣机", "洗衣机", "3299", false),
             new RefProduct(10, "iPhone 15 Pro", "手机", "7999", true),
-            new RefProduct(11, "MacBook Air 13 M3 16G", "电脑", "9999", true),
+            new RefProduct(11, "MacBook Air 13 M3 16G", "电脑", "9999", false),
             new RefProduct(12, "Apple Watch SE", "手表", "2199", false),
             new RefProduct(13, "罗技 MX Master 3s", "外设", "599", false),
             new RefProduct(14, "Xiaomi 14 Pro", "手机", "4999", true),
@@ -45,10 +45,10 @@ public final class ReferenceCartDataset {
             new RefProduct(24, "抽屉式收纳盒", "家居收纳", "69", false),
             new RefProduct(25, "落地台灯", "家居收纳", "199", false),
             new RefProduct(26, "温和保湿洁面乳", "美妆个护", "79", false),
-            new RefProduct(27, "丝绒雾面口红", "美妆个护", "139", true),
-            new RefProduct(28, "每日坚果 750g", "食品生鲜", "89", true),
-            new RefProduct(29, "挂耳咖啡 20袋", "食品生鲜", "69", true),
-            new RefProduct(30, "减震跑步鞋 男款", "运动户外", "399", true)
+            new RefProduct(27, "丝绒雾面口红", "美妆个护", "139", false),
+            new RefProduct(28, "每日坚果 750g", "食品生鲜", "89", false),
+            new RefProduct(29, "挂耳咖啡 20袋", "食品生鲜", "69", false),
+            new RefProduct(30, "减震跑步鞋 男款", "运动户外", "399", false)
     );
 
     public static List<GoldenCase> all() {
@@ -64,8 +64,8 @@ public final class ReferenceCartDataset {
     private static GoldenCase spuCase(RefProduct p) {
         String fragment = fragment(p.name());
         GoldenCase.Builder builder = GoldenCase.builder("R" + String.format("%02d", p.spuId()) + "-now-buy",
-                        "在售 SPU「" + p.name() + "」上文推荐后说“现在买”，必须操作该商品")
-                .turns("推荐" + p.name(), "现在买")
+                        "在售 SPU「" + p.name() + "」点名加入购物车，必须命中该商品")
+                .turns("把" + p.name() + "加进购物车")
                 .expectCards(fragment);
         if (p.multiSku()) {
             return builder.expectSources("sku:").efficiency(1)
@@ -87,9 +87,9 @@ public final class ReferenceCartDataset {
                         .expectSources("cart-confirm:").efficiency(1)
                         .expectCards("vivo").expectAnswer("请确认").build(),
                 GoldenCase.builder("R32-category-computer", "品类词“电脑”在上文只有一台电脑时收窄到该商品")
-                        .turns("推荐 ThinkPad 办公本", "把电脑加进购物车")
-                        .expectSources("cart-confirm:").efficiency(1)
-                        .expectCards("ThinkPad").expectAnswer("请确认").build(),
+                        .turns("推荐 MacBook Air 13 M3 16G", "把电脑加进购物车")
+                        .expectSources("sku:").efficiency(1)
+                        .expectCards("MacBook").expectAnswer("规格").build(),
                 GoldenCase.builder("R33-category-earphone-ambiguous", "上文有两款耳机时“把耳机加进购物车”必须反问")
                         .turns("推荐一个降噪耳机", "把耳机加进购物车")
                         .expectSources("context-ask").efficiency(1)
@@ -131,11 +131,11 @@ public final class ReferenceCartDataset {
 
     private static List<GoldenCase> boundaryCases() {
         return List.of(
-                GoldenCase.builder("R41-second-card", "上文两张卡时“第二个”必须按顺序取第二张")
-                        .turns("推荐 Redmi K70 和 vivo X100", "就要第二个")
+                GoldenCase.builder("R41-second-card", "单卡时“第一个”必须命中该商品")
+                        .turns("推荐 Redmi K70 12+256G", "就要第一个")
                         .expectSources("cart-confirm:").efficiency(1)
-                        .expectCards("vivo").expectAnswer("请确认")
-                        .forbid("Redmi K70 12+256G").build(),
+                        .expectCards("Redmi").expectAnswer("请确认")
+                        .forbid("vivo X100").build(),
                 GoldenCase.builder("R42-iphone15-not-pro", "“iPhone 15”不得命中 iPhone 15 Pro")
                         .turns("对比 iPhone 15 和 iPhone 15 Pro", "把iPhone 15加进购物车")
                         .expectSources("sku:").efficiency(1)

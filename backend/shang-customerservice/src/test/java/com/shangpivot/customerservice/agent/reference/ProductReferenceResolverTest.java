@@ -9,6 +9,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * 30 个在售 SPU × 6 种“上文商品指代”说法的确定性矩阵。
@@ -128,6 +132,34 @@ class ProductReferenceResolverTest {
         ProductReferenceResolver.Resolution result = resolver.resolve(
                 List.of(card(161), card(162)), "把它加进购物车", "");
         assertThat(result).isInstanceOf(ProductReferenceResolver.Ambiguous.class);
+    }
+
+    @Test
+    void 无上文时完整型号只命中对应机型() {
+        when(retrievalService.searchProducts(anyString(), anyInt(), any())).thenReturn(List.of(
+                new RetrievalService.ProductHit(card(101), 0.9, "lexical", true),
+                new RetrievalService.ProductHit(card(102), 0.8, "lexical", true)));
+        assertThat(unique(resolver.resolve(List.of(), "把iPhone 15 Pro 128G加进购物车", "")).spuId())
+                .isEqualTo(101L);
+        assertThat(unique(resolver.resolve(List.of(), "把iPhone 15 128G加进购物车", "")).spuId())
+                .isEqualTo(102L);
+    }
+
+    @Test
+    void 规格追问里点名品牌也必须命中() {
+        assertThat(unique(resolver.resolve(List.of(card(104)), "Redmi K70 有什么规格", "")).spuId())
+                .isEqualTo(104L);
+        assertThat(unique(resolver.resolve(List.of(card(101), card(102)), "iPhone 15 Pro 有什么规格", "")).spuId())
+                .isEqualTo(101L);
+    }
+
+    @Test
+    void 语义近邻不应当成目录外商品候选() {
+        when(retrievalService.searchProducts(anyString(), anyInt(), any())).thenReturn(List.of(
+                new RetrievalService.ProductHit(card(141), 0.8, "vector", true),
+                new RetrievalService.ProductHit(card(143), 0.7, "vector", true)));
+        ProductReferenceResolver.Resolution result = resolver.resolve(List.of(), "把洗碗机加进购物车", "");
+        assertThat(result).isInstanceOf(ProductReferenceResolver.NotFound.class);
     }
 
     private static ProductCardDTO card(long spuId) {

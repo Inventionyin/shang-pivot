@@ -570,13 +570,22 @@ public class ChatOrchestrator implements ChatResponder {
             if (sku.specs() != null) {
                 for (Object v : sku.specs().values()) {
                     String s = String.valueOf(v);
-                    if (s.length() >= 2 && text.contains(s)) {
+                    if (s.length() >= 2 && text.contains(s) && !isSharedSpecValue(skus, s)) {
                         return sku;
                     }
                 }
             }
         }
         return skus.size() == 1 ? skus.get(0) : null;
+    }
+
+    /** 所有 SKU 都相同的规格值（如口红的“丝绒雾面”）不能用来区分款式。 */
+    private static boolean isSharedSpecValue(List<ProductSkuDTO> skus, String value) {
+        if (skus == null || skus.size() < 2 || value == null || value.isBlank()) {
+            return false;
+        }
+        return skus.stream().allMatch(sku -> sku.specs() != null
+                && sku.specs().values().stream().anyMatch(v -> value.equals(String.valueOf(v))));
     }
 
     private Facts orderFacts(ChatSession session, String orderNo) {

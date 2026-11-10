@@ -1,0 +1,242 @@
+[
+  {
+    "product": "iPhone 15 Pro 128G",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10001"
+    ],
+    "ok": true
+  },
+  {
+    "product": "iPhone 15 128G",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10004"
+    ],
+    "ok": true
+  },
+  {
+    "product": "Xiaomi 14 Pro 12+256G",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10006"
+    ],
+    "ok": true
+  },
+  {
+    "product": "Redmi K70 12+256G",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10008"
+    ],
+    "ok": true
+  },
+  {
+    "product": "HUAWEI Mate X5",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10009"
+    ],
+    "ok": true
+  },
+  {
+    "product": "OPPO Find N3",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10010"
+    ],
+    "ok": true
+  },
+  {
+    "product": "荣耀 Magic6 Pro",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10011"
+    ],
+    "ok": true
+  },
+  {
+    "product": "vivo X100",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10012"
+    ],
+    "ok": true
+  },
+  {
+    "product": "MacBook Air 13 M3 16G",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10013"
+    ],
+    "ok": true
+  },
+  {
+    "product": "ThinkPad X1 Carbon",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10015"
+    ],
+    "ok": true
+  },
+  {
+    "product": "ROG 枪神 笔记本",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10016"
+    ],
+    "ok": true
+  },
+  {
+    "product": "联想 拯救者 Y7000",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10017"
+    ],
+    "ok": true
+  },
+  {
+    "product": "Dell U2723QE 27寸 4K",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10018"
+    ],
+    "ok": true
+  },
+  {
+    "product": "罗技 MX Master 3s",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10019"
+    ],
+    "ok": true
+  },
+  {
+    "product": "海尔 纤诺 洗衣机",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10020"
+    ],
+    "ok": true
+  },
+  {
+    "product": "美的 风冷 冰箱",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10021"
+    ],
+    "ok": true
+  },
+  {
+    "product": "戴森 V12 吸尘器",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10022"
+    ],
+    "ok": true
+  },
+  {
+    "product": "石头 扫拖机器人",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10023"
+    ],
+    "ok": true
+  },
+  {
+    "product": "索尼 WH-1000XM5",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10024"
+    ],
+    "ok": true
+  },
+  {
+    "product": "AirPods Pro 2",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10025"
+    ],
+    "ok": true
+  },
+  {
+    "product": "Anker 65W 充电器",
+    "expected": "cart:",
+    "sources": [
+      "cart:10026"
+    ],
+    "ok": true
+  },
+  {
+    "product": "Apple Watch SE",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10027"
+    ],
+    "ok": true
+  },
+  {
+    "product": "抽屉式收纳盒",
+    "expected": "cart:",
+    "sources": [
+      "cart:10028"
+    ],
+    "ok": true
+  },
+  {
+    "product": "落地台灯",
+    "expected": "cart:",
+    "sources": [
+      "cart:10029"
+    ],
+    "ok": true
+  },
+  {
+    "product": "温和保湿洁面乳",
+    "expected": "cart:",
+    "sources": [
+      "cart:10030"
+    ],
+    "ok": true
+  },
+  {
+    "product": "丝绒雾面口红",
+    "expected": "cart:",
+    "sources": [
+      "cart:10031"
+    ],
+    "ok": true
+  },
+  {
+    "product": "每日坚果 750g",
+    "expected": "cart:",
+    "sources": [
+      "cart:10042"
+    ],
+    "ok": true
+  },
+  {
+    "product": "挂耳咖啡 20袋",
+    "expected": "cart:",
+    "sources": [
+      "cart:10040"
+    ],
+    "ok": true
+  },
+  {
+    "product": "减震跑步鞋 男款",
+    "expected": "cart:",
+    "sources": [
+      "cart:10034"
+    ],
+    "ok": true
+  },
+  {
+    "product": "双人帐篷 防雨款",
+    "expected": "cart-confirm:",
+    "sources": [
+      "cart-confirm:10035"
+    ],
+    "ok": true
+  }
+]

@@ -92,7 +92,7 @@ public class ProductReferenceResolver {
         if (!probeNorm.isBlank() && !safe.isEmpty()) {
             List<Scored> scored = new ArrayList<>();
             for (ProductCardDTO card : safe) {
-                int score = score(card, probeNorm, textNorm);
+                int score = score(card, probeNorm, textNorm, text);
                 if (score > 0) {
                     scored.add(new Scored(card, score));
                 }
@@ -103,8 +103,20 @@ public class ProductReferenceResolver {
             }
         }
 
-        // 4) 检索兜底：与上文候选取交集；无上文时才允许从目录重新定位
-        List<RetrievalService.ProductHit> hits = search(probe, text);
+        // 4) 检索兜底：只保留与指代词有真实字面/品类/品牌交集的命中，避免向量检索把“洗碗机”
+        //    语义近邻成冰箱/洗衣机，进而把无关商品当成候选。
+        final String queryNorm = probeNorm;
+        List<RetrievalService.ProductHit> hits = search(probe, text).stream()
+                .filter(hit -> relevant(hit.card(), queryNorm, text))
+                .toList();
+        // 有精确名称命中时，优先精确命中；避免“iPhone 15 Pro 128G”同时被
+        // token/相似度命中到 iPhone 15 基础款。
+        List<RetrievalService.ProductHit> exactHits = hits.stream()
+                .filter(hit -> normalize(hit.card().name()).contains(queryNorm))
+                .toList();
+        if (!exactHits.isEmpty()) {
+            hits = exactHits;
+        }
         if (!safe.isEmpty()) {
             List<ProductCardDTO> inter = new ArrayList<>();
             for (RetrievalService.ProductHit hit : hits) {
@@ -160,7 +172,7 @@ public class ProductReferenceResolver {
         return new Ambiguous(topCards.subList(0, Math.min(MAX_CLARIFY, topCards.size())));
     }
 
-    private int score(ProductCardDTO card, String probeNorm, String textNorm) {
+    private int score(ProductCardDTO card, String probeNorm, String textNorm, String rawText) {
         String name = normalize(card.name());
         String subtitle = normalize(card.subtitle());
         String category = normalize(card.categoryName());
@@ -203,7 +215,67 @@ public class ProductReferenceResolver {
         if (textNorm.contains(name) && name.length() >= 2) {
             score = Math.max(score, 90);
         }
+        // 用户原话里的英文/型号 token（Redmi、K70、Pro、128G）用于解决
+        // “Redmi 有什么规格”这类 productRef 为空、但原话明确点名商品的场景。
+        score = Math.max(score, tokenScore(rawText, card.name()));
         return score;
+    }
+
+    private static int tokenScore(String rawText, String productName) {
+        if (rawText == null || rawText.isBlank() || productName == null || productName.isBlank()) {
+            return 0;
+        }
+        String text = rawText.toLowerCase(java.util.Locale.ROOT);
+        String[] tokens = productName.toLowerCase(java.util.Locale.ROOT).split("[^a-z0-9]+");
+        int total = 0;
+        int hit = 0;
+        for (String token : tokens) {
+            if (token.length() < 2 || token.matches("\\d+")) {
+                continue;
+            }
+            total++;
+            if (text.contains(token)) {
+                hit++;
+            }
+        }
+        if (hit == 0 || total == 0) {
+            return 0;
+        }
+        return 45 + (int) Math.round(30.0 * hit / total);
+    }
+
+    private static boolean relevant(ProductCardDTO card, String probeNorm, String rawText) {
+        if (card == null || probeNorm == null || probeNorm.isBlank()) {
+            return false;
+        }
+        String name = normalize(card.name());
+        String subtitle = normalize(card.subtitle());
+        String category = normalize(card.categoryName());
+        if (name.contains(probeNorm) || subtitle.contains(probeNorm)) {
+            return true;
+        }
+        // 型号/数字类指代：允许“Redmi K70 规格”这类带尾词的前缀命中，但要求足够长的公共前缀，
+        // 避免 iPhone 15 128G 把 iPhone 15 Pro 也算进来。
+        if (probeNorm.matches(".*\\d.*")) {
+            if (name.length() >= 4 && probeNorm.startsWith(name)) {
+                return true;
+            }
+            int common = commonPrefix(name, probeNorm);
+            return common >= Math.max(4, (int) Math.ceil(probeNorm.length() * 0.85))
+                    || tokenScore(rawText, card.name()) >= 70;
+        }
+        if (!category.isBlank() && (category.contains(probeNorm) || probeNorm.contains(category))) {
+            return true;
+        }
+        if (ProductAliases.matches(probeNorm, name + " " + subtitle)) {
+            return true;
+        }
+        // 非数字指代才允许 bigram 相似度（“美的冰箱”≈“美的 风冷 冰箱”）。
+        if (gramRatio(probeNorm, name) >= 0.6) {
+            return true;
+        }
+        return ProductConstraintParser.needsTermFilter(probeNorm)
+                && ProductConstraintParser.matchesTerm(probeNorm, card);
     }
 
     private List<RetrievalService.ProductHit> search(String probe, String text) {
@@ -272,6 +344,15 @@ public class ProductReferenceResolver {
         String remainder = nameNorm.substring(probeNorm.length());
         return remainder.matches("^[0-9].*")
                 || remainder.matches("^(?:g|gb|t|tb|ml|l|kg|寸|码|袋|片|粒|支|瓶|盒|套|双|只).*");
+    }
+
+    private static int commonPrefix(String a, String b) {
+        int n = Math.min(a.length(), b.length());
+        int i = 0;
+        while (i < n && a.charAt(i) == b.charAt(i)) {
+            i++;
+        }
+        return i;
     }
 
     private static double gramRatio(String probeNorm, String nameNorm) {
