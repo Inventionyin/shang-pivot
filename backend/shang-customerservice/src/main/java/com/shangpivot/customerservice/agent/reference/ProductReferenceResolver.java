@@ -50,12 +50,33 @@ public class ProductReferenceResolver {
      * @param productRef 意图层抽取的商品指代，可为空
      */
     public Resolution resolve(List<ProductCardDTO> candidates, String userText, String productRef) {
+        return resolve(candidates, userText, productRef, "");
+    }
+
+    public Resolution resolve(List<ProductCardDTO> candidates, String userText, String productRef,
+                              String lastAssistantText) {
         List<ProductCardDTO> safe = candidates == null ? List.of() : candidates.stream()
                 .filter(Objects::nonNull)
                 .filter(c -> c.spuId() != null)
                 .toList();
         String text = userText == null ? "" : userText.trim();
         String ref = productRef == null ? "" : productRef.trim();
+
+        // 规格快捷选项：“规格1/选2”承接上一轮“《商品》有多个规格”的上下文。
+        Matcher skuChoice = Pattern.compile("^(?:规格|选)\\s*([1-5])$").matcher(text);
+        if (skuChoice.matches() && lastAssistantText != null && !lastAssistantText.isBlank()) {
+            Matcher asked = Pattern.compile("《([^》]+)》").matcher(lastAssistantText);
+            if (asked.find()) {
+                String askedNorm = normalize(asked.group(1));
+                for (ProductCardDTO card : safe) {
+                    String nameNorm = normalize(card.name());
+                    if (!askedNorm.isBlank() && nameNorm.length() >= 2
+                            && (nameNorm.contains(askedNorm) || askedNorm.contains(nameNorm))) {
+                        return new Unique(card);
+                    }
+                }
+            }
+        }
 
         // 1) 序号指代：第一个/第二个/第2款
         Matcher ordinal = ORDINAL.matcher(ref + " " + text);

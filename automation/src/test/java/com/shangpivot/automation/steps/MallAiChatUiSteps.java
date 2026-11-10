@@ -78,6 +78,11 @@ public class MallAiChatUiSteps {
         new MallAiChatPage(session()).clickFirstCardAddToCart();
     }
 
+    @When("我点击第一个 AI 规格快捷选项")
+    public void clickFirstSkuOption() {
+        new MallAiChatPage(session()).clickFirstSkuOption();
+    }
+
     @When("我返回 AI 助手页面")
     public void backToAi() {
         new MallAiChatPage(session()).goBackToAi();

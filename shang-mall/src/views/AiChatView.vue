@@ -478,6 +478,19 @@ function addCardToCart(card: ChatProductCard) {
   void send('', { spuId: card.spuId, display: `把「${card.name}」加入购物车` })
 }
 
+/** 多规格回答里的【规格N】转成快捷选项；点击后发送“规格N”，复用现有 pickSku。 */
+function skuOptions(b: Bubble) {
+  if (b.role !== 'ASSISTANT' || !b.content || !b.content.includes('【规格')) return []
+  const options: Array<{ command: string; label: string }> = []
+  for (const line of b.content.split('\n')) {
+    const matched = line.match(/【规格(\d+)】(.+)/)
+    if (!matched) continue
+    const detail = matched[2].replace(/[，,].*$/, '').trim()
+    options.push({ command: `规格${matched[1]}`, label: `规格${matched[1]}${detail ? ` · ${detail}` : ''}` })
+  }
+  return options
+}
+
 const STATE_FALLBACK_LABELS: Record<string, string> = {
   ROUTING: '正在理解您的问题…',
   TOOL_CALLING: '正在处理，请稍候…',
@@ -713,6 +726,17 @@ function statusLabel(item: ChatSessionBrief): string {
             </details>
             <div v-if="b.content || !b.streaming" class="content">{{ b.content }}</div>
             <div v-else-if="!b.reasoning" class="content typing"><span />思考中…</div>
+            <div v-if="skuOptions(b).length" class="sku-options">
+              <button
+                v-for="option in skuOptions(b)"
+                :key="option.command"
+                type="button"
+                :disabled="sending"
+                @click="send(option.command)"
+              >
+                {{ option.label }}
+              </button>
+            </div>
             <div v-if="b.cards?.length" class="cards">
               <div v-if="b.historical" class="cards-history-note">历史商品卡 · 价格/库存以详情页为准</div>
               <div v-for="c in b.cards" :key="c.spuId" class="card" data-testid="ai-chat-card">
@@ -1263,6 +1287,29 @@ function statusLabel(item: ChatSessionBrief): string {
 .sold {
   font-size: 11px;
   color: var(--muted);
+}
+
+/* 多规格快捷选项 */
+.sku-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.sku-options button {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.sku-options button:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
 }
 
 /* 快捷问 */

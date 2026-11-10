@@ -66,6 +66,13 @@ jobs:
       # V3.1 图编排（与生产一致）；回退时改 legacy
       AGENT_ENGINE: graph
       AGENT_LLM_CLIENT: legacy
+      # 平台自动套件（secrets 未配置时该步骤自动跳过）
+      PLATFORM_BASE_URL: https://agent.bettery.cn
+      PLATFORM_EMAIL: ${{ secrets.PLATFORM_EMAIL }}
+      PLATFORM_PASSWORD: ${{ secrets.PLATFORM_PASSWORD }}
+      PLATFORM_PROJECT: ecommerce
+      PLATFORM_TARGETS: AT-CA66D70EFB,AT-0B7DEB56CD
+      PLATFORM_SUITE: v36-refcart-auto
       # 执行模型（被测 Agent）：V24 已清空 DB 里的占位符，环境变量才会生效
       LLM_BASE_URL: https://wb2api.yingyue.cloud/v1
       LLM_MODEL: cn:deepseek-v4.1-flash
@@ -137,6 +144,9 @@ jobs:
           python3 scripts/eval/mine_failure_candidates.py \
             --host 127.0.0.1 --port 5432 --database shang --user shang --password shang \
             --out "$OUT/reference-candidates.jsonl" || true
+          python3 scripts/eval/reference_health.py \
+            --host 127.0.0.1 --port 5432 --database shang --user shang --password shang \
+            --out "$OUT/reference-health.md" || true
 
       - name: 上传覆盖率与候选样本
         if: always()
@@ -145,6 +155,15 @@ jobs:
           name: reference-coverage-${{ github.run_id }}
           path: backend/shang-server/target/reference/
           if-no-files-found: warn
+
+      - name: 同步并运行平台自动套件
+        if: env.PLATFORM_EMAIL != ''
+        run: |
+          OUT=backend/shang-server/target/reference
+          python3 scripts/eval/sync_platform_cases.py \
+            --dataset "$OUT/reference-cart-auto.jsonl" \
+            --target AT-CA66D70EFB --target AT-0B7DEB56CD
+          python3 scripts/eval/run_platform_suite.py --suite "$PLATFORM_SUITE"
 
       - name: Golden 评估（200 用例 + graph 路径 + 裁判趋势）
         working-directory: backend

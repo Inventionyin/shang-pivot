@@ -838,7 +838,8 @@ public class AgentGraphOrchestrator implements ChatResponder {
     // ---------- 商品上下文 ----------
 
     private ProductReferenceResolver.Resolution resolveProduct(Long sessionId, String userText, String productRef) {
-        return productReferenceResolver.resolve(cardContextService.recentCards(sessionId), userText, productRef);
+        return productReferenceResolver.resolve(cardContextService.recentCards(sessionId), userText, productRef,
+                cardContextService.lastAssistantText(sessionId));
     }
 
     private static List<ProductCardDTO> candidatesOf(ProductReferenceResolver.Resolution resolution) {

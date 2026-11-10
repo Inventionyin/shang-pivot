@@ -135,6 +135,14 @@ class ProductReferenceResolverTest {
     }
 
     @Test
+    void 规格快捷选项承接上一轮商品() {
+        ProductReferenceResolver.Resolution result = resolver.resolve(
+                List.of(card(101), card(102)), "规格1", "",
+                "《iPhone 15 Pro》有多个规格，请确认您要哪一款：\n【规格1】128GB");
+        assertThat(unique(result).spuId()).isEqualTo(101L);
+    }
+
+    @Test
     void 无上文时完整型号只命中对应机型() {
         when(retrievalService.searchProducts(anyString(), anyInt(), any())).thenReturn(List.of(
                 new RetrievalService.ProductHit(card(101), 0.9, "lexical", true),

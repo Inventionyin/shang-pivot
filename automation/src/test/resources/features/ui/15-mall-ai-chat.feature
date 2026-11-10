@@ -72,6 +72,16 @@ Feature: 商城 AI 助手会话恢复
     Then AI 助手应显示待确认加购卡片
     And AI 助手对话应包含 "请确认"
 
+  @AI-CHAT-SKU-OPTION-001
+  Scenario: 多规格商品先展示规格快捷选项，选择后生成加购卡
+    Given 我用新手机号登录商城并打开 AI 助手
+    When 我在 AI 助手发送 "推荐 iPhone 15 Pro"
+    Then AI 助手应展示商品卡片
+    When 我在 AI 助手发送 "把iPhone 15 Pro加进购物车"
+    Then AI 助手对话应包含 "规格"
+    When 我点击第一个 AI 规格快捷选项
+    Then AI 助手应显示待确认加购卡片
+
   @AI-CHAT-SCROLL-001
   Scenario: 长对话消息区可以稳定滚动到底部
     Given 我用新手机号登录商城并打开 AI 助手

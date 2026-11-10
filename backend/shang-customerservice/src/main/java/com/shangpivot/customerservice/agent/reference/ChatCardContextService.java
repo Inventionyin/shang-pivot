@@ -103,6 +103,24 @@ public class ChatCardContextService {
         }
     }
 
+    /** 最近一条助手文本（用于“《商品》有多个规格”后的规格序号选择）。 */
+    public String lastAssistantText(Long sessionId) {
+        if (sessionId == null) {
+            return "";
+        }
+        try {
+            CsMessage last = messageMapper.selectOne(new LambdaQueryWrapper<CsMessage>()
+                    .eq(CsMessage::getSessionId, sessionId)
+                    .eq(CsMessage::getRole, CsMessage.ROLE_ASSISTANT)
+                    .orderByDesc(CsMessage::getId)
+                    .last("LIMIT 1"));
+            return last == null || last.getContent() == null ? "" : last.getContent();
+        } catch (Exception e) {
+            log.debug("[cs] read last assistant text failed: {}", e.getMessage());
+            return "";
+        }
+    }
+
     /** 当前会话是否有可指代的商品。 */
     public boolean hasContext(Long sessionId) {
         return !recentCards(sessionId, 1).isEmpty();

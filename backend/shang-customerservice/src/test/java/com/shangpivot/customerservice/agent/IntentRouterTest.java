@@ -166,6 +166,13 @@ class IntentRouterTest {
     }
 
     @Test
+    void 多规格快捷选项规格一继续加购() {
+        assertThat(router.route("规格1").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("规格2").type()).isEqualTo(IntentRouter.Type.ADDCART);
+        assertThat(router.route("选3").type()).isEqualTo(IntentRouter.Type.ADDCART);
+    }
+
+    @Test
     void 购买确认短语不误伤普通导购() {
         assertThat(router.route("我想买冰箱").type()).isEqualTo(IntentRouter.Type.PRESALE);
         assertThat(router.route("购物车怎么结算").type()).isNotEqualTo(IntentRouter.Type.ADDCART);

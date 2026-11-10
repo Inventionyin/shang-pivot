@@ -66,6 +66,8 @@ public final class MallAiChatPage extends BasePage {
     }
 
     public void expectActionCardVisible() {
+        page().locator(".action-card").last()
+                .waitFor(new Locator.WaitForOptions().setTimeout(AI_TIMEOUT_MS));
         assertThat(page().locator(".action-card").last()).isVisible();
         assertThat(page().locator(".action-card__summary").last()).containsText("加入购物车");
     }
@@ -103,6 +105,13 @@ public final class MallAiChatPage extends BasePage {
     /** 点击第一张商品卡的“加入购物车”按钮（不离开 /ai）。 */
     public void clickFirstCardAddToCart() {
         page().getByTestId("ai-chat-add-cart").first().click();
+    }
+
+    /** 多规格回答里的“规格1”快捷选项。 */
+    public void clickFirstSkuOption() {
+        Locator button = page().locator(".sku-options button:not([disabled])").first();
+        button.waitFor(new Locator.WaitForOptions().setTimeout(30_000));
+        button.click();
     }
 
     public void goBackToAi() {

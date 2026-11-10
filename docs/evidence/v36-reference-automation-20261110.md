@@ -3,7 +3,7 @@
 ## 版本
 
 - 尚品汇：P1 脚本与 CI，无后端/前端运行时变更
-- 生产后端仍为 v3.4.3：`5859ca38db1bee9c5209c14083be3fe594e2c53ae0558c5629ed7ea9fa2583b6`
+- 生产后端仍为 v3.4.3：`6b05a3f0c4febdb310e2b658ec7dcbd2292b69f5ad8826948ed67c2fbe3176b7`
 - 平台：用例 332 → 392（新增 `reference-cart-auto` 30 条 × 2 target）
 
 ## 新增脚本
@@ -14,6 +14,9 @@
 | `scripts/eval/generate_reference_cases.py` | 每个 ON SPU 生成 `REF-<spuId>-named-add` |
 | `scripts/eval/check_reference_coverage.py` | 覆盖率门禁；缺失/重复/断言缺失退出 1 |
 | `scripts/eval/mine_failure_candidates.py` | 只读挖掘 FAILED/HANDOFF/tool_error/retrieval_miss，脱敏候选 |
+| `scripts/eval/reference_health.py` | 指代加购健康快照（失败率/加购成功率/检索命中率） |
+| `scripts/eval/approve_candidates.py` | 人工审批候选；未审批不进入正式 suite |
+| `scripts/eval/run_platform_suite.py` | 在平台运行指定 suite 并汇总 pass/fail |
 | `scripts/eval/sync_platform_cases.py` | 按 `(targetId, sourceId)` upsert 平台 |
 
 `reference-cart-auto` 与手写 `reference-cart-50` 分开：目录变化只更新 auto 套件，不重写手写期望值。
@@ -29,6 +32,19 @@
 | 平台 legacy `v36-refcart-auto` | 30/30 |
 | trace 挖掘 | 本地 31 条候选，PII 已掩码 |
 | 平台总数 | 392 |
+
+## 平台并发修复
+
+`shangpin` 适配器原先 `fresh=true` 不带 `X-Chat-Client-Key`，同一测试手机并发时互相结束会话。现每个平台 run 使用独立 `platform-<test_run_id>`，2-worker 全量：
+
+- graph `v35-refcart` 50/50
+- legacy `v35-refcart` 50/50
+- graph `v36-refcart-auto` 30/30
+- legacy `v36-refcart-auto` 30/30
+
+## 多规格快捷选项
+
+多规格回答里的“【规格N】”渲染为快捷选项；点击发送 `规格N`，后端承接上一轮 `《商品》有多个规格` 的商品上下文，直接进入加购/确认。生产 Playwright 场景通过。
 
 ## CI
 

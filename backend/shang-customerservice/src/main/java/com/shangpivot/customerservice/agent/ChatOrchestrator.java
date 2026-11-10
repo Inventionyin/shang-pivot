@@ -533,7 +533,8 @@ public class ChatOrchestrator implements ChatResponder {
 
     /** 解析用户指代的商品：显式序号/商品名/品类/品牌 → 唯一命中；多候选由调用方反问。 */
     private ProductReferenceResolver.Resolution resolveProduct(Long sessionId, String userText, String productRef) {
-        return productReferenceResolver.resolve(cardContextService.recentCards(sessionId), userText, productRef);
+        return productReferenceResolver.resolve(cardContextService.recentCards(sessionId), userText, productRef,
+                cardContextService.lastAssistantText(sessionId));
     }
 
     private static List<ProductCardDTO> candidatesOf(ProductReferenceResolver.Resolution resolution) {

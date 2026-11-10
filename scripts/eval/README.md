@@ -11,6 +11,19 @@
 
 `reference-cart-auto` 与手写 50 条分开：目录新增/下架时只更新 auto 套件，不重写手写期望值。
 
+## 自动化脚本
+
+| 脚本 | 作用 |
+|---|---|
+| `catalog_snapshot.py` | 从管理端导出 ON SPU + SKU 快照 |
+| `generate_reference_cases.py` | 每个 ON SPU 生成 `REF-<spuId>-named-add` |
+| `check_reference_coverage.py` | 覆盖率门禁（缺失/重复/断言缺失退出 1） |
+| `mine_failure_candidates.py` | 只读挖掘失败/转人工/工具失败/检索无命中，脱敏候选 |
+| `reference_health.py` | 指代加购健康快照（失败率/加购成功率/检索命中率） |
+| `approve_candidates.py` | 人工审批候选；未审批不进入正式 suite |
+| `sync_platform_cases.py` | 按 `(targetId, sourceId)` upsert 平台 |
+| `run_platform_suite.py` | 在平台运行指定 suite 并汇总 pass/fail |
+
 ## 每周 CI
 
 `.github/workflows/eval.yml` 在 Golden 评估前执行：
