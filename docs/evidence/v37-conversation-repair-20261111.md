@@ -73,3 +73,17 @@ CI：`.github/workflows/ci.yml` 新增 `backend-integration` job（Postgres pgve
 - 多规格商品“1”先问规格，下一轮“2/规格1”选 SKU。
 - “把洗碗机加进购物车”返回“没有找到…具体商品”，不展示冰箱卡片。
 - 管理端 `/cs-quality` 可见点踩数据；点踩后 trace 可挖成候选。
+
+## 7. 生产部署与实测（2026-11-11 19:45 CST）
+
+- 发布：`main@31d41a8`，tag `v3.9.0`；后端 jar `sha256 fd5af2e6…`，V33 已由 Flyway 应用（`33|true`）。
+- 静态资源：`/var/www/shang`（`AiChatView-BaSOXqf3.js`）、`/var/www/shang-admin`（`CsQualityView-CmxJMUO9.js`）已切换；旧目录保留为 `*.old-20261111-194538`。
+- 健康检查：C 端 `/api/home` 200、管理端首页 200、测试平台首页 200。
+- 生产实测（真实模型 + graph）：
+  1. `推荐美的风冷冰箱` → `就喝一个人吧`：回答“本轮没有检索到新的商品…”，不再出现“没有可操作的商品”与卡片并存。
+  2. 继续 `确认 就买这个`：`NEED_CONFIRMATION`，回答“即将加入购物车…请确认”，生成确认卡。
+  3. `推荐一个降噪耳机` → `把耳机加进购物车` → `1`：选中索尼 WH-1000XM5 并生成确认卡，不再重置问候。
+  4. `推荐 MacBook Air 13 M3 16G` → `1` → `2`：先问规格，再选中 24GB SKU 并生成确认卡。
+  5. `推荐美的风冷冰箱` → `把洗碗机加进购物车`：回答“没有找到与「洗碗机」匹配的具体商品”，卡片为空。
+  6. 点踩接口 200；管理端 `quality?days=14` 返回 `total=1, down=1, reason=答非所问`，最近差评含回答与 runId。
+- CI：GitHub Actions `CI` run `43012446009` 全绿（含新增 `backend-integration` job：Graph Golden / Reference Cart / Conversation Repair）；`e2e` run `43012446107` 全绿。
