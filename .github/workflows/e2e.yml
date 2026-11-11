@@ -91,6 +91,17 @@ jobs:
           done
           echo "backend failed"; tail -100 /tmp/backend.log; exit 1
 
+      - name: 重建商品与知识索引
+        run: |
+          TOKEN=$(curl -fsS -X POST http://127.0.0.1:8086/admin/auth/login \
+            -H 'Content-Type: application/json' \
+            -d '{"username":"admin","password":"Admin@123"}' \
+            | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["accessToken"])')
+          curl -fsS -X POST http://127.0.0.1:8086/admin/customer-service/product-index/rebuild \
+            -H "Authorization: Bearer $TOKEN"; echo
+          curl -fsS -X POST http://127.0.0.1:8086/admin/customer-service/knowledge-docs/rebuild \
+            -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{"full":true}'; echo
+
       - name: 安装前端依赖
         run: |
           (cd shang-mall && npm ci --no-audit --no-fund || npm install --no-audit --no-fund)
