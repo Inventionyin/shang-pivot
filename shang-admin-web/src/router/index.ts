@@ -190,6 +190,12 @@ const router = createRouter({
           meta: { title: '指代加购健康', permission: 'cs-stats' },
         },
         {
+          path: 'cs-quality',
+          name: 'cs-quality',
+          component: () => import('@/views/CsQualityView.vue'),
+          meta: { title: '答案质量', permission: 'cs-stats' },
+        },
+        {
           path: 'customer-service/agent-runs',
           name: 'cs-agent-runs',
           component: () => import('@/views/CsAgentRunsView.vue'),

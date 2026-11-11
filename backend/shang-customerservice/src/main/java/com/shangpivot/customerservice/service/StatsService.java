@@ -282,6 +282,101 @@ public class StatsService {
         return trend;
     }
 
+    /** 答案质量：点赞/点踩、点踩原因分布。 */
+    public Map<String, Object> answerQuality(int days) {
+        int window = Math.max(1, Math.min(days, 90));
+        Timestamp from = Timestamp.valueOf(java.time.LocalDateTime.now()
+                .minusDays(window - 1L).toLocalDate().atStartOfDay());
+        Map<String, Object> totals = jdbcTemplate.queryForMap("""
+                SELECT count(*) AS total,
+                       count(*) FILTER (WHERE rating = 'UP') AS up,
+                       count(*) FILTER (WHERE rating = 'DOWN') AS down
+                FROM customerservice.message_feedback
+                WHERE deleted = FALSE AND created_at >= ?
+                """, from);
+        long total = number(totals.get("total"));
+        long up = number(totals.get("up"));
+        long down = number(totals.get("down"));
+
+        List<Map<String, Object>> reasons = new java.util.ArrayList<>();
+        for (Map<String, Object> row : jdbcTemplate.queryForList("""
+                SELECT COALESCE(NULLIF(reason, ''), '未填写') AS reason, count(*) AS count
+                FROM customerservice.message_feedback
+                WHERE deleted = FALSE AND rating = 'DOWN' AND created_at >= ?
+                GROUP BY 1 ORDER BY count DESC
+                """, from)) {
+            Map<String, Object> item = new java.util.LinkedHashMap<>();
+            item.put("reason", row.get("reason"));
+            item.put("count", number(row.get("count")));
+            reasons.add(item);
+        }
+
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        result.put("days", window);
+        result.put("total", total);
+        result.put("up", up);
+        result.put("down", down);
+        result.put("upRate", rate(up, total));
+        result.put("downRate", rate(down, total));
+        result.put("reasons", reasons);
+        return result;
+    }
+
+    /** 答案质量趋势：按天返回点赞/点踩。 */
+    public List<Map<String, Object>> answerQualityTrend(int days) {
+        int window = Math.max(1, Math.min(days, 90));
+        Timestamp from = Timestamp.valueOf(java.time.LocalDateTime.now()
+                .minusDays(window - 1L).toLocalDate().atStartOfDay());
+        Map<String, Map<String, Object>> byDay = new java.util.HashMap<>();
+        for (Map<String, Object> row : jdbcTemplate.queryForList("""
+                SELECT to_char(created_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD') AS day,
+                       count(*) AS total,
+                       count(*) FILTER (WHERE rating = 'UP') AS up,
+                       count(*) FILTER (WHERE rating = 'DOWN') AS down
+                FROM customerservice.message_feedback
+                WHERE deleted = FALSE AND created_at >= ?
+                GROUP BY 1
+                """, from)) {
+            byDay.put(String.valueOf(row.get("day")), row);
+        }
+        List<Map<String, Object>> trend = new java.util.ArrayList<>();
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Shanghai"));
+        for (int i = 0; i < window; i++) {
+            String day = today.minusDays(window - 1L - i).format(DateTimeFormatter.ISO_DATE);
+            Map<String, Object> row = byDay.getOrDefault(day, Map.of());
+            long total = number(row.get("total"));
+            long up = number(row.get("up"));
+            long down = number(row.get("down"));
+            Map<String, Object> point = new java.util.LinkedHashMap<>();
+            point.put("date", day);
+            point.put("total", total);
+            point.put("up", up);
+            point.put("down", down);
+            point.put("downRate", rate(down, total));
+            trend.add(point);
+        }
+        return trend;
+    }
+
+    /** 最近点踩明细（管理端质量复核用）。 */
+    public List<Map<String, Object>> recentNegativeFeedback(int limit) {
+        int size = Math.max(1, Math.min(limit, 100));
+        return jdbcTemplate.queryForList("""
+                SELECT f.id, f.message_id, f.session_id, f.rating, f.reason, f.comment,
+                       f.created_at, m.content AS answer, a.id AS run_id
+                FROM customerservice.message_feedback f
+                LEFT JOIN customerservice.message m ON m.id = f.message_id
+                LEFT JOIN LATERAL (
+                    SELECT id FROM customerservice.agent_run
+                    WHERE assistant_message_id = f.message_id
+                    ORDER BY id DESC LIMIT 1
+                ) a ON TRUE
+                WHERE f.deleted = FALSE AND f.rating = 'DOWN'
+                ORDER BY f.created_at DESC
+                LIMIT ?
+                """, size);
+    }
+
     private static long number(Object value) {
         if (value instanceof Number n) {
             return n.longValue();

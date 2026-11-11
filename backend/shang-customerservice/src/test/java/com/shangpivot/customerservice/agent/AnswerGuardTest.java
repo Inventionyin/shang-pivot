@@ -84,4 +84,26 @@ class AnswerGuardTest {
         assertThat(result.replaced()).isTrue();
         assertThat(result.answer()).startsWith("根据《退换货政策》");
     }
+
+    @Test
+    void noProductClaimWithCardsIsReplaced() {
+        AnswerGuard.Result result = guard.guard(AgentName.SHOPPING_GUIDE, SupervisorAgent.Action.ADD_TO_CART,
+                "（用户指代唯一）", cards, display, "当前会话没有可操作的商品，请告诉我具体商品名称。");
+
+        assertThat(result.replaced()).isTrue();
+        assertThat(result.answer()).isEqualTo(display);
+        assertThat(result.reason()).contains("claims no product");
+    }
+
+    @Test
+    void cartAddedClaimWithoutSuccessFactIsReplaced() {
+        AnswerGuard.Result result = guard.guard(AgentName.SHOPPING_GUIDE, SupervisorAgent.Action.ADD_TO_CART,
+                "（已生成待确认加购动作，不要声称已加购）", cards,
+                "即将加入购物车：Redmi K70 12+256G。请确认是否执行。",
+                "已为您加入购物车，可以去结算了。");
+
+        assertThat(result.replaced()).isTrue();
+        assertThat(result.answer()).contains("请确认");
+        assertThat(result.reason()).contains("claims cart add");
+    }
 }

@@ -28,6 +28,9 @@ public class AnswerGuard {
             "京东|淘宝|天猫|拼多多|唯品会|苏宁易购|抖音商城");
     private static final Pattern CART_QTY = Pattern.compile("购物车[^。；;\\n]{0,16}?\\d+\\s*(台|件|个|套)");
     private static final Pattern NO_RESULT_CLAIM = Pattern.compile("为您找到|推荐【|推荐以下商品|以下是.*商品");
+    private static final Pattern NO_PRODUCT_CLAIM = Pattern.compile(
+            "没有(?:可操作|找到|查询到|匹配|检索到).{0,8}商品|当前会话没有可操作|没有与.{0,12}匹配");
+    private static final Pattern CART_CLAIM = Pattern.compile("已(?:为您)?(?:加入|添加|放进|放入了?).{0,8}购物车|已加购");
     private static final Pattern BRAND = Pattern.compile(
             "(?i)(Redmi|iPhone|Xiaomi|HUAWEI|OPPO|vivo|荣耀|索尼|AirPods|戴森|石头|MacBook|ThinkPad|ROG|拯救者|Dell|美的|海尔|Anker|Apple Watch|iQOO|一加|realme|红米|华为|小米|苹果)");
     private static final Pattern TITLE = Pattern.compile("《([^》]+)》");
@@ -61,6 +64,15 @@ public class AnswerGuard {
         }
         if ((cards == null || cards.isEmpty()) && NO_RESULT_CLAIM.matcher(answer).find()) {
             return fallback(displayAnswer, "claims products with empty cards");
+        }
+        // 本轮有卡片却说“没有商品”：模板/模型自相矛盾，回退确定性答案。
+        if (cards != null && !cards.isEmpty() && NO_PRODUCT_CLAIM.matcher(answer).find()) {
+            return fallback(displayAnswer, "contradicts cards: claims no product");
+        }
+        // 没有加购成功事实却说“已加购”：防止模型把“即将加购”说成“已加购”。
+        if (CART_CLAIM.matcher(answer).find()
+                && (facts == null || !facts.contains("已成功为用户加入购物车"))) {
+            return fallback(displayAnswer, "claims cart add without success fact");
         }
         if (action == SupervisorAgent.Action.GET_ORDER && facts != null && facts.contains("没有订单")
                 && CART_QTY.matcher(answer).find()) {

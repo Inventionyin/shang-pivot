@@ -121,6 +121,21 @@ export interface ChatActionConfirmResult {
   message?: string
 }
 
+/** 对单条 AI 回答点赞/点踩（同一用户重复提交会覆盖） */
+export interface ChatFeedbackPayload {
+  rating: 'UP' | 'DOWN'
+  reason?: string
+  comment?: string
+}
+
+export function submitChatFeedback(messageId: string | number, payload: ChatFeedbackPayload) {
+  return http<{ messageId: number; rating: string }>({
+    url: `/api/chat/messages/${messageId}/feedback`,
+    method: 'POST',
+    data: payload,
+  })
+}
+
 /** 用户确认执行写操作（如取消订单） */
 export function confirmChatAction(sessionId: string | number, actionId: string | number) {
   return http<ChatActionConfirmResult | null>({

@@ -18,6 +18,7 @@ import com.shangpivot.customerservice.entity.ChatSession;
 import com.shangpivot.customerservice.entity.CsMessage;
 import com.shangpivot.customerservice.eval.GoldenCase;
 import com.shangpivot.customerservice.eval.GoldenDataset;
+import com.shangpivot.customerservice.eval.ConversationRepairDataset;
 import com.shangpivot.customerservice.eval.ReferenceCartDataset;
 import com.shangpivot.customerservice.llm.LlmClient;
 import com.shangpivot.customerservice.llm.LlmSettings;
@@ -296,6 +297,14 @@ class GraphGoldenIntegrationTest {
         assertTrue(failures.isEmpty(), "BadLlm Golden 失败:\n" + String.join("\n", failures));
     }
 
+    /** 多轮澄清/话轮承接：截图链路与同类口语确认、裸序号、规格序号。 */
+    @Test
+    void graphMatchesConversationRepairDeterministicAssertions() {
+        List<String> failures = new ArrayList<>();
+        runConversationDataset(9000L, ConversationRepairDataset.all(), failures);
+        assertTrue(failures.isEmpty(), "Conversation Repair 失败:\n" + String.join("\n", failures));
+    }
+
     private void runDataset(long customerBase, List<GoldenCase> dataset, List<String> failures) {
         int index = 0;
         for (GoldenCase golden : dataset) {
@@ -313,62 +322,97 @@ class GraphGoldenIntegrationTest {
                 failures.add(golden.id() + ": 无结果");
                 continue;
             }
-            if (last.answer().contains("Redmi Turbo 4") || last.answer().contains("Claude")
-                    || last.answer().contains("Anthropic") || last.answer().contains("京东")) {
-                failures.add(golden.id() + ": 回答泄漏 BadLlm 编造内容：" + last.answer());
+            verifyGolden(golden, last, customerId, failures);
+        }
+    }
+
+    /** 逐轮检查“重置问候/没有商品却列卡”，最终轮复用 Golden 断言。 */
+    private void runConversationDataset(long customerBase, List<GoldenCase> dataset, List<String> failures) {
+        int index = 0;
+        for (GoldenCase golden : dataset) {
+            long customerId = customerBase + index++;
+            ChatSession session = chatSessionService.getOrCreateActive(customerId, "h5");
+            List<Turn> turns = new ArrayList<>();
+            for (String turn : golden.turns()) {
+                String content = guardPipeline.maskPii(turn);
+                CsMessage user = chatSessionService.saveUserMessage(session.getId(), content);
+                CapturingEmitter emitter = new CapturingEmitter(objectMapper);
+                orchestrator.respond(emitter, session, user);
+                turns.add(emitter.turn());
             }
-            for (String fragment : golden.expectedSourceFragments()) {
-                boolean hit = last.sources().stream().anyMatch(source -> "retrieval".equals(fragment)
-                        ? (source.contains("vector") || source.contains("lexical"))
-                        : source.contains(fragment));
-                if (!hit) {
-                    failures.add(golden.id() + ": sources " + last.sources() + " 不含 " + fragment);
+            if (turns.isEmpty()) {
+                failures.add(golden.id() + ": 无结果");
+                continue;
+            }
+            for (int i = 0; i < turns.size(); i++) {
+                Turn turn = turns.get(i);
+                if (turn.answer().contains("我是尚品汇智能客服小尚")) {
+                    failures.add(golden.id() + ": 第" + (i + 1) + "轮重置为问候语：" + turn.answer());
+                }
+                if (turn.answer().contains("当前会话没有可操作的商品") && !turn.cards().isEmpty()) {
+                    failures.add(golden.id() + ": 第" + (i + 1) + "轮“没有商品”与卡片并存");
                 }
             }
-            for (String fragment : golden.expectedCardFragments()) {
-                boolean hit = last.cards().stream()
-                        .anyMatch(card -> String.valueOf(card.get("name")).contains(fragment));
-                if (!hit) {
-                    failures.add(golden.id() + ": cards 不含 " + fragment + "，实际 " + last.cards());
+            verifyGolden(golden, turns.get(turns.size() - 1), customerId, failures);
+        }
+    }
+
+    private void verifyGolden(GoldenCase golden, Turn last, long customerId, List<String> failures) {
+        if (last.answer().contains("Redmi Turbo 4") || last.answer().contains("Claude")
+                || last.answer().contains("Anthropic") || last.answer().contains("京东")) {
+            failures.add(golden.id() + ": 回答泄漏 BadLlm 编造内容：" + last.answer());
+        }
+        for (String fragment : golden.expectedSourceFragments()) {
+            boolean hit = last.sources().stream().anyMatch(source -> "retrieval".equals(fragment)
+                    ? (source.contains("vector") || source.contains("lexical"))
+                    : source.contains(fragment));
+            if (!hit) {
+                failures.add(golden.id() + ": sources " + last.sources() + " 不含 " + fragment);
+            }
+        }
+        for (String fragment : golden.expectedCardFragments()) {
+            boolean hit = last.cards().stream()
+                    .anyMatch(card -> String.valueOf(card.get("name")).contains(fragment));
+            if (!hit) {
+                failures.add(golden.id() + ": cards 不含 " + fragment + "，实际 " + last.cards());
+            }
+        }
+        for (String keyword : golden.expectedAnswerKeywords()) {
+            if (!last.answer().contains(keyword)) {
+                failures.add(golden.id() + ": answer 缺 " + keyword + "，实际 " + last.answer());
+            }
+        }
+        for (String pattern : golden.forbidPatterns()) {
+            if (last.answer().contains(pattern)) {
+                failures.add(golden.id() + ": answer 出现禁止词 " + pattern);
+            }
+        }
+        if (golden.maxSourceCount() != null && last.sources().size() > golden.maxSourceCount()) {
+            failures.add(golden.id() + ": sources " + last.sources().size()
+                    + " 超过上限 " + golden.maxSourceCount());
+        }
+        if (!golden.expectedCart().isEmpty()) {
+            Map<Long, Integer> cart = carts.getOrDefault(customerId, Map.of());
+            for (GoldenCase.CartExpect expect : golden.expectedCart()) {
+                int actual = CATALOG.stream()
+                        .filter(product -> product.name().contains(expect.titleFragment()))
+                        .flatMap(product -> {
+                            List<ProductSkuDTO> skus = MULTI_SKUS.get(product.spuId());
+                            if (skus == null) {
+                                return java.util.stream.Stream.of(product.spuId() * 10);
+                            }
+                            return skus.stream().map(ProductSkuDTO::skuId);
+                        })
+                        .mapToInt(skuId -> cart.getOrDefault(skuId, 0))
+                        .sum();
+                if (actual != expect.quantity()) {
+                    failures.add(golden.id() + ": 购物车 " + expect.titleFragment()
+                            + " 期望 " + expect.quantity() + " 实际 " + actual);
                 }
             }
-            for (String keyword : golden.expectedAnswerKeywords()) {
-                if (!last.answer().contains(keyword)) {
-                    failures.add(golden.id() + ": answer 缺 " + keyword + "，实际 " + last.answer());
-                }
-            }
-            for (String pattern : golden.forbidPatterns()) {
-                if (last.answer().contains(pattern)) {
-                    failures.add(golden.id() + ": answer 出现禁止词 " + pattern);
-                }
-            }
-            if (golden.maxSourceCount() != null && last.sources().size() > golden.maxSourceCount()) {
-                failures.add(golden.id() + ": sources " + last.sources().size()
-                        + " 超过上限 " + golden.maxSourceCount());
-            }
-            if (!golden.expectedCart().isEmpty()) {
-                Map<Long, Integer> cart = carts.getOrDefault(customerId, Map.of());
-                for (GoldenCase.CartExpect expect : golden.expectedCart()) {
-                    int actual = CATALOG.stream()
-                            .filter(product -> product.name().contains(expect.titleFragment()))
-                            .flatMap(product -> {
-                                List<ProductSkuDTO> skus = MULTI_SKUS.get(product.spuId());
-                                if (skus == null) {
-                                    return java.util.stream.Stream.of(product.spuId() * 10);
-                                }
-                                return skus.stream().map(ProductSkuDTO::skuId);
-                            })
-                            .mapToInt(skuId -> cart.getOrDefault(skuId, 0))
-                            .sum();
-                    if (actual != expect.quantity()) {
-                        failures.add(golden.id() + ": 购物车 " + expect.titleFragment()
-                                + " 期望 " + expect.quantity() + " 实际 " + actual);
-                    }
-                }
-            }
-            if (last.degraded()) {
-                failures.add(golden.id() + ": 降级应答");
-            }
+        }
+        if (last.degraded()) {
+            failures.add(golden.id() + ": 降级应答");
         }
     }
 

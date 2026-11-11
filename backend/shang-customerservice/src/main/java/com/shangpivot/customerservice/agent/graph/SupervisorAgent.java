@@ -47,7 +47,12 @@ public class SupervisorAgent {
     private final IntentRouter intentRouter;
 
     public RouteResult route(String userText) {
-        IntentRouter.Intent intent = intentRouter.route(userText);
+        return route(userText, null);
+    }
+
+    /** fixedIntent 非空时用于承接上一轮澄清（裸序号/确认），不再调用 LLM 重新分类。 */
+    public RouteResult route(String userText, IntentRouter.Intent fixedIntent) {
+        IntentRouter.Intent intent = fixedIntent != null ? fixedIntent : intentRouter.route(userText);
         String text = userText == null ? "" : userText;
         String orderNo = intent.orderNo();
 

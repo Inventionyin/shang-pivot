@@ -17,10 +17,12 @@ import com.shangpivot.customerservice.agent.trace.entity.PendingAction;
 import com.shangpivot.customerservice.entity.ChatSession;
 import com.shangpivot.customerservice.entity.CsAuditLog;
 import com.shangpivot.customerservice.entity.CsMessage;
+import com.shangpivot.customerservice.entity.MessageFeedback;
 import com.shangpivot.customerservice.entity.QuickReply;
 import com.shangpivot.customerservice.mapper.QuickReplyMapper;
 import com.shangpivot.customerservice.service.ChatSessionService;
 import com.shangpivot.customerservice.service.CsAuditService;
+import com.shangpivot.customerservice.service.MessageFeedbackService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -67,6 +69,7 @@ public class ChatController {
     private final com.shangpivot.customerservice.service.CsGuardRailService guardRailService;
     private final com.shangpivot.customerservice.agent.GuardPipeline guardPipeline;
     private final ProductQueryApi productQueryApi;
+    private final MessageFeedbackService messageFeedbackService;
 
     /** legacy=V3.0 两阶段编排；graph=V3.1 LangGraph4j 编排。 */
     @Value("${agent.engine:legacy}")
@@ -88,6 +91,21 @@ public class ChatController {
     }
 
     public record EscalateRequest(Boolean cancel) {
+    }
+
+    public record FeedbackRequest(String rating, String reason, String comment) {
+    }
+
+    @Operation(summary = "对单条 AI 回答点赞/点踩")
+    @PostMapping("/messages/{id}/feedback")
+    public Result<Map<String, Object>> feedback(@PathVariable Long id, @RequestBody FeedbackRequest req) {
+        Long customerId = SecurityContexts.requireUserId();
+        MessageFeedback feedback = messageFeedbackService.submit(customerId, id,
+                req.rating(), req.reason(), req.comment());
+        auditService.record("answer_feedback", CsAuditLog.RISK_LOW, feedback.getSessionId(), customerId,
+                Map.of("messageId", id, "rating", feedback.getRating(),
+                        "reason", feedback.getReason() == null ? "" : feedback.getReason()));
+        return Result.ok(Map.of("messageId", id, "rating", feedback.getRating()));
     }
 
     @Operation(summary = "创建/取进行中会话")

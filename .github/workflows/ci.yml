@@ -25,6 +25,87 @@ jobs:
       - name: Maven test
         run: ./mvnw -q -pl shang-customerservice -am test
 
+  backend-integration:
+    name: Backend multi-turn integration (Postgres + Redis + Rabbit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: shang
+          POSTGRES_USER: shang
+          POSTGRES_PASSWORD: shang
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U shang -d shang"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DB_URL: jdbc:postgresql://127.0.0.1:5432/shang?sslmode=disable&stringtype=unspecified&connectTimeout=5&socketTimeout=30&tcpKeepAlive=true
+      DB_USERNAME: shang
+      DB_PASSWORD: shang
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+      RABBITMQ_HOST: 127.0.0.1
+      RABBITMQ_PORT: 5672
+      SERVER_PORT: 8086
+      MANAGEMENT_PORT: 8087
+      JWT_SECRET: shang-pivot-ci-jwt-secret-32bytes-min!!
+      MINIO_ENDPOINT: 127.0.0.1:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET_NAME: shang-pivot
+      AGENT_ENGINE: graph
+      AGENT_LLM_CLIENT: legacy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          cache-dependency-path: backend/.mvn/wrapper/maven-wrapper.properties
+      - name: Graph Golden + Reference Cart + Conversation Repair
+        run: >
+          ./mvnw -q -pl shang-server -am
+          -Dtest=GraphGoldenIntegrationTest
+          -Dsurefire.failIfNoSpecifiedTests=false test
+      - name: 导出多轮回归 JSONL
+        run: >
+          ./mvnw -q -pl shang-customerservice -am
+          -Dtest=ConversationRepairExportTest
+          -Dsurefire.failIfNoSpecifiedTests=false test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conversation-repair-${{ github.run_id }}
+          path: backend/shang-customerservice/target/conversation-repair-40.jsonl
+          if-no-files-found: warn
+
   frontend-mall:
     name: Mall frontend (type-check + build)
     runs-on: ubuntu-latest

@@ -250,6 +250,11 @@ public class IntentRouter {
                 .replace("我想买", " ").replace("我想购买", " ").replace("帮我推荐", " ")
                 .replace("请帮我", " ").replace("推荐一下", " ").replace("有什么", " ")
                 .replace("多少钱", " ").replace("想买", " ").replace("推荐", " ")
+                // 规格/库存问句不是商品名的一部分；保留品牌/型号，让 resolver 能按 token 命中
+                .replace("规格", " ").replace("参数", " ").replace("配置", " ")
+                .replace("颜色", " ").replace("尺寸", " ").replace("型号", " ")
+                .replace("有货吗", " ").replace("有货", " ").replace("库存", " ")
+                .replace("价格", " ")
                 .replace("？", " ").replace("?", " ").replace("。", " ").replace("，", " ")
                 .replace("吗", " ").replace("呢", " ").replace("吧", " ")
                 .replaceFirst("^个", " ").trim();

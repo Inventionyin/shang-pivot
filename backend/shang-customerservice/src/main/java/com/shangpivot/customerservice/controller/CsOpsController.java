@@ -184,4 +184,24 @@ public class CsOpsController {
     public Result<List<Map<String, Object>>> referenceTrend(@RequestParam(defaultValue = "14") int days) {
         return Result.ok(statsService.referenceTrend(days));
     }
+
+    // ---------- 答案质量 ----------
+
+    @Operation(summary = "答案质量看板", description = "days=1..90；点赞率/点踩率/点踩原因")
+    @GetMapping("/quality")
+    public Result<Map<String, Object>> quality(@RequestParam(defaultValue = "14") int days) {
+        return Result.ok(statsService.answerQuality(days));
+    }
+
+    @Operation(summary = "答案质量趋势", description = "按天返回点赞/点踩/点踩率")
+    @GetMapping("/quality/trend")
+    public Result<List<Map<String, Object>>> qualityTrend(@RequestParam(defaultValue = "14") int days) {
+        return Result.ok(statsService.answerQualityTrend(days));
+    }
+
+    @Operation(summary = "最近点踩明细")
+    @GetMapping("/quality/negative-feedback")
+    public Result<List<Map<String, Object>>> negativeFeedback(@RequestParam(defaultValue = "20") int limit) {
+        return Result.ok(statsService.recentNegativeFeedback(limit));
+    }
 }

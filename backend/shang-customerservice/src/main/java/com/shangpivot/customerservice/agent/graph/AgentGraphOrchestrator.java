@@ -11,6 +11,7 @@ import com.shangpivot.commerce.api.ProductSkuApi;
 import com.shangpivot.commerce.api.ProductSkuDTO;
 import com.shangpivot.customerservice.agent.AnswerGuard;
 import com.shangpivot.customerservice.agent.ChatResponder;
+import com.shangpivot.customerservice.agent.ConversationFollowUpService;
 import com.shangpivot.customerservice.agent.FactAnswerRenderer;
 import com.shangpivot.customerservice.agent.GuardPipeline;
 import com.shangpivot.customerservice.agent.IntentRouter;
@@ -94,6 +95,7 @@ public class AgentGraphOrchestrator implements ChatResponder {
     private final RetrievalService retrievalService;
     private final ProductReferenceResolver productReferenceResolver;
     private final ChatCardContextService cardContextService;
+    private final ConversationFollowUpService followUpService;
     private final GuardPipeline guardPipeline;
     private final ObjectMapper objectMapper;
     private final BaseCheckpointSaver checkpointSaver;
@@ -212,7 +214,9 @@ public class AgentGraphOrchestrator implements ChatResponder {
             return out;
         }
 
-        SupervisorAgent.RouteResult route = supervisor.route(state.userText());
+        SupervisorAgent.RouteResult route = followUpService.resolve(state.sessionId(), state.userText())
+                .map(followUp -> supervisor.route(state.userText(), followUp))
+                .orElseGet(() -> supervisor.route(state.userText()));
         traceService.finishStep(stepId, "OK",
                 "agent=" + route.agent().name() + ", action=" + route.action(), System.currentTimeMillis() - start, null);
 
@@ -544,7 +548,7 @@ public class AgentGraphOrchestrator implements ChatResponder {
         ProductReferenceResolver.Resolution resolution =
                 resolveProduct(state.sessionId(), state.userText(), route.productRef());
         if (!(resolution instanceof ProductReferenceResolver.Unique unique)) {
-            return askWhichProduct(state, cards, sources, candidatesOf(resolution));
+            return askWhichProduct(state, cards, sources, candidatesOf(resolution), false);
         }
         ProductCardDTO product = unique.product();
         cards.add(cardMap(product));
@@ -567,7 +571,7 @@ public class AgentGraphOrchestrator implements ChatResponder {
         ProductReferenceResolver.Resolution resolution =
                 resolveProduct(state.sessionId(), state.userText(), route.productRef());
         if (!(resolution instanceof ProductReferenceResolver.Unique unique)) {
-            FactsResult ask = askWhichProduct(state, cards, sources, candidatesOf(resolution));
+            FactsResult ask = askWhichProduct(state, cards, sources, candidatesOf(resolution), true);
             return CartOutcome.ok(ask.facts(), ask.displayAnswer());
         }
         ProductCardDTO product = unique.product();
@@ -578,7 +582,8 @@ public class AgentGraphOrchestrator implements ChatResponder {
             return CartOutcome.ok("（该商品暂无可售规格，无法加购：如实告知）",
                     "《" + product.name() + "》暂无可售规格，暂时无法加购。");
         }
-        ProductSkuDTO chosen = pickSku(skus, state.userText());
+        ProductSkuDTO chosen = pickSku(skus, state.userText(),
+                cardContextService.lastAssistantText(state.sessionId()));
         if (chosen == null) {
             sources.add("sku:" + product.spuId());
             return CartOutcome.ok("（该商品有多个规格，用户未说明要哪个：请列出以下规格让用户选择，不要自行加购）\n"
@@ -848,12 +853,23 @@ public class AgentGraphOrchestrator implements ChatResponder {
     }
 
     private FactsResult askWhichProduct(AgentGraphState state, List<Map<String, Object>> cards,
-                                        List<String> sources, List<ProductCardDTO> candidates) {
-        List<ProductCardDTO> previous = candidates == null || candidates.isEmpty()
-                ? cardContextService.latestCards(state.sessionId()) : candidates;
+                                        List<String> sources, List<ProductCardDTO> candidates,
+                                        boolean addCart) {
+        List<ProductCardDTO> previous = candidates == null ? List.of() : candidates;
         if (previous.isEmpty()) {
-            return new FactsResult("（用户想操作商品但当前会话没有可指代的商品：请用户说明具体是哪款，或先为其推荐）",
-                    FactAnswerRenderer.noProductContext());
+            String keyword = IntentRouter.extractKeyword(state.userText());
+            String display = keyword.isBlank()
+                    ? FactAnswerRenderer.noProductContext()
+                    : FactAnswerRenderer.productNotInCatalog(keyword);
+            return new FactsResult("（用户想操作商品但没有可指代的候选：如实告知没找到具体商品，禁止拿无关卡片凑数）",
+                    display);
+        }
+        if (previous.size() == 1) {
+            ProductCardDTO card = previous.get(0);
+            cards.add(cardMap(card));
+            sources.add("context-confirm");
+            return new FactsResult("（用户指代唯一：请确认是否对【" + card.name() + "】执行操作，不要问“哪一款”）",
+                    FactAnswerRenderer.confirmProduct(card, addCart));
         }
         StringBuilder sb = new StringBuilder("（用户指代不明：请列出以下此前推荐过的商品，请用户确认后再继续，禁止瞎猜）\n");
         sources.add("context-ask");
@@ -864,7 +880,12 @@ public class AgentGraphOrchestrator implements ChatResponder {
         return new FactsResult(sb.toString(), FactAnswerRenderer.clarifyProducts(previous));
     }
 
-    private ProductSkuDTO pickSku(List<ProductSkuDTO> skus, String userText) {
+    private static boolean asksSkuChoice(String lastAssistantText) {
+        return lastAssistantText != null
+                && (lastAssistantText.contains("有多个规格") || lastAssistantText.contains("【规格"));
+    }
+
+    private ProductSkuDTO pickSku(List<ProductSkuDTO> skus, String userText, String lastAssistantText) {
         String text = userText == null ? "" : userText;
         // 规格序号：“第一个/第2款/规格1/选1”
         // 只识别“规格 1/规格第一个/选 1”或单独数字，避免把“购买第一款”的商品序号当成规格序号。
@@ -872,7 +893,9 @@ public class AgentGraphOrchestrator implements ChatResponder {
                 .compile("(?:规格\\s*第?\\s*|选\\s*)([一二三四五1-5])\\s*(?:个|款|号|规格)?")
                 .matcher(text);
         boolean ordinalFound = ordinal.find();
-        if (!ordinalFound) {
+        if (!ordinalFound && asksSkuChoice(lastAssistantText)) {
+            // 裸数字只有在上一条助手消息确实在问规格时才当 SKU 序号；
+            // 否则“推荐 MacBook”后回“1”是在选商品，不能顺手把第一个 SKU 也选了。
             ordinal = java.util.regex.Pattern.compile("^\\s*([1-5])\\s*$").matcher(text);
             ordinalFound = ordinal.find();
         }

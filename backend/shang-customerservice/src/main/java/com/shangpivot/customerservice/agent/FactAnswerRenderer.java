@@ -144,12 +144,24 @@ public final class FactAnswerRenderer {
     }
 
     public static String previousProducts(List<ProductCardDTO> previous) {
-        return "当前会话没有可操作的商品。之前为您推荐过：\n" + productLines(previous)
-                + "请告诉我要哪一款。";
+        return "本轮没有检索到新的商品。刚才为您推荐过：\n" + productLines(previous)
+                + "回复序号或商品名，我可以继续帮您看规格或加购。";
     }
 
     public static String noProductContext() {
         return "当前会话没有可操作的商品。请告诉我具体商品名称，或先让我为您推荐。";
+    }
+
+    /** 用户点名了目录里没有的商品：不能拿上文无关卡片凑数。 */
+    public static String productNotInCatalog(String keyword) {
+        String key = keyword == null || keyword.isBlank() ? "该商品" : "「" + keyword + "」";
+        return "没有找到与" + key + "匹配的具体商品。您可以换个说法，或先让我为您推荐。";
+    }
+
+    /** 仅一个上文候选时，用是/否确认代替“请回复序号 1”。 */
+    public static String confirmProduct(ProductCardDTO product, boolean addCart) {
+        String action = addCart ? "加购" : "查询规格";
+        return "您是要" + action + "《" + product.name() + "》吗？回复“确认”继续，或回复“不是”换一款。";
     }
 
     public static String clarifyProducts(List<ProductCardDTO> previous) {

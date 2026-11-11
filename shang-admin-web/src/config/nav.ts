@@ -66,6 +66,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { key: 'cs-seats', label: '坐席管理', path: '/cs-seats', icon: 'Headset' },
       { key: 'cs-stats', label: '服务看板', path: '/cs-stats', icon: 'DataAnalysis' },
       { key: 'cs-reference-health', label: '指代加购健康', path: '/cs-reference-health', icon: 'TrendCharts' },
+      { key: 'cs-quality', label: '答案质量', path: '/cs-quality', icon: 'ChatLineSquare' },
       {
         key: 'cs-agent-runs',
         label: 'Agent 运行轨迹',
@@ -106,6 +107,7 @@ export const ROUTE_PERMISSION: Record<string, string> = {
   '/cs-seats': 'cs-seats',
   '/cs-stats': 'cs-stats',
   '/cs-reference-health': 'cs-stats',
+  '/cs-quality': 'cs-stats',
   '/customer-service/agent-runs': 'cs-agent-runs',
 }
 

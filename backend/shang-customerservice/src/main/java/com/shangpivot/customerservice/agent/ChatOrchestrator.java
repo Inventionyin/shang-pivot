@@ -71,6 +71,7 @@ public class ChatOrchestrator implements ChatResponder {
     private final CartMutationApi cartMutationApi;
     private final ProductReferenceResolver productReferenceResolver;
     private final ChatCardContextService cardContextService;
+    private final ConversationFollowUpService followUpService;
     private final CsGuardRailService guardRailService;
     private final ObjectMapper objectMapper;
     private final ChatSessionService chatSessionService;
@@ -98,7 +99,8 @@ public class ChatOrchestrator implements ChatResponder {
                 return;
             }
 
-            intent = intentRouter.route(userText);
+            intent = followUpService.resolve(session.getId(), userText)
+                    .orElseGet(() -> intentRouter.route(userText));
             auditService.record("intent", CsAuditLog.RISK_LOW, session.getId(), session.getCustomerId(),
                     Map.of("intent", intent.type().name(), "byRule", intent.byRule()));
 
@@ -413,25 +415,7 @@ public class ChatOrchestrator implements ChatResponder {
     private Facts specsFacts(ChatSession session, String userText, String productRef) {
         ProductReferenceResolver.Resolution resolution = resolveProduct(session.getId(), userText, productRef);
         if (!(resolution instanceof ProductReferenceResolver.Unique unique)) {
-            List<ProductCardDTO> previous = candidatesOf(resolution);
-            if (previous.isEmpty()) {
-                previous = cardContextService.latestCards(session.getId());
-            }
-            if (!previous.isEmpty()) {
-                // 指代不明：列出上文商品让用户确认，绝不瞎猜
-                StringBuilder sb = new StringBuilder("（用户在问规格但没说清是哪一款：请列出以下此前推荐过的商品，请用户确认后再答）：\n");
-                List<Map<String, Object>> cards = new ArrayList<>();
-                int i = 1;
-                for (ProductCardDTO c : previous) {
-                    sb.append("【商品").append(i).append("】").append(c.name()).append("（").append(c.price()).append(" 元）\n");
-                    cards.add(cardMap(c, i));
-                    i++;
-                }
-                return new Facts(sb.toString(), cards, Map.of("sources", List.of("context-ask")),
-                        FactAnswerRenderer.clarifyProducts(previous));
-            }
-            return new Facts("（用户在问商品规格，但当前会话没有可指代的商品上下文：请用户说明具体是哪款商品，或先描述需求）",
-                    List.of(), Map.of("sources", List.of()), FactAnswerRenderer.noProductContext());
+            return clarifyTarget(userText, resolution, false);
         }
         ProductCardDTO target = unique.product();
         List<ProductSkuDTO> skus = productSkuApi.listEnabledBySpu(target.spuId());
@@ -464,24 +448,7 @@ public class ChatOrchestrator implements ChatResponder {
     private Facts addCartFacts(ChatSession session, String userText, String productRef, int quantity) {
         ProductReferenceResolver.Resolution resolution = resolveProduct(session.getId(), userText, productRef);
         if (!(resolution instanceof ProductReferenceResolver.Unique unique)) {
-            List<ProductCardDTO> previous = candidatesOf(resolution);
-            if (previous.isEmpty()) {
-                previous = cardContextService.latestCards(session.getId());
-            }
-            if (!previous.isEmpty()) {
-                StringBuilder sb = new StringBuilder("（用户想购买但没说清是哪一款：请列出以下此前推荐过的商品，请用户确认后再加购）：\n");
-                List<Map<String, Object>> cards = new ArrayList<>();
-                int i = 1;
-                for (ProductCardDTO c : previous) {
-                    sb.append("【商品").append(i).append("】").append(c.name()).append("（").append(c.price()).append(" 元）\n");
-                    cards.add(cardMap(c, i));
-                    i++;
-                }
-                return new Facts(sb.toString(), cards, Map.of("sources", List.of("context-ask")),
-                        FactAnswerRenderer.clarifyProducts(previous));
-            }
-            return new Facts("（用户想购买，但当前会话没有可指代的商品：请用户说明要哪款，或先为其推荐）",
-                    List.of(), Map.of("sources", List.of()), FactAnswerRenderer.noProductContext());
+            return clarifyTarget(userText, resolution, true);
         }
         ProductCardDTO target = unique.product();
         List<ProductSkuDTO> skus = productSkuApi.listEnabledBySpu(target.spuId());
@@ -489,7 +456,8 @@ public class ChatOrchestrator implements ChatResponder {
             return new Facts("（该商品暂无可售规格，无法加购：如实告知）", List.of(), Map.of("sources", List.of()),
                     "《" + target.name() + "》暂无可售规格，暂时无法加购。");
         }
-        ProductSkuDTO chosen = pickSku(skus, userText);
+        ProductSkuDTO chosen = pickSku(skus, userText,
+                cardContextService.lastAssistantText(session.getId()));
         if (chosen == null) {
             StringBuilder sb = new StringBuilder("（该商品有多个规格，用户未说明要哪个：请列出以下规格让用户选择，不要自行加购）：\n");
             int i = 1;
@@ -531,6 +499,36 @@ public class ChatOrchestrator implements ChatResponder {
         }
     }
 
+    /** 指代不明时的统一承接：无候选如实告知；单候选用是/否确认；多候选列序号。 */
+    private Facts clarifyTarget(String userText,
+                                ProductReferenceResolver.Resolution resolution, boolean addCart) {
+        List<ProductCardDTO> previous = candidatesOf(resolution);
+        if (previous.isEmpty()) {
+            String keyword = IntentRouter.extractKeyword(userText);
+            String display = keyword.isBlank()
+                    ? FactAnswerRenderer.noProductContext()
+                    : FactAnswerRenderer.productNotInCatalog(keyword);
+            return new Facts("（用户想操作商品但没有可指代的候选：如实告知没找到具体商品，禁止拿无关卡片凑数）",
+                    List.of(), Map.of("sources", List.of()), display);
+        }
+        if (previous.size() == 1) {
+            ProductCardDTO card = previous.get(0);
+            return new Facts("（用户指代唯一：请确认是否对【" + card.name() + "】执行操作，不要问“哪一款”）",
+                    List.of(cardMap(card, 1)), Map.of("sources", List.of("context-confirm")),
+                    FactAnswerRenderer.confirmProduct(card, addCart));
+        }
+        StringBuilder sb = new StringBuilder("（用户指代不明：请列出以下此前推荐过的商品，请用户确认后再继续，禁止瞎猜）：\n");
+        List<Map<String, Object>> cards = new ArrayList<>();
+        int i = 1;
+        for (ProductCardDTO c : previous) {
+            sb.append("【商品").append(i).append("】").append(c.name()).append("（").append(c.price()).append(" 元）\n");
+            cards.add(cardMap(c, i));
+            i++;
+        }
+        return new Facts(sb.toString(), cards, Map.of("sources", List.of("context-ask")),
+                FactAnswerRenderer.clarifyProducts(previous));
+    }
+
     /** 解析用户指代的商品：显式序号/商品名/品类/品牌 → 唯一命中；多候选由调用方反问。 */
     private ProductReferenceResolver.Resolution resolveProduct(Long sessionId, String userText, String productRef) {
         return productReferenceResolver.resolve(cardContextService.recentCards(sessionId), userText, productRef,
@@ -546,14 +544,19 @@ public class ChatOrchestrator implements ChatResponder {
         return retrievalConstraintsEnabled ? ProductConstraintParser.parse(text) : ProductConstraints.none();
     }
 
+    private static boolean asksSkuChoice(String lastAssistantText) {
+        return lastAssistantText != null
+                && (lastAssistantText.contains("有多个规格") || lastAssistantText.contains("【规格"));
+    }
+
     /** 选 SKU：消息里点名规格 → 命中；单一规格 → 直选；否则 null（反问用户）。 */
-    private ProductSkuDTO pickSku(List<ProductSkuDTO> skus, String userText) {
+    private ProductSkuDTO pickSku(List<ProductSkuDTO> skus, String userText, String lastAssistantText) {
         String text = userText == null ? "" : userText;
         java.util.regex.Matcher ordinal = java.util.regex.Pattern
                 .compile("(?:规格\\s*第?\\s*|选\\s*)([一二三四五1-5])\\s*(?:个|款|号|规格)?")
                 .matcher(text);
         boolean ordinalFound = ordinal.find();
-        if (!ordinalFound) {
+        if (!ordinalFound && asksSkuChoice(lastAssistantText)) {
             ordinal = java.util.regex.Pattern.compile("^\\s*([1-5])\\s*$").matcher(text);
             ordinalFound = ordinal.find();
         }

@@ -364,6 +364,65 @@ export function fetchReferenceTrend(days = 14) {
   })
 }
 
+export interface AnswerQualityReason {
+  reason: string
+  count: number
+}
+
+export interface AnswerQuality {
+  days: number
+  total: number
+  up: number
+  down: number
+  upRate: number
+  downRate: number
+  reasons: AnswerQualityReason[]
+}
+
+export interface AnswerQualityTrendPoint {
+  date: string
+  total: number
+  up: number
+  down: number
+  downRate: number
+}
+
+export interface NegativeFeedbackItem {
+  id: number
+  message_id: number
+  session_id: number
+  rating: string
+  reason?: string | null
+  comment?: string | null
+  created_at?: string
+  answer?: string | null
+  run_id?: number | null
+}
+
+export function fetchAnswerQuality(days = 14) {
+  return http<AnswerQuality>({
+    url: '/admin/customer-service/quality',
+    method: 'GET',
+    params: { days },
+  })
+}
+
+export function fetchAnswerQualityTrend(days = 14) {
+  return http<AnswerQualityTrendPoint[]>({
+    url: '/admin/customer-service/quality/trend',
+    method: 'GET',
+    params: { days },
+  })
+}
+
+export function fetchNegativeFeedback(limit = 20) {
+  return http<NegativeFeedbackItem[]>({
+    url: '/admin/customer-service/quality/negative-feedback',
+    method: 'GET',
+    params: { limit },
+  })
+}
+
 export function fetchAiConfig() {
   return http({ url: '/admin/customer-service/ai-config', method: 'GET' })
 }

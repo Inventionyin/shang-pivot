@@ -38,6 +38,14 @@ class IntentRouterTest {
     private final IntentRouter router = new IntentRouter(BROKEN_LLM, new ObjectMapper());
 
     @Test
+    void 型号加规格意图保留关键词() {
+        var intent = router.route("Redmi 有什么规格，有货吗");
+        assertThat(intent.type()).isEqualTo(IntentRouter.Type.SPECS);
+        assertThat(intent.keyword()).contains("Redmi");
+        assertThat(intent.keyword()).doesNotContain("规格", "有货");
+    }
+
+    @Test
     void 订单类消息走订单意图() {
         var intent = router.route("帮我查一下物流到哪了");
         assertThat(intent.type()).isEqualTo(IntentRouter.Type.ORDER);

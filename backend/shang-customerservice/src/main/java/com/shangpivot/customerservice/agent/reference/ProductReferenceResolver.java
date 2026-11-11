@@ -102,6 +102,17 @@ public class ProductReferenceResolver {
             return new NotFound("no-context");
         }
 
+        // 2.1) “有什么规格/有货吗/多少钱”这类短追问：省略了商品名，直接承接上文。
+        if (isContextFollowUp(ref, text)) {
+            if (safe.size() == 1) {
+                return new Unique(safe.get(0));
+            }
+            if (safe.size() > 1) {
+                return new Ambiguous(safe.subList(0, Math.min(MAX_CLARIFY, safe.size())));
+            }
+            return new NotFound("no-context");
+        }
+
         String probe = ref.isBlank() ? IntentRouter.extractKeyword(text) : ref;
         String probeNorm = normalize(probe);
         String textNorm = normalize(text);
@@ -155,7 +166,9 @@ public class ProductReferenceResolver {
             if (!isPronoun(ref) && !isCategoryOrBrand(ref) && hits.size() == 1) {
                 return new Unique(hits.get(0).card());
             }
-            return new Ambiguous(safe.subList(0, Math.min(MAX_CLARIFY, safe.size())));
+            // 明确点名了商品/品类但检索无交集：不能把上文无关卡片当候选。
+            // 例如上文是冰箱、用户说“把洗碗机加进购物车”，应如实告知没找到，而不是反问冰箱。
+            return new NotFound("no-match");
         }
 
         if (hits.size() == 1) {
@@ -317,16 +330,56 @@ public class ProductReferenceResolver {
     }
 
     private static boolean isImplicitReference(String ref, String text) {
-        if (!ref.isBlank() && !isPronoun(ref)) {
+        if (!ref.isBlank() && !isPronoun(ref) && !implicitCore(ref).isEmpty()) {
             return false;
         }
         String t = text == null ? "" : text.trim();
+        if (t.isEmpty()) {
+            return ref.isBlank();
+        }
         return t.matches("^(?:我)?(?:现在|现|就|直接)?(?:我)?(?:买|要|下单|拍下)(?:了|吧|呀|啊|啦|这个|这款|它)?[。！!]?$")
                 || t.matches("^(?:就|那)?(?:要)?(?:这个|那个|它|这款|那款)(?:吧|了|呀|啊|啦)?[。！!]?$")
                 || t.matches("^(?:来|要|拿|加)(?:一|两|二|三|四|五|\\d+)(?:个|台|件|份|套|部|双|只|盒)?[。！!]?$")
                 || t.matches(".*(上面那个|上面这款|刚才那个|前面那个|上一个|同款).*")
                 || t.matches(".*(?:把|将|给|帮我).{0,8}(?:它|这个|那个|这款|那款).*(?:加|放|添加|加入|加进).*")
-                || t.matches("^(它|这个|那个|这款|那款)[。！!]?$");
+                || t.matches("^(它|这个|那个|这款|那款)[。！!]?$")
+                // 口语/确认词 + 购买 + 指示代词（“确认 就买这个”“好的，就要这个”“行，就它”）
+                || implicitCore(t).isEmpty();
+    }
+
+    /**
+     * 去掉确认词、购买动词、指示代词和语气词后，若什么都不剩，就是纯指代/购买确认。
+     * 只用于短句，避免把“确认收货”“我要买手机”这类带业务对象的句子误判成指代。
+     */
+    private static String implicitCore(String text) {
+        if (text.length() > 24) {
+            return "long";
+        }
+        String core = text.replaceAll("[\\s\\p{Punct}，。！？、：；“”‘’（）【】《》]", "");
+        core = core.replaceAll("确认|确定|好的|好|行|可以|嗯|对|是|麻烦|请|帮我|给我|那就|就|直接|现在|吧|了|呀|啊|啦|嘛", "");
+        core = core.replaceAll("购买|买|要|想|拿|来|下单|拍下|加购|加入|放进|放入|添加", "");
+        core = core.replace("上面那个", "").replace("刚才那个", "").replace("这个", "")
+                .replace("那个", "").replace("它", "").replace("这款", "").replace("那款", "")
+                .replace("同款", "").replace("上面", "").replace("刚才", "").replace("前面", "");
+        return core;
+    }
+
+    /** “有什么规格/有货吗/多少钱”这类省略主语的短追问，承接上文商品。 */
+    private static boolean isContextFollowUp(String ref, String text) {
+        if (!ref.isBlank() && !isPronoun(ref)) {
+            return false;
+        }
+        String t = text == null ? "" : text.replaceAll("[\\s\\p{Punct}，。！？、：；“”‘’（）【】《》]", "");
+        if (t.isBlank() || t.length() > 14) {
+            return false;
+        }
+        if (t.matches(".*[a-zA-Z0-9].*")) {
+            return false;
+        }
+        if (!ProductConstraintParser.categories(t).isEmpty() || !ProductAliases.tokensFor(t).isEmpty()) {
+            return false;
+        }
+        return t.matches(".*(规格|参数|配置|颜色|配色|尺寸|型号|版本|有货|库存|多少钱|价格|怎么样|值得|哪个好).*");
     }
 
     private static boolean isPronoun(String ref) {

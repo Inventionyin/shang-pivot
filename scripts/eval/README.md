@@ -8,8 +8,10 @@
 | `session-continuity-6.jsonl` | 同一会话多轮上下文连续性 |
 | `reference-cart-50.jsonl` | 手写全品类指代加购 50 条（30 SPU + 10 品类/品牌 + 10 边界） |
 | `reference-cart-auto.jsonl` | 由在售目录自动生成，每个 ON SPU 一条点名加购 |
+| `conversation-repair-40.jsonl` | 多轮澄清/话轮承接 40 条（口语确认、裸序号、规格序号、目录外） |
 
 `reference-cart-auto` 与手写 50 条分开：目录新增/下架时只更新 auto 套件，不重写手写期望值。
+`conversation-repair` 用于锁住“确认 就买这个 / 1 / 第二个 / 规格1”这类多轮断点；反馈差评与 trace 候选经人工复核后补入。
 
 ## 自动化脚本
 
@@ -42,6 +44,15 @@ python scripts/eval/check_reference_coverage.py \
 
 覆盖率门禁：任一在售 SPU 缺 `REF-<spuId>-named-add`、sourceId 重复或 case 缺可失败断言，命令退出 1。
 
+多轮澄清 40 条由 `ConversationRepairExportTest` 导出：
+
+```bash
+cd backend
+./mvnw -q -pl shang-customerservice -am \
+  -Dtest=ConversationRepairExportTest -Dsurefire.failIfNoSpecifiedTests=false test
+# 产物：shang-customerservice/target/conversation-repair-40.jsonl
+```
+
 ## 生产 trace 挖候选
 
 ```bash
@@ -49,6 +60,12 @@ python scripts/eval/mine_failure_candidates.py \
   --host 127.0.0.1 --port 5432 --database shang --user shang --password '***' \
   --since-days 14 --out /tmp/reference-candidates.jsonl
 ```
+
+除失败/转人工/工具失败/检索无命中外，现已纳入：
+
+- `message_feedback.rating=DOWN` 的差评 run（`negative_feedback=...`）；
+- 上一轮助手问过“请回复序号/您指的是哪一款”但本轮未承接（`clarify_without_followup`）；
+- 上一轮出现“没有可操作的商品”（`no_context_claim`）。
 
 只读；输出只作候选，必须人工脱敏复核后才能进入正式 suite。
 

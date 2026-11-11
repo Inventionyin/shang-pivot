@@ -19,6 +19,7 @@ import {
   listMessages,
   listSessions,
   sendMessageStream,
+  submitChatFeedback,
 } from '@/api/chat'
 import { CHAT_TEST_MODE_KEY, clearChatTestMode } from '@/utils/chatStorage'
 
@@ -36,6 +37,7 @@ interface Bubble {
   key: string
   role: 'USER' | 'ASSISTANT' | 'AGENT'
   content: string
+  messageId?: string | number
   reasoning?: string
   reasoningOpen?: boolean
   cards?: ChatProductCard[]
@@ -44,6 +46,10 @@ interface Bubble {
   seatName?: string
   stateLabel?: string
   action?: BubbleAction
+  /** 已提交的反馈；DOWN 时展开原因选择 */
+  feedback?: 'UP' | 'DOWN'
+  feedbackOpen?: boolean
+  feedbackSending?: boolean
   /** true=历史回放消息（商品卡价格/库存可能已变化）。 */
   historical?: boolean
 }
@@ -130,6 +136,7 @@ function toBubbles(messages: ChatMessage[]): Bubble[] {
     .map((m: ChatMessage) => ({
       key: `h${m.id}`,
       role: (m.role === 'AGENT' ? 'AGENT' : m.role === 'USER' ? 'USER' : 'ASSISTANT') as Bubble['role'],
+      messageId: m.id,
       content: m.content || '',
       // 历史回放不回传思考链；旧接口即使返回了也不展示。
       reasoning: undefined,
@@ -441,6 +448,7 @@ async function send(text?: string, opts?: { spuId?: string | number; display?: s
       onDone: (payload) => {
         pending.streaming = false
         pending.stateLabel = undefined
+        if (payload.messageId) pending.messageId = payload.messageId
         if (!received && !pending.content) {
           pending.content = payload.degraded ? '智能助手暂时繁忙，请稍后再试~' : '（本次没有生成回答，请重试）'
         }
@@ -489,6 +497,36 @@ function skuOptions(b: Bubble) {
     options.push({ command: `规格${matched[1]}`, label: `规格${matched[1]}${detail ? ` · ${detail}` : ''}` })
   }
   return options
+}
+
+const FEEDBACK_REASONS = ['答非所问', '商品不对', '没有执行', '信息不准确', '其他']
+
+function canRate(b: Bubble) {
+  return b.role === 'ASSISTANT' && !!b.messageId && !b.streaming && !!b.content
+}
+
+function rateAnswer(b: Bubble, rating: 'UP' | 'DOWN') {
+  if (!canRate(b) || b.feedbackSending) return
+  if (rating === 'UP') {
+    void sendFeedback(b, 'UP')
+    return
+  }
+  b.feedbackOpen = !b.feedbackOpen
+}
+
+async function sendFeedback(b: Bubble, rating: 'UP' | 'DOWN', reason?: string) {
+  if (!b.messageId || b.feedbackSending) return
+  b.feedbackSending = true
+  try {
+    await submitChatFeedback(b.messageId, { rating, reason })
+    b.feedback = rating
+    b.feedbackOpen = false
+    errorMsg.value = ''
+  } catch (err) {
+    errorMsg.value = errorText(err, '反馈提交失败，请稍后重试')
+  } finally {
+    b.feedbackSending = false
+  }
 }
 
 const STATE_FALLBACK_LABELS: Record<string, string> = {
@@ -767,6 +805,42 @@ function statusLabel(item: ChatSessionBrief): string {
             </div>
             <div v-if="b.role === 'AGENT'" class="agent-tag">人工客服{{ b.seatName ? ` · ${b.seatName}` : '' }}</div>
             <div v-else-if="b.role === 'ASSISTANT' && b.content" class="ai-gen-tag">AI 生成</div>
+            <div v-if="canRate(b)" class="feedback" data-testid="ai-chat-feedback">
+              <button
+                type="button"
+                class="feedback__btn"
+                :class="{ 'feedback__btn--active': b.feedback === 'UP' }"
+                :disabled="b.feedbackSending"
+                data-testid="ai-chat-feedback-up"
+                @click="rateAnswer(b, 'UP')"
+              >
+                有帮助
+              </button>
+              <button
+                type="button"
+                class="feedback__btn"
+                :class="{ 'feedback__btn--active': b.feedback === 'DOWN' }"
+                :disabled="b.feedbackSending"
+                data-testid="ai-chat-feedback-down"
+                @click="rateAnswer(b, 'DOWN')"
+              >
+                没帮助
+              </button>
+              <span v-if="b.feedback === 'UP'" class="feedback__thanks">感谢反馈</span>
+              <span v-else-if="b.feedback === 'DOWN'" class="feedback__thanks">已记录，我们会优化</span>
+            </div>
+            <div v-if="b.feedbackOpen" class="feedback-reasons" data-testid="ai-chat-feedback-reasons">
+              <span class="feedback-reasons__label">哪里不准确？</span>
+              <button
+                v-for="reason in FEEDBACK_REASONS"
+                :key="reason"
+                type="button"
+                :disabled="b.feedbackSending"
+                @click="sendFeedback(b, 'DOWN', reason)"
+              >
+                {{ reason }}
+              </button>
+            </div>
           </div>
 
           <div v-if="b.stateLabel" class="state-label">{{ b.stateLabel }}</div>
@@ -1381,6 +1455,76 @@ function statusLabel(item: ChatSessionBrief): string {
   font-size: 10px;
   color: var(--muted, #9a8e7c);
   letter-spacing: 0.5px;
+}
+
+.feedback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px dashed var(--border, #eee7dd);
+}
+
+.feedback__btn {
+  border: 1px solid var(--border, #eee7dd);
+  background: transparent;
+  color: var(--muted, #9a8e7c);
+  font-size: 11px;
+  line-height: 1;
+  padding: 5px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.feedback__btn:hover:not(:disabled) {
+  color: var(--brand, #f26b3a);
+  border-color: var(--brand, #f26b3a);
+}
+
+.feedback__btn--active {
+  color: #fff;
+  background: var(--brand, #f26b3a);
+  border-color: var(--brand, #f26b3a);
+}
+
+.feedback__btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.feedback__thanks {
+  font-size: 11px;
+  color: var(--muted, #9a8e7c);
+}
+
+.feedback-reasons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.feedback-reasons__label {
+  font-size: 11px;
+  color: var(--muted, #9a8e7c);
+}
+
+.feedback-reasons button {
+  border: 1px solid var(--border, #eee7dd);
+  background: #fff;
+  color: var(--text, #4a3f33);
+  font-size: 11px;
+  line-height: 1;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.feedback-reasons button:hover:not(:disabled) {
+  border-color: var(--brand, #f26b3a);
+  color: var(--brand, #f26b3a);
 }
 
 .error-bar {

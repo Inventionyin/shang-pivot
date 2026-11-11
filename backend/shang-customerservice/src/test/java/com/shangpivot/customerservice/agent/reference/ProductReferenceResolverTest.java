@@ -170,6 +170,48 @@ class ProductReferenceResolverTest {
         assertThat(result).isInstanceOf(ProductReferenceResolver.NotFound.class);
     }
 
+    @Test
+    void 口语确认与确认词组合解析到唯一商品() {
+        List<ProductCardDTO> cards = List.of(card(142));
+        assertThat(unique(resolver.resolve(cards, "就买这个吧", "")).spuId()).isEqualTo(142L);
+        assertThat(unique(resolver.resolve(cards, "确认 就买这个", "")).spuId()).isEqualTo(142L);
+        assertThat(unique(resolver.resolve(cards, "好的，就要这个", "")).spuId()).isEqualTo(142L);
+        assertThat(unique(resolver.resolve(cards, "行，就它", "")).spuId()).isEqualTo(142L);
+        assertThat(unique(resolver.resolve(cards, "嗯", "")).spuId()).isEqualTo(142L);
+    }
+
+    @Test
+    void 单候选的规格短追问承接上文() {
+        assertThat(unique(resolver.resolve(List.of(card(142)), "有什么规格", "")).spuId())
+                .isEqualTo(142L);
+        assertThat(unique(resolver.resolve(List.of(card(142)), "有货吗", "")).spuId())
+                .isEqualTo(142L);
+        assertThat(unique(resolver.resolve(List.of(card(142)), "多少钱", "")).spuId())
+                .isEqualTo(142L);
+    }
+
+    @Test
+    void 目录外商品不拿上文无关卡片凑数() {
+        ProductReferenceResolver.Resolution result = resolver.resolve(
+                List.of(card(142)), "把洗碗机加进购物车", "");
+        assertThat(result).isInstanceOf(ProductReferenceResolver.NotFound.class);
+    }
+
+    @Test
+    void 多候选下的口语确认仍然反问() {
+        ProductReferenceResolver.Resolution result = resolver.resolve(
+                List.of(card(161), card(162)), "确认 就买这个", "");
+        assertThat(result).isInstanceOf(ProductReferenceResolver.Ambiguous.class);
+    }
+
+    @Test
+    void 无上文时带型号的规格追问也能命中() {
+        when(retrievalService.searchProducts(anyString(), anyInt(), any())).thenReturn(List.of(
+                new RetrievalService.ProductHit(card(104), 0.9, "lexical", true)));
+        assertThat(unique(resolver.resolve(List.of(), "Redmi 有什么规格，有货吗", "")).spuId())
+                .isEqualTo(104L);
+    }
+
     private static ProductCardDTO card(long spuId) {
         return CATALOG.stream().filter(p -> p.spuId() == spuId).findFirst().orElseThrow().card();
     }

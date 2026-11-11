@@ -148,12 +148,28 @@ jobs:
             --host 127.0.0.1 --port 5432 --database shang --user shang --password shang \
             --out "$OUT/reference-health.md" || true
 
+      - name: 多轮澄清回归（graph 确定性）
+        working-directory: backend
+        run: >
+          ./mvnw -q -pl shang-server -am
+          -Dtest=GraphGoldenIntegrationTest
+          -Dsurefire.failIfNoSpecifiedTests=false test
+
+      - name: 导出多轮澄清用例
+        working-directory: backend
+        run: >
+          ./mvnw -q -pl shang-customerservice -am
+          -Dtest=ConversationRepairExportTest
+          -Dsurefire.failIfNoSpecifiedTests=false test
+
       - name: 上传覆盖率与候选样本
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: reference-coverage-${{ github.run_id }}
-          path: backend/shang-server/target/reference/
+          path: |
+            backend/shang-server/target/reference/
+            backend/shang-customerservice/target/conversation-repair-40.jsonl
           if-no-files-found: warn
 
       - name: 同步并运行平台自动套件

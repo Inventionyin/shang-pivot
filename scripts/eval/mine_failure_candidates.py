@@ -30,13 +30,21 @@ SELECT r.id AS run_id,
                  WHERE m.session_id = r.session_id AND m.role = 'USER'
                    AND m.created_at <= r.started_at
                  ORDER BY m.created_at DESC LIMIT 1), '') AS user_text,
+       COALESCE((SELECT left(m.content, 160)
+                 FROM customerservice.message m
+                 WHERE m.session_id = r.session_id AND m.role = 'ASSISTANT'
+                   AND m.created_at < r.started_at
+                 ORDER BY m.created_at DESC LIMIT 1), '') AS prev_assistant,
        COALESCE((SELECT string_agg(t.tool_name || ':' || t.status, ',' ORDER BY t.id)
                  FROM customerservice.tool_call t WHERE t.run_id = r.id), '') AS tools,
        COALESCE((SELECT string_agg(q.query || ':' || q.hit, ' | ' ORDER BY q.id)
                  FROM customerservice.retrieval q WHERE q.run_id = r.id), '') AS retrieval,
        COALESCE((SELECT string_agg(left(t.error_code, 40), ',')
                  FROM customerservice.tool_call t
-                 WHERE t.run_id = r.id AND t.status <> 'SUCCESS'), '') AS tool_errors
+                 WHERE t.run_id = r.id AND t.status <> 'SUCCESS'), '') AS tool_errors,
+       COALESCE((SELECT string_agg(f.rating || ':' || COALESCE(f.reason, ''), ',' ORDER BY f.id)
+                 FROM customerservice.message_feedback f
+                 WHERE f.run_id = r.id AND f.deleted = FALSE), '') AS feedback
 FROM customerservice.agent_run r
 WHERE r.started_at > NOW() - (%s || ' days')::interval
   AND (
@@ -45,6 +53,15 @@ WHERE r.started_at > NOW() - (%s || ' days')::interval
                  WHERE t.run_id = r.id AND t.status <> 'SUCCESS')
       OR EXISTS (SELECT 1 FROM customerservice.retrieval q
                  WHERE q.run_id = r.id AND q.hit = FALSE)
+      OR EXISTS (SELECT 1 FROM customerservice.message_feedback f
+                 WHERE f.run_id = r.id AND f.rating = 'DOWN' AND f.deleted = FALSE)
+      OR EXISTS (SELECT 1 FROM customerservice.message m
+                 WHERE m.session_id = r.session_id AND m.role = 'ASSISTANT'
+                   AND m.created_at < r.started_at
+                   AND m.created_at > r.started_at - INTERVAL '10 minutes'
+                   AND (m.content LIKE '%%请回复序号%%'
+                        OR m.content LIKE '%%您指的是哪一款%%'
+                        OR m.content LIKE '%%没有可操作的商品%%'))
   )
 ORDER BY r.started_at DESC
 LIMIT %s
@@ -99,6 +116,8 @@ def main(argv: list[str] | None = None) -> int:
         status = str(row.get("status") or "")
         tool_errors = str(row.get("tool_errors") or "")
         retrieval = str(row.get("retrieval") or "")
+        feedback = str(row.get("feedback") or "")
+        prev_assistant = str(row.get("prev_assistant") or "")
         reasons: list[str] = []
         if status in ("FAILED", "HANDOFF"):
             reasons.append(f"status={status}")
@@ -106,15 +125,23 @@ def main(argv: list[str] | None = None) -> int:
             reasons.append(f"tool_error={tool_errors}")
         if ":f" in retrieval or ":false" in retrieval.lower():
             reasons.append("retrieval_miss")
+        if "DOWN" in feedback.upper():
+            reasons.append(f"negative_feedback={feedback}")
+        if "请回复序号" in prev_assistant or "您指的是哪一款" in prev_assistant:
+            reasons.append("clarify_without_followup")
+        if "没有可操作的商品" in prev_assistant:
+            reasons.append("no_context_claim")
         rows.append({
             "sourceId": f"C-{run_id}",
             "userText": mask_pii(str(row.get("user_text") or "")),
+            "prevAssistant": mask_pii(prev_assistant),
             "intent": str(row.get("intent") or ""),
             "agent": str(row.get("agent") or ""),
             "status": status,
             "error": mask_pii(str(row.get("error") or "")),
             "tools": str(row.get("tools") or ""),
             "retrieval": retrieval,
+            "feedback": feedback,
             "reason": ",".join(reasons) or "candidate",
             "capturedAt": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
             "datasetVersion": "candidate",

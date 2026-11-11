@@ -106,6 +106,13 @@
 - **开关**：`AGENT_ENGINE=legacy|graph`（代码默认 `legacy`，生产已设 `graph`）；回滚只需改回 `legacy`
 - 设计与取舍见 [ADR-0007](docs/04-architecture/adr/0007-agent-runtime.md)、[ADR-0008](docs/04-architecture/adr/0008-write-confirmation-idempotency.md)、[方案对比备忘](docs/03-ai/agent/README.md)
 
+### V3.7 多轮澄清与答案质量（已上线：2026-11-11 起）
+
+- **话轮承接**：助手问过“请回复序号/哪一款/多个规格”后，用户只回 `1`、`第一个`、`选2`、`确认`、`好的` 也能继续同一商品/规格，不再重置为欢迎语
+- **指代容错**：“确认 就买这个”“就买这个吧”“好的，就要这个”等口语组合可解析；单候选直接是/否确认；目录外商品不再拿无关卡片凑数
+- **回答一致性**：AnswerGuard 新增“有卡片却说没有商品”“未加购却说已加购”拦截
+- **质量闭环**：每条 AI 回答可点赞/点踩（6 类原因）→ 管理端「答案质量」看板 → 差评 trace 挖掘 → `conversation-repair` 40 条回归集（CI 每次跑）
+
 ---
 
 ## 技术栈
