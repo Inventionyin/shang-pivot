@@ -220,6 +220,11 @@ public class IntentRouter {
     private static final java.util.List<String> CATEGORY_WORDS = java.util.List.of(
             "手机", "耳机", "吸尘器", "扫地机器人", "帐篷", "洗衣机", "跑步鞋", "蓝牙耳机", "自行车");
 
+    /** 品牌词：品类检索时一并保留，供商品索引 alias_text 命中（华为→HUAWEI 等）。 */
+    private static final java.util.List<String> BRAND_WORDS = java.util.List.of(
+            "华为", "小米", "红米", "苹果", "戴尔", "联想", "索尼", "戴森", "安克",
+            "海尔", "美的", "石头", "罗技", "OPPO", "vivo", "荣耀");
+
     /** 轻量关键词抽取：先识别品类词（长描述也能命中），再去停用词取前 12 字符。 */
     public static String extractKeyword(String message) {
         if (message == null) {
@@ -231,7 +236,8 @@ public class IntentRouter {
                 .filter(normalized::contains)
                 .toList();
         if (!categories.isEmpty()) {
-            return String.join(" ", categories);
+            String brand = BRAND_WORDS.stream().filter(normalized::contains).findFirst().orElse("");
+            return String.join(" ", categories) + (brand.isBlank() ? "" : " " + brand);
         }
         String cleaned = normalized
                 // 加购数量前缀（“来三个收纳盒”“来一台 HUAWEI Mate X5”）不是商品名的一部分

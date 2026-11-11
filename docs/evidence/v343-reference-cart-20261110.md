@@ -3,7 +3,7 @@
 ## 版本
 
 - 尚品汇：`02186a1` + 本次复查修复，tag `v3.4.3`
-- 生产 jar SHA256：`803ca1401246e01057c3e97620997643d58ac7dac917b7076afc6c4ece29fdd0`
+- 生产 jar SHA256：`828fe96c7e62f1ae2a6f79f282712719563cc6c458cf6e65450643bcf1071b3b`
 - 数据库：无新 Flyway 迁移（沿用 V30）
 - 平台：332 条（新增 `reference-cart` 50 条 × 2 target）
 

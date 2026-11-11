@@ -15,48 +15,48 @@ import java.util.Map;
 public interface ProductChunkMapper extends BaseMapper<ProductChunk> {
 
     @Insert("""
-            INSERT INTO customerservice.product_chunk (id, spu_id, name, subtitle, category_name, price_min, price_max,
+            INSERT INTO customerservice.product_chunk (id, spu_id, name, subtitle, category_name, alias_text, price_min, price_max,
                                                        sold_count, embedding, refreshed_at, created_at, updated_at, deleted)
-            VALUES (#{id}, #{spuId}, #{name}, #{subtitle}, #{categoryName}, #{priceMin}, #{priceMax},
+            VALUES (#{id}, #{spuId}, #{name}, #{subtitle}, #{categoryName}, #{aliasText}, #{priceMin}, #{priceMax},
                     #{soldCount}, CAST(#{embedding} AS vector), NOW(), NOW(), NOW(), FALSE)
             """)
     int upsertWithVector(@Param("id") Long id, @Param("spuId") Long spuId, @Param("name") String name,
-                         @Param("subtitle") String subtitle, @Param("categoryName") String categoryName,
+                         @Param("subtitle") String subtitle, @Param("categoryName") String categoryName, @Param("aliasText") String aliasText,
                          @Param("priceMin") java.math.BigDecimal priceMin, @Param("priceMax") java.math.BigDecimal priceMax,
                          @Param("soldCount") Long soldCount, @Param("embedding") String embedding);
 
     @Insert("""
-            INSERT INTO customerservice.product_chunk (id, spu_id, name, subtitle, category_name, price_min, price_max,
+            INSERT INTO customerservice.product_chunk (id, spu_id, name, subtitle, category_name, alias_text, price_min, price_max,
                                                        sold_count, refreshed_at, created_at, updated_at, deleted)
-            VALUES (#{id}, #{spuId}, #{name}, #{subtitle}, #{categoryName}, #{priceMin}, #{priceMax},
+            VALUES (#{id}, #{spuId}, #{name}, #{subtitle}, #{categoryName}, #{aliasText}, #{priceMin}, #{priceMax},
                     #{soldCount}, NOW(), NOW(), NOW(), FALSE)
             """)
     int upsertLexical(@Param("id") Long id, @Param("spuId") Long spuId, @Param("name") String name,
-                      @Param("subtitle") String subtitle, @Param("categoryName") String categoryName,
+                      @Param("subtitle") String subtitle, @Param("categoryName") String categoryName, @Param("aliasText") String aliasText,
                       @Param("priceMin") java.math.BigDecimal priceMin, @Param("priceMax") java.math.BigDecimal priceMax,
                       @Param("soldCount") Long soldCount);
 
     @Update("""
             UPDATE customerservice.product_chunk
-            SET name = #{name}, subtitle = #{subtitle}, category_name = #{categoryName},
+            SET name = #{name}, subtitle = #{subtitle}, category_name = #{categoryName}, alias_text = #{aliasText},
                 price_min = #{priceMin}, price_max = #{priceMax}, sold_count = #{soldCount},
                 embedding = CAST(#{embedding} AS vector), refreshed_at = NOW(), updated_at = NOW()
             WHERE spu_id = #{spuId} AND deleted = FALSE
             """)
     int updateWithVector(@Param("spuId") Long spuId, @Param("name") String name, @Param("subtitle") String subtitle,
-                         @Param("categoryName") String categoryName, @Param("priceMin") java.math.BigDecimal priceMin,
+                         @Param("categoryName") String categoryName, @Param("aliasText") String aliasText, @Param("priceMin") java.math.BigDecimal priceMin,
                          @Param("priceMax") java.math.BigDecimal priceMax, @Param("soldCount") Long soldCount,
                          @Param("embedding") String embedding);
 
     @Update("""
             UPDATE customerservice.product_chunk
-            SET name = #{name}, subtitle = #{subtitle}, category_name = #{categoryName},
+            SET name = #{name}, subtitle = #{subtitle}, category_name = #{categoryName}, alias_text = #{aliasText},
                 price_min = #{priceMin}, price_max = #{priceMax}, sold_count = #{soldCount},
                 refreshed_at = NOW(), updated_at = NOW()
             WHERE spu_id = #{spuId} AND deleted = FALSE
             """)
     int updateLexical(@Param("spuId") Long spuId, @Param("name") String name, @Param("subtitle") String subtitle,
-                      @Param("categoryName") String categoryName, @Param("priceMin") java.math.BigDecimal priceMin,
+                      @Param("categoryName") String categoryName, @Param("aliasText") String aliasText, @Param("priceMin") java.math.BigDecimal priceMin,
                       @Param("priceMax") java.math.BigDecimal priceMax, @Param("soldCount") Long soldCount);
 
     @Select("SELECT COALESCE(MAX(spu_id), 0) FROM customerservice.product_chunk WHERE deleted = FALSE")
@@ -98,6 +98,7 @@ public interface ProductChunkMapper extends BaseMapper<ProductChunk> {
                        (CASE WHEN LOWER(name) LIKE CONCAT('%', LOWER(CAST(#{g} AS text)), '%') THEN 2 ELSE 0 END)
                        + (CASE WHEN LOWER(subtitle) LIKE CONCAT('%', LOWER(CAST(#{g} AS text)), '%') THEN 1 ELSE 0 END)
                        + (CASE WHEN LOWER(category_name) LIKE CONCAT('%', LOWER(CAST(#{g} AS text)), '%') THEN 1 ELSE 0 END)
+                       + (CASE WHEN LOWER(alias_text) LIKE CONCAT('%', LOWER(CAST(#{g} AS text)), '%') THEN 1 ELSE 0 END)
                    </foreach>
                    AS score
             FROM customerservice.product_chunk
@@ -107,6 +108,7 @@ public interface ProductChunkMapper extends BaseMapper<ProductChunk> {
                           LOWER(name) LIKE CONCAT('%', LOWER(CAST(#{g} AS text)), '%')
                           OR LOWER(subtitle) LIKE CONCAT('%', LOWER(CAST(#{g} AS text)), '%')
                           OR LOWER(category_name) LIKE CONCAT('%', LOWER(CAST(#{g} AS text)), '%')
+                          OR LOWER(alias_text) LIKE CONCAT('%', LOWER(CAST(#{g} AS text)), '%')
                       )
                   </foreach>
             <if test="categories != null and categories.size() > 0">

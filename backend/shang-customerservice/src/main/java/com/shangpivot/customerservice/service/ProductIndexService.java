@@ -4,6 +4,7 @@ import com.shangpivot.commerce.api.ProductQueryApi;
 import com.shangpivot.commerce.api.ProductSnapshotDTO;
 import com.shangpivot.customerservice.llm.EmbeddingClient;
 import com.shangpivot.customerservice.mapper.ProductChunkMapper;
+import com.shangpivot.customerservice.retrieval.ProductSearchAliases;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -86,19 +87,20 @@ public class ProductIndexService {
             }
         }
         String emb = embedding;
+        String aliasText = ProductSearchAliases.forProductName(s.name());
         int updated = emb != null
                 ? productChunkMapper.updateWithVector(s.spuId(), s.name(), s.subtitle(), s.categoryName(),
-                        s.priceMin(), s.priceMax(), s.soldCount(), emb)
+                        aliasText, s.priceMin(), s.priceMax(), s.soldCount(), emb)
                 : productChunkMapper.updateLexical(s.spuId(), s.name(), s.subtitle(), s.categoryName(),
-                        s.priceMin(), s.priceMax(), s.soldCount());
+                        aliasText, s.priceMin(), s.priceMax(), s.soldCount());
         if (updated == 0) {
             long id = com.baomidou.mybatisplus.core.toolkit.IdWorker.getId();
             if (emb != null) {
                 productChunkMapper.upsertWithVector(id, s.spuId(), s.name(), s.subtitle(), s.categoryName(),
-                        s.priceMin(), s.priceMax(), s.soldCount(), emb);
+                        aliasText, s.priceMin(), s.priceMax(), s.soldCount(), emb);
             } else {
                 productChunkMapper.upsertLexical(id, s.spuId(), s.name(), s.subtitle(), s.categoryName(),
-                        s.priceMin(), s.priceMax(), s.soldCount());
+                        aliasText, s.priceMin(), s.priceMax(), s.soldCount());
             }
         }
     }
@@ -110,6 +112,10 @@ public class ProductIndexService {
         }
         if (s.categoryName() != null) {
             sb.append(' ').append(s.categoryName());
+        }
+        String aliases = ProductSearchAliases.forProductName(s.name());
+        if (!aliases.isBlank()) {
+            sb.append(' ').append(aliases);
         }
         return sb.toString();
     }

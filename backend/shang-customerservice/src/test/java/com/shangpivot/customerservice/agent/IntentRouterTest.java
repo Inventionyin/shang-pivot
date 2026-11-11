@@ -173,6 +173,12 @@ class IntentRouterTest {
     }
 
     @Test
+    void 品类检索保留品牌词() {
+        assertThat(router.route("推荐华为手机").keyword()).contains("手机").contains("华为");
+        assertThat(router.route("推荐小米手机").keyword()).contains("小米");
+    }
+
+    @Test
     void 购买确认短语不误伤普通导购() {
         assertThat(router.route("我想买冰箱").type()).isEqualTo(IntentRouter.Type.PRESALE);
         assertThat(router.route("购物车怎么结算").type()).isNotEqualTo(IntentRouter.Type.ADDCART);

@@ -48,8 +48,9 @@ public class RetrievalService {
      */
     public List<ProductHit> searchProducts(String query, int topK, ProductConstraints constraints) {
         ProductConstraints c = constraints == null ? ProductConstraints.none() : constraints;
+        String expandedQuery = ProductSearchAliases.expandQuery(query);
         int searchLimit = ProductConstraintParser.needsTermFilter(query) ? Math.max(topK + 6, 12) : topK;
-        List<ProductHit> hits = new ArrayList<>(searchRaw(query, searchLimit, c));
+        List<ProductHit> hits = new ArrayList<>(searchRaw(expandedQuery, searchLimit, c));
         if (c.budgetMax() != null && hits.size() < topK) {
             ProductConstraints overBudget = new ProductConstraints(c.categories(), c.budgetMin(), null,
                     c.budgetLabel(), c.explicitNewQuery());
@@ -57,7 +58,7 @@ public class RetrievalService {
             hits.forEach(h -> merged.put(h.card().spuId(), h));
             // 超预算候选保持检索相关性顺序（不按价格重排），
             // 保证“预算两千左右”仍能看到目录里用户最常问的 iPhone 15 等对比项。
-            List<ProductHit> candidates = searchRaw(query, Math.max(topK + 10, 20), overBudget).stream()
+            List<ProductHit> candidates = searchRaw(expandedQuery, Math.max(topK + 10, 20), overBudget).stream()
                     .filter(hit -> hit.card().price() != null
                             && hit.card().price().compareTo(c.budgetMax()) > 0)
                     .toList();

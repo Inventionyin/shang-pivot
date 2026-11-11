@@ -3,7 +3,7 @@
 ## 版本
 
 - 尚品汇：P1 脚本与 CI，无后端/前端运行时变更
-- 生产后端仍为 v3.4.3：`803ca1401246e01057c3e97620997643d58ac7dac917b7076afc6c4ece29fdd0`
+- 生产后端仍为 v3.4.3：`828fe96c7e62f1ae2a6f79f282712719563cc6c458cf6e65450643bcf1071b3b`
 - 平台：用例 332 → 392（新增 `reference-cart-auto` 30 条 × 2 target）
 
 ## 新增脚本
@@ -86,7 +86,14 @@ python scripts/eval/sync_platform_cases.py \
 - 页面：管理端「智能客服 → 指代加购健康」，权限复用 `cs-stats`。
 - 生产实测：1/7/14/30 天均返回 200。
 
+## 索引级品牌别名（V31）
+
+- Flyway V31 新增 `product_chunk.alias_text`。
+- `ProductIndexService` 根据商品名生成中文/英文别名并写入词法/向量索引。
+- `ProductSearchAliases.expandQuery` 把“华为/小米/苹果/戴尔…”扩展为英文品牌词。
+- 生产重建 30 条切片成功；“推荐华为手机”返回 `HUAWEI Mate X5` 首卡。
+
 ## 部署说明
 
 P1 只改仓库脚本与 GitHub Actions；管理端健康页面需要部署前端。
-本轮后端 jar SHA256：`803ca1401246e01057c3e97620997643d58ac7dac917b7076afc6c4ece29fdd0`，管理端备份 `/var/www/shang-admin.old-20261111-0100`，生产服务 active。
+本轮后端 jar SHA256：`828fe96c7e62f1ae2a6f79f282712719563cc6c458cf6e65450643bcf1071b3b`，管理端备份 `/var/www/shang-admin.old-20261111-0100`，生产服务 active。
