@@ -35,6 +35,8 @@
 
 ## 平台并发修复
 
+平台仓库提交：`2b4f893 fix(agent-test): isolate shangpin sessions per run`
+
 `shangpin` 适配器原先 `fresh=true` 不带 `X-Chat-Client-Key`，同一测试手机并发时互相结束会话。现每个平台 run 使用独立 `platform-<test_run_id>`，2-worker 全量：
 
 - graph `v35-refcart` 50/50

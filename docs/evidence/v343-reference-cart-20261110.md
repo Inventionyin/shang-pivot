@@ -69,7 +69,7 @@
 |---|---|
 | 后端 | `systemctl restart shang-backend`，active，`/api/home` 200 |
 | 备份 | `/opt/shang-pivot/backups/pre-v343-20261109-1215/`（jar/env/shang.dump） |
-| 前端备份 | `/var/www/shang.old-20261109-1215` |
+| 前端备份 | `/var/www/shang.old-20261110-2200` |
 | 前端 | `/var/www/shang`（1.4M） |
 | 迁移 | 无新迁移 |
 
@@ -79,6 +79,6 @@
 cp /opt/shang-pivot/backups/pre-v343-20261109-1215/shang-server.jar /opt/shang-pivot/shang-server.jar
 cp /opt/shang-pivot/backups/pre-v343-20261109-1215/.env /opt/shang-pivot/.env
 rm -rf /var/www/shang
-mv /var/www/shang.old-20261109-1215 /var/www/shang
+mv /var/www/shang.old-20261110-2200 /var/www/shang
 systemctl restart shang-backend
 ```
