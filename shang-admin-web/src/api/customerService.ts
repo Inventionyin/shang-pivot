@@ -339,6 +339,10 @@ export function fetchCsStats(range: 'today' | 'week') {
   return http({ url: '/admin/customer-service/stats', method: 'GET', params: { range } })
 }
 
+export function fetchReferenceHealth(days = 14) {
+  return http({ url: '/admin/customer-service/reference-health', method: 'GET', params: { days } })
+}
+
 export function fetchAiConfig() {
   return http({ url: '/admin/customer-service/ai-config', method: 'GET' })
 }

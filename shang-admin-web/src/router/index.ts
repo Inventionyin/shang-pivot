@@ -184,6 +184,12 @@ const router = createRouter({
           meta: { title: '服务看板', permission: 'cs-stats' },
         },
         {
+          path: 'cs-reference-health',
+          name: 'cs-reference-health',
+          component: () => import('@/views/CsReferenceHealthView.vue'),
+          meta: { title: '指代加购健康', permission: 'cs-stats' },
+        },
+        {
           path: 'customer-service/agent-runs',
           name: 'cs-agent-runs',
           component: () => import('@/views/CsAgentRunsView.vue'),

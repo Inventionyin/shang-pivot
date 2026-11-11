@@ -5,11 +5,14 @@ import com.shangpivot.customerservice.agent.trace.entity.AgentRun;
 import com.shangpivot.customerservice.agent.trace.entity.RetrievalTrace;
 import com.shangpivot.customerservice.agent.trace.entity.ToolCall;
 import com.shangpivot.customerservice.agent.trace.mapper.AgentRunMapper;
+import com.shangpivot.customerservice.agent.trace.mapper.PendingActionMapper;
 import com.shangpivot.customerservice.agent.trace.mapper.RetrievalTraceMapper;
 import com.shangpivot.customerservice.agent.trace.mapper.ToolCallMapper;
 import com.shangpivot.customerservice.entity.ChatSession;
+import com.shangpivot.customerservice.entity.CsMessage;
 import com.shangpivot.customerservice.entity.CsTicket;
 import com.shangpivot.customerservice.mapper.ChatSessionMapper;
+import com.shangpivot.customerservice.mapper.CsMessageMapper;
 import com.shangpivot.customerservice.mapper.CsTicketMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,8 @@ public class StatsService {
     private final AgentRunMapper agentRunMapper;
     private final ToolCallMapper toolCallMapper;
     private final RetrievalTraceMapper retrievalTraceMapper;
+    private final PendingActionMapper pendingActionMapper;
+    private final CsMessageMapper messageMapper;
 
     public Map<String, Object> dashboard(String range) {
         OffsetDateTime from = "week".equals(range)
@@ -137,5 +142,64 @@ public class StatsService {
         m.put("retrievalMissRate", retrievalTotal == 0 ? 0
                 : Math.round(retrievalMiss * 1000.0 / retrievalTotal) / 10.0);
         return m;
+    }
+
+    /** 指代加购健康：失败率、加购成功率、反问率、检索命中率。 */
+    public Map<String, Object> referenceHealth(int days) {
+        int window = Math.max(1, Math.min(days, 90));
+        OffsetDateTime from = OffsetDateTime.now(ZoneOffset.UTC).minusDays(window);
+        long runs = agentRunMapper.selectCount(new LambdaQueryWrapper<AgentRun>()
+                .ge(AgentRun::getStartedAt, from));
+        long failed = agentRunMapper.selectCount(new LambdaQueryWrapper<AgentRun>()
+                .ge(AgentRun::getStartedAt, from).eq(AgentRun::getStatus, "FAILED"));
+        long handoff = agentRunMapper.selectCount(new LambdaQueryWrapper<AgentRun>()
+                .ge(AgentRun::getStartedAt, from).eq(AgentRun::getStatus, "HANDOFF"));
+        long confirm = agentRunMapper.selectCount(new LambdaQueryWrapper<AgentRun>()
+                .ge(AgentRun::getStartedAt, from).eq(AgentRun::getStatus, "NEED_CONFIRMATION"));
+        long cartCalls = toolCallMapper.selectCount(new LambdaQueryWrapper<ToolCall>()
+                .ge(ToolCall::getCreatedAt, from).eq(ToolCall::getToolName, "addToCart"));
+        long cartSuccess = toolCallMapper.selectCount(new LambdaQueryWrapper<ToolCall>()
+                .ge(ToolCall::getCreatedAt, from).eq(ToolCall::getToolName, "addToCart")
+                .eq(ToolCall::getStatus, "SUCCESS"));
+        long cartPending = pendingActionMapper.selectCount(
+                new LambdaQueryWrapper<com.shangpivot.customerservice.agent.trace.entity.PendingAction>()
+                        .ge(com.shangpivot.customerservice.agent.trace.entity.PendingAction::getCreatedAt, from)
+                        .eq(com.shangpivot.customerservice.agent.trace.entity.PendingAction::getToolName, "addToCart"));
+        long retrievals = retrievalTraceMapper.selectCount(new LambdaQueryWrapper<RetrievalTrace>()
+                .ge(RetrievalTrace::getCreatedAt, from));
+        long miss = retrievalTraceMapper.selectCount(new LambdaQueryWrapper<RetrievalTrace>()
+                .ge(RetrievalTrace::getCreatedAt, from).eq(RetrievalTrace::getHit, false));
+        long contextAsk = messageMapper.selectCount(new LambdaQueryWrapper<CsMessage>()
+                .ge(CsMessage::getCreatedAt, from)
+                .eq(CsMessage::getRole, CsMessage.ROLE_ASSISTANT)
+                .like(CsMessage::getContent, "您指的是哪一款"));
+        long skuAsk = messageMapper.selectCount(new LambdaQueryWrapper<CsMessage>()
+                .ge(CsMessage::getCreatedAt, from)
+                .eq(CsMessage::getRole, CsMessage.ROLE_ASSISTANT)
+                .like(CsMessage::getContent, "有多个规格"));
+
+        Map<String, Object> m = new HashMap<>();
+        m.put("days", window);
+        m.put("runs", runs);
+        m.put("failed", failed);
+        m.put("handoff", handoff);
+        m.put("needConfirmation", confirm);
+        m.put("cartCalls", cartCalls);
+        m.put("cartSuccess", cartSuccess);
+        m.put("cartPending", cartPending);
+        m.put("retrievals", retrievals);
+        m.put("retrievalMiss", miss);
+        m.put("contextAsk", contextAsk);
+        m.put("skuAsk", skuAsk);
+        m.put("failedRate", rate(failed, runs));
+        m.put("handoffRate", rate(handoff, runs));
+        m.put("cartSuccessRate", rate(cartSuccess, cartCalls));
+        m.put("retrievalMissRate", rate(miss, retrievals));
+        m.put("contextAskRate", rate(contextAsk, runs));
+        return m;
+    }
+
+    private static double rate(long numerator, long denominator) {
+        return denominator == 0 ? 0 : Math.round(numerator * 1000.0 / denominator) / 10.0;
     }
 }

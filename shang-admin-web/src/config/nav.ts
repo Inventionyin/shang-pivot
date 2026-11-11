@@ -65,6 +65,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { key: 'cs-quick-replies', label: '快捷回复', path: '/cs-quick-replies', icon: 'Comment' },
       { key: 'cs-seats', label: '坐席管理', path: '/cs-seats', icon: 'Headset' },
       { key: 'cs-stats', label: '服务看板', path: '/cs-stats', icon: 'DataAnalysis' },
+      { key: 'cs-reference-health', label: '指代加购健康', path: '/cs-reference-health', icon: 'TrendCharts' },
       {
         key: 'cs-agent-runs',
         label: 'Agent 运行轨迹',
@@ -104,6 +105,7 @@ export const ROUTE_PERMISSION: Record<string, string> = {
   '/cs-quick-replies': 'cs-quick-replies',
   '/cs-seats': 'cs-seats',
   '/cs-stats': 'cs-stats',
+  '/cs-reference-health': 'cs-stats',
   '/customer-service/agent-runs': 'cs-agent-runs',
 }
 

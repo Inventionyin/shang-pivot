@@ -3,7 +3,7 @@
 ## 版本
 
 - 尚品汇：P1 脚本与 CI，无后端/前端运行时变更
-- 生产后端仍为 v3.4.3：`6b05a3f0c4febdb310e2b658ec7dcbd2292b69f5ad8826948ed67c2fbe3176b7`
+- 生产后端仍为 v3.4.3：`803ca1401246e01057c3e97620997643d58ac7dac917b7076afc6c4ece29fdd0`
 - 平台：用例 332 → 392（新增 `reference-cart-auto` 30 条 × 2 target）
 
 ## 新增脚本
@@ -79,6 +79,14 @@ python scripts/eval/sync_platform_cases.py \
 
 新增 SPU 后：快照 → 生成 → 覆盖率 → 同步平台，四步即可；不需要改手写 50 条。
 
+## 管理端：指代加购健康页
+
+- 接口：`GET /admin/customer-service/reference-health?days=1|7|14|30`
+- 指标：运行失败率、转人工率、加购成功率、待确认加购、指代反问率、规格反问、检索无命中率。
+- 页面：管理端「智能客服 → 指代加购健康」，权限复用 `cs-stats`。
+- 生产实测：1/7/14/30 天均返回 200。
+
 ## 部署说明
 
-P1 只改仓库脚本与 GitHub Actions，不需要重启生产后端/前端；生产服务保持 v3.4.3。
+P1 只改仓库脚本与 GitHub Actions；管理端健康页面需要部署前端。
+本轮后端 jar SHA256：`803ca1401246e01057c3e97620997643d58ac7dac917b7076afc6c4ece29fdd0`，管理端备份 `/var/www/shang-admin.old-20261111-0100`，生产服务 active。

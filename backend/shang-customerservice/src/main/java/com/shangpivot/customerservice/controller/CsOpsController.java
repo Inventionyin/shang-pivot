@@ -171,4 +171,10 @@ public class CsOpsController {
     public Result<Map<String, Object>> stats(@RequestParam(defaultValue = "today") String range) {
         return Result.ok(statsService.dashboard(range));
     }
+
+    @Operation(summary = "指代加购健康", description = "days=1..90；失败率/加购成功率/反问率/检索命中率")
+    @GetMapping("/reference-health")
+    public Result<Map<String, Object>> referenceHealth(@RequestParam(defaultValue = "14") int days) {
+        return Result.ok(statsService.referenceHealth(days));
+    }
 }
