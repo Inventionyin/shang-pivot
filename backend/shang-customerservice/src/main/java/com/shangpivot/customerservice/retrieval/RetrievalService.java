@@ -30,6 +30,7 @@ public class RetrievalService {
     private final ProductChunkMapper productChunkMapper;
     private final ProductQueryApi productQueryApi;
     private final SystemConfigApi systemConfigApi;
+    private final ProductAliasService productAliasService;
 
     public record ProductHit(ProductCardDTO card, double score, String source, boolean withinBudget) {
         public ProductHit(ProductCardDTO card, double score, String source) {
@@ -48,7 +49,7 @@ public class RetrievalService {
      */
     public List<ProductHit> searchProducts(String query, int topK, ProductConstraints constraints) {
         ProductConstraints c = constraints == null ? ProductConstraints.none() : constraints;
-        String expandedQuery = ProductSearchAliases.expandQuery(query);
+        String expandedQuery = productAliasService.expandQuery(query);
         int searchLimit = ProductConstraintParser.needsTermFilter(query) ? Math.max(topK + 6, 12) : topK;
         List<ProductHit> hits = new ArrayList<>(searchRaw(expandedQuery, searchLimit, c));
         if (c.budgetMax() != null && hits.size() < topK) {

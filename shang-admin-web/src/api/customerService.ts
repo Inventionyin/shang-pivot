@@ -343,6 +343,27 @@ export function fetchReferenceHealth(days = 14) {
   return http({ url: '/admin/customer-service/reference-health', method: 'GET', params: { days } })
 }
 
+export interface ReferenceTrendPoint {
+  date: string
+  runs: number
+  failed: number
+  handoff: number
+  cartCalls: number
+  cartSuccess: number
+  retrievals: number
+  retrievalMiss: number
+  contextAsk: number
+  skuAsk: number
+}
+
+export function fetchReferenceTrend(days = 14) {
+  return http<ReferenceTrendPoint[]>({
+    url: '/admin/customer-service/reference-health/trend',
+    method: 'GET',
+    params: { days },
+  })
+}
+
 export function fetchAiConfig() {
   return http({ url: '/admin/customer-service/ai-config', method: 'GET' })
 }

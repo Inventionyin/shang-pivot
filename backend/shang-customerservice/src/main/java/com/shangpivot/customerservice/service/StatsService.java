@@ -15,11 +15,15 @@ import com.shangpivot.customerservice.mapper.ChatSessionMapper;
 import com.shangpivot.customerservice.mapper.CsMessageMapper;
 import com.shangpivot.customerservice.mapper.CsTicketMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +41,7 @@ public class StatsService {
     private final RetrievalTraceMapper retrievalTraceMapper;
     private final PendingActionMapper pendingActionMapper;
     private final CsMessageMapper messageMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     public Map<String, Object> dashboard(String range) {
         OffsetDateTime from = "week".equals(range)
@@ -197,6 +202,95 @@ public class StatsService {
         m.put("retrievalMissRate", rate(miss, retrievals));
         m.put("contextAskRate", rate(contextAsk, runs));
         return m;
+    }
+
+    /** 按天趋势：运行/失败/转人工、加购调用、指代反问、检索无命中。 */
+    public List<Map<String, Object>> referenceTrend(int days) {
+        int window = Math.max(1, Math.min(days, 90));
+        ZoneId zone = ZoneId.of("Asia/Shanghai");
+        LocalDate today = LocalDate.now(zone);
+        OffsetDateTime from = today.minusDays(window - 1L).atStartOfDay(zone).toOffsetDateTime();
+        Timestamp ts = Timestamp.from(from.toInstant());
+        String runSql = """
+                SELECT to_char(started_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD') AS day,
+                       count(*) AS runs,
+                       count(*) FILTER (WHERE status = 'FAILED') AS failed,
+                       count(*) FILTER (WHERE status = 'HANDOFF') AS handoff
+                FROM customerservice.agent_run
+                WHERE started_at >= ?
+                GROUP BY 1
+                """;
+        String cartSql = """
+                SELECT to_char(created_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD') AS day,
+                       count(*) AS cart_calls,
+                       count(*) FILTER (WHERE status = 'SUCCESS') AS cart_success
+                FROM customerservice.tool_call
+                WHERE created_at >= ? AND tool_name = 'addToCart'
+                GROUP BY 1
+                """;
+        String retrievalSql = """
+                SELECT to_char(created_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD') AS day,
+                       count(*) AS retrievals,
+                       count(*) FILTER (WHERE hit = FALSE) AS retrieval_miss
+                FROM customerservice.retrieval
+                WHERE created_at >= ?
+                GROUP BY 1
+                """;
+        String askSql = """
+                SELECT to_char(created_at AT TIME ZONE 'Asia/Shanghai', 'YYYY-MM-DD') AS day,
+                       count(*) FILTER (WHERE content LIKE '%您指的是哪一款%') AS context_ask,
+                       count(*) FILTER (WHERE content LIKE '%有多个规格%') AS sku_ask
+                FROM customerservice.message
+                WHERE created_at >= ? AND role = 'ASSISTANT'
+                GROUP BY 1
+                """;
+        Map<String, Map<String, Object>> byDay = new java.util.LinkedHashMap<>();
+        for (Map<String, Object> row : jdbcTemplate.queryForList(runSql, ts)) {
+            byDay.computeIfAbsent(String.valueOf(row.get("day")), k -> new java.util.LinkedHashMap<>())
+                    .putAll(row);
+        }
+        for (Map<String, Object> row : jdbcTemplate.queryForList(cartSql, ts)) {
+            byDay.computeIfAbsent(String.valueOf(row.get("day")), k -> new java.util.LinkedHashMap<>())
+                    .putAll(row);
+        }
+        for (Map<String, Object> row : jdbcTemplate.queryForList(retrievalSql, ts)) {
+            byDay.computeIfAbsent(String.valueOf(row.get("day")), k -> new java.util.LinkedHashMap<>())
+                    .putAll(row);
+        }
+        for (Map<String, Object> row : jdbcTemplate.queryForList(askSql, ts)) {
+            byDay.computeIfAbsent(String.valueOf(row.get("day")), k -> new java.util.LinkedHashMap<>())
+                    .putAll(row);
+        }
+        List<Map<String, Object>> trend = new java.util.ArrayList<>();
+        DateTimeFormatter fmt = DateTimeFormatter.ISO_DATE;
+        for (int i = 0; i < window; i++) {
+            String day = today.minusDays(window - 1L - i).format(fmt);
+            Map<String, Object> row = byDay.getOrDefault(day, Map.of());
+            Map<String, Object> point = new java.util.LinkedHashMap<>();
+            point.put("date", day);
+            point.put("runs", number(row.get("runs")));
+            point.put("failed", number(row.get("failed")));
+            point.put("handoff", number(row.get("handoff")));
+            point.put("cartCalls", number(row.get("cart_calls")));
+            point.put("cartSuccess", number(row.get("cart_success")));
+            point.put("retrievals", number(row.get("retrievals")));
+            point.put("retrievalMiss", number(row.get("retrieval_miss")));
+            point.put("contextAsk", number(row.get("context_ask")));
+            point.put("skuAsk", number(row.get("sku_ask")));
+            trend.add(point);
+        }
+        return trend;
+    }
+
+    private static long number(Object value) {
+        if (value instanceof Number n) {
+            return n.longValue();
+        }
+        try {
+            return value == null ? 0 : Long.parseLong(String.valueOf(value));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     private static double rate(long numerator, long denominator) {

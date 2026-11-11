@@ -4,7 +4,7 @@ import com.shangpivot.commerce.api.ProductQueryApi;
 import com.shangpivot.commerce.api.ProductSnapshotDTO;
 import com.shangpivot.customerservice.llm.EmbeddingClient;
 import com.shangpivot.customerservice.mapper.ProductChunkMapper;
-import com.shangpivot.customerservice.retrieval.ProductSearchAliases;
+import com.shangpivot.customerservice.retrieval.ProductAliasService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,6 +30,7 @@ public class ProductIndexService {
     private final ProductQueryApi productQueryApi;
     private final ProductChunkMapper productChunkMapper;
     private final EmbeddingClient embeddingClient;
+    private final ProductAliasService productAliasService;
 
     /** 增量索引（每 10 分钟）：追平新增在售商品。 */
     @Scheduled(cron = "0 */10 * * * *")
@@ -87,7 +88,7 @@ public class ProductIndexService {
             }
         }
         String emb = embedding;
-        String aliasText = ProductSearchAliases.forProductName(s.name());
+        String aliasText = productAliasService.aliasTextFor(s.name());
         int updated = emb != null
                 ? productChunkMapper.updateWithVector(s.spuId(), s.name(), s.subtitle(), s.categoryName(),
                         aliasText, s.priceMin(), s.priceMax(), s.soldCount(), emb)
@@ -105,7 +106,7 @@ public class ProductIndexService {
         }
     }
 
-    private static String indexText(ProductSnapshotDTO s) {
+    private String indexText(ProductSnapshotDTO s) {
         StringBuilder sb = new StringBuilder(s.name() == null ? "" : s.name());
         if (s.subtitle() != null) {
             sb.append(' ').append(s.subtitle());
@@ -113,7 +114,7 @@ public class ProductIndexService {
         if (s.categoryName() != null) {
             sb.append(' ').append(s.categoryName());
         }
-        String aliases = ProductSearchAliases.forProductName(s.name());
+        String aliases = productAliasService.aliasTextFor(s.name());
         if (!aliases.isBlank()) {
             sb.append(' ').append(aliases);
         }

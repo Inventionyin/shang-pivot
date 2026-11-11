@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /** 工单 / 快捷回复 / 坐席 / 看板（/admin/customer-service/**）。 */
@@ -176,5 +177,11 @@ public class CsOpsController {
     @GetMapping("/reference-health")
     public Result<Map<String, Object>> referenceHealth(@RequestParam(defaultValue = "14") int days) {
         return Result.ok(statsService.referenceHealth(days));
+    }
+
+    @Operation(summary = "指代加购健康趋势", description = "按天返回运行/加购/反问/检索指标")
+    @GetMapping("/reference-health/trend")
+    public Result<List<Map<String, Object>>> referenceTrend(@RequestParam(defaultValue = "14") int days) {
+        return Result.ok(statsService.referenceTrend(days));
     }
 }
